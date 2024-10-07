@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="SessionPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.fx.SessionScreenController">
+<AnchorPane fx:id="SubmitPanel" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.fx.SubmitEventScreenController">
 
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
@@ -63,7 +63,7 @@
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
+      <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
          <effect>
             <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
                <color>
@@ -72,7 +72,7 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="Sessões" textFill="#ff914d">
+            <Label layoutX="35.0" layoutY="19.0" text="Sessões" textFill="WHITE">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
@@ -80,7 +80,7 @@
             <Button layoutY="-2.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" text="Session" />
          </children>
       </Pane>
-      <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+      <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <effect>
             <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
                <color>
@@ -89,7 +89,7 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="Submeter Artigo" textFill="WHITE">
+            <Label layoutX="35.0" layoutY="19.0" text="Submeter Artigo" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
