@@ -64,6 +64,25 @@ public class MainScreenController {
         }
     }
 
+    public void handleSession() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sessionScreen.fxml"));
+            AnchorPane subEventScreen = loader.load();
+
+            SubEventScreenController subEventController = loader.getController();
+            subEventController.setUserController(userController);
+
+            Scene subEventScene = new Scene(subEventScreen);
+            Stage stage = (Stage) MainPane.getScene().getWindow();
+
+            stage.setScene(subEventScene);
+            stage.setTitle("Even4");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void logout(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/loginScreen.fxml"));
