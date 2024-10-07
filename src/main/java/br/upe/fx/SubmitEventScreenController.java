@@ -10,13 +10,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class SessionScreenController {
+public class SubmitEventScreenController {
     UserController userController;
 
     @FXML
     private Label userEmail;
     @FXML
-    private AnchorPane SessionPane;
+    private AnchorPane SubmitPanel;
 
     public void setUserController(UserController userController) {
         this.userController = userController;
@@ -36,7 +36,7 @@ public class SessionScreenController {
             userScreenController.setUserController(userController);
 
             Scene userScene = new Scene(userScreen);
-            Stage stage = (Stage) SessionPane.getScene().getWindow();
+            Stage stage = (Stage) SubmitPanel.getScene().getWindow();
 
             stage.setScene(userScene);
             stage.setTitle("Even4");
@@ -51,11 +51,11 @@ public class SessionScreenController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/subEventScreen.fxml"));
             AnchorPane subEventScreen = loader.load();
 
-            SessionScreenController subEventController = loader.getController();
+            SubmitEventScreenController subEventController = loader.getController();
             subEventController.setUserController(userController);
 
             Scene subEventScene = new Scene(subEventScreen);
-            Stage stage = (Stage) SessionPane.getScene().getWindow();
+            Stage stage = (Stage) SubmitPanel.getScene().getWindow();
 
             stage.setScene(subEventScene);
             stage.setTitle("Even4");
@@ -67,14 +67,14 @@ public class SessionScreenController {
 
     public void handleSubmitEvent() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/submitScreen.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/subEventScreen.fxml"));
             AnchorPane submitScreen = loader.load();
 
             SubmitEventScreenController submitEventScreenController = loader.getController();
             submitEventScreenController.setUserController(userController);
 
             Scene submitScene = new Scene(submitScreen);
-            Stage stage = (Stage) SessionPane.getScene().getWindow();
+            Stage stage = (Stage) SubmitPanel.getScene().getWindow();
 
             stage.setScene(submitScene);
             stage.setTitle("Even4");
@@ -90,7 +90,7 @@ public class SessionScreenController {
             AnchorPane loginScreen = loader.load();
 
             Scene loginScene = new Scene(loginScreen);
-            Stage stage = (Stage) SessionPane.getScene().getWindow();
+            Stage stage = (Stage) SubmitPanel.getScene().getWindow();
 
             stage.setScene(loginScene);
             stage.setTitle("Even4");
