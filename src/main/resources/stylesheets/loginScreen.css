@@ -1,0 +1,11 @@
+AnchorPane {
+    -fx-background-color: #FF914D;
+}
+
+Pane {
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
+
+
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.fx.LogoController">
+    <ImageView fx:id="imageView" fitHeight="378.0" fitWidth="368.0" layoutX="306.0" layoutY="107.0" preserveRatio="true">
+        <image>
+            <Image url="@/images/Even4.png" />
+        </image>
+    </ImageView>
+</AnchorPane>

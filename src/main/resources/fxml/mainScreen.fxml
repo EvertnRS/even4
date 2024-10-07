@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="MainPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.fx.MainScreenController">
+
+   <children>
+      <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
+         <image>
+            <Image url="@/images/userIcon.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="exitView" fitHeight="34.0" fitWidth="29.0" layoutX="23.0" layoutY="508.0" preserveRatio="true">
+         <image>
+            <Image url="@/images/exit.png" />
+         </image>
+      </ImageView>
+      <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;" />
+      <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="134.0" style="-fx-text-fill: white;" text="Teste">
+         <font>
+            <Font name="Inter Semi Bold" size="12.0" />
+         </font></Label>
+      <Label layoutX="64.0" layoutY="512.0" text="Sair">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" onAction="#logout" opacity="0.0" prefHeight="35.0" prefWidth="72.0" text="logout" />
+      <Pane layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
+         <effect>
+            <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
+               <color>
+                  <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+               </color>
+            </DropShadow>
+         </effect>
+         <children>
+            <Label layoutX="35.0" layoutY="19.0" text="Eventos" textFill="#ff914d">
+               <font>
+                  <Font name="Inter Semi Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane layoutX="-1.0" layoutY="215.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+         <effect>
+            <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
+               <color>
+                  <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+               </color>
+            </DropShadow>
+         </effect>
+         <children>
+            <Label layoutX="35.0" layoutY="19.0" text="SubEventos" textFill="WHITE">
+               <font>
+                  <Font name="Inter Semi Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+         <effect>
+            <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
+               <color>
+                  <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+               </color>
+            </DropShadow>
+         </effect>
+         <children>
+            <Label layoutX="35.0" layoutY="19.0" text="Sessões" textFill="WHITE">
+               <font>
+                  <Font name="Inter Semi Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+         <effect>
+            <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
+               <color>
+                  <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+               </color>
+            </DropShadow>
+         </effect>
+         <children>
+            <Label layoutX="35.0" layoutY="19.0" text="Submeter Artigo" textFill="WHITE">
+               <font>
+                  <Font name="Inter Semi Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane layoutX="-1.0" layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+         <effect>
+            <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
+               <color>
+                  <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+               </color>
+            </DropShadow>
+         </effect>
+         <children>
+            <Label layoutX="35.0" layoutY="19.0" text="Perfil" textFill="WHITE">
+               <font>
+                  <Font name="Inter Semi Bold" size="16.0" />
+               </font>
+            </Label>
+            <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" onAction="#handleUser" opacity="0.0" prefHeight="65.0" prefWidth="222.0" text="user" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
