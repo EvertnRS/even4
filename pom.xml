@@ -24,7 +24,7 @@
   </repositories>
 
   <dependencies>
-    <!-- Dependências do JUnit-->
+    <!-- Dependência do JUnit-->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -86,6 +86,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.0.0-M5</version>
         <configuration>
+          <argLine>-Djava.awt.headless=true</argLine>
           <includes>
             <include>**/*Test.java</include>
             <include>**/*Tests.java</include>
