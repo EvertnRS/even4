@@ -10,13 +10,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class SubEventScreenController {
+public class SessionScreenController {
     UserController userController;
 
     @FXML
     private Label userEmail;
     @FXML
-    private AnchorPane SubEventPane;
+    private AnchorPane SessionPane;
 
     public void setUserController(UserController userController) {
         this.userController = userController;
@@ -36,7 +36,7 @@ public class SubEventScreenController {
             userScreenController.setUserController(userController);
 
             Scene userScene = new Scene(userScreen);
-            Stage stage = (Stage) SubEventPane.getScene().getWindow();
+            Stage stage = (Stage) SessionPane.getScene().getWindow();
 
             stage.setScene(userScene);
             stage.setTitle("Even4");
@@ -46,18 +46,18 @@ public class SubEventScreenController {
         }
     }
 
-    public void handleSession() {
+    public void handleSubEvent() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sessionScreen.fxml"));
-            AnchorPane sessionScreen = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/subEventScreen.fxml"));
+            AnchorPane subEventScreen = loader.load();
 
-            SessionScreenController sessionScreenController = loader.getController();
-            sessionScreenController.setUserController(userController);
+            SessionScreenController subEventController = loader.getController();
+            subEventController.setUserController(userController);
 
-            Scene sessionScene = new Scene(sessionScreen);
-            Stage stage = (Stage) SubEventPane.getScene().getWindow();
+            Scene subEventScene = new Scene(subEventScreen);
+            Stage stage = (Stage) SessionPane.getScene().getWindow();
 
-            stage.setScene(sessionScene);
+            stage.setScene(subEventScene);
             stage.setTitle("Even4");
 
         } catch (IOException e) {
@@ -71,7 +71,7 @@ public class SubEventScreenController {
             AnchorPane loginScreen = loader.load();
 
             Scene loginScene = new Scene(loginScreen);
-            Stage stage = (Stage) SubEventPane.getScene().getWindow();
+            Stage stage = (Stage) SessionPane.getScene().getWindow();
 
             stage.setScene(loginScene);
             stage.setTitle("Even4");
