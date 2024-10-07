@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="MainPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.fx.MainScreenController">
+<AnchorPane fx:id="SubEventPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.fx.SubEventScreenController">
 
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
@@ -31,7 +31,7 @@
          </font>
       </Label>
       <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" onAction="#logout" opacity="0.0" prefHeight="35.0" prefWidth="72.0" text="logout" />
-      <Pane layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
+      <Pane layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
          <effect>
             <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
                <color>
@@ -40,14 +40,14 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="Eventos" textFill="#ff914d">
+            <Label layoutX="35.0" layoutY="19.0" text="Eventos" textFill="WHITE">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
          </children>
       </Pane>
-      <Pane layoutX="-1.0" layoutY="215.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+      <Pane layoutY="217.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffff; -fx-background-radius: 10 0 0 10;">
          <effect>
             <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
                <color>
@@ -56,12 +56,11 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="SubEventos" textFill="WHITE">
+            <Label layoutX="35.0" layoutY="19.0" text="SubEventos" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button layoutY="-7.0" mnemonicParsing="false" onAction="#handleSubEvent" opacity="0.0" prefHeight="65.0" prefWidth="222.0" text="subEvent" />
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">

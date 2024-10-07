@@ -1,21 +1,22 @@
 package br.upe.fx;
 
-import br.upe.controller.*;
+import br.upe.controller.UserController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
-public class MainScreenController {
+public class SubEventScreenController {
     UserController userController;
 
     @FXML
     private Label userEmail;
     @FXML
-    private AnchorPane MainPane;
+    private AnchorPane SubEventPane;
 
     public void setUserController(UserController userController) {
         this.userController = userController;
@@ -35,28 +36,9 @@ public class MainScreenController {
             userScreenController.setUserController(userController);
 
             Scene userScene = new Scene(userScreen);
-            Stage stage = (Stage) MainPane.getScene().getWindow();
+            Stage stage = (Stage) SubEventPane.getScene().getWindow();
 
             stage.setScene(userScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void handleSubEvent() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/subEventScreen.fxml"));
-            AnchorPane subEventScreen = loader.load();
-
-            SubEventScreenController subEventController = loader.getController();
-            subEventController.setUserController(userController);
-
-            Scene subEventScene = new Scene(subEventScreen);
-            Stage stage = (Stage) MainPane.getScene().getWindow();
-
-            stage.setScene(subEventScene);
             stage.setTitle("Even4");
 
         } catch (IOException e) {
@@ -70,7 +52,7 @@ public class MainScreenController {
             AnchorPane loginScreen = loader.load();
 
             Scene loginScene = new Scene(loginScreen);
-            Stage stage = (Stage) MainPane.getScene().getWindow();
+            Stage stage = (Stage) SubEventPane.getScene().getWindow();
 
             stage.setScene(loginScene);
             stage.setTitle("Even4");
