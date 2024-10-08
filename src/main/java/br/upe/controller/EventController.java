@@ -220,17 +220,17 @@ public class EventController implements Controller {
         String ownerId = "";
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("name").equals(params[0])){
+            if (persistence.getData("id").equals(params[0])){
                 ownerId = persistence.getData("ownerId");
             }
         }
 
-        if ((params[1]).equals("name") && (params[2]).equals(ownerId)) {
+        if ((params[1]).equals(ownerId)) {
             Iterator<Map.Entry<String, Persistence>> iterator = eventHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence eventindice = entry.getValue();
-                if (eventindice.getData("name").equals(params[0])) {
+                if (eventindice.getData("id").equals(params[0])) {
                     iterator.remove();
                 }
             }
