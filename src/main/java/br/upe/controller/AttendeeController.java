@@ -2,8 +2,6 @@ package br.upe.controller;
 
 import br.upe.persistence.Attendee;
 import br.upe.persistence.Persistence;
-import br.upe.persistence.Session;
-import br.upe.persistence.User;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

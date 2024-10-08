@@ -1,8 +1,5 @@
 package br.upe.controller;
 
-import br.upe.persistence.Persistence;
-import br.upe.persistence.User;
-
 import java.io.FileNotFoundException;
 
 public interface Controller {
