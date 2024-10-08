@@ -56,7 +56,7 @@ public class LoginScreenController extends BaseController implements FxControlle
         UserController userController = new UserController();
         if (userController.loginValidate(email, cpf)) {
             try {
-                genericButton("/fxml/submitScreen.fxml", loginAnchorPane, userController);
+                genericButton("/fxml/mainScreen.fxml", loginAnchorPane, userController);
             } catch (IOException e) {
                 e.printStackTrace();
             }
