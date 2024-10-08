@@ -7,8 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class AttendeeController implements Controller {
+    private static final Logger LOGGER = Logger.getLogger(AttendeeController.class.getName());
     private Map<String, Persistence> attendeeHashMap;
     private Persistence attendeeLog;
 
@@ -35,7 +37,7 @@ public class AttendeeController implements Controller {
     @Override
     public void create(Object... params) throws FileNotFoundException {
         if (params.length < 2) {
-            System.out.println("Só pode ter 2 parametros");
+            LOGGER.warning("Só pode ter 2 parametros");
         }
 
         String name = (String) params[0];
@@ -46,7 +48,7 @@ public class AttendeeController implements Controller {
         try {
 
             if (!validateSessionId(sessionId)) {
-                System.out.println("Id Incorreto ou Sessão não Existe");
+                LOGGER.warning("Id Incorreto ou Sessão não Existe");
                 return;
             }
 
@@ -65,14 +67,14 @@ public class AttendeeController implements Controller {
             this.setAttendeeLog(attendee);
 
         } catch (IOException exception) {
-            System.out.println("Usuário já cadastrado");
+            LOGGER.warning("Usuário já cadastrado");
         }
     }
 
     @Override
     public void update(Object... params) throws FileNotFoundException {
         if (params.length < 2) {
-            System.out.println("Só pode ter 2 parametros");
+            LOGGER.warning("Só pode ter 2 parametros");
             return;
         }
         this.read();
@@ -81,7 +83,7 @@ public class AttendeeController implements Controller {
         String sessionId = (String) params[1];
 
         if (!validateSessionId(sessionId)) {
-            System.out.println("Id Incorreto ou Sessão não Existe");
+            LOGGER.warning("Id Incorreto ou Sessão não Existe");
             return;
         }
 
@@ -96,7 +98,7 @@ public class AttendeeController implements Controller {
         }
 
         if (nameExists || newName.isEmpty()) {
-            System.out.println("Nome em uso ou vazio");
+            LOGGER.warning("Nome em uso ou vazio");
             return;
         }
 
@@ -112,7 +114,7 @@ public class AttendeeController implements Controller {
         }
 
         if (!found) {
-            System.out.println("Nenhum attendee encontrado para a sessão " + sessionId);
+            LOGGER.warning("Nenhum attendee encontrado para a sessão " + sessionId);
             return;
         }
 
@@ -168,13 +170,13 @@ public class AttendeeController implements Controller {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("userId").equals(idowner)){
                     String[] results = getSessionById(persistence.getData("sessionId"));
-                    System.out.println("Nome: " + results[0] + " - " + "Data: " + results[2] +  "\nDescrição: " + results[1] + " - " + "Local: " + results[3] + " - " + "Hora: " + results[4] + "\n");
+                    LOGGER.warning("Nome: " + results[0] + " - " + "Data: " + results[2] +  "\nDescrição: " + results[1] + " - " + "Local: " + results[3] + " - " + "Hora: " + results[4] + "\n");
                     found = true;
                     isnull = false;
                 }
             }
             if (!found){
-                System.out.println("Seu usuário atual não é inscrito em nenhum evento\n");
+                LOGGER.warning("Seu usuário atual não é inscrito em nenhum evento\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,7 +231,7 @@ public class AttendeeController implements Controller {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
