@@ -104,6 +104,25 @@ public class UserScreenController {
         }
     }
 
+    public void handleSession() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sessionScreen.fxml"));
+            AnchorPane sessionScreen = loader.load();
+
+            SessionScreenController sessionScreenController = loader.getController();
+            sessionScreenController.setUserController(userController);
+
+            Scene sessionScene = new Scene(sessionScreen);
+            Stage stage = (Stage) UserPane.getScene().getWindow();
+
+            stage.setScene(sessionScene);
+            stage.setTitle("Even4");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deleteUser(){
         String cpf = cpfTextField.getText();
 
