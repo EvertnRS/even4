@@ -1,19 +1,13 @@
 package br.upe.controller;
 
-
-import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.Persistence;
-import br.upe.persistence.User;
-
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SubEventController implements Controller {
     private HashMap<String, Persistence> subEventHashMap;
