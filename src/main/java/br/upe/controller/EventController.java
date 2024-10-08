@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class EventController implements Controller {
+    private static final Logger LOGGER = Logger.getLogger(AttendeeController.class.getName());
+
     private Map<String, Persistence> eventHashMap;
     private Persistence eventLog;
 
@@ -36,13 +39,13 @@ public class EventController implements Controller {
             for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("ownerId").equals(ownerId)){
-                    System.out.println(persistence.getData("name"));
+                    LOGGER.warning(persistence.getData("name"));
                     found = true;
                     isnull = false;
                 }
             }
             if (!found){
-                System.out.println("Seu usuário atual é organizador de nenhum evento");
+                LOGGER.warning("Seu usuário atual é organizador de nenhum evento");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,7 +66,7 @@ public class EventController implements Controller {
                 }
             }
             if (userEvents.isEmpty()) {
-                System.out.println("Seu usuário atual é organizador de nenhum evento");
+                LOGGER.warning("Seu usuário atual é organizador de nenhum evento");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,7 +83,7 @@ public class EventController implements Controller {
             String ownerId = persistence.getData("ownerId");
             // Verifica se o evento não é de propriedade do usuário e se possui sessões
             if (!ownerId.equals(params[0])) {
-                System.out.println(persistence.getData("name") + " - " + persistence.getData("id"));
+                LOGGER.warning(persistence.getData("name") + " - " + persistence.getData("id"));
             }
         }
     }
@@ -90,7 +93,7 @@ public class EventController implements Controller {
     @Override
     public void update(Object... params) throws FileNotFoundException {
         if (params.length != 6) {
-            System.out.println("Só pode ter 6 parametros");
+            LOGGER.warning("Só pode ter 6 parametros");
             return;
         }
 
@@ -128,7 +131,7 @@ public class EventController implements Controller {
             }
 
             if (nameExists) {
-                System.out.println("Nome em uso ou vazio");
+                LOGGER.warning("Nome em uso ou vazio");
                 return;
             }
 
@@ -143,13 +146,13 @@ public class EventController implements Controller {
                     Persistence eventPersistence = new Event();
                     eventPersistence.update(eventHashMap);
                 } else {
-                    System.out.println("Evento não encontrado");
+                    LOGGER.warning("Evento não encontrado");
                 }
             } else {
-                System.out.println("Você não pode alterar este Evento");
+                LOGGER.warning("Você não pode alterar este Evento");
             }
         } else {
-            System.out.println("Você não pode alterar este Evento");
+            LOGGER.warning("Você não pode alterar este Evento");
         }
     }
 
@@ -181,7 +184,7 @@ public class EventController implements Controller {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -189,7 +192,7 @@ public class EventController implements Controller {
     @Override
     public void create(Object... params) {
         if (params.length != 5) {
-            System.out.println("Só pode ter 5 parâmetros");
+            LOGGER.warning("Só pode ter 5 parâmetros");
             return;
         }
 
@@ -202,7 +205,7 @@ public class EventController implements Controller {
         for (Map.Entry<String, Persistence> entry : this.eventHashMap.entrySet()) {
             Persistence event = entry.getValue();
             if (event.getData("name").equals(name) || name.isEmpty()) {
-                System.out.println("Nome em uso ou vazio");
+                LOGGER.warning("Nome em uso ou vazio");
                 return;
             }
         }
@@ -234,7 +237,7 @@ public class EventController implements Controller {
             Persistence eventPersistence = new Event();
             eventPersistence.delete(eventHashMap);
         } else {
-            System.out.println("Você não pode deletar esse evento");
+            LOGGER.warning("Você não pode deletar esse evento");
         }
     }
 }
