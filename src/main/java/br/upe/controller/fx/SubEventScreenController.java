@@ -10,13 +10,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class SubEventScreenController {
+public class SubEventScreenController extends BaseController implements FxController{
     UserController userController;
 
     @FXML
     private Label userEmail;
     @FXML
-    private AnchorPane SubEventPane;
+    private AnchorPane subEventPane;
 
     public void setUserController(UserController userController) {
         this.userController = userController;
@@ -27,57 +27,23 @@ public class SubEventScreenController {
         userEmail.setText(userController.getData("email"));
     }
 
-    public void handleUser() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/userScreen.fxml"));
-            AnchorPane userScreen = loader.load();
-
-            UserScreenController userScreenController = loader.getController();
-            userScreenController.setUserController(userController);
-
-            Scene userScene = new Scene(userScreen);
-            Stage stage = (Stage) SubEventPane.getScene().getWindow();
-
-            stage.setScene(userScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void handleUser() throws IOException {
+        genericButton("/fxml/userScreen.fxml", subEventPane, userController);
     }
 
-    public void handleSession() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sessionScreen.fxml"));
-            AnchorPane sessionScreen = loader.load();
-
-            SessionScreenController sessionScreenController = loader.getController();
-            sessionScreenController.setUserController(userController);
-
-            Scene sessionScene = new Scene(sessionScreen);
-            Stage stage = (Stage) SubEventPane.getScene().getWindow();
-
-            stage.setScene(sessionScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void handleEvent() throws IOException {
+        genericButton("/fxml/mainScreen.fxml", subEventPane, userController);
     }
 
-    public void logout(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/loginScreen.fxml"));
-            AnchorPane loginScreen = loader.load();
+    public void handleSubmit() throws IOException {
+        genericButton("/fxml/submitScreen.fxml", subEventPane, userController);
+    }
 
-            Scene loginScene = new Scene(loginScreen);
-            Stage stage = (Stage) SubEventPane.getScene().getWindow();
+    public void handleSession() throws IOException {
+        genericButton("/fxml/sessionScreen.fxml", subEventPane, userController);
+    }
 
-            stage.setScene(loginScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void logout() throws IOException {
+        genericButton("/fxml/loginScreen.fxml", subEventPane, userController);
     }
 }
