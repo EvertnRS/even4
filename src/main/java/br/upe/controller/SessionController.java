@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 public class SessionController implements Controller {
     private Map<String, Persistence> sessionHashMap;
-    private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
     private Persistence sessionLog;
 
     public SessionController() {

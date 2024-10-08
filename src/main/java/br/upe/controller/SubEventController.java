@@ -7,8 +7,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class SubEventController implements Controller {
+    private static final Logger LOGGER = Logger.getLogger(SubEventController.class.getName());
     private Map<String, Persistence> subEventHashMap;
     private Persistence subEventLog;
 
