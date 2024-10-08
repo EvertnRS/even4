@@ -1,17 +1,25 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.*;
+import br.upe.persistence.Persistence;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.Map;
 
 public class MainScreenController {
     UserController userController;
+    EventController eventController;
 
+    @FXML
+    private VBox eventVBox;
     @FXML
     private Label userEmail;
     @FXML
@@ -19,11 +27,13 @@ public class MainScreenController {
 
     public void setUserController(UserController userController) {
         this.userController = userController;
+        this.eventController = new EventController();
         initial();
     }
 
     private void initial() {
         userEmail.setText(userController.getData("email"));
+        loadUserEvents();
     }
 
     public void handleUser() {
@@ -83,7 +93,7 @@ public class MainScreenController {
         }
     }
 
-    public void logout(){
+    public void logout() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/loginScreen.fxml"));
             AnchorPane loginScreen = loader.load();
@@ -98,4 +108,20 @@ public class MainScreenController {
             e.printStackTrace();
         }
     }
+
+    private void loadUserEvents() {
+        eventVBox.getChildren().clear();
+
+        eventController.list(userController.getData("id"), "");
+
+        for (Map.Entry<String, Persistence> entry : eventController.getEventHashMap().entrySet()) {
+            Persistence persistence = entry.getValue();
+            if (persistence.getData("ownerId").equals(userController.getData("id"))) {
+                Label eventLabel = new Label(persistence.getData("name"));
+
+                eventVBox.getChildren().add(eventLabel);
+            }
+        }
+    }
 }
+
