@@ -1,7 +1,6 @@
 package br.upe.ui;
 
 import br.upe.controller.SessionController;
-import br.upe.persistence.Session;
 import br.upe.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

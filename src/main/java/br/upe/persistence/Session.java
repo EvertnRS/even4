@@ -1,7 +1,5 @@
 package br.upe.persistence;
 
-import br.upe.controller.EventController;
-
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.Instant;

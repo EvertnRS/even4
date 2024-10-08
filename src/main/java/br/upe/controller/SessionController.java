@@ -1,18 +1,12 @@
 package br.upe.controller;
 
-import br.upe.persistence.Event;
 import br.upe.persistence.Session;
 import br.upe.persistence.Persistence;
-import br.upe.persistence.SubEvent;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SessionController implements Controller {
     private HashMap<String, Persistence> sessionHashMap;
