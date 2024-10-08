@@ -141,6 +141,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
+            <Button layoutX="-2.0" layoutY="-9.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="222.0" text="submit" onAction="#handleSubmitEvent"/>
             </children>
         </Pane>
         <Pane layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
