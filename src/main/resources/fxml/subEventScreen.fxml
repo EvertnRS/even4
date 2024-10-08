@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="SubEventPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.SubEventScreenController">
+<AnchorPane fx:id="SubEventPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.SubEventScreenController">
 
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
@@ -45,6 +45,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="222.0" text="event" />
          </children>
       </Pane>
       <Pane layoutY="217.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffff; -fx-background-radius: 10 0 0 10;">
@@ -77,7 +78,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button layoutY="-2.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" text="Session" onAction="#handleSession"/>
+            <Button layoutY="-2.0" mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="58.0" prefWidth="222.0" text="Session" />
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -94,6 +95,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
+            <Button layoutY="2.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" text="submit" />
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
