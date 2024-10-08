@@ -1,4 +1,4 @@
-package br.upe.fx;
+package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
 import javafx.fxml.FXML;
@@ -10,13 +10,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class SubmitEventScreenController {
+public class SubEventScreenController {
     UserController userController;
 
     @FXML
     private Label userEmail;
     @FXML
-    private AnchorPane SubmitPanel;
+    private AnchorPane SubEventPane;
 
     public void setUserController(UserController userController) {
         this.userController = userController;
@@ -36,7 +36,7 @@ public class SubmitEventScreenController {
             userScreenController.setUserController(userController);
 
             Scene userScene = new Scene(userScreen);
-            Stage stage = (Stage) SubmitPanel.getScene().getWindow();
+            Stage stage = (Stage) SubEventPane.getScene().getWindow();
 
             stage.setScene(userScene);
             stage.setTitle("Even4");
@@ -46,37 +46,18 @@ public class SubmitEventScreenController {
         }
     }
 
-    public void handleSubEvent() {
+    public void handleSession() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/subEventScreen.fxml"));
-            AnchorPane subEventScreen = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sessionScreen.fxml"));
+            AnchorPane sessionScreen = loader.load();
 
-            SubmitEventScreenController subEventController = loader.getController();
-            subEventController.setUserController(userController);
+            SessionScreenController sessionScreenController = loader.getController();
+            sessionScreenController.setUserController(userController);
 
-            Scene subEventScene = new Scene(subEventScreen);
-            Stage stage = (Stage) SubmitPanel.getScene().getWindow();
+            Scene sessionScene = new Scene(sessionScreen);
+            Stage stage = (Stage) SubEventPane.getScene().getWindow();
 
-            stage.setScene(subEventScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void handleSubmitEvent() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/subEventScreen.fxml"));
-            AnchorPane submitScreen = loader.load();
-
-            SubmitEventScreenController submitEventScreenController = loader.getController();
-            submitEventScreenController.setUserController(userController);
-
-            Scene submitScene = new Scene(submitScreen);
-            Stage stage = (Stage) SubmitPanel.getScene().getWindow();
-
-            stage.setScene(submitScene);
+            stage.setScene(sessionScene);
             stage.setTitle("Even4");
 
         } catch (IOException e) {
@@ -90,7 +71,7 @@ public class SubmitEventScreenController {
             AnchorPane loginScreen = loader.load();
 
             Scene loginScene = new Scene(loginScreen);
-            Stage stage = (Stage) SubmitPanel.getScene().getWindow();
+            Stage stage = (Stage) SubEventPane.getScene().getWindow();
 
             stage.setScene(loginScene);
             stage.setTitle("Even4");
