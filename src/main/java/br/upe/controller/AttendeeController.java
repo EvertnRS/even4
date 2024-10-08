@@ -10,18 +10,18 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class AttendeeController implements Controller {
-    private HashMap<String, Persistence> attendeeHashMap;
+    private Map<String, Persistence> attendeeHashMap; // Alterado para Map
     private Persistence attendeeLog;
 
     public AttendeeController() {
         this.read();
     }
 
-    public HashMap<String, Persistence> getAttendeeHashMap() {
+    public Map<String, Persistence> getAttendeeHashMap() { // Alterado para Map
         return attendeeHashMap;
     }
 
-    public void setAttendeeHashMap(HashMap<String, Persistence> attendeeHashMap) {
+    public void setAttendeeHashMap(Map<String, Persistence> attendeeHashMap) { // Alterado para Map
         this.attendeeHashMap = attendeeHashMap;
     }
 
