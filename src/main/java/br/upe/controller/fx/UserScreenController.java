@@ -13,11 +13,11 @@ import java.io.IOException;
 
 import static br.upe.ui.Validation.isValidEmail;
 
-public class UserScreenController {
+public class UserScreenController extends BaseController implements FxController {
     UserController userController;
 
     @FXML
-    private AnchorPane UserPane;
+    private AnchorPane userPane;
     @FXML
     private Label userEmail;
     @FXML
@@ -38,39 +38,24 @@ public class UserScreenController {
         userEmail.setText(userController.getData("email"));
     }
 
-    public void logout(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/loginScreen.fxml"));
-            AnchorPane loginScreen = loader.load();
-
-            Scene loginScene = new Scene(loginScreen);
-            Stage stage = (Stage) UserPane.getScene().getWindow();
-
-            stage.setScene(loginScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void handleEvent() throws IOException {
+        genericButton("/fxml/mainScreen.fxml", userPane, userController);
     }
 
-    public void handleEvent() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainScreen.fxml"));
-            AnchorPane mainScreen = loader.load();
+    public void handleSubEvent() throws IOException {
+        genericButton("/fxml/mainScreen.fxml", userPane, userController);
+    }
 
-            MainScreenController mainScreenController = loader.getController();
-            mainScreenController.setUserController(userController);
+    public void handleSubmitEvent() throws IOException {
+        genericButton("/fxml/submitScreen.fxml", userPane, userController);
+    }
 
-            Scene mainScene = new Scene(mainScreen);
-            Stage stage = (Stage) UserPane.getScene().getWindow();
+    public void handleSession() throws IOException {
+        genericButton("/fxml/sessionScreen.fxml", userPane, userController);
+    }
 
-            stage.setScene(mainScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void logout() throws IOException {
+        genericButton("/fxml/submitScreen.fxml", userPane, userController);
     }
 
     public void updateUser(){
@@ -85,45 +70,7 @@ public class UserScreenController {
         }
     }
 
-    public void handleSubmitEvent() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/submitScreen.fxml"));
-            AnchorPane submitScreen = loader.load();
-
-            SubmitEventScreenController submitEventScreenController = loader.getController();
-            submitEventScreenController.setUserController(userController);
-
-            Scene submitScene = new Scene(submitScreen);
-            Stage stage = (Stage) UserPane.getScene().getWindow();
-
-            stage.setScene(submitScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void handleSession() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sessionScreen.fxml"));
-            AnchorPane sessionScreen = loader.load();
-
-            SessionScreenController sessionScreenController = loader.getController();
-            sessionScreenController.setUserController(userController);
-
-            Scene sessionScene = new Scene(sessionScreen);
-            Stage stage = (Stage) UserPane.getScene().getWindow();
-
-            stage.setScene(sessionScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteUser(){
+    public void deleteUser() throws IOException {
         String cpf = cpfTextField.getText();
 
         if (cpf.equals(userController.getData("cpf"))) {
