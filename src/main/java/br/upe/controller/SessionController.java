@@ -6,9 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class SessionController implements Controller {
     private Map<String, Persistence> sessionHashMap;
+    private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
     private Persistence sessionLog;
 
     public SessionController() {
@@ -27,7 +29,7 @@ public class SessionController implements Controller {
     public String getData(String dataToGet) {
         String data = "";
         if (this.sessionLog == null) {
-            System.out.println("Sessão não inicializada.");
+            LOGGER.warning("Sessão não inicializada.");
             return "";
         }
         try {
@@ -42,7 +44,7 @@ public class SessionController implements Controller {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -50,7 +52,7 @@ public class SessionController implements Controller {
     @Override
     public void create(Object... params) {
         if (params.length != 9) {
-            System.out.println("Número incorreto de parâmetros. Esperado: 9");
+            LOGGER.warning("Número incorreto de parâmetros. Esperado: 9");
             return;
         }
 
@@ -75,7 +77,7 @@ public class SessionController implements Controller {
         }
 
         if (!eventOwnerId.equals(userId)) {
-            System.out.println("Você não pode criar uma sessão para um evento que você não possui.");
+            LOGGER.warning("Você não pode criar uma sessão para um evento que você não possui.");
             return;
         }
 
@@ -89,7 +91,7 @@ public class SessionController implements Controller {
             }
 
         if (inUseName || name.isEmpty()) {
-            System.out.println("Nome vazio ou em uso");
+            LOGGER.warning("Nome vazio ou em uso");
             return;
         }
 
@@ -119,7 +121,7 @@ public class SessionController implements Controller {
             Persistence sessionPersistence = new Session();
             sessionPersistence.delete(sessionHashMap);
         } else {
-            System.out.println("Você não pode deletar essa Sessão");
+            LOGGER.warning("Você não pode deletar essa Sessão");
         }
     }
 
@@ -131,13 +133,13 @@ public class SessionController implements Controller {
             for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("ownerId").equals(ownerId)) {
-                    System.out.println(persistence.getData("name"));
+                    LOGGER.warning(persistence.getData("name"));
                     found = true;
                     isnull = false;
                 }
             }
             if (!found) {
-                System.out.println("Seu usuário atual não é organizador de nenhuma Sessão\n");
+                LOGGER.warning("Seu usuário atual não é organizador de nenhuma Sessão\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -153,7 +155,7 @@ public class SessionController implements Controller {
                 Persistence persistence = entry.getValue();
                 if (!persistence.getData("ownerId").equals(params[0])){
                     String eventName = getEventName(persistence.getData("eventId"));
-                    System.out.println("Nome: " + persistence.getData("name") + " - " + "Id: " + persistence.getData("id") +  "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\n");
+                    LOGGER.warning("Nome: " + persistence.getData("name") + " - " + "Id: " + persistence.getData("id") +  "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\n");
                 }
             }
         } else if (params[1].equals("sessionId")) {
@@ -161,7 +163,7 @@ public class SessionController implements Controller {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("id").equals(params[0])){
                     String eventName = getEventName(persistence.getData("eventId"));
-                    System.out.println("Nome: " + persistence.getData("name") + " - " + "Id: " + persistence.getData("id") +  "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\nDescrição: " + persistence.getData("description") + " - " + "Local: " + persistence.getData("location") + "\n");
+                    LOGGER.warning("Nome: " + persistence.getData("name") + " - " + "Id: " + persistence.getData("id") +  "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\nDescrição: " + persistence.getData("description") + " - " + "Local: " + persistence.getData("location") + "\n");
                     break;
                 }
             }
@@ -198,7 +200,7 @@ public class SessionController implements Controller {
     @Override
     public void update(Object... params) throws FileNotFoundException {
         if (params.length != 6) {
-            System.out.println("Só pode ter 6 parametros");
+            LOGGER.warning("Só pode ter 6 parametros");
             return;
         }
 
@@ -236,7 +238,7 @@ public class SessionController implements Controller {
             }
 
             if (nameExists) {
-                System.out.println("Nome em uso ou vazio");
+                LOGGER.warning("Nome em uso ou vazio");
                 return;
             }
 
@@ -251,13 +253,13 @@ public class SessionController implements Controller {
                     Persistence SessionPersistence = new Session();
                     SessionPersistence.update(sessionHashMap);
                 } else {
-                    System.out.println("Sessão não encontrada");
+                    LOGGER.warning("Sessão não encontrada");
                 }
             } else {
-                System.out.println("Você não pode alterar esta Sessão");
+                LOGGER.warning("Você não pode alterar esta Sessão");
             }
         } else {
-            System.out.println("Você não pode alterar esta Sessão");
+            LOGGER.warning("Você não pode alterar esta Sessão");
         }
     }
 
@@ -294,7 +296,7 @@ public class SessionController implements Controller {
             }
         }
         if (!found) {
-            System.out.println("Evento pai não encontrado\n");
+            LOGGER.warning("Evento pai não encontrado\n");
         }
 
         return fatherId;
