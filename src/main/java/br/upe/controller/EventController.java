@@ -57,7 +57,6 @@ public class EventController implements Controller {
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             String ownerId = persistence.getData("ownerId");
-            int sessionListSize = Integer.parseInt(persistence.getData("listSize"));
             // Verifica se o evento não é de propriedade do usuário e se possui sessões
             if (!ownerId.equals(params[0])) {
                 System.out.println(persistence.getData("name") + " - " + persistence.getData("id"));
@@ -201,17 +200,17 @@ public class EventController implements Controller {
         String ownerId = "";
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("name").equals((String) params[0])){
+            if (persistence.getData("name").equals(params[0])){
                 ownerId = persistence.getData("ownerId");
             }
         }
 
-        if (((String) params[1]).equals("name") && ((String) params[2]).equals(ownerId)) {
+        if ((params[1]).equals("name") && (params[2]).equals(ownerId)) {
             Iterator<Map.Entry<String, Persistence>> iterator = eventHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence eventindice = entry.getValue();
-                if (eventindice.getData("name").equals((String) params[0])) {
+                if (eventindice.getData("name").equals(params[0])) {
                     iterator.remove();
                 }
             }
@@ -221,5 +220,4 @@ public class EventController implements Controller {
             System.out.println("Você não pode deletar esse evento");
         }
     }
-
 }

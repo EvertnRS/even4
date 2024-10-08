@@ -129,13 +129,13 @@ public class AttendeeController implements Controller {
 
     @Override
     public void delete(Object... params) {
-        if (((String) params[1]).equals("id")) {
+        if ((params[1]).equals("id")) {
             Iterator<Map.Entry<String, Persistence>> iterator = attendeeHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence attendee = entry.getValue();
 
-                if (attendee.getData("userId").equals((String) params[0]) && attendee.getData("sessionId").equals(params[2])) {
+                if (attendee.getData("userId").equals(params[0]) && attendee.getData("sessionId").equals(params[2])) {
 
                     iterator.remove();
                 }
