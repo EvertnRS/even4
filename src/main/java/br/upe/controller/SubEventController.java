@@ -5,23 +5,22 @@ import br.upe.persistence.Persistence;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class SubEventController implements Controller {
-    private HashMap<String, Persistence> subEventHashMap;
+    private Map<String, Persistence> subEventHashMap;
     private Persistence subEventLog;
 
     public SubEventController() {
         this.read();
     }
 
-    public HashMap<String, Persistence> getEventHashMap() {
+    public Map<String, Persistence> getEventHashMap() {
         return subEventHashMap;
     }
 
-    public void setEventHashMap(HashMap<String, Persistence> subEventHashMap) {
+    public void setEventHashMap(Map<String, Persistence> subEventHashMap) {
         this.subEventHashMap = subEventHashMap;
     }
 
@@ -230,7 +229,7 @@ public class SubEventController implements Controller {
     private String getFatherEventId(String searchId) {
         EventController ec = new EventController();
         String fatherId = "";
-        HashMap<String, Persistence> list = ec.getEventHashMap();
+        Map<String, Persistence> list = ec.getEventHashMap();
         boolean found = false;
         for (Map.Entry<String, Persistence> entry : list.entrySet()) {
             Persistence listindice = entry.getValue();
@@ -250,7 +249,7 @@ public class SubEventController implements Controller {
     private String getFatherOwnerId(String eventId){
         EventController ec = new EventController();
         String fatherOwnerId = "";
-        HashMap<String, Persistence> list = ec.getEventHashMap();
+        Map<String, Persistence> list = ec.getEventHashMap();
         for (Map.Entry<String, Persistence> entry : list.entrySet()) {
             Persistence listindice = entry.getValue();
             if (listindice.getData("id").equals(eventId)) {
@@ -263,7 +262,7 @@ public class SubEventController implements Controller {
 
     private boolean validateEventDate(String date, String searchId) {
         EventController ec = new EventController();
-        HashMap<String, Persistence> list = ec.getEventHashMap();
+        Map<String, Persistence> list = ec.getEventHashMap();
 
         Persistence listIndice = list.get(searchId);
 

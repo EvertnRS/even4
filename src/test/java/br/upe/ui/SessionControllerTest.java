@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +21,7 @@ class SessionControllerTest {
     @Test
     void testCreateSession() {
         sessionController.create("Event1", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
-        HashMap<String, Persistence> sessions = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessions = sessionController.getSessionHashMap();
         assertFalse(sessions.isEmpty(), "A sessão não foi criada corretamente.");
     }
 
@@ -29,7 +29,7 @@ class SessionControllerTest {
     void testReadSessions() {
         sessionController.create("Event1", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
         sessionController.read();
-        HashMap<String, Persistence> sessions = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessions = sessionController.getSessionHashMap();
         assertFalse(sessions.isEmpty(), "As sessões não foram lidas corretamente.");
     }
 
@@ -58,7 +58,7 @@ class SessionControllerTest {
         sessionController.create("Event1", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
         sessionController.delete("Session1", "name", "owner-id");
 
-        HashMap<String, Persistence> sessions = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessions = sessionController.getSessionHashMap();
         boolean deleted = true;
         for (Persistence session : sessions.values()) {
             if (session.getData("name").equals("Session1")) {

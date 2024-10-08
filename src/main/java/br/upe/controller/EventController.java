@@ -4,12 +4,11 @@ import br.upe.persistence.Persistence;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class EventController implements Controller {
-    private HashMap<String, Persistence> eventHashMap;
+    private Map<String, Persistence> eventHashMap;
     private Persistence eventLog;
 
 
@@ -17,12 +16,12 @@ public class EventController implements Controller {
         this.read();
     }
 
-    public HashMap<String, Persistence> getEventHashMap() {
+    public Map<String, Persistence> getEventHashMap() {
         return eventHashMap;
     }
 
 
-    public void setEventHashMap(HashMap<String, Persistence> eventHashMap) {
+    public void setEventHashMap(Map<String, Persistence> eventHashMap) {
         this.eventHashMap = eventHashMap;
     }
 

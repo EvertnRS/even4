@@ -4,23 +4,22 @@ import br.upe.persistence.Session;
 import br.upe.persistence.Persistence;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class SessionController implements Controller {
-    private HashMap<String, Persistence> sessionHashMap;
+    private Map<String, Persistence> sessionHashMap;
     private Persistence sessionLog;
 
     public SessionController() {
         this.read();
     }
 
-    public HashMap<String, Persistence> getSessionHashMap() {
+    public Map<String, Persistence> getSessionHashMap() {
         return sessionHashMap;
     }
 
-    public void setSessionHashMap(HashMap<String, Persistence> sessionHashMap) {
+    public void setSessionHashMap(Map<String, Persistence> sessionHashMap) {
         this.sessionHashMap = sessionHashMap;
     }
 
@@ -65,7 +64,7 @@ public class SessionController implements Controller {
         String userId = (String) params[7];
 
         String eventOwnerId = getFatherOwnerId(eventId, (String) params[8]);
-        HashMap<String, Persistence> eventH;
+        Map<String, Persistence> eventH;
 
         if (params[8].equals("Event")){
             EventController eventController = new EventController();
@@ -173,7 +172,7 @@ public class SessionController implements Controller {
     private String getEventName(String id) {
         String name = "";
         EventController eventController = new EventController();
-        HashMap<String, Persistence> evenH = eventController.getEventHashMap();
+        Map<String, Persistence> evenH = eventController.getEventHashMap();
         boolean isEvent = false;
         for (Map.Entry<String, Persistence> entry : evenH.entrySet()) {
             Persistence persistence = entry.getValue();
@@ -184,7 +183,7 @@ public class SessionController implements Controller {
 
         if (!isEvent) {
             SubEventController subEventController = new SubEventController();
-            HashMap<String, Persistence> subEvenH = subEventController.getEventHashMap();
+            Map<String, Persistence> subEvenH = subEventController.getEventHashMap();
             for (Map.Entry<String, Persistence> entry : subEvenH.entrySet()) {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("id").equals(id)) {
@@ -275,7 +274,7 @@ public class SessionController implements Controller {
     }
 
     private String getFatherEventId(String searchId, String type) {
-        HashMap<String, Persistence> list;
+        Map<String, Persistence> list;
         if (type.equals("Event")){
             EventController eventController = new EventController();
             list = eventController.getEventHashMap();
@@ -302,7 +301,7 @@ public class SessionController implements Controller {
     }
 
     private String getFatherOwnerId(String eventId, String type) {
-        HashMap<String, Persistence> list;
+        Map<String, Persistence> list;
         if (type.equals("Event")){
             EventController eventController = new EventController();
             list = eventController.getEventHashMap();

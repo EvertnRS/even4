@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,7 +37,7 @@ class SubEventControllerTest {
             subEventController.create("Event1", "New SubEvent", "02/12/2024", "New SubEvent Description", "New Location", "owner-id");
             subEventController.read();
 
-            HashMap<String, Persistence> subEventMap = subEventController.getEventHashMap();
+            Map<String, Persistence> subEventMap = subEventController.getEventHashMap();
             boolean subEventExists = subEventMap.values().stream().anyMatch(e -> e.getData("name").equals("New SubEvent"));
             assertTrue(subEventExists, "O subevento criado não foi encontrado: " + subEventMap);
         } catch (Exception e) {
@@ -73,7 +73,7 @@ class SubEventControllerTest {
             subEventController.update("SubEvent1", "Updated SubEvent", "15/11/2024", "Updated Description", "Updated Location", "owner-id");
             subEventController.read();
 
-            HashMap<String, Persistence> subEventMap = subEventController.getEventHashMap();
+            Map<String, Persistence> subEventMap = subEventController.getEventHashMap();
             boolean isUpdated = subEventMap.values().stream().anyMatch(e -> e.getData("name").equals("Updated SubEvent"));
             assertTrue(isUpdated, "O subevento não foi atualizado corretamente: " + subEventMap);
         } catch (Exception e) {
@@ -93,7 +93,7 @@ class SubEventControllerTest {
             subEventController.delete("SubEvent1", "name", "owner-id");
             subEventController.read();
 
-            HashMap<String, Persistence> subEventMap = subEventController.getEventHashMap();
+            Map<String, Persistence> subEventMap = subEventController.getEventHashMap();
             boolean subEventExists = subEventMap.values().stream().anyMatch(e -> e.getData("name").equals("SubEvent1"));
             assertFalse(subEventExists, "O subevento não foi removido corretamente : " + subEventMap);
         } catch (Exception e) {
