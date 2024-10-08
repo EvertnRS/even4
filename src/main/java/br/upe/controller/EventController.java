@@ -4,7 +4,9 @@ import br.upe.persistence.Persistence;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class EventController implements Controller {
@@ -47,6 +49,26 @@ public class EventController implements Controller {
         }
 
         return isnull;
+    }
+
+    public List<String> list(String ownerId, String fx) {
+        this.read();
+        List<String> userEvents = new ArrayList<>();
+
+        try {
+            for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
+                Persistence persistence = entry.getValue();
+                if (persistence.getData("ownerId").equals(ownerId)) {
+                    userEvents.add(persistence.getData("name"));
+                }
+            }
+            if (userEvents.isEmpty()) {
+                System.out.println("Seu usuário atual é organizador de nenhum evento");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userEvents;
     }
 
     @Override
