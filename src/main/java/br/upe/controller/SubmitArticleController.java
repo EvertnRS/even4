@@ -11,7 +11,8 @@ public class SubmitArticleController implements Controller {
     private HashMap<String, Persistence> articleHashMap;
     private HashMap<String, Persistence> EventHashMap;
 
-    public SubmitArticleController() {
+    @Override
+    public void SubmitArticleController(String string) {
         this.articleHashMap = new HashMap<>();
         this.EventHashMap = new HashMap<>();
     }
@@ -39,11 +40,6 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public void SubmitArticleController(String string) {
-        // Método vazio
-    }
-
-    @Override
     public void create(Object... params) throws FileNotFoundException {
         if (params.length != 2) {
             System.out.println("São necessários 2 parâmetros: nome do evento e caminho do arquivo.");
@@ -52,8 +48,7 @@ public class SubmitArticleController implements Controller {
 
         String eventName = (String) params[0];
         String filePath = (String) params[1];
-        StringBuilder fatherId = new StringBuilder();
-        boolean eventFound = getFatherEventId(eventName, fatherId);
+        boolean eventFound = getFatherEventId(eventName);
         if (eventFound) {
             Persistence article = new SubmitArticle();
             article.create(eventName, filePath);
@@ -101,7 +96,6 @@ public class SubmitArticleController implements Controller {
 
     @Override
     public void read() {
-        // Método read padrão vazio
     }
 
     public void read(Object... params) {
@@ -128,7 +122,7 @@ public class SubmitArticleController implements Controller {
         return false;
     }
 
-    private boolean getFatherEventId(String eventName, StringBuilder fatherId) throws FileNotFoundException {
+    private boolean getFatherEventId(String eventName) {
         EventController ec = new EventController();
         HashMap<String, Persistence> list = ec.getEventHashMap();
         boolean found = false;

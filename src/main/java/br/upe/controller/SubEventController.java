@@ -45,7 +45,6 @@ public class SubEventController implements Controller {
         return data;
     }
 
-
     @Override
     public void SubmitArticleController(String string) {
 
@@ -77,7 +76,7 @@ public class SubEventController implements Controller {
             Persistence subEvent = entry.getValue();
             if (subEvent.getData("name").equals(name)) {
                 nomeEmUso = true;
-                break; //
+                break;
             }
         }
 
@@ -100,17 +99,17 @@ public class SubEventController implements Controller {
         String ownerId = "";
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("name").equals((String) params[0])){
+            if (persistence.getData("name").equals(params[0])){
                 ownerId = persistence.getData("ownerId");
             }
         }
 
-        if (((String) params[1]).equals("name") && ((String) params[2]).equals(ownerId)) {
+        if ((params[1]).equals("name") && (params[2]).equals(ownerId)) {
             Iterator<Map.Entry<String, Persistence>> iterator = subEventHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence subEventindice = entry.getValue();
-                if (subEventindice.getData("name").equals((String) params[0])) {
+                if (subEventindice.getData("name").equals(params[0])) {
                     iterator.remove();
                 }
             }
@@ -232,7 +231,7 @@ public class SubEventController implements Controller {
         return false;
     }
 
-    private String getFatherEventId(String searchId) throws FileNotFoundException {
+    private String getFatherEventId(String searchId) {
         EventController ec = new EventController();
         String fatherId = "";
         HashMap<String, Persistence> list = ec.getEventHashMap();
@@ -249,11 +248,10 @@ public class SubEventController implements Controller {
             System.out.println("Evento pai não encontrado\n");
 
         }
-
         return fatherId;
     }
 
-    private String getFatherOwnerId(String eventId) throws FileNotFoundException {
+    private String getFatherOwnerId(String eventId){
         EventController ec = new EventController();
         String fatherOwnerId = "";
         HashMap<String, Persistence> list = ec.getEventHashMap();

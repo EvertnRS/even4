@@ -108,17 +108,17 @@ public class SessionController implements Controller {
         String ownerId = "";
         for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("name").equals((String) params[0])) {
+            if (persistence.getData("name").equals(params[0])) {
                 ownerId = persistence.getData("ownerId");
             }
         }
 
-        if (((String) params[1]).equals("name") && ((String) params[2]).equals(ownerId)) {
+        if ((params[1]).equals("name") && (params[2]).equals(ownerId)) {
             Iterator<Map.Entry<String, Persistence>> iterator = sessionHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence sessionIndice = entry.getValue();
-                if (sessionIndice.getData("name").equals((String) params[0])) {
+                if (sessionIndice.getData("name").equals(params[0])) {
                     iterator.remove();
                 }
             }
