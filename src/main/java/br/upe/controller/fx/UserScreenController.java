@@ -85,6 +85,25 @@ public class UserScreenController {
         }
     }
 
+    public void handleSubmitEvent() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/submitScreen.fxml"));
+            AnchorPane submitScreen = loader.load();
+
+            SubmitEventScreenController submitEventScreenController = loader.getController();
+            submitEventScreenController.setUserController(userController);
+
+            Scene submitScene = new Scene(submitScreen);
+            Stage stage = (Stage) UserPane.getScene().getWindow();
+
+            stage.setScene(submitScene);
+            stage.setTitle("Even4");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void deleteUser(){
         String cpf = cpfTextField.getText();
 
