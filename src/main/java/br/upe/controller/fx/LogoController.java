@@ -21,12 +21,7 @@ public class LogoController {
     private AnchorPane anchorPane;
 
     @FXML
-    private ImageView imageView;
-
-    @FXML
     public void initialize() {
-        Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/Even4.png")));
-        imageView.setImage(logo);
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.6), event -> {
             changeToLoginScreen();
