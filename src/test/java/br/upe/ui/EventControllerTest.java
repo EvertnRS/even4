@@ -61,9 +61,9 @@ class EventControllerTest {
 
     @Test
     void testDeleteEvent() {
-        eventController.delete("Test Event", "name", "owner-id");
+        eventController.delete("Test Event", "owner-id");
 
         Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        assertFalse(eventMap.values().stream().anyMatch(e -> e.getData("name").equals("Test Event")));
+        assertFalse(eventMap.values().stream().anyMatch(e -> e.getData("id").equals("Test Event")));
     }
 }
