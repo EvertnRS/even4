@@ -11,7 +11,4 @@ public interface Controller {
     void show(Object... params);
     boolean loginValidate(String email, String cpf);
     String getData(String dataToGet);
-
-
-    void SubmitArticleController(String string);
 }

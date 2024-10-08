@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AttendeeControllerTest {
+class AttendeeControllerTest {
 
     private UserController userController;
     private EventController eventController;
@@ -22,7 +22,7 @@ public class AttendeeControllerTest {
     private AttendeeController attendeeController;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         attendeeController = new AttendeeController();
         userController = new UserController();
         eventController = new EventController();
@@ -30,7 +30,7 @@ public class AttendeeControllerTest {
     }
 
     @Test
-    public void testCreateAttendee() throws FileNotFoundException {
+    void testCreateAttendee() throws FileNotFoundException {
         String email = "newusr@example.com";
         String cpf = "09876543211";
         userController.create(email, cpf);
@@ -68,7 +68,7 @@ public class AttendeeControllerTest {
     }
 
     @Test
-    public void testReadAttendees() {
+    void testReadAttendees() {
         attendeeController.read();
 
         HashMap<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
@@ -76,7 +76,7 @@ public class AttendeeControllerTest {
     }
 
     @Test
-    public void testUpdateAttendee() throws FileNotFoundException {
+    void testUpdateAttendee() throws FileNotFoundException {
         String email = "newuser@example.com";
         String cpf = "09876543211";
         userController.create(email, cpf);
@@ -114,7 +114,7 @@ public class AttendeeControllerTest {
     }
 
     @Test
-    public void testDeleteAttendee() throws FileNotFoundException {
+    void testDeleteAttendee() throws FileNotFoundException {
         userController.create("newuser@example.com", "09876543211");
 
         if (userController.loginValidate("newuser@example.com", "09876543211")) {

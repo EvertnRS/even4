@@ -14,14 +14,14 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EventControllerTest {
+class EventControllerTest {
 
     private EventController eventController;
     private HashMap<String, Persistence> mockEventMap;
     private Event testEvent;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         eventController = new EventController();
         mockEventMap = new HashMap<>();
 
@@ -33,12 +33,7 @@ public class EventControllerTest {
     }
 
     @Test
-    public void testCreateEvent() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/events.csv"))) {
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    void testCreateEvent() {
         eventController.create("New Event", "01/11/2024", "New Description", "New Location", "owner-id");
         eventController.read();
 
@@ -48,7 +43,7 @@ public class EventControllerTest {
     }
 
     @Test
-    public void testReadEvent() {
+    void testReadEvent() {
         HashMap<String, Persistence> eventMap = eventController.getEventHashMap();
         assertNotNull(eventMap);
         assertEquals(1, eventMap.size());
@@ -56,7 +51,7 @@ public class EventControllerTest {
     }
 
     @Test
-    public void testUpdateEvent() throws FileNotFoundException {
+    void testUpdateEvent() throws FileNotFoundException {
         eventController.update("Test Event", "Updated Event", "31/12/2024", "Updated Description", "Updated Location", "owner-id");
 
         Event updatedEvent = (Event) eventController.getEventHashMap().get(testEvent.getId());
@@ -67,7 +62,7 @@ public class EventControllerTest {
     }
 
     @Test
-    public void testDeleteEvent() {
+    void testDeleteEvent() {
         eventController.delete("Test Event", "name", "owner-id");
 
         HashMap<String, Persistence> eventMap = eventController.getEventHashMap();

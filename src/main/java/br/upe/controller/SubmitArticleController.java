@@ -9,13 +9,6 @@ import java.util.Map;
 
 public class SubmitArticleController implements Controller {
     private HashMap<String, Persistence> articleHashMap;
-    private HashMap<String, Persistence> EventHashMap;
-
-    @Override
-    public void SubmitArticleController(String string) {
-        this.articleHashMap = new HashMap<>();
-        this.EventHashMap = new HashMap<>();
-    }
 
     public HashMap<String, Persistence> getArticleHashMap() {
         return articleHashMap;
@@ -72,6 +65,7 @@ public class SubmitArticleController implements Controller {
 
     @Override
     public boolean list(String idowner) {
+        // Método não implementado
         return false;
     }
 
@@ -96,6 +90,7 @@ public class SubmitArticleController implements Controller {
 
     @Override
     public void read() {
+        // Método não implementado (Polimorfismo)
     }
 
     public void read(Object... params) {

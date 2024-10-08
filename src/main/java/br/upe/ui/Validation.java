@@ -7,6 +7,11 @@ import java.util.regex.Pattern;
 
 
 public class Validation {
+
+    private Validation() {
+        throw new UnsupportedOperationException("Esta classe não pode ser instanciada.");
+    }
+
     public static boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -48,14 +53,7 @@ public class Validation {
     }
 
     public static boolean areValidTimes(String startTime, String endTime) {
-        if (!isValidTime(startTime)) {
-            return false;
-        }
-
-        if (!isValidTime(endTime)) {
-            return false;
-        }
-        return true;
+        return isValidTime(startTime) && (isValidTime(endTime));
     }
 
     public static boolean isValidTime(String hr) {

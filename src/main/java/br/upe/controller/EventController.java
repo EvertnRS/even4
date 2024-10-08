@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class EventController implements Controller {
     private HashMap<String, Persistence> eventHashMap;
-    private Persistence EventLog;
+    private Persistence eventLog;
 
 
     public EventController() {
@@ -135,13 +135,14 @@ public class EventController implements Controller {
 
     @Override
     public void read() {
-        Persistence eventPersistence = (Persistence) new Event();
+        Persistence eventPersistence = new Event();
         this.eventHashMap = eventPersistence.read();
     }
 
 
     @Override
     public boolean loginValidate(String email, String cpf) {
+        //Método não implementado
         return false;
     }
 
@@ -151,22 +152,17 @@ public class EventController implements Controller {
         String data = "";
         try {
             switch (dataToGet) {
-                case "id" -> data = this.EventLog.getData("id");
-                case "name" -> data = this.EventLog.getData("name");
-                case "description" -> data = this.EventLog.getData("description");
-                case "date" -> data = String.valueOf(this.EventLog.getData("date"));
-                case "location" -> data = this.EventLog.getData("location");
+                case "id" -> data = this.eventLog.getData("id");
+                case "name" -> data = this.eventLog.getData("name");
+                case "description" -> data = this.eventLog.getData("description");
+                case "date" -> data = String.valueOf(this.eventLog.getData("date"));
+                case "location" -> data = this.eventLog.getData("location");
                 default -> throw new IOException();
             }
         } catch (IOException e) {
             System.out.println("Informação não existe ou é restrita");
         }
         return data;
-    }
-
-    @Override
-    public void SubmitArticleController(String string) {
-
     }
 
     @Override

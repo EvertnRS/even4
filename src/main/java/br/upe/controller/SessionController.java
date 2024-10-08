@@ -49,11 +49,6 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public void SubmitArticleController(String string) {
-
-    }
-
-    @Override
     public void create(Object... params) {
         if (params.length != 9) {
             System.out.println("Número incorreto de parâmetros. Esperado: 9");
@@ -275,6 +270,7 @@ public class SessionController implements Controller {
 
     @Override
     public boolean loginValidate(String email, String cpf) {
+        //Método não implementado
         return false;
     }
 
