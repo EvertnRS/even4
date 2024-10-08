@@ -1,4 +1,4 @@
-package br.upe.fx;
+package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
 import javafx.fxml.FXML;

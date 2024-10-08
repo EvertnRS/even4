@@ -1,4 +1,4 @@
-package br.upe.fx;
+package br.upe.controller.fx;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;

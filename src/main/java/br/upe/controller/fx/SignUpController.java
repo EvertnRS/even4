@@ -1,4 +1,4 @@
-package br.upe.fx;
+package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
 import javafx.fxml.FXML;
@@ -15,7 +15,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class LoginScreenController {
+import static br.upe.ui.Validation.isValidCPF;
+import static br.upe.ui.Validation.isValidEmail;
+
+public class SignUpController {
 
     @FXML
     private ImageView imageView;
@@ -41,7 +44,7 @@ public class LoginScreenController {
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
-                        handleLogin();
+                        handleRegister();
                     }
                 });
             }
@@ -60,39 +63,25 @@ public class LoginScreenController {
         });
     }
 
-    public void handleLogin() {
-        String email = emailTextField.getText();
-        String cpf = cpfTextField.getText();
+    public void handleRegister() {
+        String email = emailTextField.getText().trim();
+        String cpf = cpfTextField.getText().trim();
 
         UserController userController = new UserController();
-        if (userController.loginValidate(email, cpf)) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainScreen.fxml"));
-                AnchorPane mainScreen = loader.load();
-
-                MainScreenController mainScreenController = loader.getController();
-                mainScreenController.setUserController(userController);
-
-                Scene mainScene = new Scene(mainScreen);
-                Stage stage = (Stage) loginAnchorPane.getScene().getWindow();
-
-                stage.setScene(mainScene);
-                stage.setTitle("Even4");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (isValidEmail(email) && isValidCPF(cpf)) {
+            userController.create(email.trim(), cpf.trim());
+            returnToLogin();
         } else {
-            errorLabel.setText("Login falhou! Verifique suas credenciais.");
+            errorLabel.setText("Cadastro falhou! Insira informações válidas.");
         }
     }
 
-    public void moveToSignUp(){
+    public void returnToLogin(){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignUpScreen.fxml"));
-            AnchorPane signUpScreen = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/loginScreen.fxml"));
+            AnchorPane loginScreen = loader.load();
 
-            Scene mainScene = new Scene(signUpScreen);
+            Scene mainScene = new Scene(loginScreen);
             Stage stage = (Stage) loginAnchorPane.getScene().getWindow();
 
             stage.setScene(mainScene);
