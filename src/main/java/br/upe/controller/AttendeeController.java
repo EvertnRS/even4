@@ -209,11 +209,12 @@ public class AttendeeController implements Controller {
 
     @Override
     public void show(Object... params) {
-
+        //Método não implementado
     }
 
     @Override
     public boolean loginValidate(String email, String cpf) {
+        //Método não implementado
         return false;
     }
 
@@ -232,11 +233,6 @@ public class AttendeeController implements Controller {
             System.out.println("Informação não existe ou é restrita");
         }
         return data;
-    }
-
-    @Override
-    public void SubmitArticleController(String string) {
-
     }
 
 

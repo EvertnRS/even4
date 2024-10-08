@@ -39,12 +39,6 @@ public class UserController implements Controller {
         return data;
     }
 
-
-    @Override
-    public void SubmitArticleController(String string) {
-
-    }
-
     public void setUserLog(Persistence userLog) {
         this.userLog = userLog;
     }
@@ -117,12 +111,13 @@ public class UserController implements Controller {
 
     @Override
     public boolean list(String idowner) {
+        // Método não implementado
         return false;
     }
 
     @Override
     public void show(Object... params) {
-
+        // Método não implementado
     }
 
     public boolean loginValidate(String email, String cpf) {

@@ -12,13 +12,13 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserControllerTest {
+class UserControllerTest {
 
     private UserController userController;
     private User testUser;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
         userController = new UserController();
         testUser = new User();
 
@@ -38,7 +38,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testCreateUser() {
+    void testCreateUser() {
         userController.create("newuser@example.com", "09876543211");
 
         HashMap<String, Persistence> updatedUserMap = new User().read();
@@ -52,7 +52,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testUpdateUser() {
+    void testUpdateUser() {
         userController.update("updateduser@example.com", "11223344556");
 
         HashMap<String, Persistence> updatedUserMap = new User().read();
@@ -64,7 +64,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testDeleteUser() {
+    void testDeleteUser() {
         userController.delete(testUser.getId(), "id");
 
         HashMap<String, Persistence> updatedUserMap = new User().read();
@@ -72,7 +72,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testRead() {
+    void testRead() {
         HashMap<String, Persistence> userMap = new User().read();
         assertEquals(1, userMap.size());
     }

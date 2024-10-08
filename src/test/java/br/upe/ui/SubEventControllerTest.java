@@ -14,12 +14,12 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SubEventControllerTest {
+class SubEventControllerTest {
 
     private SubEventController subEventController;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/subEvents.csv"))) {
         } catch (IOException e) {
             e.printStackTrace();
@@ -29,7 +29,7 @@ public class SubEventControllerTest {
     }
 
     @Test
-    public void testCreateSubEvent() {
+    void testCreateSubEvent() {
         try {
             EventController eventController = new EventController();
             eventController.create("Event1", "01/12/2024", "Event Description", "Event Location", "owner-id");
@@ -46,7 +46,7 @@ public class SubEventControllerTest {
     }
 
     @Test
-    public void testReadSubEvent() {
+    void testReadSubEvent() {
         try {
             EventController eventController = new EventController();
             eventController.create("Event1", "01/12/2024", "Event Description", "Event Location", "owner-id");
@@ -62,7 +62,7 @@ public class SubEventControllerTest {
     }
 
     @Test
-    public void testUpdateSubEvent() {
+    void testUpdateSubEvent() {
         try {
             EventController eventController = new EventController();
             eventController.create("Event1", "01/12/2024", "Event Description", "Event Location", "owner-id");
@@ -82,7 +82,7 @@ public class SubEventControllerTest {
     }
 
     @Test
-    public void testDeleteSubEvent() {
+    void testDeleteSubEvent() {
         try {
             EventController eventController = new EventController();
             eventController.create("Event1", "01/12/2024", "Event Description", "Event Location", "owner-id");

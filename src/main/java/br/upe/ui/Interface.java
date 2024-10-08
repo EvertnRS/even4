@@ -1,10 +1,7 @@
 package br.upe.ui;
 
 import br.upe.controller.*;
-import br.upe.persistence.SubmitArticle;
-
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
 import java.util.Scanner;
 
 import static br.upe.ui.Validation.*;
@@ -85,7 +82,7 @@ public class Interface {
                     alterFlow(sc, ec, sec, ses, userLogin);
                     break;
                 case 3:
-                    enterFlow(sc, sub, ses, userLogin, ac);
+                    enterFlow(sc, ses, userLogin, ac);
                     break;
                 case 4:
                     if (setup(sc, userLogin)) {
@@ -166,7 +163,7 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void enterFlow(Scanner sc, Controller sub, Controller ses, Controller userLogin, Controller ac) throws FileNotFoundException  {
+    private static void enterFlow(Scanner sc, Controller ses, Controller userLogin, Controller ac) throws FileNotFoundException  {
         SubmitArticleController submitArticleController = new SubmitArticleController();
         int option;
         do {
@@ -179,7 +176,7 @@ public class Interface {
 
             switch (option) {
                 case 1:
-                    listEvents(sc, ses, userLogin, ac);
+                    listEvents(sc, userLogin, ac);
                     break;
                 case 2:
                     choiceEvent(sc, ses, userLogin, ac);
@@ -196,7 +193,7 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void listEvents(Scanner sc, Controller ses, Controller userLogin, Controller ac) throws FileNotFoundException {
+    private static void listEvents(Scanner sc, Controller userLogin, Controller ac) throws FileNotFoundException {
         boolean isnull = ac.list(userLogin.getData("id"));
         if (isnull) {
             return;
