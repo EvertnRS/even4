@@ -62,7 +62,7 @@ class AttendeeControllerTest {
         attendeeController.create("Man", sessionId, userId);
         attendeeController.read();
 
-        HashMap<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
+        Map<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
         boolean attendeeExists = attendees.values().stream().anyMatch(a -> a.getData("name").equals("Man"));
         assertTrue(attendeeExists, "O participante não foi criado corretamente.");
     }
@@ -71,7 +71,7 @@ class AttendeeControllerTest {
     void testReadAttendees() {
         attendeeController.read();
 
-        HashMap<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
+        Map<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
         assertTrue(attendees != null && !attendees.isEmpty(), "A leitura dos participantes falhou.");
     }
 
@@ -108,7 +108,7 @@ class AttendeeControllerTest {
         attendeeController.update("Jane", "353738");
         attendeeController.read();
 
-        HashMap<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
+        Map<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
         boolean attendeeUpdated = attendees.values().stream().anyMatch(a -> a.getData("name").equals("Jane"));
         assertTrue(attendeeUpdated, "O participante não foi atualizado corretamente.");
     }
@@ -126,7 +126,7 @@ class AttendeeControllerTest {
 
         attendeeController.delete(userController.getData("id"), "id", "353738");
 
-        HashMap<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
+        Map<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
         boolean attendeeDeleted = attendees.values().stream().noneMatch(a -> a.getData("name").equals("James"));
         assertTrue(attendeeDeleted, "O participante não foi deletado corretamente.");
     }
