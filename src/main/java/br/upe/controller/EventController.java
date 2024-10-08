@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class EventController implements Controller {
-    private static final Logger LOGGER = Logger.getLogger(AttendeeController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EventController.class.getName());
 
     private Map<String, Persistence> eventHashMap;
     private Persistence eventLog;
