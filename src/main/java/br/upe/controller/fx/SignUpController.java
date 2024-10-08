@@ -18,10 +18,7 @@ import java.util.Objects;
 import static br.upe.ui.Validation.isValidCPF;
 import static br.upe.ui.Validation.isValidEmail;
 
-public class SignUpController {
-
-    @FXML
-    private ImageView imageView;
+public class SignUpController extends BaseController implements FxController {
 
     @FXML
     private TextField emailTextField;
@@ -30,21 +27,23 @@ public class SignUpController {
     private TextField cpfTextField;
 
     @FXML
-    private AnchorPane loginAnchorPane;
+    private AnchorPane registerAnchorPane;
 
     @FXML
     private Label errorLabel;
 
     @FXML
     public void initialize() {
-        Image logo = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/Even4.png")));
-        imageView.setImage(logo);
 
-        loginAnchorPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
+        registerAnchorPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
-                        handleRegister();
+                        try {
+                            handleRegister();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
             }
@@ -63,7 +62,7 @@ public class SignUpController {
         });
     }
 
-    public void handleRegister() {
+    public void handleRegister() throws IOException {
         String email = emailTextField.getText().trim();
         String cpf = cpfTextField.getText().trim();
 
@@ -76,19 +75,12 @@ public class SignUpController {
         }
     }
 
-    public void returnToLogin(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/loginScreen.fxml"));
-            AnchorPane loginScreen = loader.load();
+    public void returnToLogin() throws IOException {
+        genericButton("/fxml/loginScreen.fxml", registerAnchorPane, null);
+    }
 
-            Scene mainScene = new Scene(loginScreen);
-            Stage stage = (Stage) loginAnchorPane.getScene().getWindow();
-
-            stage.setScene(mainScene);
-            stage.setTitle("Even4");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void setUserController(UserController userController) {
+        // Método não implementado
     }
 }
