@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +32,7 @@ class UserControllerTest {
 
         // Configura o estado inicial
         testUser.create("test@example.com", "12345678900");
-        HashMap<String, Persistence> mockUserMap = new HashMap<>();
+        Map<String, Persistence> mockUserMap = new HashMap<>();
         mockUserMap.put(testUser.getId(), testUser);
         userController.setUserHashMap(mockUserMap);
         userController.setUserLog(testUser);
@@ -41,7 +42,7 @@ class UserControllerTest {
     void testCreateUser() {
         userController.create("newuser@example.com", "09876543211");
 
-        HashMap<String, Persistence> updatedUserMap = new User().read();
+        Map<String, Persistence> updatedUserMap = new User().read();
         Persistence newUser = updatedUserMap.values().stream()
                 .filter(user -> "newuser@example.com".equals(user.getData("email")))
                 .findFirst()
@@ -55,7 +56,7 @@ class UserControllerTest {
     void testUpdateUser() {
         userController.update("updateduser@example.com", "11223344556");
 
-        HashMap<String, Persistence> updatedUserMap = new User().read();
+        Map<String, Persistence> updatedUserMap = new User().read();
         Persistence updatedUser = updatedUserMap.get(testUser.getId());
 
         assertNotNull(updatedUser);
@@ -67,13 +68,13 @@ class UserControllerTest {
     void testDeleteUser() {
         userController.delete(testUser.getId(), "id");
 
-        HashMap<String, Persistence> updatedUserMap = new User().read();
+        Map<String, Persistence> updatedUserMap = new User().read();
         assertFalse(updatedUserMap.containsKey(testUser.getId()));
     }
 
     @Test
     void testRead() {
-        HashMap<String, Persistence> userMap = new User().read();
+        Map<String, Persistence> userMap = new User().read();
         assertEquals(1, userMap.size());
     }
 }

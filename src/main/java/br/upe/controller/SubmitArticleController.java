@@ -4,17 +4,16 @@ import br.upe.persistence.Persistence;
 import br.upe.persistence.SubmitArticle;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class SubmitArticleController implements Controller {
-    private HashMap<String, Persistence> articleHashMap;
+    private Map<String, Persistence> articleHashMap;
 
-    public HashMap<String, Persistence> getArticleHashMap() {
+    public Map<String, Persistence> getArticleHashMap() {
         return articleHashMap;
     }
 
-    public void setArticleHashMap(HashMap<String, Persistence> articleHashMap) {
+    public void setArticleHashMap(Map<String, Persistence> articleHashMap) {
         this.articleHashMap = articleHashMap;
     }
 
@@ -119,7 +118,7 @@ public class SubmitArticleController implements Controller {
 
     private boolean getFatherEventId(String eventName) {
         EventController ec = new EventController();
-        HashMap<String, Persistence> list = ec.getEventHashMap();
+        Map<String, Persistence> list = ec.getEventHashMap();
         boolean found = false;
         for (Map.Entry<String, Persistence> entry : list.entrySet()) {
             Persistence listindice = entry.getValue();

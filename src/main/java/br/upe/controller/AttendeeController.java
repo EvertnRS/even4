@@ -5,23 +5,22 @@ import br.upe.persistence.Persistence;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class AttendeeController implements Controller {
-    private Map<String, Persistence> attendeeHashMap; // Alterado para Map
+    private Map<String, Persistence> attendeeHashMap;
     private Persistence attendeeLog;
 
     public AttendeeController() {
         this.read();
     }
 
-    public Map<String, Persistence> getAttendeeHashMap() { // Alterado para Map
+    public Map<String, Persistence> getAttendeeHashMap() {
         return attendeeHashMap;
     }
 
-    public void setAttendeeHashMap(Map<String, Persistence> attendeeHashMap) { // Alterado para Map
+    public void setAttendeeHashMap(Map<String, Persistence> attendeeHashMap) {
         this.attendeeHashMap = attendeeHashMap;
     }
 
@@ -148,7 +147,7 @@ public class AttendeeController implements Controller {
 
     private boolean validateSessionId (String sessionId) {
         SessionController sessionController = new SessionController();
-        HashMap<String, Persistence> sessH = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessH = sessionController.getSessionHashMap();
         boolean hasSession = false;
         for (Map.Entry<String, Persistence> entry : sessH.entrySet()) {
             Persistence session = entry.getValue();
@@ -190,7 +189,7 @@ public class AttendeeController implements Controller {
         String location = "";
         String startTime = "";
         SessionController sessionController = new SessionController();
-        HashMap<String, Persistence> sessH = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessH = sessionController.getSessionHashMap();
 
         for (Map.Entry<String, Persistence> entry : sessH.entrySet()) {
             Persistence persistence = entry.getValue();

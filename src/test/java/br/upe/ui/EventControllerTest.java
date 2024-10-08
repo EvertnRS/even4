@@ -6,11 +6,9 @@ import br.upe.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,14 +35,14 @@ class EventControllerTest {
         eventController.create("New Event", "01/11/2024", "New Description", "New Location", "owner-id");
         eventController.read();
 
-        HashMap<String, Persistence> eventMap = eventController.getEventHashMap();
+        Map<String, Persistence> eventMap = eventController.getEventHashMap();
         boolean eventExists = eventMap.values().stream().anyMatch(e -> e.getData("name").equals("New Event"));
         assertTrue(eventExists, "O evento criado não foi encontrado.");
     }
 
     @Test
     void testReadEvent() {
-        HashMap<String, Persistence> eventMap = eventController.getEventHashMap();
+        Map<String, Persistence> eventMap = eventController.getEventHashMap();
         assertNotNull(eventMap);
         assertEquals(1, eventMap.size());
         assertEquals("Test Event", testEvent.getData("name"));
@@ -65,7 +63,7 @@ class EventControllerTest {
     void testDeleteEvent() {
         eventController.delete("Test Event", "name", "owner-id");
 
-        HashMap<String, Persistence> eventMap = eventController.getEventHashMap();
+        Map<String, Persistence> eventMap = eventController.getEventHashMap();
         assertFalse(eventMap.values().stream().anyMatch(e -> e.getData("name").equals("Test Event")));
     }
 }

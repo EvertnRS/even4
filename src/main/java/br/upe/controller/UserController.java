@@ -3,23 +3,22 @@ package br.upe.controller;
 import br.upe.persistence.Persistence;
 import br.upe.persistence.User;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class UserController implements Controller {
-    private HashMap<String, Persistence> userHashMap;
+    private Map<String, Persistence> userHashMap;
     private Persistence userLog;
 
     public UserController() {
         this.read();
     }
 
-    public HashMap<String, Persistence> getUserHashMap() {
+    public Map<String, Persistence> getUserHashMap() {
         return userHashMap;
     }
 
-    public void setUserHashMap(HashMap<String, Persistence> userHashMap) {
+    public void setUserHashMap(Map<String, Persistence> userHashMap) {
         this.userHashMap = userHashMap;
     }
 
