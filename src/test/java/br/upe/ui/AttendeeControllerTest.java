@@ -30,103 +30,98 @@ class AttendeeControllerTest {
 
     @Test
     void testCreateAttendee() throws FileNotFoundException {
-        String email = "newusr@example.com";
-        String cpf = "09876543211";
-        userController.create(email, cpf);
+        attendeeExists();
 
-        userController.read();
-        String userId = null;
+        Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
+        boolean attendeeCreated = attendeeMap.values().stream()
+                .anyMatch(attendee -> attendee.getData("name").equals("Man"));
+        assertTrue(attendeeCreated, "O participante criado não foi encontrado.");
 
-        for (Map.Entry<String, Persistence> entry : userController.getUserHashMap().entrySet()) {
-            Persistence user = entry.getValue();
-            if (user.getData("email").equals(email)) {
-                userId = user.getData("id");
-                break;
-            }
-        }
-
-        eventController.create("TestEvent", "31/12/2024", "Description", "Location", "owner-id");
-        sessionController.create("TestEvent", "SessionId1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
-
-        String sessionId = null;
-        sessionController.read();
-        for (Map.Entry<String, Persistence> entry : sessionController.getSessionHashMap().entrySet()) {
-            Persistence session = entry.getValue();
-            if (session.getData("name").equals("SessionId1")) {
-                sessionId = session.getData("id");
-                break;
-            }
-        }
-
-        attendeeController.create("Man", sessionId, userId);
-        attendeeController.read();
-
-        Map<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
-        boolean attendeeExists = attendees.values().stream().anyMatch(a -> a.getData("name").equals("Man"));
-        assertTrue(attendeeExists, "O participante não foi criado corretamente.");
-    }
-
-    @Test
-    void testReadAttendees() {
-        attendeeController.read();
-
-        Map<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
-        assertTrue(attendees != null && !attendees.isEmpty(), "A leitura dos participantes falhou.");
+        attendeeDelete();
     }
 
     @Test
     void testUpdateAttendee() throws FileNotFoundException {
-        String email = "newuser@example.com";
-        String cpf = "09876543211";
-        userController.create(email, cpf);
+        attendeeExists();
 
-        userController.read();
-        String userId = null;
+        attendeeController.update("Duda", sessionController.getSessionHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null));
 
-        for (Map.Entry<String, Persistence> entry : userController.getUserHashMap().entrySet()) {
-            Persistence user = entry.getValue();
-            if (user.getData("email").equals(email)) {
-                userId = user.getData("id");
-                break;
+        Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
+        boolean attendeeUpdated = attendeeMap.values().stream()
+                .anyMatch(attendee -> attendee.getData("name").equals("Duda"));
+        assertTrue(attendeeUpdated, "O Participante não foi atualizado.");
+
+        attendeeDelete();
+    }
+
+    @Test
+    void testReadAttendee() throws FileNotFoundException {
+        attendeeExists();
+
+        boolean loginSuccessful = userController.loginValidate("newuser@example.com", "09876543211");
+        assertTrue(loginSuccessful, "Login falhou, não é possível atualizar o usuário");
+        String userId = userController.getData("id");
+
+        String attendeeReaded = "";
+        Map<String, Persistence> attendeeHashMap = attendeeController.getAttendeeHashMap();
+        for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
+            Persistence persistence = entry.getValue();
+            if (persistence.getData("userId").equals(userId)) {
+                attendeeReaded = persistence.getData("name");
             }
         }
-
-        eventController.create("TestEvent", "31/12/2024", "Description", "Location", "owner-id");
-        sessionController.create("TestEvent", "SessionId1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
-
-        String sessionId = null;
-        for (Map.Entry<String, Persistence> entry : sessionController.getSessionHashMap().entrySet()) {
-            Persistence session = entry.getValue();
-            if (session.getData("name").equals("SessionId1")) {
-                sessionId = session.getData("id");
-                break;
-            }
-        }
-
-        attendeeController.create("Man", sessionId, userId);
-        attendeeController.update("Jane", "353738");
-        attendeeController.read();
-
-        Map<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
-        boolean attendeeUpdated = attendees.values().stream().anyMatch(a -> a.getData("name").equals("Jane"));
-        assertTrue(attendeeUpdated, "O participante não foi atualizado corretamente.");
+        assertEquals("Man", attendeeReaded, "A sessão não foi lida.");
+        attendeeDelete();
     }
 
     @Test
     void testDeleteAttendee() throws FileNotFoundException {
-        userController.create("newuser@example.com", "09876543211");
+        attendeeExists();
+        attendeeDelete();
 
-        if (userController.loginValidate("newuser@example.com", "09876543211")) {
-            userController.setUserLog(userController.getUserHashMap().values().iterator().next());
+        Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
+        boolean attendeeDeleted = attendeeMap.values().stream()
+                .noneMatch(attendee -> attendee.getData("name").equals("Man"));
+        assertTrue(attendeeDeleted, "A sessão não foi deletada.");
+
+    }
+
+    void attendeeExists() throws FileNotFoundException {
+        boolean sessionExists = attendeeController.getAttendeeHashMap().values().stream()
+                .anyMatch(attendee -> attendee.getData("name").equals("Man"));
+
+        if (!sessionExists) {
+            userController.create("newuser@example.com", "09876543211");
+            userController.read();
+            boolean loginSuccessful = userController.loginValidate("newuser@example.com", "09876543211");
+            assertTrue(loginSuccessful, "Login falhou, não é possível atualizar o usuário");
+            String userId = userController.getData("id");
+
+            eventController.create("Event2", "01/12/2024", "Event Description", "Event Location", userId);
+            eventController.read();
+            sessionController.create("Event2", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", userId, "Event");
+            sessionController.read();
+
+            String sessionId = sessionController.getSessionHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null);
+            attendeeController.create("Man", sessionId, userId);
+            attendeeController.read();
+
+
         }
+    }
 
-        attendeeController.create("James", "353738", userController.getData("id"));
-        attendeeController.read();
+    void attendeeDelete() {
+        boolean loginSuccessful = userController.loginValidate("newuser@example.com", "09876543211");
+        assertTrue(loginSuccessful, "Login falhou, não é possível atualizar o usuário");
+        String userId = userController.getData("id");
+        userController.delete(userId, "id");
 
-        attendeeController.delete(userController.getData("id"), "id", "353738");
+        String sessionId = sessionController.getSessionHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null);
+        sessionController.delete(sessionId, userId);
 
-        Map<String, Persistence> attendees = attendeeController.getAttendeeHashMap();
-        boolean attendeeDeleted = attendees.values().stream().noneMatch(a -> a.getData("name").equals("James"));
-        assertTrue(attendeeDeleted, "O participante não foi deletado corretamente.");
+        attendeeController.delete(userId, "id", sessionId);
+
+        String eventId = eventController.getEventHashMap().values().stream().filter(event -> event.getData("name").equals("Event2")).findFirst().map(event -> event.getData("id")).orElse(null);
+        eventController.delete(eventId, userId);
     }
 }

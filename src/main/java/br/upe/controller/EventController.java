@@ -169,7 +169,6 @@ public class EventController implements Controller {
         return false;
     }
 
-
     @Override
     public String getData(String dataToGet) {
         String data = "";

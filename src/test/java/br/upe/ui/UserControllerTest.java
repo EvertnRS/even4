@@ -1,80 +1,84 @@
 package br.upe.ui;
 
 import br.upe.controller.UserController;
-import br.upe.persistence.User;
 import br.upe.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
 
     private UserController userController;
-    private User testUser;
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         userController = new UserController();
-        testUser = new User();
-
-        File file = new File("./db/users.csv");
-        if (file.exists()) {
-            if (!file.delete()) {
-                throw new IOException("Não foi possível excluir o arquivo.");
-            }
-        }
-
-        // Configura o estado inicial
-        testUser.create("test@example.com", "12345678900");
-        Map<String, Persistence> mockUserMap = new HashMap<>();
-        mockUserMap.put(testUser.getId(), testUser);
-        userController.setUserHashMap(mockUserMap);
-        userController.setUserLog(testUser);
     }
 
     @Test
     void testCreateUser() {
-        userController.create("newuser@example.com", "09876543211");
+        userExists();
 
-        Map<String, Persistence> updatedUserMap = new User().read();
-        Persistence newUser = updatedUserMap.values().stream()
-                .filter(user -> "newuser@example.com".equals(user.getData("email")))
-                .findFirst()
-                .orElse(null);
-
-        assertNotNull(newUser);
-        assertEquals("newuser@example.com", newUser.getData("email"));
+        Map<String, Persistence> userHashMap = userController.getUserHashMap();
+        boolean userCreated = userHashMap.values().stream()
+                .anyMatch(user -> user.getData("email").equals("newuser@example.com"));
+        assertTrue(userCreated);
+        userController.delete(userController.getData("id"), "id");
     }
 
     @Test
     void testUpdateUser() {
+        userExists();
+
         userController.update("updateduser@example.com", "11223344556");
+        boolean updateSuccessful = userController.loginValidate("updateduser@example.com", "11223344556");
+        assertTrue(updateSuccessful, "Login falhou, não é possível atualizar o usuário");
 
-        Map<String, Persistence> updatedUserMap = new User().read();
-        Persistence updatedUser = updatedUserMap.get(testUser.getId());
+        assertEquals("updateduser@example.com", userController.getData("email"));
 
-        assertNotNull(updatedUser);
-        assertEquals("updateduser@example.com", updatedUser.getData("email"));
-        assertEquals("11223344556", updatedUser.getData("cpf"));
-    }
-
-    @Test
-    void testDeleteUser() {
-        userController.delete(testUser.getId(), "id");
-
-        Map<String, Persistence> updatedUserMap = new User().read();
-        assertFalse(updatedUserMap.containsKey(testUser.getId()));
+        userController.delete(userController.getData("id"), "id");
     }
 
     @Test
     void testRead() {
-        Map<String, Persistence> userMap = new User().read();
-        assertEquals(1, userMap.size());
+        userExists();
+
+        String userReaded = "";
+        Map<String, Persistence> userHashMap = userController.getUserHashMap();
+        for (Map.Entry<String, Persistence> entry : userHashMap.entrySet()) {
+            Persistence persistence = entry.getValue();
+            if (persistence.getData("email").equals("newuser@example.com")) {
+                userReaded = persistence.getData("id");;
+            }
+        }
+
+        assertEquals(userController.getData("id"), userReaded);
+        userController.delete(userController.getData("id"), "id");
+    }
+
+    @Test
+    void testDeleteUser() {
+        userExists();
+
+        userController.delete(userController.getData("id"), "id");
+
+        boolean deleteSuccessful = userController.getUserHashMap().values().stream()
+                .anyMatch(user -> user.getData("email").equals("newuser@example.com"));
+        assertFalse(deleteSuccessful);
+
+    }
+
+    void userExists() {
+        boolean userExists = userController.getUserHashMap().values().stream()
+                .anyMatch(user -> user.getData("email").equals("newuser@example.com"));
+
+        if (!userExists) {
+            userController.create("newuser@example.com", "09876543211");
+            userController.read();
+        }
+
+        boolean loginSuccessful = userController.loginValidate("newuser@example.com", "09876543211");
+        assertTrue(loginSuccessful, "Login falhou, não é possível atualizar o usuário");
     }
 }
