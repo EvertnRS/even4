@@ -1,13 +1,17 @@
 package br.upe.persistence;
 
+import br.upe.controller.SubmitArticleController;
+
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Session implements Persistence {
+    private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
     private String id;
     private String name;
     private String date;
@@ -35,7 +39,7 @@ public class Session implements Persistence {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -56,7 +60,7 @@ public class Session implements Persistence {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
     }
 
@@ -142,7 +146,7 @@ public class Session implements Persistence {
 
     public void create(Object... params) {
         if (params.length < 9) {
-            System.out.println("Só pode ter 9 parâmetros");
+            LOGGER.warning("Só pode ter 9 parâmetros");
             return; // Adicionando return para sair da função se o número de parâmetros estiver incorreto
         }
 
@@ -180,7 +184,7 @@ public class Session implements Persistence {
             }
 
             if (event == null) {
-                System.out.println("Evento não encontrado.");
+                LOGGER.warning("Evento não encontrado.");
                 return;
             }
 
@@ -190,7 +194,7 @@ public class Session implements Persistence {
             }
 
             Session session = new Session();
-            System.out.println("IdEvent " + event.getId());
+            LOGGER.warning("IdEvent " + event.getId());
             session.setId(id);
             session.setName(name);
             session.setDate(date);
@@ -200,17 +204,17 @@ public class Session implements Persistence {
             session.setEndTime(endTime);
             session.setOwnerId(ownerId);
             sessionList.add(session);
-            System.out.println("Sessão Criada: " + session.getId());
+            LOGGER.warning("Sessão Criada: " + session.getId());
 
             // Se necessário, atualizar o evento com a nova lista de sessões
             event.setSessionsList(sessionList);
 
             eventH.put(eventId, event);
 
-            System.out.println("Sessões atuais: " + sessionList.size());
+            LOGGER.warning("Sessões atuais: " + sessionList.size());
 
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
@@ -252,7 +256,7 @@ public class Session implements Persistence {
             reader.close();
 
         } catch (IOException readerEx) {
-            System.out.println("Erro ao ler o arquivo");
+            LOGGER.warning("Erro ao ler o arquivo");
             readerEx.printStackTrace();
         }
         return list;
@@ -265,7 +269,7 @@ public class Session implements Persistence {
 
     public void update(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> sessionHashMap = (HashMap<String, Persistence>) params[0];
@@ -277,16 +281,16 @@ public class Session implements Persistence {
                 writer.write(line);
             }
             writer.close();
-            System.out.println("Sessão Atualizada");
+            LOGGER.warning("Sessão Atualizada");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
 
     public void delete(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> sessionHashMap = (HashMap<String, Persistence>) params[0];
@@ -298,9 +302,9 @@ public class Session implements Persistence {
                 writer.write(line);
             }
             writer.close();
-            System.out.println("Sessão Removida");
+            LOGGER.warning("Sessão Removida");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }

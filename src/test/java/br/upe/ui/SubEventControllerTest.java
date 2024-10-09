@@ -89,24 +89,30 @@ class SubEventControllerTest {
         try {
             // Verifica se o evento principal já existe
             boolean eventExists = eventController.getEventHashMap().values().stream()
-                    .anyMatch(event -> event.getData("name").equals("Event3"));
+                    .anyMatch(event -> event.getData("name").equals("Event4"));
 
             // Se o evento não existir, cria-o
             if (!eventExists) {
-                eventController.create("Event3", "01/12/2024", "Event Description", "Event Location", "owner-id");
+                eventController.create("Event4", "01/12/2024", "Event Description", "Event Location", "owner-id");
             }
 
             // Cria um subevento dentro desse evento
-            subEventController.create("Event3", "SubEvent1", "02/12/2024", "Description", "Location", "owner-id");
+            subEventController.create("Event4", "SubEvent3", "02/12/2024", "Description", "Location", "owner-id");
             subEventController.read();
 
             // Atualiza o subevento
-            subEventController.update("SubEvent1", "Updated SubEvent", "15/11/2024", "Updated Description", "Updated Location", "owner-id");
+            subEventController.update("SubEvent3", "Updated", "15/11/2024", "Updated Description", "Updated Location", "owner-id");
             subEventController.read();
 
             // Verifica se o subevento foi atualizado corretamente
             Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
-            boolean isUpdated = subEventMap.values().stream().anyMatch(e -> e.getData("name").equals("Updated SubEvent"));
+            boolean isUpdated = false;
+            for (Map.Entry<String, Persistence> entry : subEventMap.entrySet()) {
+                Persistence persistence = entry.getValue();
+                if (persistence.getData("name").equals("Updated")) {
+                    isUpdated = true;
+                }
+            }
             assertTrue(isUpdated, "O subevento não foi atualizado corretamente: " + subEventMap);
         } catch (Exception e) {
             e.printStackTrace();

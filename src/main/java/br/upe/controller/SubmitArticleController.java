@@ -5,9 +5,11 @@ import br.upe.persistence.SubmitArticle;
 
 import java.io.FileNotFoundException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class SubmitArticleController implements Controller {
     private Map<String, Persistence> articleHashMap;
+    private static final Logger LOGGER = Logger.getLogger(SubmitArticleController.class.getName());
 
     public Map<String, Persistence> getArticleHashMap() {
         return articleHashMap;
@@ -26,7 +28,7 @@ public class SubmitArticleController implements Controller {
                 data = article.getData(dataToGet);
             }
         } catch (Exception e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -34,7 +36,7 @@ public class SubmitArticleController implements Controller {
     @Override
     public void create(Object... params) throws FileNotFoundException {
         if (params.length != 2) {
-            System.out.println("São necessários 2 parâmetros: nome do evento e caminho do arquivo.");
+            LOGGER.warning("São necessários 2 parâmetros: nome do evento e caminho do arquivo.");
             return;
         }
 
@@ -45,14 +47,14 @@ public class SubmitArticleController implements Controller {
             Persistence article = new SubmitArticle();
             article.create(eventName, filePath);
         } else {
-            System.out.println("Evento não encontrado.");
+            LOGGER.warning("Evento não encontrado.");
         }
     }
 
     @Override
     public void delete(Object... params) {
         if (params.length != 1) {
-            System.out.println("São necessários 1 parâmetro: nome do arquivo.");
+            LOGGER.warning("São necessários 1 parâmetro: nome do arquivo.");
             return;
         }
 
@@ -76,7 +78,7 @@ public class SubmitArticleController implements Controller {
     @Override
     public void update(Object... params) {
         if (params.length != 2) {
-            System.out.println("São necessários 2 parâmetros: nome do artigo e caminho do novo arquivo.");
+            LOGGER.warning("São necessários 2 parâmetros: nome do artigo e caminho do novo arquivo.");
             return;
         }
 
@@ -94,7 +96,7 @@ public class SubmitArticleController implements Controller {
 
     public void read(Object... params) {
         if (params.length != 1) {
-            System.out.println("É necessário 1 parâmetro: nome do evento.");
+            LOGGER.warning("É necessário 1 parâmetro: nome do evento.");
             return;
         }
 
@@ -102,11 +104,11 @@ public class SubmitArticleController implements Controller {
         Persistence articlePersistence = new SubmitArticle();
         this.articleHashMap = articlePersistence.read(eventName);
         if (this.articleHashMap.isEmpty()) {
-            System.out.println("Nenhum artigo encontrado para o evento: " + eventName);
+            LOGGER.warning("Nenhum artigo encontrado para o evento: " + eventName);
         } else {
-            System.out.println("Artigos encontrados para o evento: " + eventName);
+            LOGGER.warning("Artigos encontrados para o evento: " + eventName);
             for (String articleName : this.articleHashMap.keySet()) {
-                System.out.println(articleName);
+                LOGGER.warning(articleName);
             }
         }
     }

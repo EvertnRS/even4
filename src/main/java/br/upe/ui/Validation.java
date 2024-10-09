@@ -1,13 +1,16 @@
 package br.upe.ui;
+import br.upe.persistence.SubEvent;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class Validation {
-
+    private static final Logger LOGGER = Logger.getLogger(SubEvent.class.getName());
     private Validation() {
         throw new UnsupportedOperationException("Esta classe não pode ser instanciada.");
     }
@@ -38,17 +41,17 @@ public class Validation {
                 LocalDate dateNow = LocalDate.now();
 
                 if (dateValidate.isBefore(dateNow)) {
-                    System.out.println("A data '" + dt + "' é anterior à data de hoje.");
+                    LOGGER.warning("A data '" + dt + "' é anterior à data de hoje.");
                     return false;
                 }
 
                 return true;
             } catch (DateTimeParseException e) {
-                System.out.println("Erro ao validar data: " + e.getMessage());
+                LOGGER.warning("Erro ao validar data: " + e.getMessage());
                 return false;
             }
         }
-        System.out.println("Formato de data inválido. Use o formato dd/MM/yyyy.");
+        LOGGER.warning("Formato de data inválido. Use o formato dd/MM/yyyy.");
         return false;
     }
 
@@ -67,17 +70,17 @@ public class Validation {
             int minute = Integer.parseInt(time[1]);
 
             if (hour < 0 || hour > 23) {
-                System.out.println("Horário inválido");
+                LOGGER.warning("Horário inválido");
                 return false;
             }
 
             if (minute < 0 || minute > 59) {
-                System.out.println("Horário inválido");
+                LOGGER.warning("Horário inválido");
                 return false;
             }
             return true;
         }
-    System.out.println("Formato de hora inválido. Use o formato hh:mm");
+        LOGGER.warning("Formato de hora inválido. Use o formato hh:mm");
     return false;
     }
 }
