@@ -32,7 +32,7 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", sessionPane, userController);
+        genericButton("/fxml/subEventScreen.fxml", sessionPane, userController);
     }
 
     public void handleSubmit() throws IOException {

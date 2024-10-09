@@ -109,7 +109,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" text="Subevent" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" text="Subevent" onAction="#handleSubEvent"/>
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
