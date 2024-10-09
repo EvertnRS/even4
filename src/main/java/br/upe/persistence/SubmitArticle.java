@@ -2,8 +2,10 @@ package br.upe.persistence;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class SubmitArticle implements Persistence {
+    private static final Logger LOGGER = Logger.getLogger(SubEvent.class.getName());
     private String name;
     private String path;
 
@@ -39,7 +41,7 @@ public class SubmitArticle implements Persistence {
     public HashMap<String, Persistence> read(Object... params) {
         HashMap<String, Persistence> articles = new HashMap<>();
         if (params.length != 1) {
-            System.out.println("É necessário 1 parâmetro: nome do evento.");
+            LOGGER.warning("É necessário 1 parâmetro: nome do evento.");
             return articles;
         }
 
@@ -48,7 +50,7 @@ public class SubmitArticle implements Persistence {
 
         File eventFolder = new File(eventFolderPath);
         if (!eventFolder.exists()) {
-            System.out.println("Pasta do evento não encontrada: " + eventFolderPath);
+            LOGGER.warning("Pasta do evento não encontrada: " + eventFolderPath);
             return articles;
         }
 
@@ -79,7 +81,7 @@ public class SubmitArticle implements Persistence {
     @Override
     public void create(Object... params) {
         if (params.length != 2) {
-            System.out.println("São necessários 2 parâmetros: nome do evento e caminho do arquivo.");
+            LOGGER.warning("São necessários 2 parâmetros: nome do evento e caminho do arquivo.");
             return;
         }
 
@@ -93,32 +95,32 @@ public class SubmitArticle implements Persistence {
         File destinationFile = new File(eventFolder, fileToMove.getName());
         if (!eventFolder.exists()) {
             if (eventFolder.mkdirs()) {
-                System.out.println("Pasta do evento criada com sucesso: " + eventFolderPath);
+                LOGGER.warning("Pasta do evento criada com sucesso: " + eventFolderPath);
             } else {
-                System.out.println("Erro ao criar a pasta do evento: " + eventFolderPath);
+                LOGGER.warning("Erro ao criar a pasta do evento: " + eventFolderPath);
                 return;
             }
         }
         if (!fileToMove.exists()) {
-            System.out.println("Arquivo a ser movido não existe: " + filePath);
+            LOGGER.warning("Arquivo a ser movido não existe: " + filePath);
             return;
         }
 
         try {
             if (fileToMove.renameTo(destinationFile)) {
-                System.out.println("Arquivo movido com sucesso para: " + destinationFile.getAbsolutePath());
+                LOGGER.warning("Arquivo movido com sucesso para: " + destinationFile.getAbsolutePath());
             } else {
-                System.out.println("Erro ao mover o arquivo.");
+                LOGGER.warning("Erro ao mover o arquivo.");
             }
         } catch (Exception e) {
-            System.out.println("Erro ao mover o arquivo: " + e.getMessage());
+            LOGGER.warning("Erro ao mover o arquivo: " + e.getMessage());
         }
     }
 
     @Override
     public void update(Object... params) {
         if (params.length != 2) {
-            System.out.println("São necessários 2 parâmetros: nome do artigo e caminho do novo arquivo.");
+            LOGGER.warning("São necessários 2 parâmetros: nome do artigo e caminho do novo arquivo.");
             return;
         }
 
@@ -127,7 +129,7 @@ public class SubmitArticle implements Persistence {
 
         File newFile = new File(newFilePath);
         if (!newFile.exists()) {
-            System.out.println("Novo arquivo não existe: " + newFilePath);
+            LOGGER.warning("Novo arquivo não existe: " + newFilePath);
             return;
         }
 
@@ -140,22 +142,22 @@ public class SubmitArticle implements Persistence {
                 if (oldFile.exists()) {
                     boolean deleted = oldFile.delete();
                     if (deleted) {
-                        System.out.println("Arquivo antigo deletado com sucesso: " + oldFile.getAbsolutePath());
+                        LOGGER.warning("Arquivo antigo deletado com sucesso: " + oldFile.getAbsolutePath());
                     } else {
-                        System.out.println("Erro ao deletar o arquivo: " + oldFile.getAbsolutePath());
+                        LOGGER.warning("Erro ao deletar o arquivo: " + oldFile.getAbsolutePath());
                         return;
                     }
                 }
             }
         }
 
-        System.out.println("Arquivo não encontrado.");
+        LOGGER.warning("Arquivo não encontrado.");
     }
 
     @Override
     public void delete(Object... params) {
         if (params.length != 1) {
-            System.out.println("São necessários 1 parâmetro: nome do arquivo.");
+            LOGGER.warning("São necessários 1 parâmetro: nome do arquivo.");
             return;
         }
 
@@ -168,15 +170,15 @@ public class SubmitArticle implements Persistence {
                 File fileToDelete = new File(eventFolder, fileName);
                 if (fileToDelete.exists()) {
                     if (fileToDelete.delete()) {
-                        System.out.println("Arquivo deletado com sucesso.");
+                        LOGGER.warning("Arquivo deletado com sucesso.");
                     } else {
-                        System.out.println("Erro ao deletar o arquivo.");
+                        LOGGER.warning("Erro ao deletar o arquivo.");
                     }
                     return;
                 }
             }
         }
 
-        System.out.println("Arquivo não encontrado.");
+        LOGGER.warning("Arquivo não encontrado.");
     }
 }

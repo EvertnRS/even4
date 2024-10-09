@@ -44,7 +44,7 @@ public class EventController implements Controller {
                 }
             }
             if (!found){
-                LOGGER.warning("Seu usuário atual é organizador de nenhum evento");
+                LOGGER.warning("Seu usuário atual Não é organizador de nenhum evento");
             }
         } catch (Exception e) {
             e.printStackTrace();

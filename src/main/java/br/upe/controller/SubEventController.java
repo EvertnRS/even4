@@ -41,7 +41,7 @@ public class SubEventController implements Controller {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -49,7 +49,7 @@ public class SubEventController implements Controller {
     @Override
     public void create(Object... params) throws FileNotFoundException {
         if (params.length != 6) {
-            System.out.println("Só pode ter 6 parâmetros");
+            LOGGER.warning("Só pode ter 6 parâmetros");
             return;
         }
 
@@ -63,7 +63,7 @@ public class SubEventController implements Controller {
         String eventOwnerId = getFatherOwnerId(eventId);
 
         if (!eventOwnerId.equals(userId)) {
-            System.out.println("Você não pode criar um subevento para um evento que você não possui.");
+            LOGGER.warning("Você não pode criar um subevento para um evento que você não possui.");
             return;
         }
 
@@ -77,7 +77,7 @@ public class SubEventController implements Controller {
         }
 
         if (nomeEmUso || name.isEmpty()) {
-            System.out.println("Nome vazio ou em uso");
+            LOGGER.warning("Nome vazio ou em uso");
             return;
         }
 
@@ -112,7 +112,7 @@ public class SubEventController implements Controller {
             Persistence SubEventPersistence = new SubEvent();
             SubEventPersistence.delete(subEventHashMap);
         } else {
-            System.out.println("Você não pode deletar esse SubEvento");
+            LOGGER.warning("Você não pode deletar esse SubEvento");
         }
     }
 
@@ -125,13 +125,13 @@ public class SubEventController implements Controller {
             for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("ownerId").equals(idowner)){
-                    System.out.println(persistence.getData("name"));
+                    LOGGER.warning(persistence.getData("name"));
                     found = true;
                     isnull = false;
                 }
             }
             if (!found){
-                System.out.println("Seu usuário atual é organizador de nenhum SubEvento\n");
+                LOGGER.warning("Seu usuário atual é organizador de nenhum SubEvento\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,7 +145,7 @@ public class SubEventController implements Controller {
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (!persistence.getData("ownerId").equals(params[0])){
-                System.out.println(persistence.getData("name") + " - " + persistence.getData("id"));
+                LOGGER.warning(persistence.getData("name") + " - " + persistence.getData("id"));
             }
         }
     }
@@ -153,7 +153,7 @@ public class SubEventController implements Controller {
     @Override
     public void update(Object... params) throws FileNotFoundException {
         if (params.length != 6) {
-            System.out.println("Só pode ter 6 parametros");
+            LOGGER.warning("Só pode ter 6 parametros");
             return;
         }
 
@@ -191,7 +191,7 @@ public class SubEventController implements Controller {
             }
 
             if (nameExists || newName.isEmpty()) {
-                System.out.println("Nome em uso ou vazio");
+                LOGGER.warning("Nome em uso ou vazio");
                 return;
             }
 
@@ -206,13 +206,13 @@ public class SubEventController implements Controller {
                     Persistence subEventPersistence = new SubEvent();
                     subEventPersistence.update(subEventHashMap);
                 } else {
-                    System.out.println("SubEvento não encontrado");
+                    LOGGER.warning("SubEvento não encontrado");
                 }
             } else {
-                System.out.println("Você não pode alterar este SubEvento");
+                LOGGER.warning("Você não pode alterar este SubEvento");
             }
         } else {
-            System.out.println("Você não pode alterar este SubEvento");
+            LOGGER.warning("Você não pode alterar este SubEvento");
         }
     }
 
@@ -242,7 +242,7 @@ public class SubEventController implements Controller {
             }
         }
         if (!found){
-            System.out.println("Evento pai não encontrado\n");
+            LOGGER.warning("Evento pai não encontrado\n");
 
         }
         return fatherId;
@@ -275,7 +275,7 @@ public class SubEventController implements Controller {
         LocalDate inputDate;
         inputDate = LocalDate.parse(date, formatter);
         if (eventDate.isAfter(inputDate)) {
-            System.out.println("A data não pode ser anterior ao seu Evento Pai\n");
+            LOGGER.warning("A data não pode ser anterior ao seu Evento Pai\n");
             return false;
         }
 

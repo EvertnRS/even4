@@ -26,6 +26,7 @@ class SessionControllerTest {
         if (!sessionExists) {
             sessionController.create("Event1", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
         }
+        sessionController.read();
 
         Map<String, Persistence> sessions = sessionController.getSessionHashMap();
         assertFalse(sessions.isEmpty(), "A sessão não foi criada corretamente.");

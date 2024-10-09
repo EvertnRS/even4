@@ -5,8 +5,10 @@ import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class SubEvent extends Event implements Persistence{
+    private static final Logger LOGGER = Logger.getLogger(SubEvent.class.getName());
     private String eventId;
     private String id;
     private String name;
@@ -30,7 +32,7 @@ public class SubEvent extends Event implements Persistence{
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -49,7 +51,7 @@ public class SubEvent extends Event implements Persistence{
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
     }
 
@@ -119,7 +121,7 @@ public class SubEvent extends Event implements Persistence{
 
     public void create(Object... params) {
         if (params.length < 6) {
-            System.out.println("Só pode ter 6 parametros");
+            LOGGER.warning("Só pode ter 6 parametros");
         }
 
         String eventId = (String) params[0];
@@ -142,9 +144,9 @@ public class SubEvent extends Event implements Persistence{
                 writer.write(line);
             }
 
-            System.out.println("SubEvento Criado");
+            LOGGER.warning("SubEvento Criado");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
@@ -180,7 +182,7 @@ public class SubEvent extends Event implements Persistence{
             reader.close();
 
         } catch (IOException readerEx) {
-            System.out.println("Erro ao ler o arquivo");
+            LOGGER.warning("Erro ao ler o arquivo");
             readerEx.printStackTrace();
         }
         return list;
@@ -193,7 +195,7 @@ public class SubEvent extends Event implements Persistence{
 
     public void update(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> subEventHashMap = (HashMap<String, Persistence>) params[0];
@@ -205,16 +207,16 @@ public class SubEvent extends Event implements Persistence{
                 writer.write(line);
             }
             writer.close();
-            System.out.println("SubEvento Atualizado");
+            LOGGER.warning("SubEvento Atualizado");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
 
     public void delete(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> subEventHashMap = (HashMap<String, Persistence>) params[0];
@@ -226,9 +228,9 @@ public class SubEvent extends Event implements Persistence{
                 writer.write(line);
             }
             writer.close();
-            System.out.println("SubEvento Removido");
+            LOGGER.warning("SubEvento Removido");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
