@@ -45,7 +45,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="222.0" text="event" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="222.0" text="event" onAction="#handleEvent"/>
          </children>
       </Pane>
       <Pane layoutY="217.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffff; -fx-background-radius: 10 0 0 10;">
@@ -95,7 +95,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button layoutY="2.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" text="submit" />
+            <Button layoutY="2.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" text="submit" onAction="#handleSubmit"/>
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
