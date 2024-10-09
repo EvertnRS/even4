@@ -44,7 +44,7 @@ public class UserScreenController extends BaseController implements FxController
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", userPane, userController, null, null);
+        genericButton("/fxml/subEventScreen.fxml", userPane, userController, null, null);
     }
 
     public void handleSubmitEvent() throws IOException {
