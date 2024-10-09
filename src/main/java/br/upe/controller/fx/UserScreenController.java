@@ -55,7 +55,7 @@ public class UserScreenController extends BaseController implements FxController
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", userPane, userController);
+        genericButton("/fxml/loginScreen.fxml", userPane, userController);
     }
 
     public void updateUser(){
