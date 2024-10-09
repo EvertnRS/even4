@@ -1,12 +1,16 @@
 package br.upe.persistence;
 
+import br.upe.controller.AttendeeController;
+
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Attendee implements Persistence{
+    private static final Logger LOGGER = Logger.getLogger(Attendee.class.getName());
     private String id;
     private String userId;
     private String name;
@@ -48,7 +52,7 @@ public class Attendee implements Persistence{
     @Override
     public void create(Object... params) {
         if (params.length < 2) {
-            System.out.println("Erro: Parâmetros insuficientes.");
+            LOGGER.warning("Erro: Parâmetros insuficientes.");
             return;
         }
 
@@ -64,9 +68,9 @@ public class Attendee implements Persistence{
                 writer.newLine();
             }
 
-            System.out.println("Cadastro Realizado");
+            LOGGER.warning("Cadastro Realizado");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
@@ -75,7 +79,7 @@ public class Attendee implements Persistence{
     @Override
     public void delete(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> attendeeHashMap = (HashMap<String, Persistence>) params[0];
@@ -87,9 +91,9 @@ public class Attendee implements Persistence{
                 writer.write(line);
             }
             writer.close();
-            System.out.println("Inscrição Removida");
+            LOGGER.warning("Inscrição Removida");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
@@ -97,7 +101,7 @@ public class Attendee implements Persistence{
     @Override
     public void update(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> attendeeHashMap = (HashMap<String, Persistence>) params[0];
@@ -109,9 +113,9 @@ public class Attendee implements Persistence{
                 writer.write(line);
             }
             writer.close();
-            System.out.println("Nome Atualizado");
+            LOGGER.warning("Nome Atualizado");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
@@ -128,7 +132,7 @@ public class Attendee implements Persistence{
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -145,7 +149,7 @@ public class Attendee implements Persistence{
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
     }
 
@@ -183,7 +187,7 @@ public class Attendee implements Persistence{
             reader.close();
 
         } catch (IOException readerEx) {
-            System.out.println("Erro ao ler o arquivo");
+            LOGGER.warning("Erro ao ler o arquivo");
             readerEx.printStackTrace();
         } catch (Exception e) {
             throw new RuntimeException(e);

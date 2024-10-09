@@ -171,7 +171,9 @@ public class AttendeeController implements Controller {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("userId").equals(idowner)){
                     String[] results = getSessionById(persistence.getData("sessionId"));
-                    LOGGER.warning("Nome: " + results[0] + " - " + "Data: " + results[2] +  "\nDescrição: " + results[1] + " - " + "Local: " + results[3] + " - " + "Hora: " + results[4] + "\n");
+                    LOGGER.log(Level.WARNING, "Nome: {0} - Data: {1}\nDescrição: {2} - Local: {3} - Hora: {4}\n",
+                            new Object[]{results[0], results[2], results[1], results[3], results[4]});
+
                     found = true;
                     isnull = false;
                 }

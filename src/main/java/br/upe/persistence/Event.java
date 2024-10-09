@@ -5,9 +5,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 public class Event implements Persistence {
+    private static final Logger LOGGER = Logger.getLogger(Event.class.getName());
     private String id;
     private String name;
     private String date;
@@ -104,7 +106,7 @@ public class Event implements Persistence {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -122,14 +124,14 @@ public class Event implements Persistence {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
     }
 
     @Override
     public void create(Object... params) {
         if (params.length != 5) {
-            System.out.println("Erro: Parâmetros insuficientes.");
+            LOGGER.warning("Erro: Parâmetros insuficientes.");
             return;
         }
 
@@ -148,9 +150,9 @@ public class Event implements Persistence {
                 writer.write(line);
             }
 
-            System.out.println("Evento Criado\n");
+            LOGGER.warning("Evento Criado\n");
         } catch (IOException writerEx) {
-            System.out.println("Um erro ocorreu:");
+            LOGGER.warning("Um erro ocorreu:");
             writerEx.printStackTrace();
         }
     }
@@ -187,7 +189,7 @@ public class Event implements Persistence {
             reader.close();
 
         } catch (IOException readerEx) {
-            System.out.println("Error occurred while reading:");
+            LOGGER.warning("Error occurred while reading:");
             readerEx.printStackTrace();
         }
         return list;
@@ -201,7 +203,7 @@ public class Event implements Persistence {
     @Override
     public void update(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> userHashMap = (HashMap<String, Persistence>) params[0];
@@ -215,9 +217,9 @@ public class Event implements Persistence {
                 writer.write(line);
             }
             writer.close();
-            System.out.println("Evento Atualizado");
+            LOGGER.warning("Evento Atualizado");
         } catch (IOException writerEx) {
-            System.out.println("Error occurred while writing:");
+            LOGGER.warning("Error occurred while writing:");
             writerEx.printStackTrace();
         }
     }
@@ -225,7 +227,7 @@ public class Event implements Persistence {
     @Override
     public void delete(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
         HashMap<String, Persistence> eventHashMap = (HashMap<String, Persistence>) params[0];
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/events.csv"))) {
@@ -237,9 +239,9 @@ public class Event implements Persistence {
                 writer.write(line);
             }
             writer.close();
-            System.out.println("Event Removed\n");
+            LOGGER.warning("Event Removed\n");
         } catch (IOException writerEx) {
-            System.out.println("Error occurred while writing:");
+            LOGGER.warning("Error occurred while writing:");
             writerEx.printStackTrace();
         }
     }
