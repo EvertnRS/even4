@@ -1,5 +1,6 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,27 +24,28 @@ public class SubEventScreenController extends BaseController implements FxContro
         initial();
     }
 
+
     private void initial() {
         userEmail.setText(userController.getData("email"));
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", subEventPane, userController);
+        genericButton("/fxml/userScreen.fxml", subEventPane, userController, null, null);
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", subEventPane, userController);
+        genericButton("/fxml/mainScreen.fxml", subEventPane, userController, null, null);
     }
 
     public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", subEventPane, userController);
+        genericButton("/fxml/submitScreen.fxml", subEventPane, userController, null, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", subEventPane, userController);
+        genericButton("/fxml/sessionScreen.fxml", subEventPane, userController, null, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", subEventPane, userController);
+        genericButton("/fxml/loginScreen.fxml", subEventPane, userController, null, null);
     }
 }

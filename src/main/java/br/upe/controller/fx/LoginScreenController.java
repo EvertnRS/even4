@@ -1,5 +1,6 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -25,7 +26,6 @@ public class LoginScreenController extends BaseController implements FxControlle
 
     @FXML
     public void initialize() {
-
         loginAnchorPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
@@ -56,7 +56,7 @@ public class LoginScreenController extends BaseController implements FxControlle
         UserController userController = new UserController();
         if (userController.loginValidate(email, cpf)) {
             try {
-                genericButton("/fxml/mainScreen.fxml", loginAnchorPane, userController);
+                genericButton("/fxml/mainScreen.fxml", loginAnchorPane, userController, null, null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -66,11 +66,12 @@ public class LoginScreenController extends BaseController implements FxControlle
     }
 
     public void moveToSignUp() throws IOException {
-        genericButton("/fxml/signUpScreen.fxml", loginAnchorPane, null);
+        genericButton("/fxml/signUpScreen.fxml", loginAnchorPane, null, null, null);
     }
 
     @Override
     public void setUserController(UserController userController) {
         // Método não implementado
     }
+
 }
