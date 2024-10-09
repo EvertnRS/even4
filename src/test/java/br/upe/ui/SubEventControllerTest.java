@@ -123,10 +123,10 @@ class SubEventControllerTest {
 
             // Se o evento não existir, cria-o
             if (!eventExists) {
-                eventController.create("Event3", "01/12/2024", "Event Description", "Event Location", "owner-id");
+                eventController.create("Event3", "01/12/2024", "Event Description", "Event Location", "1234");
             }
 
-            subEventController.create("Event1", "SubEvent1", "01/11/2024", "Description", "Location", "1234");
+            subEventController.create("Event3", "SubEvent1", "01/11/2024", "Description", "Location", "1234");
             subEventController.read();
 
             subEventController.delete("SubEvent1", "name", "1234");

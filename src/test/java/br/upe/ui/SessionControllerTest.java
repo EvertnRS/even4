@@ -27,12 +27,16 @@ class SessionControllerTest {
             sessionController.create("Event1", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
         }
 
-        // Verifica se a sessão foi adicionada corretamente
         Map<String, Persistence> sessions = sessionController.getSessionHashMap();
         assertFalse(sessions.isEmpty(), "A sessão não foi criada corretamente.");
 
-        boolean sessionCreated = sessions.values().stream()
-                .anyMatch(session -> session.getData("name").equals("Session1"));
+        boolean sessionCreated = false;
+        for (Map.Entry<String, Persistence> entry : sessions.entrySet()) {
+            Persistence persistence = entry.getValue();
+            if (persistence.getData("name").equals("Session1")) {
+                sessionCreated = true;
+            }
+        }
         assertTrue(sessionCreated, "A sessão 'Session1' não foi encontrada.");
     }
 
@@ -56,17 +60,19 @@ class SessionControllerTest {
             boolean sessionRead = false;
             for (Map.Entry<String, Persistence> entry : sessions.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData("name").equals("Event1")) {
+                if (persistence.getData("name").equals("Session1")) {
                     sessionRead = true;
                 }
             }
-            assertFalse(sessionRead, "A sessão 'Session1' não foi encontrada nas sessões lidas.");
+            // A mudança está aqui
+            assertTrue(sessionRead, "A sessão 'Session1' não foi encontrada nas sessões lidas.");
 
         } catch (Exception e) {
             e.printStackTrace();
             fail("Falha ao ler as sessões devido a: " + e.getMessage());
         }
     }
+
 
 
     @Test
