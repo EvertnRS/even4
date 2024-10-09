@@ -129,7 +129,7 @@ public class SubEvent extends Event implements Persistence{
         String description = (String) params[3];
         String location = (String) params[4];
         String ownerId = (String) params[5];
-        String line = id + ";" + name + ";" + date + ";" + description + ";" + location + ";" + eventId + ";" + ownerId;
+        String line = id + ";" + name + ";" + date + ";" + description + ";" + location + ";" + eventId + ";" + ownerId + "\n";
 
         try {
             File file = new File("./db/subEvents.csv");

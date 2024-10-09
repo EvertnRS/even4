@@ -73,7 +73,7 @@ public class SessionController implements Controller {
             eventH = eventController.getEventHashMap();
         } else{
             SubEventController subEventController = new SubEventController();
-            eventH = subEventController.getEventHashMap();
+            eventH = subEventController.getSubEventHashMap();
         }
 
         if (!eventOwnerId.equals(userId)) {
@@ -185,7 +185,7 @@ public class SessionController implements Controller {
 
         if (!isEvent) {
             SubEventController subEventController = new SubEventController();
-            Map<String, Persistence> subEvenH = subEventController.getEventHashMap();
+            Map<String, Persistence> subEvenH = subEventController.getSubEventHashMap();
             for (Map.Entry<String, Persistence> entry : subEvenH.entrySet()) {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("id").equals(id)) {
@@ -211,6 +211,21 @@ public class SessionController implements Controller {
         String newLocation = (String) params[4];
         String userId = (String) params[5];
 
+        // Verifica se o nome novo não é vazio e se já não existe
+        if (newName == null || newName.trim().isEmpty()) {
+            LOGGER.warning("Nome não pode ser vazio");
+            return;
+        }
+
+        boolean nameExists = sessionHashMap.values().stream()
+                .anyMatch(session -> session.getData("name").equals(newName) && !session.getData("name").equals(oldName));
+
+        if (nameExists) {
+            LOGGER.warning("Nome em uso");
+            return;
+        }
+
+        // Aqui estamos apenas verificando se o usuário é o proprietário
         boolean isOwner = false;
         String id = null;
 
@@ -219,7 +234,7 @@ public class SessionController implements Controller {
             String name = persistence.getData("name");
             String ownerId = persistence.getData("ownerId");
 
-            if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
+            if (ownerId != null && ownerId.equals(userId)) {
                 isOwner = true;
                 id = persistence.getData("id");
                 break;
@@ -227,21 +242,6 @@ public class SessionController implements Controller {
         }
 
         if (isOwner) {
-            boolean nameExists = false;
-            for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
-                Persistence Session = entry.getValue();
-                String name = Session.getData("name");
-                if (name.isEmpty() || name.equals(newName)) {
-                    nameExists = true;
-                    break;
-                }
-            }
-
-            if (nameExists) {
-                LOGGER.warning("Nome em uso ou vazio");
-                return;
-            }
-
             if (id != null) {
                 Persistence newSession = sessionHashMap.get(id);
                 if (newSession != null) {
@@ -263,6 +263,7 @@ public class SessionController implements Controller {
         }
     }
 
+
     @Override
     public void read() {
         Persistence sessionPersistence = new Session();
@@ -282,7 +283,7 @@ public class SessionController implements Controller {
             list = eventController.getEventHashMap();
         } else{
             SubEventController subEventController = new SubEventController();
-            list = subEventController.getEventHashMap();
+            list = subEventController.getSubEventHashMap();
         }
 
         String fatherId = "";
@@ -309,7 +310,7 @@ public class SessionController implements Controller {
             list = eventController.getEventHashMap();
         } else{
             SubEventController subEventController = new SubEventController();
-            list = subEventController.getEventHashMap();
+            list = subEventController.getSubEventHashMap();
         }
 
         String fatherOwnerId = "";

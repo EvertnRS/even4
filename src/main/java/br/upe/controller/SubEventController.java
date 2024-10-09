@@ -16,7 +16,7 @@ public class SubEventController implements Controller {
         this.read();
     }
 
-    public Map<String, Persistence> getEventHashMap() {
+    public Map<String, Persistence> getSubEventHashMap() {
         return subEventHashMap;
     }
 

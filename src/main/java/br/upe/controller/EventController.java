@@ -25,7 +25,6 @@ public class EventController implements Controller {
         return eventHashMap;
     }
 
-
     public void setEventHashMap(Map<String, Persistence> eventHashMap) {
         this.eventHashMap = eventHashMap;
     }
