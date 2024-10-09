@@ -1,5 +1,6 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 
 public interface FxController {
