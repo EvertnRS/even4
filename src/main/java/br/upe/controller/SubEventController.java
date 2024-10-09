@@ -95,17 +95,17 @@ public class SubEventController implements Controller {
         String ownerId = "";
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("name").equals(params[0])){
+            if (persistence.getData("id").equals(params[0])){
                 ownerId = persistence.getData("ownerId");
             }
         }
 
-        if ((params[1]).equals("name") && (params[2]).equals(ownerId)) {
+        if ((params[1]).equals(ownerId)) {
             Iterator<Map.Entry<String, Persistence>> iterator = subEventHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence subEventindice = entry.getValue();
-                if (subEventindice.getData("name").equals(params[0])) {
+                if (subEventindice.getData("id").equals(params[0])) {
                     iterator.remove();
                 }
             }

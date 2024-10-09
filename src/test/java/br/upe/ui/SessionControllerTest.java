@@ -1,5 +1,6 @@
 package br.upe.ui;
 
+import br.upe.controller.EventController;
 import br.upe.controller.SessionController;
 import br.upe.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,113 +13,85 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SessionControllerTest {
     private SessionController sessionController;
+    private EventController eventController;
 
     @BeforeEach
     void setUp() {
+        eventController = new EventController();
         sessionController = new SessionController();
     }
 
     @Test
     void testCreateSession() {
-        boolean sessionExists = sessionController.getSessionHashMap().values().stream()
-                .anyMatch(session -> session.getData("name").equals("Session1"));
+        sessionExists();
 
-        if (!sessionExists) {
-            sessionController.create("Event1", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
-        }
-        sessionController.read();
+        Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+        boolean sessionCreated = sessionMap.values().stream()
+                .anyMatch(session -> session.getData("name").equals("New Session"));
+        assertTrue(sessionCreated, "A sessão criada não foi encontrado.");
 
-        Map<String, Persistence> sessions = sessionController.getSessionHashMap();
-        assertFalse(sessions.isEmpty(), "A sessão não foi criada corretamente.");
-
-        boolean sessionCreated = false;
-        for (Map.Entry<String, Persistence> entry : sessions.entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData("name").equals("Session1")) {
-                sessionCreated = true;
-            }
-        }
-        assertTrue(sessionCreated, "A sessão 'Session1' não foi encontrada.");
+        sessionDelete("New Session");
     }
-
-
-
-    @Test
-    void testReadSessions() {
-        try {
-            boolean sessionExists = sessionController.getSessionHashMap().values().stream()
-                    .anyMatch(session -> session.getData("name").equals("Session1"));
-
-            if (!sessionExists) {
-                sessionController.create("Event1", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
-            }
-
-            sessionController.read();
-            Map<String, Persistence> sessions = sessionController.getSessionHashMap();
-
-            assertFalse(sessions.isEmpty(), "As sessões não foram lidas corretamente.");
-
-            boolean sessionRead = false;
-            for (Map.Entry<String, Persistence> entry : sessions.entrySet()) {
-                Persistence persistence = entry.getValue();
-                if (persistence.getData("name").equals("Session1")) {
-                    sessionRead = true;
-                }
-            }
-            // A mudança está aqui
-            assertTrue(sessionRead, "A sessão 'Session1' não foi encontrada nas sessões lidas.");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Falha ao ler as sessões devido a: " + e.getMessage());
-        }
-    }
-
-
 
     @Test
     void testUpdateSession() throws FileNotFoundException {
-        boolean session1Exists = sessionController.getSessionHashMap().values().stream()
-                .anyMatch(session -> session.getData("name").equals("Session1"));
+        sessionExists();
 
-        if (!session1Exists) {
-            sessionController.create("Event1", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
-        }
+        sessionController.update("New Session", "Updated Session", "02/12/2024", "Updated Session Description", "New Location", "id2");
 
-        sessionController.read();
-        sessionController.update("Session1", "Updated Session2", "04/12/2024", "Updated Description", "Updated Location", "owner-id");
+        Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+        boolean sessionUpdated = sessionMap.values().stream()
+                .anyMatch(session -> session.getData("name").equals("Updated Session") && session.getData("description").equals("Updated Session Description"));
+        assertTrue(sessionUpdated, "O SubEvento não foi atualizado.");
 
-        boolean updated = false;
-        for (Persistence session : sessionController.getSessionHashMap().values()) {
-            if (session.getData("name").equals("Updated Session2")) {
-                updated = true;
-                assertEquals("04/12/2024", session.getData("date"));
-                assertEquals("Updated Description", session.getData("description"));
-                assertEquals("Updated Location", session.getData("location"));
-                break;
+        sessionDelete("Updated Session");
+    }
+
+    @Test
+    void testReadSession() {
+        sessionExists();
+
+        String sessionReaded = "";
+        Map<String, Persistence> sessionHashMap = sessionController.getSessionHashMap();
+        for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
+            Persistence persistence = entry.getValue();
+            if (persistence.getData("ownerId").equals("id2")) {
+                sessionReaded = persistence.getData("name");
             }
         }
-        assertTrue(updated, "A sessão 'Session2' não foi atualizada corretamente.");
+        assertEquals("New Session", sessionReaded, "A sessão não foi lida.");
+        sessionDelete("New Session");
     }
 
     @Test
     void testDeleteSession() {
-        boolean session1Exists = sessionController.getSessionHashMap().values().stream()
-                .anyMatch(session -> session.getData("name").equals("Session1"));
+        sessionExists();
 
-        if (!session1Exists) {
-            sessionController.create("Event1", "Session2", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "owner-id", "Event");
-        }
-        sessionController.delete("Session2", "name", "owner-id");
+        sessionDelete("New Session");
 
-        Map<String, Persistence> sessions = sessionController.getSessionHashMap();
-        boolean deleted = true;
-        for (Persistence session : sessions.values()) {
-            if (session.getData("name").equals("Session2")) {
-                deleted = false;
-                break;
-            }
+        Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+        boolean sessionDeleted = sessionMap.values().stream()
+                .noneMatch(session -> session.getData("name").equals("New Session"));
+        assertTrue(sessionDeleted, "A sessão não foi deletada.");
+    }
+
+    void sessionExists() {
+        boolean sessionExists = sessionController.getSessionHashMap().values().stream()
+                .anyMatch(session -> session.getData("name").equals("New Session"));
+
+        if (!sessionExists) {
+            eventController.create("Event1", "01/12/2024", "Event Description", "Event Location", "id2");
+            sessionController.create("Event1", "New Session", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", "id2", "Event");
+            eventController.read();
+            sessionController.read();
         }
-        assertTrue(deleted, "A sessão não foi deletada corretamente.");
+    }
+
+    void sessionDelete(String sessionName) {
+        String sessionId = sessionController.getSessionHashMap().values().stream().filter(subSession -> subSession.getData("name").equals(sessionName)).findFirst().map(session -> session.getData("id")).orElse(null);
+        sessionController.delete(sessionId, "id2");
+
+        String eventId = eventController.getEventHashMap().values().stream().filter(event -> event.getData("name").equals("Event1")).findFirst().map(event -> event.getData("id")).orElse(null);
+        eventController.delete(eventId, "id2");
     }
 }

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,57 +14,80 @@ import static org.junit.jupiter.api.Assertions.*;
 class EventControllerTest {
 
     private EventController eventController;
-    private HashMap<String, Persistence> mockEventMap;
     private Event testEvent;
 
     @BeforeEach
     void setUp() {
         eventController = new EventController();
-        mockEventMap = new HashMap<>();
-
-        testEvent = new Event();
-        testEvent.create("Test Event", "31/12/2024", "Description", "Location", "owner-id");
-        mockEventMap.put(testEvent.getId(), testEvent);
-
-        eventController.setEventHashMap(mockEventMap);
     }
 
     @Test
     void testCreateEvent() {
-        eventController.create("New Event", "01/11/2024", "New Description", "New Location", "owner-id");
-        eventController.read();
+        eventExists();
 
         Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        boolean eventExists = eventMap.values().stream().anyMatch(e -> e.getData("name").equals("New Event"));
-        assertTrue(eventExists, "O evento criado não foi encontrado.");
-    }
+        boolean eventCreated = eventMap.values().stream()
+                .anyMatch(event -> event.getData("name").equals("New Event"));
+        assertTrue(eventCreated, "O evento criado não foi encontrado.");
 
-    @Test
-    void testReadEvent() {
-        Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        assertNotNull(eventMap);
-        assertEquals(1, eventMap.size());
-        assertEquals("Test Event", testEvent.getData("name"));
+        eventDelete("New Event");
     }
 
     @Test
     void testUpdateEvent() throws FileNotFoundException {
-        eventController.update("Test Event", "Updated Event", "31/12/2024", "Updated Description", "Updated Location", "owner-id");
+        eventExists();
 
-        Event updatedEvent = (Event) eventController.getEventHashMap().get(testEvent.getId());
-        assertEquals("Updated Event", updatedEvent.getData("name"));
-        assertEquals("31/12/2024", updatedEvent.getData("date"));
-        assertEquals("Updated Description", updatedEvent.getData("description"));
-        assertEquals("Updated Location", updatedEvent.getData("location"));
+
+        eventController.update("New Event", "Updated Event", "31/12/2024", "Updated Description", "Updated Location", "id1");
+        eventController.read();
+
+        Map<String, Persistence> eventMap = eventController.getEventHashMap();
+        boolean eventUpdated = eventMap.values().stream()
+                .anyMatch(event -> event.getData("name").equals("Updated Event") && event.getData("description").equals("Updated Description"));
+        assertTrue(eventUpdated, "O Evento não foi atualizado.");
+
+        eventDelete("Updated Event");
+    }
+
+    @Test
+    void testReadEvent() {
+        eventExists();
+
+        String eventReaded = "";
+        Map<String, Persistence> eventHashMap = eventController.getEventHashMap();
+        for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
+            Persistence persistence = entry.getValue();
+            if (persistence.getData("ownerId").equals("id1")) {
+                eventReaded = persistence.getData("name");
+            }
+        }
+
+        assertEquals("New Event", eventReaded);
+        eventDelete("New Event");
     }
 
     @Test
     void testDeleteEvent() {
-        String eventId = eventController.getEventHashMap().values().stream().filter(event -> event.getData("name").equals("Test Event")).findFirst().map(event -> event.getData("id")).orElse(null);
+        eventExists();
+        eventDelete("New Event");
 
-        eventController.delete(eventId, "owner-id");
+        boolean eventDeleted = eventController.getEventHashMap().values().stream()
+                .noneMatch(event -> event.getData("name").equals("New Event"));
+        assertTrue(eventDeleted, "O Evento não foi deletado.");
+    }
 
-        Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        assertFalse(eventMap.values().stream().anyMatch(e -> e.getData("id").equals(eventId)));
+    void eventExists() {
+        boolean eventExists = eventController.getEventHashMap().values().stream()
+                .anyMatch(event -> event.getData("name").equals("New Event"));
+
+        if (!eventExists) {
+            eventController.create("New Event", "01/11/2024", "New Description", "New Location", "id1");
+            eventController.read();
+        }
+    }
+
+    void eventDelete(String eventName) {
+        String eventId = eventController.getEventHashMap().values().stream().filter(event -> event.getData("name").equals(eventName)).findFirst().map(event -> event.getData("id")).orElse(null);
+        eventController.delete(eventId, "id1");
     }
 }

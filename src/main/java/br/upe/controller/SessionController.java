@@ -105,17 +105,17 @@ public class SessionController implements Controller {
         String ownerId = "";
         for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("name").equals(params[0])) {
+            if (persistence.getData("id").equals(params[0])) {
                 ownerId = persistence.getData("ownerId");
             }
         }
 
-        if ((params[1]).equals("name") && (params[2]).equals(ownerId)) {
+        if ((params[1]).equals(ownerId)) {
             Iterator<Map.Entry<String, Persistence>> iterator = sessionHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence sessionIndice = entry.getValue();
-                if (sessionIndice.getData("name").equals(params[0])) {
+                if (sessionIndice.getData("id").equals(params[0])) {
                     iterator.remove();
                 }
             }
@@ -128,6 +128,7 @@ public class SessionController implements Controller {
 
     @Override
     public boolean list(String ownerId) {
+        this.read();
         boolean isnull = true;
         try {
             boolean found = false;
@@ -212,7 +213,6 @@ public class SessionController implements Controller {
         String newLocation = (String) params[4];
         String userId = (String) params[5];
 
-        // Verifica se o nome novo não é vazio e se já não existe
         if (newName == null || newName.trim().isEmpty()) {
             LOGGER.warning("Nome não pode ser vazio");
             return;
@@ -226,7 +226,6 @@ public class SessionController implements Controller {
             return;
         }
 
-        // Aqui estamos apenas verificando se o usuário é o proprietário
         boolean isOwner = false;
         String id = null;
 
