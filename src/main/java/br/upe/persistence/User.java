@@ -5,8 +5,10 @@ import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class User implements Persistence {
+    private static final Logger LOGGER = Logger.getLogger(User.class.getName());
     private String id;
     private String cpf;
     private String email;
@@ -30,7 +32,7 @@ public class User implements Persistence {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -45,7 +47,7 @@ public class User implements Persistence {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
     }
 
@@ -87,7 +89,7 @@ public class User implements Persistence {
 
         if (params.length < 2) {
             // erro
-            System.out.println("Erro: Parâmetros insuficientes.");
+            LOGGER.warning("Erro: Parâmetros insuficientes.");
             return;
         }
 
@@ -102,9 +104,9 @@ public class User implements Persistence {
                 writer.newLine();
             }
 
-            System.out.println("Usuário Criado");
+            LOGGER.warning("Usuário Criado");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
@@ -113,7 +115,7 @@ public class User implements Persistence {
     @Override
     public void update(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> userHashMap = (HashMap<String, Persistence>) params[0];
@@ -125,9 +127,9 @@ public class User implements Persistence {
                 writer.write(line);
             }
             writer.close();
-            System.out.println("Usuário Atualizado");
+            LOGGER.warning("Usuário Atualizado");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
@@ -135,7 +137,7 @@ public class User implements Persistence {
     @Override
     public void delete(Object... params) {
         if (params.length > 1) {
-            System.out.println("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> userHashMap = (HashMap<String, Persistence>) params[0];
@@ -147,9 +149,9 @@ public class User implements Persistence {
                 writer.write(line);
             }
             writer.close();
-            System.out.println("Usuário Removido");
+            LOGGER.warning("Usuário Removido");
         } catch (IOException writerEx) {
-            System.out.println("Erro na escrita do arquivo");
+            LOGGER.warning("Erro na escrita do arquivo");
             writerEx.printStackTrace();
         }
     }
@@ -178,7 +180,7 @@ public class User implements Persistence {
             reader.close();
 
         } catch (IOException readerEx) {
-            System.out.println("Erro ao ler o arquivo");
+            LOGGER.warning("Erro ao ler o arquivo");
             readerEx.printStackTrace();
         } catch (Exception e) {
             throw new RuntimeException(e);

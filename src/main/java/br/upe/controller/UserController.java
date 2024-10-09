@@ -5,8 +5,10 @@ import br.upe.persistence.User;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class UserController implements Controller {
+    private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
     private Map<String, Persistence> userHashMap;
     private Persistence userLog;
 
@@ -33,7 +35,7 @@ public class UserController implements Controller {
                 default -> throw new IOException();
             }
         } catch (IOException e) {
-            System.out.println("Informação não existe ou é restrita");
+            LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
     }
@@ -45,7 +47,7 @@ public class UserController implements Controller {
     @Override
     public void create(Object... params) {
         if (params.length < 2) {
-            System.out.println("Só pode ter 2 parametros");
+            LOGGER.warning("Só pode ter 2 parametros");
         }
 
         String email = (String) params[0];
@@ -62,21 +64,21 @@ public class UserController implements Controller {
             userPersistence.create(email, cpf);
 
         } catch (IOException exception) {
-            System.out.println("Email já cadastrado");
+            LOGGER.warning("Email já cadastrado");
         }
     }
 
     @Override
     public void update(Object... params) {
         if (params.length < 2) {
-            System.out.println("Só pode ter 2 parametros");
+            LOGGER.warning("Só pode ter 2 parametros");
         }
         Persistence userPersistence = new User();
         String email = (String) params[0];
         String cpf = (String) params[1];
         Persistence user = userHashMap.get(this.userLog.getData("id"));
         if (user == null) {
-            System.out.println("Usuário não encontrado");
+            LOGGER.warning("Usuário não encontrado");
             return;
         }
         user.setData("email",email);
