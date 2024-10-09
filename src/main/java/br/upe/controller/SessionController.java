@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class SessionController implements Controller {
+    private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
+
+
     private Map<String, Persistence> sessionHashMap;
     private Persistence sessionLog;
 
