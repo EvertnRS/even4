@@ -6,12 +6,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SessionController implements Controller {
 
-    private Map<String, Persistence> sessionHashMap;
+    private static final String DESCRIPTION = "description";
+    private static final String NAME = "name";
+    private static final String ID = "id";
+    private static final String OWNER_ID = "ownerId";
+    private static final String EVENT_ID = "eventId";
     private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
+
+    private Map<String, Persistence> sessionHashMap;
     private Persistence sessionLog;
 
     public SessionController() {
@@ -35,13 +42,13 @@ public class SessionController implements Controller {
         }
         try {
             switch (dataToGet) {
-                case "id" -> data = this.sessionLog.getData("id");
-                case "name" -> data = this.sessionLog.getData("name");
-                case "description" -> data = this.sessionLog.getData("description");
+                case ID -> data = this.sessionLog.getData(ID);
+                case NAME -> data = this.sessionLog.getData(NAME);
+                case DESCRIPTION -> data = this.sessionLog.getData(DESCRIPTION);
                 case "date" -> data = String.valueOf(this.sessionLog.getData("date"));
                 case "location" -> data = this.sessionLog.getData("location");
-                case "eventId" -> data = this.sessionLog.getData("eventId");
-                case "ownerId" -> data = this.sessionLog.getData("ownerId");
+                case EVENT_ID -> data = this.sessionLog.getData(EVENT_ID);
+                case OWNER_ID -> data = this.sessionLog.getData(OWNER_ID);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -69,10 +76,10 @@ public class SessionController implements Controller {
         String eventOwnerId = getFatherOwnerId(eventId, (String) params[8]);
         Map<String, Persistence> eventH;
 
-        if (params[8].equals("Event")){
+        if (params[8].equals("Event")) {
             EventController eventController = new EventController();
             eventH = eventController.getEventHashMap();
-        } else{
+        } else {
             SubEventController subEventController = new SubEventController();
             eventH = subEventController.getSubEventHashMap();
         }
@@ -85,11 +92,11 @@ public class SessionController implements Controller {
         boolean inUseName = false;
         for (Map.Entry<String, Persistence> entry : this.sessionHashMap.entrySet()) {
             Persistence sessionIndice = entry.getValue();
-            if (sessionIndice.getData("name").equals(name) || name.isEmpty()) {
+            if (sessionIndice.getData(NAME).equals(name) || name.isEmpty()) {
                 inUseName = true;
                 break;
-                }
             }
+        }
 
         if (inUseName || name.isEmpty()) {
             LOGGER.warning("Nome vazio ou em uso");
@@ -105,8 +112,8 @@ public class SessionController implements Controller {
         String ownerId = "";
         for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("id").equals(params[0])) {
-                ownerId = persistence.getData("ownerId");
+            if (persistence.getData(ID).equals(params[0])) {
+                ownerId = persistence.getData(OWNER_ID);
             }
         }
 
@@ -115,7 +122,7 @@ public class SessionController implements Controller {
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence sessionIndice = entry.getValue();
-                if (sessionIndice.getData("id").equals(params[0])) {
+                if (sessionIndice.getData(ID).equals(params[0])) {
                     iterator.remove();
                 }
             }
@@ -130,22 +137,33 @@ public class SessionController implements Controller {
     public boolean list(String ownerId) {
         this.read();
         boolean isnull = true;
+
         try {
             boolean found = false;
+
             for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData("ownerId").equals(ownerId)) {
-                    LOGGER.warning(persistence.getData("name"));
+                String currentOwnerId = persistence.getData(OWNER_ID);
+
+                if (ownerId.equals(currentOwnerId)) {
+
+                    if (LOGGER.isLoggable(Level.WARNING)) {
+                        LOGGER.warning(persistence.getData(NAME));
+                    }
+
                     found = true;
                     isnull = false;
                 }
             }
-            if (!found) {
+
+            if (!found && LOGGER.isLoggable(Level.WARNING)) {
                 LOGGER.warning("Seu usuário atual não é organizador de nenhuma Sessão\n");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return isnull;
     }
 
@@ -155,22 +173,27 @@ public class SessionController implements Controller {
         if (params[1].equals("userId")) {
             for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (!persistence.getData("ownerId").equals(params[0])){
-                    String eventName = getEventName(persistence.getData("eventId"));
-                    LOGGER.warning("Nome: " + persistence.getData("name") + " - " + "Id: " + persistence.getData("id") +  "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\n");
+                if (!persistence.getData(OWNER_ID).equals(params[0])) {
+                    String eventName = getEventName(persistence.getData(EVENT_ID));
+                    LOGGER.warning("Nome: " + persistence.getData(NAME) + " - " + "Id: " + persistence.getData(ID) + "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\n");
                 }
             }
         } else if (params[1].equals("sessionId")) {
             for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData("id").equals(params[0])){
-                    String eventName = getEventName(persistence.getData("eventId"));
-                    LOGGER.warning("Nome: " + persistence.getData("name") + " - " + "Id: " + persistence.getData("id") +  "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\nDescrição: " + persistence.getData("description") + " - " + "Local: " + persistence.getData("location") + "\n");
+                if (persistence.getData(ID).equals(params[0])) {
+                    String eventName = getEventName(persistence.getData(EVENT_ID));
+                    LOGGER.warning("Nome: " + persistence.getData(NAME) + " - " + "Id: " + persistence.getData(ID) + "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\nDescrição: " + persistence.getData(DESCRIPTION) + " - " + "Local: " + persistence.getData("location") + "\n");
                     break;
                 }
             }
         }
 
+    }
+
+    @Override
+    public boolean loginValidate(String email, String cpf) {
+        return false;
     }
 
     private String getEventName(String id) {
@@ -180,8 +203,8 @@ public class SessionController implements Controller {
         boolean isEvent = false;
         for (Map.Entry<String, Persistence> entry : evenH.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("id").equals(id)) {
-                name = persistence.getData("name");
+            if (persistence.getData(ID).equals(id)) {
+                name = persistence.getData(NAME);
             }
         }
 
@@ -190,8 +213,8 @@ public class SessionController implements Controller {
             Map<String, Persistence> subEvenH = subEventController.getSubEventHashMap();
             for (Map.Entry<String, Persistence> entry : subEvenH.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData("id").equals(id)) {
-                    name = persistence.getData("name");
+                if (persistence.getData(ID).equals(id)) {
+                    name = persistence.getData(NAME);
                 }
             }
         }
@@ -202,7 +225,7 @@ public class SessionController implements Controller {
     @Override
     public void update(Object... params) throws FileNotFoundException {
         if (params.length != 6) {
-            LOGGER.warning("Só pode ter 6 parametros");
+            LOGGER.warning("Só pode ter 6 parâmetros");
             return;
         }
 
@@ -219,7 +242,7 @@ public class SessionController implements Controller {
         }
 
         boolean nameExists = sessionHashMap.values().stream()
-                .anyMatch(session -> session.getData("name").equals(newName) && !session.getData("name").equals(oldName));
+                .anyMatch(session -> session.getData(NAME).equals(newName) && !session.getData(NAME).equals(oldName));
 
         if (nameExists) {
             LOGGER.warning("Nome em uso");
@@ -231,38 +254,28 @@ public class SessionController implements Controller {
 
         for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            String name = persistence.getData("name");
-            String ownerId = persistence.getData("ownerId");
+            String name = persistence.getData(NAME);
+            String ownerId = persistence.getData(OWNER_ID);
 
             if (ownerId != null && ownerId.equals(userId)) {
-                isOwner = true;
-                id = persistence.getData("id");
-                break;
+                if (name.equals(oldName)) {
+                    persistence.update(oldName, newName, newDate, newDescription, newLocation);
+                    sessionLog = persistence;
+                    id = persistence.getData(ID);
+                    isOwner = true;
+                }
             }
         }
 
-        if (isOwner) {
-            if (id != null) {
-                Persistence newSession = sessionHashMap.get(id);
-                if (newSession != null) {
-                    newSession.setData("name", newName);
-                    newSession.setData("date", newDate);
-                    newSession.setData("description", newDescription);
-                    newSession.setData("location", newLocation);
-                    sessionHashMap.put(id, newSession);
-                    Persistence SessionPersistence = new Session();
-                    SessionPersistence.update(sessionHashMap);
-                } else {
-                    LOGGER.warning("Sessão não encontrada");
-                }
-            } else {
-                LOGGER.warning("Você não pode alterar esta Sessão");
-            }
-        } else {
-            LOGGER.warning("Você não pode alterar esta Sessão");
+        if (!isOwner) {
+            LOGGER.warning("Você não tem permissão para alterar esta Sessão");
+        }
+
+        if (sessionLog != null) {
+            Persistence sessionPersistence = new Session();
+            sessionPersistence.update(sessionHashMap);
         }
     }
-
 
     @Override
     public void read() {
@@ -270,55 +283,53 @@ public class SessionController implements Controller {
         this.sessionHashMap = sessionPersistence.read();
     }
 
-    @Override
-    public boolean loginValidate(String email, String cpf) {
-        //Método não implementado
-        return false;
-    }
-
-    private String getFatherEventId(String searchId, String type) {
-        Map<String, Persistence> list;
-        if (type.equals("Event")){
-            EventController eventController = new EventController();
-            list = eventController.getEventHashMap();
-        } else{
-            SubEventController subEventController = new SubEventController();
-            list = subEventController.getSubEventHashMap();
-        }
-
+    private String getFatherEventId(String eventName, String eventType) {
         String fatherId = "";
-        boolean found = false;
-        for (Map.Entry<String, Persistence> entry : list.entrySet()) {
-            Persistence listIndice = entry.getValue();
-            if (listIndice.getData("name").equals(searchId)) {
-                fatherId = listIndice.getData("id");
-                found = true;
-                break;
+        if (eventType.equals("Event")) {
+            EventController eventController = new EventController();
+            Map<String, Persistence> eventH = eventController.getEventHashMap();
+            for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
+                Persistence eventIndice = entry.getValue();
+                if (eventIndice.getData(NAME).equals(eventName)) {
+                    fatherId = eventIndice.getData(ID);
+                    break;
+                }
+            }
+        } else {
+            SubEventController subEventController = new SubEventController();
+            Map<String, Persistence> eventH = subEventController.getSubEventHashMap();
+            for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
+                Persistence eventIndice = entry.getValue();
+                if (eventIndice.getData(NAME).equals(eventName)) {
+                    fatherId = eventIndice.getData(ID);
+                    break;
+                }
             }
         }
-        if (!found) {
-            LOGGER.warning("Evento pai não encontrado\n");
-        }
-
         return fatherId;
     }
 
-    private String getFatherOwnerId(String eventId, String type) {
-        Map<String, Persistence> list;
-        if (type.equals("Event")){
-            EventController eventController = new EventController();
-            list = eventController.getEventHashMap();
-        } else{
-            SubEventController subEventController = new SubEventController();
-            list = subEventController.getSubEventHashMap();
-        }
-
+    private String getFatherOwnerId(String eventId, String eventType) {
         String fatherOwnerId = "";
-        for (Map.Entry<String, Persistence> entry : list.entrySet()) {
-            Persistence listIndice = entry.getValue();
-            if (listIndice.getData("id").equals(eventId)) {
-                fatherOwnerId = listIndice.getData("ownerId");
-                break;
+        if (eventType.equals("Event")) {
+            EventController eventController = new EventController();
+            Map<String, Persistence> eventH = eventController.getEventHashMap();
+            for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
+                Persistence eventIndice = entry.getValue();
+                if (eventIndice.getData(ID).equals(eventId)) {
+                    fatherOwnerId = eventIndice.getData(OWNER_ID);
+                    break;
+                }
+            }
+        } else {
+            SubEventController subEventController = new SubEventController();
+            Map<String, Persistence> eventH = subEventController.getSubEventHashMap();
+            for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
+                Persistence eventIndice = entry.getValue();
+                if (eventIndice.getData(ID).equals(eventId)) {
+                    fatherOwnerId = eventIndice.getData(OWNER_ID);
+                    break;
+                }
             }
         }
         return fatherOwnerId;
