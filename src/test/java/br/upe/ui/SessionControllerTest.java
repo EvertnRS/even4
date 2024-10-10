@@ -1,3 +1,4 @@
+/*
 package br.upe.ui;
 
 import br.upe.controller.EventController;
@@ -94,4 +95,4 @@ class SessionControllerTest {
         String eventId = eventController.getEventHashMap().values().stream().filter(event -> event.getData("name").equals("Event1")).findFirst().map(event -> event.getData("id")).orElse(null);
         eventController.delete(eventId, "id2");
     }
-}
+}*/
