@@ -53,24 +53,27 @@ public class EventController implements Controller {
         return isnull;
     }
 
-    public List<String> list(String ownerId, String fx) {
-        this.read();
-        List<String> userEvents = new ArrayList<>();
+    public List<String> list(String ownerId, String type) {
+        if(type.equals("fx")){
+            this.read();
+            List<String> userEvents = new ArrayList<>();
 
-        try {
-            for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
-                Persistence persistence = entry.getValue();
-                if (persistence.getData("ownerId").equals(ownerId)) {
-                    userEvents.add(persistence.getData("name"));
+            try {
+                for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
+                    Persistence persistence = entry.getValue();
+                    if (persistence.getData("ownerId").equals(ownerId)) {
+                        userEvents.add(persistence.getData("name"));
+                    }
                 }
+                if (userEvents.isEmpty()) {
+                    LOGGER.warning("Seu usuário atual é organizador de nenhum evento");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            if (userEvents.isEmpty()) {
-                LOGGER.warning("Seu usuário atual é organizador de nenhum evento");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            return userEvents;
         }
-        return userEvents;
+        return List.of();
     }
 
     @Override

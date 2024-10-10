@@ -59,7 +59,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newEventPane, userController, null, null);
+        genericButton("/fxml/subEventScreen.fxml", newEventPane, userController, null, null);
     }
 
     public void handleSubmitEvent() throws IOException {
@@ -71,7 +71,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newEventPane, userController, null, null);
+        genericButton("/fxml/loginScreen.fxml", newEventPane, userController, null, null);
     }
 
     public void handleUser() throws IOException {
