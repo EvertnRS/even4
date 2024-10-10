@@ -16,8 +16,8 @@ public class SessionController implements Controller {
     private static final String ID = "id";
     private static final String OWNER_ID = "ownerId";
     private static final String EVENT_ID = "eventId";
-    private static final String LOCATION = "location"; // New constant for "location"
-    private static final String EVENT_TYPE = "Event"; // New constant for "Event"
+    private static final String LOCATION = "location"; // Definindo a constante para "location"
+    private static final String EVENT_TYPE = "Event"; // Definindo a constante para "Event"
     private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
 
     private Map<String, Persistence> sessionHashMap;
@@ -48,7 +48,7 @@ public class SessionController implements Controller {
                 case NAME -> data = this.sessionLog.getData(NAME);
                 case DESCRIPTION -> data = this.sessionLog.getData(DESCRIPTION);
                 case "date" -> data = String.valueOf(this.sessionLog.getData("date"));
-                case LOCATION -> data = this.sessionLog.getData(LOCATION); // Updated to use LOCATION constant
+                case LOCATION -> data = this.sessionLog.getData(LOCATION);
                 case EVENT_ID -> data = this.sessionLog.getData(EVENT_ID);
                 case OWNER_ID -> data = this.sessionLog.getData(OWNER_ID);
                 default -> throw new IOException();
@@ -78,7 +78,7 @@ public class SessionController implements Controller {
         String eventOwnerId = getFatherOwnerId(eventId, (String) params[8]);
         Map<String, Persistence> eventH;
 
-        if (params[8].equals(EVENT_TYPE)) { // Updated to use EVENT_TYPE constant
+        if (params[8].equals(EVENT_TYPE)) { // Substituindo a literal "Event"
             EventController eventController = new EventController();
             eventH = eventController.getEventHashMap();
         } else {
@@ -190,7 +190,6 @@ public class SessionController implements Controller {
                 }
             }
         }
-
     }
 
     @Override
@@ -243,38 +242,37 @@ public class SessionController implements Controller {
             return;
         }
 
-        boolean nameExists = false;
-
-        for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData(NAME).equals(newName) || newName.isEmpty()) {
-                nameExists = true;
-                break;
-            }
-        }
+        boolean nameExists = sessionHashMap.values().stream()
+                .anyMatch(session -> session.getData(NAME).equals(newName) && !session.getData(NAME).equals(oldName));
 
         if (nameExists) {
-            LOGGER.warning("Esse nome já existe!");
+            LOGGER.warning("Nome em uso");
             return;
         }
 
-        for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData(NAME).equals(oldName)) {
-                persistence.update(newName, newDate, newDescription, newLocation, userId);
+        boolean isOwner = false;
+        for (Persistence session : sessionHashMap.values()) {
+            if (session.getData(NAME).equals(oldName) && session.getData(OWNER_ID).equals(userId)) {
+                session.update(newName, newDate, newDescription, newLocation);
+                isOwner = true;
                 break;
             }
         }
+
+        if (!isOwner) {
+            LOGGER.warning("Nome não pertence ao seu usuário atual");
+        }
     }
 
+    @Override
     public void read() {
-        Persistence sessionPersistence = new Session();
-        this.sessionHashMap = sessionPersistence.read();
+        Persistence persistence = new Session();
+        this.sessionHashMap = persistence.read();
     }
 
     private String getFatherEventId(String eventName, String eventType) {
         String fatherId = "";
-        if (eventType.equals("Event")) {
+        if (eventType.equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
             Map<String, Persistence> eventH = eventController.getEventHashMap();
             for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
@@ -300,7 +298,7 @@ public class SessionController implements Controller {
 
     private String getFatherOwnerId(String eventId, String eventType) {
         String fatherOwnerId = "";
-        if (eventType.equals("Event")) {
+        if (eventType.equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
             Map<String, Persistence> eventH = eventController.getEventHashMap();
             for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
@@ -321,7 +319,6 @@ public class SessionController implements Controller {
                 }
             }
         }
-
         return fatherOwnerId;
     }
 }
