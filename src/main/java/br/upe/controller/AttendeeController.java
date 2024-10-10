@@ -117,8 +117,11 @@ public class AttendeeController implements Controller {
         }
 
         if (!found) {
-            LOGGER.warning(String.format("Nenhum attendee encontrado para a sessão %s", sessionId));
+            if (LOGGER.isLoggable(Level.WARNING)) {
+                LOGGER.warning(String.format("Nenhum attendee encontrado para a sessão %s", sessionId));
+            }
         }
+
 
 
         attendeePersistence.update(this.attendeeHashMap);
