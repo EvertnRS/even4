@@ -172,29 +172,36 @@ public class SessionController implements Controller {
     @Override
     public void show(Object... params) {
         this.read();
-        if (params[1].equals("userId")) {
-            for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
-                Persistence persistence = entry.getValue();
-                if (!persistence.getData(OWNER_ID).equals(params[0])) {
-                    String eventName = getEventName(persistence.getData(EVENT_ID));
-                    if (LOGGER.isLoggable(Level.WARNING)) {
-                        LOGGER.warning("Nome: " + persistence.getData(NAME) + " - " + "Id: " + persistence.getData(ID) + "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\n");
-                    }
-                }
+
+        String paramType = (String) params[1];
+        String paramId = (String) params[0];
+
+        for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
+            Persistence persistence = entry.getValue();
+
+            // Se for "userId", exibe sessões que não pertencem ao usuário
+            if (paramType.equals("userId") && !persistence.getData(OWNER_ID).equals(paramId)) {
+                logSessionDetails(persistence);
             }
-        } else if (params[1].equals("sessionId")) {
-            for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
-                Persistence persistence = entry.getValue();
-                if (persistence.getData(ID).equals(params[0])) {
-                    String eventName = getEventName(persistence.getData(EVENT_ID));
-                    if (LOGGER.isLoggable(Level.WARNING)) {
-                        LOGGER.warning("Nome: " + persistence.getData(NAME) + " - " + "Id: " + persistence.getData(ID) + "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\nDescrição: " + persistence.getData(DESCRIPTION) + " - " + "Local: " + persistence.getData(LOCATION) + "\n");
-                        break;
-                    }
-                }
+
+            // Se for "sessionId", exibe detalhes da sessão correspondente
+            else if (paramType.equals("sessionId") && persistence.getData(ID).equals(paramId)) {
+                logSessionDetails(persistence);
+                break; // Sai do loop após encontrar a sessão correspondente
             }
         }
     }
+
+    private void logSessionDetails(Persistence persistence) {
+        String eventName = getEventName(persistence.getData(EVENT_ID));
+        if (LOGGER.isLoggable(Level.WARNING)) {
+            LOGGER.warning("Nome: " + persistence.getData(NAME) + " - " + "Id: " + persistence.getData(ID) +
+                    "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") +
+                    " - " + "Hora: " + persistence.getData("startTime") +
+                    "\nDescrição: " + persistence.getData(DESCRIPTION) + " - " + "Local: " + persistence.getData(LOCATION) + "\n");
+        }
+    }
+
 
     @Override
     public boolean loginValidate(String email, String cpf) {
@@ -208,8 +215,8 @@ public class SessionController implements Controller {
         boolean isEvent = false;
         for (Map.Entry<String, Persistence> entry : evenH.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData(ID).equals(id)) {
-                name = persistence.getData(NAME);
+            if (persistence.getData("id").equals(id)) {
+                name = persistence.getData("name");
             }
         }
 
@@ -218,8 +225,8 @@ public class SessionController implements Controller {
             Map<String, Persistence> subEvenH = subEventController.getSubEventHashMap();
             for (Map.Entry<String, Persistence> entry : subEvenH.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData(ID).equals(id)) {
-                    name = persistence.getData(NAME);
+                if (persistence.getData("id").equals(id)) {
+                    name = persistence.getData("name");
                 }
             }
         }
