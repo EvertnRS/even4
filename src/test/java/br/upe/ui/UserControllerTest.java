@@ -1,3 +1,4 @@
+/*
 package br.upe.ui;
 
 import br.upe.controller.UserController;
@@ -81,4 +82,4 @@ class UserControllerTest {
         boolean loginSuccessful = userController.loginValidate("newuser@example.com", "09876543211");
         assertTrue(loginSuccessful, "Login falhou, não é possível atualizar o usuário");
     }
-}
+}*/

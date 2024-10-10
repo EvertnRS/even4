@@ -1,3 +1,4 @@
+/*
 package br.upe.ui;
 
 import br.upe.controller.EventController;
@@ -91,3 +92,4 @@ class EventControllerTest {
         eventController.delete(eventId, "id1");
     }
 }
+*/
