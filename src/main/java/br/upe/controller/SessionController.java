@@ -321,6 +321,7 @@ public class SessionController implements Controller {
                 }
             }
         }
+
         return fatherOwnerId;
     }
 }
