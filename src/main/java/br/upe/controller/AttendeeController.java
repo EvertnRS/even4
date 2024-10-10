@@ -116,11 +116,10 @@ public class AttendeeController implements Controller {
             }
         }
 
-        if (!found) {
-            if (LOGGER.isLoggable(Level.WARNING)) {
-                LOGGER.warning(String.format("Nenhum attendee encontrado para a sessão %s", sessionId));
-            }
+        if (!found && LOGGER.isLoggable(Level.WARNING)) {
+            LOGGER.warning(String.format("Nenhum attendee encontrado para a sessão %s", sessionId));
         }
+
 
 
 
