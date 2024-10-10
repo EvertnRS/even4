@@ -82,21 +82,21 @@ public class MainScreenController extends BaseController implements FxController
                 eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
 
                 Button editButton = new Button("Editar");
-                editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white;");
+                editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
                 Button deleteButton = new Button("Excluir");
-                deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white;");
+                deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
 
                 editButton.setOnAction(e -> {
                     try {
-                        editEvent(persistence.getData("name"), userController.getData("id"));
+                        handleEditEvent(persistence.getData("name"), userController.getData("id"));
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                 });
 
-                deleteButton.setOnAction(e -> deleteEvent(persistence.getData("id"), userController.getData("id")));
+                deleteButton.setOnAction(e -> handleDeleteEvent(persistence.getData("id"), userController.getData("id")));
 
                 HBox actionButtons = new HBox(10);
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
@@ -109,7 +109,7 @@ public class MainScreenController extends BaseController implements FxController
         }
     }
 
-    private void deleteEvent(String eventId, String userId) {
+    private void handleDeleteEvent(String eventId, String userId) {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
         confirmationAlert.setHeaderText("Deseja realmente excluir este evento?");
@@ -129,8 +129,12 @@ public class MainScreenController extends BaseController implements FxController
         }
     }
 
-    private void editEvent(String eventName, String userId) throws IOException {
+    private void handleEditEvent(String eventName, String userId) throws IOException {
         genericButton("/fxml/updateEventScreen.fxml", mainPane, userController, eventName, userId);
+    }
+
+    public void handleAddEvent() throws IOException {
+        genericButton("/fxml/createEventScreen.fxml", mainPane, userController, null, userController.getData("id"));
     }
 
 }
