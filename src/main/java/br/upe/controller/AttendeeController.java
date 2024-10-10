@@ -230,9 +230,9 @@ public class AttendeeController implements Controller {
         try {
             switch (dataToGet) {
                 case "name" -> data = this.attendeeLog.getData("name");
-                case "sessionId" -> data = this.attendeeLog.getData(SESSION_ID);
+                case SESSION_ID -> data = this.attendeeLog.getData(SESSION_ID);
                 case "id" -> data = this.attendeeLog.getData("id");
-                case "userId" -> data = this.attendeeLog.getData(USER_ID);
+                case USER_ID -> data = this.attendeeLog.getData(USER_ID);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
