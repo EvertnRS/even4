@@ -16,6 +16,8 @@ public class SessionController implements Controller {
     private static final String ID = "id";
     private static final String OWNER_ID = "ownerId";
     private static final String EVENT_ID = "eventId";
+    private static final String LOCATION = "location"; // Definindo a constante para "location"
+    private static final String EVENT_TYPE = "Event"; // Definindo a constante para "Event"
     private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
 
     private Map<String, Persistence> sessionHashMap;
@@ -46,7 +48,7 @@ public class SessionController implements Controller {
                 case NAME -> data = this.sessionLog.getData(NAME);
                 case DESCRIPTION -> data = this.sessionLog.getData(DESCRIPTION);
                 case "date" -> data = String.valueOf(this.sessionLog.getData("date"));
-                case "location" -> data = this.sessionLog.getData("location");
+                case LOCATION -> data = this.sessionLog.getData(LOCATION);
                 case EVENT_ID -> data = this.sessionLog.getData(EVENT_ID);
                 case OWNER_ID -> data = this.sessionLog.getData(OWNER_ID);
                 default -> throw new IOException();
@@ -76,7 +78,7 @@ public class SessionController implements Controller {
         String eventOwnerId = getFatherOwnerId(eventId, (String) params[8]);
         Map<String, Persistence> eventH;
 
-        if (params[8].equals("Event")) {
+        if (params[8].equals(EVENT_TYPE)) { // Substituindo a literal "Event"
             EventController eventController = new EventController();
             eventH = eventController.getEventHashMap();
         } else {
@@ -183,12 +185,11 @@ public class SessionController implements Controller {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData(ID).equals(params[0])) {
                     String eventName = getEventName(persistence.getData(EVENT_ID));
-                    LOGGER.warning("Nome: " + persistence.getData(NAME) + " - " + "Id: " + persistence.getData(ID) + "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\nDescrição: " + persistence.getData(DESCRIPTION) + " - " + "Local: " + persistence.getData("location") + "\n");
+                    LOGGER.warning("Nome: " + persistence.getData(NAME) + " - " + "Id: " + persistence.getData(ID) + "\nEvento Pai: " + eventName + " - " + "Data: " + persistence.getData("date") + " - " + "Hora: " + persistence.getData("startTime") + "\nDescrição: " + persistence.getData(DESCRIPTION) + " - " + "Local: " + persistence.getData(LOCATION) + "\n");
                     break;
                 }
             }
         }
-
     }
 
     @Override
@@ -250,42 +251,28 @@ public class SessionController implements Controller {
         }
 
         boolean isOwner = false;
-        String id = null;
-
-        for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            String name = persistence.getData(NAME);
-            String ownerId = persistence.getData(OWNER_ID);
-
-            if (ownerId != null && ownerId.equals(userId)) {
-                if (name.equals(oldName)) {
-                    persistence.update(oldName, newName, newDate, newDescription, newLocation);
-                    sessionLog = persistence;
-                    id = persistence.getData(ID);
-                    isOwner = true;
-                }
+        for (Persistence session : sessionHashMap.values()) {
+            if (session.getData(NAME).equals(oldName) && session.getData(OWNER_ID).equals(userId)) {
+                session.update(newName, newDate, newDescription, newLocation);
+                isOwner = true;
+                break;
             }
         }
 
         if (!isOwner) {
-            LOGGER.warning("Você não tem permissão para alterar esta Sessão");
-        }
-
-        if (sessionLog != null) {
-            Persistence sessionPersistence = new Session();
-            sessionPersistence.update(sessionHashMap);
+            LOGGER.warning("Nome não pertence ao seu usuário atual");
         }
     }
 
     @Override
     public void read() {
-        Persistence sessionPersistence = new Session();
-        this.sessionHashMap = sessionPersistence.read();
+        Persistence persistence = new Session();
+        this.sessionHashMap = persistence.read();
     }
 
     private String getFatherEventId(String eventName, String eventType) {
         String fatherId = "";
-        if (eventType.equals("Event")) {
+        if (eventType.equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
             Map<String, Persistence> eventH = eventController.getEventHashMap();
             for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
@@ -311,7 +298,7 @@ public class SessionController implements Controller {
 
     private String getFatherOwnerId(String eventId, String eventType) {
         String fatherOwnerId = "";
-        if (eventType.equals("Event")) {
+        if (eventType.equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
             Map<String, Persistence> eventH = eventController.getEventHashMap();
             for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
@@ -334,5 +321,4 @@ public class SessionController implements Controller {
         }
         return fatherOwnerId;
     }
-
 }
