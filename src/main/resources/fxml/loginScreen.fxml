@@ -31,11 +31,12 @@
                   -fx-background-radius: 5;
                   -fx-padding: 5 10 5 10;
                   -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);
+                  -fx-cursor: hand;
               </style>
           </Button>
 
           <Label layoutX="130.0" layoutY="260.0" text="Não é cadastrado?" />
          <Label layoutX="237.0" layoutY="260.0" text="Sign Up" textFill="#ff914d" />
-         <Button layoutX="235.0" layoutY="256.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="45.0" text=" " onAction="#moveToSignUp"/>
+         <Button layoutX="235.0" layoutY="256.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="45.0" text=" " onAction="#moveToSignUp" style="-fx-cursor: hand;"/>
       </children></Pane>
 </AnchorPane>
