@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public abstract class BaseController {
 
-    public void genericButton(String path, AnchorPane pane, UserController userController, String eventName, String userId) throws IOException {
+    public void genericButton(String path, AnchorPane pane, UserController userController, String eventName) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         AnchorPane screen = loader.load();
 
@@ -21,7 +21,6 @@ public abstract class BaseController {
 
             if (screenController instanceof UpdateEventScreenController) {
                 ((UpdateEventScreenController) screenController).setEventName(eventName);
-                ((UpdateEventScreenController) screenController).setUserId(userId);
             }
         }
 

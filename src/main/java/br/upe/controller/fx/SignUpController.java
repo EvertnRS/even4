@@ -76,7 +76,7 @@ public class SignUpController extends BaseController implements FxController {
     }
 
     public void returnToLogin() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", registerAnchorPane, null, null, null);
+        genericButton("/fxml/loginScreen.fxml", registerAnchorPane, null, null);
     }
 
     @Override

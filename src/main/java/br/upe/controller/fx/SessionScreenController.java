@@ -29,22 +29,22 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", sessionPane, userController, null, null);
+        genericButton("/fxml/userScreen.fxml", sessionPane, userController, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", sessionPane, userController, null, null);
+        genericButton("/fxml/subEventScreen.fxml", sessionPane, userController, null);
     }
 
     public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", sessionPane, userController, null, null);
+        genericButton("/fxml/submitScreen.fxml", sessionPane, userController, null);
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", sessionPane, userController, null, null);
+        genericButton("/fxml/mainScreen.fxml", sessionPane, userController, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", sessionPane, userController, null, null);
+        genericButton("/fxml/loginScreen.fxml", sessionPane, userController, null);
     }
 }

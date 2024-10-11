@@ -29,22 +29,22 @@ public class SubmitEventScreenController extends BaseController implements FxCon
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", submitPane, userController, null, null);
+        genericButton("/fxml/userScreen.fxml", submitPane, userController, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", submitPane, userController, null, null);
+        genericButton("/fxml/subEventScreen.fxml", submitPane, userController, null);
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", submitPane, userController, null, null);
+        genericButton("/fxml/mainScreen.fxml", submitPane, userController, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", submitPane, userController, null, null);
+        genericButton("/fxml/sessionScreen.fxml", submitPane, userController, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", submitPane, userController, null, null);
+        genericButton("/fxml/loginScreen.fxml", submitPane, userController, null);
     }
 }
