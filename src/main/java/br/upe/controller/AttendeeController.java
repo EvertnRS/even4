@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AttendeeController implements Controller {
+    private static final String USER_ID = "userId";
+    private static final String SESSION_ID = "sessionId";
     private static final Logger LOGGER = Logger.getLogger(AttendeeController.class.getName());
     private Map<String, Persistence> attendeeHashMap;
     private Persistence attendeeLog;
@@ -55,7 +57,7 @@ public class AttendeeController implements Controller {
 
             for (Map.Entry<String, Persistence> entry : this.attendeeHashMap.entrySet()) {
                 Persistence attendee = entry.getValue();
-                if (attendee.getData("userId").equals(userId) && attendee.getData("sessionId").equals(sessionId)) {
+                if (attendee.getData(USER_ID).equals(userId) && attendee.getData(SESSION_ID).equals(sessionId)) {
                     throw new IOException();
                 }
             }
@@ -63,8 +65,8 @@ public class AttendeeController implements Controller {
             attendeePersistence.create(userId, name, sessionId);
             Persistence attendee = new Attendee();
             attendee.setData("name", name);
-            attendee.setData("sessionId", sessionId);
-            attendee.setData("userId", userId);
+            attendee.setData(SESSION_ID, sessionId);
+            attendee.setData(USER_ID, userId);
             this.setAttendeeLog(attendee);
 
         } catch (IOException exception) {
@@ -106,7 +108,7 @@ public class AttendeeController implements Controller {
         boolean found = false;
         for (Map.Entry<String, Persistence> entry : this.attendeeHashMap.entrySet()) {
             Persistence attendee = entry.getValue();
-            if (attendee.getData("sessionId").equals(sessionId)) {
+            if (attendee.getData(SESSION_ID).equals(sessionId)) {
                 attendee.setData("name", newName);
                 this.attendeeHashMap.put(attendee.getData("id"), attendee);
                 found = true;
@@ -114,10 +116,12 @@ public class AttendeeController implements Controller {
             }
         }
 
-        if (!found) {
-            LOGGER.warning("Nenhum attendee encontrado para a sessão " + sessionId);
-            return;
+        if (!found && LOGGER.isLoggable(Level.WARNING)) {
+            LOGGER.warning(String.format("Nenhum attendee encontrado para a sessão %s", sessionId));
         }
+
+
+
 
         attendeePersistence.update(this.attendeeHashMap);
     }
@@ -137,7 +141,7 @@ public class AttendeeController implements Controller {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence attendee = entry.getValue();
 
-                if (attendee.getData("userId").equals(params[0]) && attendee.getData("sessionId").equals(params[2])) {
+                if (attendee.getData(USER_ID).equals(params[0]) && attendee.getData(SESSION_ID).equals(params[2])) {
 
                     iterator.remove();
                 }
@@ -169,8 +173,8 @@ public class AttendeeController implements Controller {
             boolean found = false;
             for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData("userId").equals(idowner)){
-                    String[] results = getSessionById(persistence.getData("sessionId"));
+                if (persistence.getData(USER_ID).equals(idowner)){
+                    String[] results = getSessionById(persistence.getData(SESSION_ID));
                     LOGGER.log(Level.WARNING, "Nome: {0} - Data: {1}\nDescrição: {2} - Local: {3} - Hora: {4}\n",
                             new Object[]{results[0], results[2], results[1], results[3], results[4]});
 
@@ -228,9 +232,9 @@ public class AttendeeController implements Controller {
         try {
             switch (dataToGet) {
                 case "name" -> data = this.attendeeLog.getData("name");
-                case "sessionId" -> data = this.attendeeLog.getData("sessionId");
+                case SESSION_ID -> data = this.attendeeLog.getData(SESSION_ID);
                 case "id" -> data = this.attendeeLog.getData("id");
-                case "userId" -> data = this.attendeeLog.getData("userId");
+                case USER_ID -> data = this.attendeeLog.getData(USER_ID);
                 default -> throw new IOException();
             }
         } catch (IOException e) {

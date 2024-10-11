@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class EventController implements Controller {
+    private static final String OWNWERID = "ownerId";
     private static final Logger LOGGER = Logger.getLogger(EventController.class.getName());
 
     private Map<String, Persistence> eventHashMap;
@@ -37,7 +38,7 @@ public class EventController implements Controller {
             boolean found = false;
             for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData("ownerId").equals(ownerId)){
+                if (persistence.getData(OWNWERID).equals(ownerId)){
                     LOGGER.warning(persistence.getData("name"));
                     found = true;
                     isnull = false;
@@ -61,7 +62,7 @@ public class EventController implements Controller {
             try {
                 for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                     Persistence persistence = entry.getValue();
-                    if (persistence.getData("ownerId").equals(ownerId)) {
+                    if (persistence.getData(OWNWERID).equals(ownerId)) {
                         userEvents.add(persistence.getData("name"));
                     }
                 }
@@ -82,7 +83,7 @@ public class EventController implements Controller {
 
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            String ownerId = persistence.getData("ownerId");
+            String ownerId = persistence.getData(OWNWERID);
             // Verifica se o evento não é de propriedade do usuário e se possui sessões
             if (!ownerId.equals(params[0])) {
                 LOGGER.warning(persistence.getData("name") + " - " + persistence.getData("id"));
@@ -112,7 +113,7 @@ public class EventController implements Controller {
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             String name = persistence.getData("name");
-            String ownerId = persistence.getData("ownerId");
+            String ownerId = persistence.getData(OWNWERID);
 
             if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
                 isOwner = true;
@@ -222,7 +223,7 @@ public class EventController implements Controller {
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(params[0])){
-                ownerId = persistence.getData("ownerId");
+                ownerId = persistence.getData(OWNWERID);
             }
         }
 
