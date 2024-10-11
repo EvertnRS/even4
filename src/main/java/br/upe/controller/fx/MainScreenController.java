@@ -40,23 +40,23 @@ public class MainScreenController extends BaseController implements FxController
     }
 
     public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", mainPane, userController, null, null);
+        genericButton("/fxml/submitScreen.fxml", mainPane, userController, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", mainPane, userController, null, null);
+        genericButton("/fxml/userScreen.fxml", mainPane, userController, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", mainPane, userController, null, null);
+        genericButton("/fxml/subEventScreen.fxml", mainPane, userController, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", mainPane, userController, null, null);
+        genericButton("/fxml/sessionScreen.fxml", mainPane, userController, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", mainPane, userController, null, null);
+        genericButton("/fxml/loginScreen.fxml", mainPane, userController, null);
     }
 
     private void loadUserEvents() {
@@ -90,7 +90,7 @@ public class MainScreenController extends BaseController implements FxController
 
                 editButton.setOnAction(e -> {
                     try {
-                        handleEditEvent(persistence.getData("name"), userController.getData("id"));
+                        handleEditEvent(persistence.getData("name"));
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -129,12 +129,12 @@ public class MainScreenController extends BaseController implements FxController
         }
     }
 
-    private void handleEditEvent(String eventName, String userId) throws IOException {
-        genericButton("/fxml/updateEventScreen.fxml", mainPane, userController, eventName, userId);
+    private void handleEditEvent(String eventName) throws IOException {
+        genericButton("/fxml/updateEventScreen.fxml", mainPane, userController, eventName);
     }
 
     public void handleAddEvent() throws IOException {
-        genericButton("/fxml/createEventScreen.fxml", mainPane, userController, null, userController.getData("id"));
+        genericButton("/fxml/createEventScreen.fxml", mainPane, userController, null);
     }
 
 }

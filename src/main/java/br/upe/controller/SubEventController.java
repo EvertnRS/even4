@@ -5,7 +5,10 @@ import br.upe.persistence.Persistence;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -139,6 +142,29 @@ public class SubEventController implements Controller {
         return isnull;
     }
 
+    public List<String> list(String ownerId, String type) {
+        if(type.equals("fx")){
+            this.read();
+            List<String> userEvents = new ArrayList<>();
+
+            try {
+                for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
+                    Persistence persistence = entry.getValue();
+                    if (persistence.getData("ownerId").equals(ownerId)) {
+                        userEvents.add(persistence.getData("name"));
+                    }
+                }
+                if (userEvents.isEmpty()) {
+                    LOGGER.warning("Seu usuário atual é organizador de nenhum subevento");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return userEvents;
+        }
+        return List.of();
+    }
+
     @Override
     public void show(Object... params) {
         this.read();
@@ -263,19 +289,45 @@ public class SubEventController implements Controller {
     }
 
     private boolean validateEventDate(String date, String searchId) {
+        if (date == null || date.trim().isEmpty()) {
+            LOGGER.warning("A data fornecida está vazia.");
+            return false;
+        }
+
+        if (searchId == null || searchId.trim().isEmpty()) {
+            LOGGER.warning("O ID de busca está vazio.");
+            return false;
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         EventController ec = new EventController();
         Map<String, Persistence> list = ec.getEventHashMap();
 
         Persistence listIndice = list.get(searchId);
+        if (listIndice == null) {
+            LOGGER.warning("Evento não encontrado para o ID fornecido: " + searchId);
+            return false;
+        }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate eventDate;
-        eventDate = LocalDate.parse(listIndice.getData("date"), formatter);
+        try {
+            String parentDateString = listIndice.getData("date");
+            if (parentDateString == null || parentDateString.trim().isEmpty()) {
+                LOGGER.warning("Data do evento Pai está vazia ou nula.");
+                return false;
+            }
 
-        LocalDate inputDate;
-        inputDate = LocalDate.parse(date, formatter);
-        if (eventDate.isAfter(inputDate)) {
-            LOGGER.warning("A data não pode ser anterior ao seu Evento Pai\n");
+            LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
+
+            LocalDate inputDate = LocalDate.parse(date, formatter);
+
+            if (inputDate.isBefore(eventDate)) {
+                LOGGER.warning("A data do subevento não pode ser anterior à data do Evento Pai.");
+                return false;
+            }
+
+        } catch (DateTimeParseException e) {
+            LOGGER.warning("Erro ao analisar a data. Formato inválido: " + date);
             return false;
         }
 

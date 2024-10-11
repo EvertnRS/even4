@@ -56,7 +56,7 @@ public class LoginScreenController extends BaseController implements FxControlle
         UserController userController = new UserController();
         if (userController.loginValidate(email, cpf)) {
             try {
-                genericButton("/fxml/mainScreen.fxml", loginAnchorPane, userController, null, null);
+                genericButton("/fxml/mainScreen.fxml", loginAnchorPane, userController, null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -66,7 +66,7 @@ public class LoginScreenController extends BaseController implements FxControlle
     }
 
     public void moveToSignUp() throws IOException {
-        genericButton("/fxml/signUpScreen.fxml", loginAnchorPane, null, null, null);
+        genericButton("/fxml/signUpScreen.fxml", loginAnchorPane, null, null);
     }
 
     @Override

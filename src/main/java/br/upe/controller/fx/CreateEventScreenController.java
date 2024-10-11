@@ -13,7 +13,6 @@ import java.io.IOException;
 public class CreateEventScreenController extends BaseController implements FxController {
     private UserController userController;
     private EventController eventController;
-    private String userId;
 
     @FXML
     private AnchorPane newEventPane;
@@ -43,27 +42,27 @@ public class CreateEventScreenController extends BaseController implements FxCon
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newEventPane, userController, null, null);
+        genericButton("/fxml/mainScreen.fxml", newEventPane, userController, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", newEventPane, userController, null, null);
+        genericButton("/fxml/subEventScreen.fxml", newEventPane, userController, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newEventPane, userController, null, null);
+        genericButton("/fxml/submitScreen.fxml", newEventPane, userController, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", newEventPane, userController, null, null);
+        genericButton("/fxml/sessionScreen.fxml", newEventPane, userController, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", newEventPane, userController, null, null);
+        genericButton("/fxml/loginScreen.fxml", newEventPane, userController, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", newEventPane, userController, null, null);
+        genericButton("/fxml/userScreen.fxml", newEventPane, userController, null);
     }
 
     public void createEvent() throws IOException {

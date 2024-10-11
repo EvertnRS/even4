@@ -7,17 +7,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import static br.upe.ui.Validation.isValidEmail;
 
 public class UpdateEventScreenController extends BaseController implements FxController {
     private UserController userController;
     private EventController eventController;
     private String eventName;
-    private String userId;
 
     @FXML
     private AnchorPane editEventPane;
@@ -46,36 +41,33 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         this.eventName = eventName;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     private void initial() {
         userEmail.setText(userController.getData("email"));
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", editEventPane, userController, null, null);
+        genericButton("/fxml/mainScreen.fxml", editEventPane, userController, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", editEventPane, userController, null, null);
+        genericButton("/fxml/subEventScreen.fxml", editEventPane, userController, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", editEventPane, userController, null, null);
+        genericButton("/fxml/submitScreen.fxml", editEventPane, userController, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", editEventPane, userController, null, null);
+        genericButton("/fxml/sessionScreen.fxml", editEventPane, userController, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", editEventPane, userController, null, null);
+        genericButton("/fxml/loginScreen.fxml", editEventPane, userController, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", editEventPane, userController, null, null);
+        genericButton("/fxml/userScreen.fxml", editEventPane, userController, null);
     }
 
     public void updateEvent() throws IOException {
@@ -84,7 +76,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue().toString();
 
-        eventController.update(eventName, newName, newDate, newDescription, newLocation, userId);
+        eventController.update(eventName, newName, newDate, newDescription, newLocation, userController.getData("id"));
         handleEvent();
     }
 
