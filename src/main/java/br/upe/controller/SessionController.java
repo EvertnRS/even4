@@ -4,7 +4,9 @@ import br.upe.persistence.Session;
 import br.upe.persistence.Persistence;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,6 +76,8 @@ public class SessionController implements Controller {
         String startTime = (String) params[5];
         String endTime = (String) params[6];
         String userId = (String) params[7];
+
+        System.out.printf(userId);
 
         String eventOwnerId = getFatherOwnerId(eventId, (String) params[8]);
         Map<String, Persistence> eventH;
@@ -167,6 +171,29 @@ public class SessionController implements Controller {
         }
 
         return isnull;
+    }
+
+    public List<String> list(String ownerId, String type) {
+        if(type.equals("fx")){
+            this.read();
+            List<String> userEvents = new ArrayList<>();
+
+            try {
+                for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
+                    Persistence persistence = entry.getValue();
+                    if (persistence.getData(OWNER_ID).equals(ownerId)) {
+                        userEvents.add(persistence.getData("name"));
+                    }
+                }
+                if (userEvents.isEmpty()) {
+                    LOGGER.warning("Seu usuário atual é organizador de nenhuma sessão");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return userEvents;
+        }
+        return List.of();
     }
 
     @Override
