@@ -98,13 +98,13 @@ public class SubEventScreenController extends BaseController implements FxContro
 
                 editButton.setOnAction(e -> {
                     try {
-                        handleEditEvent(persistence.getData("name"));
+                        handleEditSubEvent(persistence.getData("name"));
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
                 });
 
-                deleteButton.setOnAction(e -> handleDeleteEvent(persistence.getData("id"), userController.getData("id")));
+                deleteButton.setOnAction(e -> handleDeleteSubEvent(persistence.getData("id"), userController.getData("id")));
 
                 HBox actionButtons = new HBox(10);
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
@@ -117,11 +117,11 @@ public class SubEventScreenController extends BaseController implements FxContro
         }
     }
 
-    private void handleEditEvent(String eventName) throws IOException {
+    private void handleEditSubEvent(String eventName) throws IOException {
         genericButton("/fxml/updateEventScreen.fxml", subEventPane, userController, eventName);
     }
 
-    private void handleDeleteEvent(String eventId, String userId) {
+    private void handleDeleteSubEvent(String eventId, String userId) {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
         confirmationAlert.setHeaderText("Deseja realmente excluir este subEvento?");
