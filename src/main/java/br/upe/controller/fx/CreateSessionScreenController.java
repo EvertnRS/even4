@@ -90,17 +90,17 @@ public class CreateSessionScreenController extends BaseController implements FxC
         for (Map.Entry<String, Persistence> entry : eventMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("name").equals(name)) {
-                return "Evento";
+                return "Event";
             }
         }
 
         for (Map.Entry<String, Persistence> entry : subEventMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("name").equals(name)) {
-                return "SubEvento";
+                return "SubEvent";
             }
         }
-        return "nenhum";
+        return "";
     }
 
     private void loadUserEvents() {
