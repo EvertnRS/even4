@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static br.upe.ui.Validation.isValidDate;
+
 public class CreateSubEventScreenController extends BaseController implements FxController {
     private UserController userController;
     private SubEventController subEventController;
@@ -36,8 +38,6 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     private ComboBox<String> eventComboBox;
     @FXML
     private Label errorUpdtLabel;
-    @FXML
-    private Label errorDelLabel;
 
     public void setUserController(UserController userController) {
         this.userController = userController;
@@ -64,7 +64,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/createSubEventScreen.fxml", newSubEventPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", newSubEventPane, userController, null);
     }
 
     public void logout() throws IOException {
@@ -89,9 +89,13 @@ public class CreateSubEventScreenController extends BaseController implements Fx
 
         String selectedEventName = eventComboBox.getSelectionModel().getSelectedItem();
 
-        subEventController.create(selectedEventName, subEventName, subEventDate, subEventDescription, subEventLocation, userController.getData("id"));
-        subEventController.read();
-        handleSubEvent();
+        if (!isValidDate(subEventDate)) {
+            errorUpdtLabel.setText("Data inválida.");
+        }else {
+            subEventController.create(selectedEventName, subEventName, subEventDate, subEventDescription, subEventLocation, userController.getData("id"));
+            subEventController.read();
+            handleSubEvent();
+        }
     }
 
 }

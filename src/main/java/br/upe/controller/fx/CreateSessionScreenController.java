@@ -5,7 +5,6 @@ import br.upe.controller.SessionController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
-import br.upe.persistence.Session;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -16,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import static br.upe.ui.Validation.*;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
     private UserController userController;
@@ -72,7 +72,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/createSubEventScreen.fxml", newSessionPane, userController, null);
+        genericButton("/fxml/SessionScreen.fxml", newSessionPane, userController, null);
     }
 
     public void logout() throws IOException {
@@ -124,9 +124,13 @@ public class CreateSessionScreenController extends BaseController implements FxC
 
         System.out.printf(type);
 
-        sessionController.create(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, userController.getData("id"), type);
-        sessionController.read();
-        handleSubEvent();
+        if (!isValidDate(sessionDate) || !areValidTimes(startTime, endTime)) {
+            errorUpdtLabel.setText("Data ou horário inválido.");
+        }else {
+            sessionController.create(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, userController.getData("id"), type);
+            sessionController.read();
+            handleSession();
+        }
     }
 
 }
