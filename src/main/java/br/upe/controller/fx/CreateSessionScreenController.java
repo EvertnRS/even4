@@ -5,7 +5,6 @@ import br.upe.controller.SessionController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
-import br.upe.persistence.Session;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -16,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import static br.upe.ui.Validation.*;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
     private UserController userController;
@@ -72,7 +72,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/createSubEventScreen.fxml", newSessionPane, userController, null);
+        genericButton("/fxml/SessionScreen.fxml", newSessionPane, userController, null);
     }
 
     public void logout() throws IOException {
@@ -83,24 +83,24 @@ public class CreateSessionScreenController extends BaseController implements FxC
         genericButton("/fxml/userScreen.fxml", newSessionPane, userController, null);
     }
 
-    public String verifyType(String name) throws IOException {
+    public String verifyType(String name) {
 
         Map<String, Persistence> eventMap = eventController.getEventHashMap();
         Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
         for (Map.Entry<String, Persistence> entry : eventMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("name").equals(name)) {
-                return "Evento";
+                return "Event";
             }
         }
 
         for (Map.Entry<String, Persistence> entry : subEventMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("name").equals(name)) {
-                return "SubEvento";
+                return "SubEvent";
             }
         }
-        return "nenhum";
+        return "";
     }
 
     private void loadUserEvents() {
@@ -122,11 +122,13 @@ public class CreateSessionScreenController extends BaseController implements FxC
         String selectedEventName = eventComboBox.getSelectionModel().getSelectedItem();
         String type = verifyType(selectedEventName);
 
-        System.out.printf(type);
-
-        sessionController.create(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, userController.getData("id"), type);
-        sessionController.read();
-        handleSubEvent();
+        if (!isValidDate(sessionDate) || !areValidTimes(startTime, endTime)) {
+            errorUpdtLabel.setText("Data ou horário inválido.");
+        }else {
+            sessionController.create(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, userController.getData("id"), type);
+            sessionController.read();
+            handleSession();
+        }
     }
 
 }

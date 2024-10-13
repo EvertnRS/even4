@@ -18,8 +18,8 @@ public class SessionController implements Controller {
     private static final String ID = "id";
     private static final String OWNER_ID = "ownerId";
     private static final String EVENT_ID = "eventId";
-    private static final String LOCATION = "location"; // Definindo a constante para "location"
-    private static final String EVENT_TYPE = "Event"; // Definindo a constante para "Event"
+    private static final String LOCATION = "location";
+    private static final String EVENT_TYPE = "Event";
     private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
 
     private Map<String, Persistence> sessionHashMap;
@@ -77,12 +77,10 @@ public class SessionController implements Controller {
         String endTime = (String) params[6];
         String userId = (String) params[7];
 
-        System.out.printf(userId);
-
         String eventOwnerId = getFatherOwnerId(eventId, (String) params[8]);
         Map<String, Persistence> eventH;
 
-        if (params[8].equals(EVENT_TYPE)) { // Substituindo a literal "Event"
+        if (params[8].equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
             eventH = eventController.getEventHashMap();
         } else {

@@ -30,12 +30,12 @@ public class Validation {
     }
 
     public static boolean isValidDate(String dt) {
-        String dateRegex = "^((([0-2]\\d)|(3[01]))/((0\\d)|(1[0-2]))/\\d{4})$";
+        String dateRegex = "^\\d{4}-((0\\d)|(1[0-2]))-(([0-2]\\d)|(3[01]))$";
         Pattern pattern = Pattern.compile(dateRegex);
         Matcher matcher = pattern.matcher(dt);
 
         if (matcher.matches()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             try {
                 LocalDate dateValidate = LocalDate.parse(dt, formatter);
                 LocalDate dateNow = LocalDate.now();
@@ -51,7 +51,7 @@ public class Validation {
                 return false;
             }
         }
-        LOGGER.warning("Formato de data inválido. Use o formato dd/MM/yyyy.");
+        LOGGER.warning("Formato de data inválido. Use o formato yyyy-MM-dd.");
         return false;
     }
 
