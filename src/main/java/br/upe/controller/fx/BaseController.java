@@ -1,6 +1,5 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

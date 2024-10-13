@@ -43,8 +43,6 @@ public class CreateSessionScreenController extends BaseController implements FxC
     private ComboBox<String> eventComboBox;
     @FXML
     private Label errorUpdtLabel;
-    @FXML
-    private Label errorDelLabel;
 
     public void setUserController(UserController userController) {
         this.userController = userController;
