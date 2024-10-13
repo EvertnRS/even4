@@ -10,6 +10,9 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 
+import static br.upe.ui.Validation.areValidTimes;
+import static br.upe.ui.Validation.isValidDate;
+
 public class CreateEventScreenController extends BaseController implements FxController {
     private UserController userController;
     private EventController eventController;
@@ -28,8 +31,6 @@ public class CreateEventScreenController extends BaseController implements FxCon
     private TextField descriptionTextField;
     @FXML
     private Label errorUpdtLabel;
-    @FXML
-    private Label errorDelLabel;
 
     public void setUserController(UserController userController) {
         this.userController = userController;
@@ -71,9 +72,13 @@ public class CreateEventScreenController extends BaseController implements FxCon
         String eventDescription = descriptionTextField.getText();
         String eventDate = datePicker.getValue().toString();
 
-        eventController.create(eventName, eventLocation, eventDescription, eventDate, userController.getData("id"));
-        eventController.read();
-        handleEvent();
+        if (!isValidDate(eventDate)) {
+            errorUpdtLabel.setText("Data inválida.");
+        }else {
+            eventController.create(eventName, eventLocation, eventDescription, eventDate, userController.getData("id"));
+            eventController.read();
+            handleEvent();
+        }
     }
 
 }
