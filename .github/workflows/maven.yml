@@ -12,6 +12,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
@@ -20,4 +21,10 @@ jobs:
         cache: maven
 
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn clean package
+
+    - name: Save JAR as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: even4-21.jar
+        path: target/even4-21.jar
