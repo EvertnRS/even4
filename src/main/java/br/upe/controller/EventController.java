@@ -39,7 +39,9 @@ public class EventController implements Controller {
             for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData(OWNWERID).equals(ownerId)){
-                    LOGGER.warning(persistence.getData("name"));
+                    if (persistence.getData("name") != null) {
+                        LOGGER.warning(persistence.getData("name"));
+                    }
                     found = true;
                     isnull = false;
                 }
