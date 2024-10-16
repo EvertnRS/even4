@@ -21,6 +21,7 @@ import java.util.Optional;
 public class SubEventScreenController extends BaseController implements FxController{
     UserController userController;
     SubEventController subEventController;
+    EventController eventController;
 
     @FXML
     private Label userEmail;
@@ -34,6 +35,7 @@ public class SubEventScreenController extends BaseController implements FxContro
     public void setUserController(UserController userController) {
         this.userController = userController;
         this.subEventController = new SubEventController();
+        this.eventController = new EventController();
         initial();
     }
 
@@ -79,15 +81,22 @@ public class SubEventScreenController extends BaseController implements FxContro
 
         subEventVBox.setAlignment(Pos.CENTER);
 
+        Map<String, Persistence> eventHashMap = eventController.getEventHashMap();
+
         for (Map.Entry<String, Persistence> entry : subEventController.getSubEventHashMap().entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("ownerId").equals(userController.getData("id"))) {
 
-                VBox eventContainer = new VBox();
-                eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                VBox subeventContainer = new VBox();
+                subeventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-                Label eventLabel = new Label(persistence.getData("name"));
-                eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
+                Label subeventLabel = new Label(persistence.getData("name"));
+                subeventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
+
+                String nameEvent = eventHashMap.get(persistence.getData("eventId")).getData("name");
+                Label eventLabel = new Label(nameEvent);
+                eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
+                System.out.println(nameEvent);
 
                 Button editButton = new Button("Editar");
                 editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
@@ -110,11 +119,14 @@ public class SubEventScreenController extends BaseController implements FxContro
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
                 actionButtons.getChildren().addAll(editButton, deleteButton);
 
-                eventContainer.getChildren().addAll(eventLabel, actionButtons);
+                subeventContainer.getChildren().addAll(subeventLabel, actionButtons, eventLabel);
 
-                subEventVBox.getChildren().add(eventContainer);
+                subEventVBox.getChildren().add(subeventContainer);
+
             }
         }
+
+
     }
 
     private void handleEditSubEvent(String eventName) throws IOException {
