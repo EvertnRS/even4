@@ -104,9 +104,9 @@ public class SubmitArticleController implements Controller {
         Persistence articlePersistence = new SubmitArticle();
         this.articleHashMap = articlePersistence.read(eventName);
         if (this.articleHashMap.isEmpty()) {
-            LOGGER.warning("Nenhum artigo encontrado para o evento: " + eventName);
+            LOGGER.warning("Nenhum artigo encontrado para o evento: %s".formatted(eventName));
         } else {
-            LOGGER.warning("Artigos encontrados para o evento: " + eventName);
+            LOGGER.warning("Artigos encontrados para o evento: %s".formatted(eventName));
             for (String articleName : this.articleHashMap.keySet()) {
                 LOGGER.warning(articleName);
             }

@@ -1,20 +1,15 @@
 package br.upe.controller.fx;
-
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
-import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-
 import static br.upe.ui.Validation.isValidDate;
 
 public class CreateSubEventScreenController extends BaseController implements FxController {

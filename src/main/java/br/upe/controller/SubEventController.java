@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class SubEventController implements Controller {
+    private static final String DESCRIPTION = "description";
+    private static final String LOCATION = "location";
+    private static final String OWNWERID = "ownerId";
     private static final Logger LOGGER = Logger.getLogger(SubEventController.class.getName());
     private Map<String, Persistence> subEventHashMap;
     private Persistence subEventLog;
@@ -36,11 +39,11 @@ public class SubEventController implements Controller {
             switch (dataToGet) {
                 case "id" -> data = this.subEventLog.getData("id");
                 case "name" -> data = this.subEventLog.getData("name");
-                case "description" -> data = this.subEventLog.getData("description");
+                case DESCRIPTION -> data = this.subEventLog.getData(DESCRIPTION);
                 case "date" -> data = String.valueOf(this.subEventLog.getData("date"));
-                case "location" -> data = this.subEventLog.getData("location");
+                case LOCATION -> data = this.subEventLog.getData(LOCATION);
                 case "eventId" -> data = this.subEventLog.getData("eventId");
-                case "ownerId" -> data = this.subEventLog.getData("ownerId");
+                case OWNWERID -> data = this.subEventLog.getData(OWNWERID);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -70,16 +73,16 @@ public class SubEventController implements Controller {
             return;
         }
 
-        boolean nomeEmUso = false;
+        boolean inUseName = false;
         for (Map.Entry<String, Persistence> entry : this.subEventHashMap.entrySet()) {
             Persistence subEvent = entry.getValue();
             if (subEvent.getData("name").equals(name)) {
-                nomeEmUso = true;
+                inUseName = true;
                 break;
             }
         }
 
-        if (nomeEmUso || name.isEmpty()) {
+        if (inUseName || name.isEmpty()) {
             LOGGER.warning("Nome vazio ou em uso");
             return;
         }
@@ -99,7 +102,7 @@ public class SubEventController implements Controller {
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(params[0])){
-                ownerId = persistence.getData("ownerId");
+                ownerId = persistence.getData(OWNWERID);
             }
         }
 
@@ -112,8 +115,8 @@ public class SubEventController implements Controller {
                     iterator.remove();
                 }
             }
-            Persistence SubEventPersistence = new SubEvent();
-            SubEventPersistence.delete(subEventHashMap);
+            Persistence subEventPersistence = new SubEvent();
+            subEventPersistence.delete(subEventHashMap);
         } else {
             LOGGER.warning("Você não pode deletar esse SubEvento");
         }
@@ -127,8 +130,11 @@ public class SubEventController implements Controller {
             boolean found = false;
             for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData("ownerId").equals(idowner)){
-                    LOGGER.warning(persistence.getData("name"));
+                if (persistence.getData(OWNWERID).equals(idowner)){
+                    String eventName = persistence.getData("name");
+                    if (eventName != null) {
+                        LOGGER.warning(eventName);
+                    }
                     found = true;
                     isnull = false;
                 }
@@ -150,7 +156,7 @@ public class SubEventController implements Controller {
             try {
                 for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
                     Persistence persistence = entry.getValue();
-                    if (persistence.getData("ownerId").equals(ownerId)) {
+                    if (persistence.getData(OWNWERID).equals(ownerId)) {
                         userEvents.add(persistence.getData("name"));
                     }
                 }
@@ -170,8 +176,11 @@ public class SubEventController implements Controller {
         this.read();
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (!persistence.getData("ownerId").equals(params[0])){
-                LOGGER.warning(persistence.getData("name") + " - " + persistence.getData("id"));
+            String ownerId = persistence.getData(OWNWERID);
+            if (!ownerId.equals(params[0])){
+                String name = persistence.getData("name");
+                String id = persistence.getData("id");
+                LOGGER.warning("%s - %s".formatted(name, id));
             }
         }
     }
@@ -196,7 +205,7 @@ public class SubEventController implements Controller {
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             String name = persistence.getData("name");
-            String ownerId = persistence.getData("ownerId");
+            String ownerId = persistence.getData(OWNWERID);
 
             if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
                 isOwner = true;
@@ -226,7 +235,7 @@ public class SubEventController implements Controller {
                 if (newSubEvent != null) {
                     newSubEvent.setData("name", newName);
                     newSubEvent.setData("date", newDate);
-                    newSubEvent.setData("description", newDescription);
+                    newSubEvent.setData(DESCRIPTION, newDescription);
                     newSubEvent.setData("location", newLocation);
                     subEventHashMap.put(id, newSubEvent);
                     Persistence subEventPersistence = new SubEvent();
@@ -281,7 +290,7 @@ public class SubEventController implements Controller {
         for (Map.Entry<String, Persistence> entry : list.entrySet()) {
             Persistence listindice = entry.getValue();
             if (listindice.getData("id").equals(eventId)) {
-                fatherOwnerId = listindice.getData("ownerId");
+                fatherOwnerId = listindice.getData(OWNWERID);
                 break;
             }
         }
@@ -306,7 +315,7 @@ public class SubEventController implements Controller {
 
         Persistence listIndice = list.get(searchId);
         if (listIndice == null) {
-            LOGGER.warning("Evento não encontrado para o ID fornecido: " + searchId);
+            LOGGER.warning("Evento não encontrado para o ID fornecido: %s".formatted(searchId));
             return false;
         }
 

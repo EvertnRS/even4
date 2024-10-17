@@ -1,5 +1,4 @@
 package br.upe.controller.fx;
-
 import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import javafx.fxml.FXML;
@@ -7,10 +6,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-
 import java.io.IOException;
-
-import static br.upe.ui.Validation.areValidTimes;
 import static br.upe.ui.Validation.isValidDate;
 
 public class CreateEventScreenController extends BaseController implements FxController {
