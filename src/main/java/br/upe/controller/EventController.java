@@ -1,7 +1,6 @@
 package br.upe.controller;
 import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +11,8 @@ import java.util.logging.Logger;
 
 public class EventController implements Controller {
     private static final String OWNWERID = "ownerId";
+    private static final String DESCRIPTION = "description";
+    private static final String LOCATION = "location";
     private static final Logger LOGGER = Logger.getLogger(EventController.class.getName());
 
     private Map<String, Persistence> eventHashMap;
@@ -39,8 +40,9 @@ public class EventController implements Controller {
             for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData(OWNWERID).equals(ownerId)){
-                    if (persistence.getData("name") != null) {
-                        LOGGER.warning(persistence.getData("name"));
+                    String eventName = persistence.getData("name");
+                    if (eventName != null) {
+                        LOGGER.warning(eventName);
                     }
                     found = true;
                     isnull = false;
@@ -88,7 +90,9 @@ public class EventController implements Controller {
             String ownerId = persistence.getData(OWNWERID);
             // Verifica se o evento não é de propriedade do usuário e se possui sessões
             if (!ownerId.equals(params[0])) {
-                LOGGER.warning(persistence.getData("name") + " - " + persistence.getData("id"));
+                String name = persistence.getData("name");
+                String id = persistence.getData("id");
+                LOGGER.warning("%s - %s".formatted(name, id));
             }
         }
     }
@@ -145,8 +149,8 @@ public class EventController implements Controller {
                 if (newEvent != null) {
                     newEvent.setData("name", newName);
                     newEvent.setData("date", newDate);
-                    newEvent.setData("description", newDescription);
-                    newEvent.setData("location", newLocation);
+                    newEvent.setData(DESCRIPTION, newDescription);
+                    newEvent.setData(LOCATION, newLocation);
                     eventHashMap.put(id, newEvent);
                     Persistence eventPersistence = new Event();
                     eventPersistence.update(eventHashMap);
@@ -182,9 +186,9 @@ public class EventController implements Controller {
             switch (dataToGet) {
                 case "id" -> data = this.eventLog.getData("id");
                 case "name" -> data = this.eventLog.getData("name");
-                case "description" -> data = this.eventLog.getData("description");
+                case DESCRIPTION -> data = this.eventLog.getData(DESCRIPTION);
                 case "date" -> data = String.valueOf(this.eventLog.getData("date"));
-                case "location" -> data = this.eventLog.getData("location");
+                case LOCATION -> data = this.eventLog.getData(LOCATION);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
