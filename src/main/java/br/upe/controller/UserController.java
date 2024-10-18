@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 public class UserController implements Controller {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
+    private static final String EMAIL = "email";
     private Map<String, Persistence> userHashMap;
     private Persistence userLog;
 
@@ -29,7 +30,7 @@ public class UserController implements Controller {
         String data = "";
         try {
             switch (dataToGet) {
-                case "email" -> data = this.userLog.getData("email");
+                case EMAIL -> data = this.userLog.getData(EMAIL);
                 case "cpf" -> data = this.userLog.getData("cpf");
                 case "id" -> data = this.userLog.getData("id");
                 default -> throw new IOException();
@@ -56,7 +57,7 @@ public class UserController implements Controller {
         try {
             for (Map.Entry<String, Persistence> entry : this.userHashMap.entrySet()) {
                 Persistence user = entry.getValue();
-                if (user.getData("email").equals(email)) {
+                if (user.getData(EMAIL).equals(email)) {
                     throw new IOException();
                 }
             }
@@ -72,6 +73,7 @@ public class UserController implements Controller {
     public void update(Object... params) {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
+            return;
         }
         Persistence userPersistence = new User();
         String email = (String) params[0];
@@ -81,7 +83,7 @@ public class UserController implements Controller {
             LOGGER.warning("Usuário não encontrado");
             return;
         }
-        user.setData("email",email);
+        user.setData(EMAIL,email);
         user.setData("cpf", cpf);
         userHashMap.put(this.userLog.getData("id"), user);
 
@@ -124,7 +126,7 @@ public class UserController implements Controller {
     public boolean loginValidate(String email, String cpf) {
         for (Map.Entry<String, Persistence> entry : this.userHashMap.entrySet()) {
             Persistence user = entry.getValue();
-            if (user.getData("email").equals(email) && user.getData("cpf").equals(cpf)) {
+            if (user.getData(EMAIL).equals(email) && user.getData("cpf").equals(cpf)) {
                 setUserLog(user);
                 return true;
             }

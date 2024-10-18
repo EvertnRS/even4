@@ -1,13 +1,10 @@
 package br.upe.controller.fx;
-
-import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-
 import java.io.IOException;
 
 public class LoginScreenController extends BaseController implements FxController{

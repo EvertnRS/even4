@@ -1,19 +1,14 @@
 package br.upe.controller.fx;
-
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.IOException;
-import java.util.Objects;
 
 public class LogoController {
 
@@ -23,9 +18,7 @@ public class LogoController {
     @FXML
     public void initialize() {
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.6), event -> {
-            changeToLoginScreen();
-        }));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.6), event -> changeToLoginScreen()));
         timeline.play();
     }
 
