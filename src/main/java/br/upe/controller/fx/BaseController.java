@@ -73,7 +73,7 @@ public abstract class BaseController {
             LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
             LocalDate inputDate = LocalDate.parse(date, formatter);
 
-            return !inputDate.isBefore(eventDate);
+            return inputDate.isBefore(eventDate);
     }
 
     public abstract void setUserController(UserController userController);
