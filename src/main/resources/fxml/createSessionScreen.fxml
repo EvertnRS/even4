@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="newSessionPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/21.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.CreateSessionScreenController">
+<AnchorPane fx:id="newSessionPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.CreateSessionScreenController">
 
     <children>
         <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
@@ -45,7 +45,7 @@
                      -fx-cursor: hand;
                  </style>
              </Button>
-             <Label fx:id="errorUpdtLabel" layoutX="83.0" layoutY="180.0" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
+             <Label fx:id="errorUpdtLabel" layoutX="250.0" layoutY="480.0" prefHeight="17.0" prefWidth="497.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
             <DatePicker fx:id="datePicker" layoutX="300.0" layoutY="229.0" prefHeight="42.0" prefWidth="293.0" promptText="Escolha a Data da Sessão" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
             <TextField fx:id="descriptionTextField" layoutX="300.0" layoutY="385.0" prefHeight="42.0" prefWidth="293.0" promptText="Digite a Descrição da Sessão" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
             <TextField fx:id="locationTextField" layoutX="300.0" layoutY="436.0" prefHeight="42.0" prefWidth="293.0" promptText="Digite o Local da Sessão" style="-fx-background-radius: 10; -fx-border-radius: 10;" />

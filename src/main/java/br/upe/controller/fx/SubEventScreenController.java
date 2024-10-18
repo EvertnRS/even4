@@ -93,10 +93,18 @@ public class SubEventScreenController extends BaseController implements FxContro
                 Label subeventLabel = new Label(persistence.getData("name"));
                 subeventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
-                String nameEvent = eventHashMap.get(persistence.getData("eventId")).getData("name");
-                Label eventLabel = new Label(nameEvent);
+                String eventId = persistence.getData("eventId");
+
+                Label eventLabel = new Label();
+
+                if (eventHashMap != null && eventHashMap.containsKey(eventId)) {
+                    String nameEvent = eventHashMap.get(eventId).getData("name");
+                    eventLabel.setText(nameEvent);
+                } else {
+                    eventLabel.setText("Evento não encontrado");
+                }
+
                 eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
-                System.out.println(nameEvent);
 
                 Button editButton = new Button("Editar");
                 editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
@@ -118,6 +126,8 @@ public class SubEventScreenController extends BaseController implements FxContro
                 HBox actionButtons = new HBox(10);
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
                 actionButtons.getChildren().addAll(editButton, deleteButton);
+
+                System.out.println(eventLabel.getText());
 
                 subeventContainer.getChildren().addAll(subeventLabel, actionButtons, eventLabel);
 

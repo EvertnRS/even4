@@ -223,9 +223,55 @@ public class EventController implements Controller {
 
     }
 
+    private void cascadeDelete(String id) {
+        // Deletar todas as sessões relacionadas ao evento
+        SessionController sessionController = new SessionController();
+        sessionController.read();
+        sessionController.getSessionHashMap().entrySet().removeIf(entry ->
+                entry.getValue().getData("eventId").equals(id)
+        );
+        sessionController.getSessionHashMap().values().forEach(session ->
+                session.delete(sessionController.getSessionHashMap())
+        );
+
+        // Deletar todos os subeventos relacionados ao evento
+        SubEventController subEventController = new SubEventController();
+        subEventController.read();
+        subEventController.getSubEventHashMap().entrySet().removeIf(entry ->
+                entry.getValue().getData("eventId").equals(id)
+        );
+        subEventController.getSubEventHashMap().values().forEach(subEvent ->
+                subEvent.delete(subEventController.getSubEventHashMap())
+        );
+
+        // Deletar todos os participantes relacionados às sessões do evento
+        AttendeeController attendeeController = new AttendeeController();
+        attendeeController.read();
+        attendeeController.getAttendeeHashMap().entrySet().removeIf(entry -> {
+            String sessionId = entry.getValue().getData("sessionId");
+            return sessionController.getSessionHashMap().containsKey(sessionId);
+        });
+        attendeeController.getAttendeeHashMap().values().forEach(attendee ->
+                attendee.delete(attendeeController.getAttendeeHashMap())
+        );
+
+        // Deletar todos os artigos relacionados ao evento
+        String eventName = eventHashMap.get(id).getData("name");
+        SubmitArticleController articleController = new SubmitArticleController();
+        articleController.read(eventName);
+        articleController.getArticleHashMap().entrySet().removeIf(entry ->
+                entry.getValue().getData("eventId").equals(id)
+        );
+        articleController.getArticleHashMap().values().forEach(article ->
+                article.delete(articleController.getArticleHashMap())
+        );
+    }
+
+
     @Override
     public void delete(Object... params) {
         String ownerId = "";
+        cascadeDelete((String) params[0]);
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(params[0])){
@@ -234,6 +280,7 @@ public class EventController implements Controller {
         }
 
         if ((params[1]).equals(ownerId)) {
+            cascadeDelete((String) params[0]);
             Iterator<Map.Entry<String, Persistence>> iterator = eventHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();

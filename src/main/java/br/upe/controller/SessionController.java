@@ -77,7 +77,6 @@ public class SessionController implements Controller {
         String endTime = (String) params[6];
         String userId = (String) params[7];
 
-        String eventOwnerId = getFatherOwnerId(eventId, (String) params[8]);
         Map<String, Persistence> eventH;
 
         if (params[8].equals(EVENT_TYPE)) {
@@ -88,32 +87,43 @@ public class SessionController implements Controller {
             eventH = subEventController.getSubEventHashMap();
         }
 
-        if (!eventOwnerId.equals(userId)) {
-            LOGGER.warning("Você não pode criar uma sessão para um evento que você não possui.");
-            return;
-        }
-
-        boolean inUseName = false;
-        for (Map.Entry<String, Persistence> entry : this.sessionHashMap.entrySet()) {
-            Persistence sessionIndice = entry.getValue();
-            if (sessionIndice.getData(NAME).equals(name) || name.isEmpty()) {
-                inUseName = true;
-                break;
-            }
-        }
-
-        if (inUseName || name.isEmpty()) {
-            LOGGER.warning("Nome vazio ou em uso");
-            return;
-        }
-
         Persistence session = new Session();
         session.create(eventId, name, date, description, location, startTime, endTime, userId, eventH);
+    }
+
+    private void cascadeDelete(String id) {
+
+        // Deletar todos os participantes relacionados às sessões do evento
+        AttendeeController attendeeController = new AttendeeController();
+        attendeeController.read();
+        Iterator<Map.Entry<String, Persistence>> attendeeIterator = attendeeController.getAttendeeHashMap().entrySet().iterator();
+        while (attendeeIterator.hasNext()) {
+            Map.Entry<String, Persistence> entry = attendeeIterator.next();
+            String sessionId = entry.getValue().getData("sessionId");
+            if (sessionHashMap.containsKey(sessionId)) {
+                attendeeIterator.remove();
+            }
+        }
+        attendeeController.getAttendeeHashMap().values().forEach(attendee -> attendee.delete(attendeeController.getAttendeeHashMap()));
+
+        // Deletar todos os artigos relacionados ao SubEvento
+        String subEventName = sessionHashMap.get(id).getData("name");
+        SubmitArticleController articleController = new SubmitArticleController();
+        articleController.read(subEventName);
+        Iterator<Map.Entry<String, Persistence>> articleIterator = articleController.getArticleHashMap().entrySet().iterator();
+        while (articleIterator.hasNext()) {
+            Map.Entry<String, Persistence> entry = articleIterator.next();
+            if (entry.getValue().getData("eventId").equals(id)) {
+                articleIterator.remove();
+            }
+        }
+        articleController.getArticleHashMap().values().forEach(article -> article.delete(articleController.getArticleHashMap()));
     }
 
     @Override
     public void delete(Object... params) {
         String ownerId = "";
+        cascadeDelete((String) params[0]);
         for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData(ID).equals(params[0])) {
@@ -333,31 +343,5 @@ public class SessionController implements Controller {
             }
         }
         return fatherId;
-    }
-
-    private String getFatherOwnerId(String eventId, String eventType) {
-        String fatherOwnerId = "";
-        if (eventType.equals(EVENT_TYPE)) {
-            EventController eventController = new EventController();
-            Map<String, Persistence> eventH = eventController.getEventHashMap();
-            for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
-                Persistence eventIndice = entry.getValue();
-                if (eventIndice.getData(ID).equals(eventId)) {
-                    fatherOwnerId = eventIndice.getData(OWNER_ID);
-                    break;
-                }
-            }
-        } else {
-            SubEventController subEventController = new SubEventController();
-            Map<String, Persistence> eventH = subEventController.getSubEventHashMap();
-            for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
-                Persistence eventIndice = entry.getValue();
-                if (eventIndice.getData(ID).equals(eventId)) {
-                    fatherOwnerId = eventIndice.getData(OWNER_ID);
-                    break;
-                }
-            }
-        }
-        return fatherOwnerId;
     }
 }

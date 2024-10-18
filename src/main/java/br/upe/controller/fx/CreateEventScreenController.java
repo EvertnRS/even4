@@ -1,12 +1,15 @@
 package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.UserController;
+import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
+import java.util.Map;
+
 import static br.upe.ui.Validation.isValidDate;
 
 public class CreateEventScreenController extends BaseController implements FxController {
@@ -66,12 +69,13 @@ public class CreateEventScreenController extends BaseController implements FxCon
         String eventName = nameTextField.getText();
         String eventLocation = locationTextField.getText();
         String eventDescription = descriptionTextField.getText();
-        String eventDate = datePicker.getValue().toString();
+        String eventDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
 
-        if (!isValidDate(eventDate)) {
-            errorUpdtLabel.setText("Data inválida.");
+        Map<String, Persistence> eventMap = eventController.getEventHashMap();
+        if (!isValidDate(eventDate) || eventLocation.isEmpty() || eventDescription.isEmpty() || isValidName(eventName, eventMap)) {
+            errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            eventController.create(eventName, eventLocation, eventDescription, eventDate, userController.getData("id"));
+            eventController.create(eventName, eventDate, eventDescription, eventLocation, userController.getData("id"));
             eventController.read();
             handleEvent();
         }
