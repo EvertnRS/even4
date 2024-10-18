@@ -21,6 +21,9 @@ public abstract class BaseController {
             if (screenController instanceof UpdateEventScreenController) {
                 ((UpdateEventScreenController) screenController).setEventName(eventName);
             }
+            if (screenController instanceof UpdateSubEventScreenController) {
+                ((UpdateSubEventScreenController) screenController).setEventName(eventName);
+            }
         }
 
 
