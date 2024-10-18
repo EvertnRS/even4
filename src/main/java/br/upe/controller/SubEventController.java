@@ -66,39 +66,55 @@ public class SubEventController implements Controller {
         String location = (String) params[4];
         String userId = (String) params[5];
 
-        String eventOwnerId = getFatherOwnerId(eventId);
-
-        if (!eventOwnerId.equals(userId)) {
-            LOGGER.warning("Você não pode criar um subevento para um evento que você não possui.");
-            return;
-        }
-
-        boolean inUseName = false;
-        for (Map.Entry<String, Persistence> entry : this.subEventHashMap.entrySet()) {
-            Persistence subEvent = entry.getValue();
-            if (subEvent.getData("name").equals(name)) {
-                inUseName = true;
-                break;
-            }
-        }
-
-        if (inUseName || name.isEmpty()) {
-            LOGGER.warning("Nome vazio ou em uso");
-            return;
-        }
-
-        if (!validateEventDate(date, eventId)){
-            return;
-        }
-
         Persistence subEvent = new SubEvent();
         subEvent.create(eventId, name, date, description, location, userId);
+    }
+
+    private void cascadeDelete(String id) {
+        // Deletar todas as sessões relacionadas ao SubEvento
+        SessionController sessionController = new SessionController();
+        sessionController.read();
+        Iterator<Map.Entry<String, Persistence>> sessionIterator = sessionController.getSessionHashMap().entrySet().iterator();
+        while (sessionIterator.hasNext()) {
+            Map.Entry<String, Persistence> entry = sessionIterator.next();
+            if (entry.getValue().getData("eventId").equals(id)) {
+                sessionIterator.remove();
+            }
+        }
+        sessionController.getSessionHashMap().values().forEach(session -> session.delete(sessionController.getSessionHashMap()));
+
+        // Deletar todos os participantes relacionados às sessões do evento
+        AttendeeController attendeeController = new AttendeeController();
+        attendeeController.read();
+        Iterator<Map.Entry<String, Persistence>> attendeeIterator = attendeeController.getAttendeeHashMap().entrySet().iterator();
+        while (attendeeIterator.hasNext()) {
+            Map.Entry<String, Persistence> entry = attendeeIterator.next();
+            String sessionId = entry.getValue().getData("sessionId");
+            if (sessionController.getSessionHashMap().containsKey(sessionId)) {
+                attendeeIterator.remove();
+            }
+        }
+        attendeeController.getAttendeeHashMap().values().forEach(attendee -> attendee.delete(attendeeController.getAttendeeHashMap()));
+
+        // Deletar todos os artigos relacionados ao SubEvento
+        String subEventName = subEventHashMap.get(id).getData("name");
+        SubmitArticleController articleController = new SubmitArticleController();
+        articleController.read(subEventName);
+        Iterator<Map.Entry<String, Persistence>> articleIterator = articleController.getArticleHashMap().entrySet().iterator();
+        while (articleIterator.hasNext()) {
+            Map.Entry<String, Persistence> entry = articleIterator.next();
+            if (entry.getValue().getData("eventId").equals(id)) {
+                articleIterator.remove();
+            }
+        }
+        articleController.getArticleHashMap().values().forEach(article -> article.delete(articleController.getArticleHashMap()));
     }
 
 
     @Override
     public void delete(Object... params) {
         String ownerId = "";
+        cascadeDelete((String) params[0]);
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(params[0])){
@@ -282,65 +298,5 @@ public class SubEventController implements Controller {
 
         }
         return fatherId;
-    }
-
-    private String getFatherOwnerId(String eventId){
-        EventController ec = new EventController();
-        String fatherOwnerId = "";
-        Map<String, Persistence> list = ec.getEventHashMap();
-        for (Map.Entry<String, Persistence> entry : list.entrySet()) {
-            Persistence listindice = entry.getValue();
-            if (listindice.getData("id").equals(eventId)) {
-                fatherOwnerId = listindice.getData(OWNWERID);
-                break;
-            }
-        }
-        return fatherOwnerId;
-    }
-
-    private boolean validateEventDate(String date, String searchId) {
-        if (date == null || date.trim().isEmpty()) {
-            LOGGER.warning("A data fornecida está vazia.");
-            return false;
-        }
-
-        if (searchId == null || searchId.trim().isEmpty()) {
-            LOGGER.warning("O ID de busca está vazio.");
-            return false;
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        EventController ec = new EventController();
-        Map<String, Persistence> list = ec.getEventHashMap();
-
-        Persistence listIndice = list.get(searchId);
-        if (listIndice == null) {
-            LOGGER.warning("Evento não encontrado para o ID fornecido: %s".formatted(searchId));
-            return false;
-        }
-
-        try {
-            String parentDateString = listIndice.getData("date");
-            if (parentDateString == null || parentDateString.trim().isEmpty()) {
-                LOGGER.warning("Data do evento Pai está vazia ou nula.");
-                return false;
-            }
-
-            LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
-
-            LocalDate inputDate = LocalDate.parse(date, formatter);
-
-            if (inputDate.isBefore(eventDate)) {
-                LOGGER.warning("A data do subevento não pode ser anterior à data do Evento Pai.");
-                return false;
-            }
-
-        } catch (DateTimeParseException e) {
-            LOGGER.warning("Erro ao analisar a data. Formato inválido: " + date);
-            return false;
-        }
-
-        return true;
     }
 }

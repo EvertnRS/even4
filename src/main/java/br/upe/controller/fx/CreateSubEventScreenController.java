@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
+import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -9,7 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+
 import static br.upe.ui.Validation.isValidDate;
 
 public class CreateSubEventScreenController extends BaseController implements FxController {
@@ -80,17 +85,18 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         String subEventName = nameTextField.getText();
         String subEventLocation = locationTextField.getText();
         String subEventDescription = descriptionTextField.getText();
-        String subEventDate = datePicker.getValue().toString();
-
+        String subEventDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
         String selectedEventName = eventComboBox.getSelectionModel().getSelectedItem();
 
-        if (!isValidDate(subEventDate)) {
-            errorUpdtLabel.setText("Data inválida.");
+        Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
+        if (!validateEventDate(subEventDate, selectedEventName)) {
+            errorUpdtLabel.setText("Data do subEvento não pode ser anterior a data do evento.");
+        } else if (!isValidDate(subEventDate) || subEventLocation.isEmpty() || subEventDescription.isEmpty() || isValidName(subEventName, subEventMap)) {
+            errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
             subEventController.create(selectedEventName, subEventName, subEventDate, subEventDescription, subEventLocation, userController.getData("id"));
             subEventController.read();
             handleSubEvent();
         }
     }
-
 }

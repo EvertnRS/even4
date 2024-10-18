@@ -113,14 +113,16 @@ public class CreateSessionScreenController extends BaseController implements FxC
         String sessionName = nameTextField.getText();
         String sessionLocation = locationTextField.getText();
         String sessionDescription = descriptionTextField.getText();
-        String sessionDate = datePicker.getValue().toString();
+        String sessionDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
         String startTime = startTimeTextField.getText();
         String endTime = endTimeTextField.getText();
-
         String selectedEventName = eventComboBox.getSelectionModel().getSelectedItem();
         String type = verifyType(selectedEventName);
 
-        if (!isValidDate(sessionDate) || !areValidTimes(startTime, endTime)) {
+        Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+        if (!validateEventDate(sessionDate, selectedEventName)) {
+            errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
+        } else if (!isValidDate(sessionDate) || !areValidTimes(startTime, endTime) || sessionLocation.isEmpty() || sessionDescription.isEmpty() || isValidName(sessionName, sessionMap)) {
             errorUpdtLabel.setText("Data ou horário inválido.");
         }else {
             sessionController.create(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, userController.getData("id"), type);
