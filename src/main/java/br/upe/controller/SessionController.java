@@ -242,6 +242,8 @@ public class SessionController implements Controller {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(id)) {
                 name = persistence.getData("name");
+                isEvent = true;
+                break;
             }
         }
 
@@ -252,6 +254,7 @@ public class SessionController implements Controller {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("id").equals(id)) {
                     name = persistence.getData("name");
+                    break;
                 }
             }
         }
