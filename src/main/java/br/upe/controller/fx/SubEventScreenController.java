@@ -130,7 +130,7 @@ public class SubEventScreenController extends BaseController implements FxContro
     }
 
     private void handleEditSubEvent(String eventName) throws IOException {
-        genericButton("/fxml/updateEventScreen.fxml", subEventPane, userController, eventName);
+        genericButton("/fxml/updateSubEventScreen.fxml", subEventPane, userController, eventName);
     }
 
     private void handleDeleteSubEvent(String eventId, String userId) {

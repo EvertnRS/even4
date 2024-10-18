@@ -199,6 +199,7 @@ public class SubEventController implements Controller {
             String ownerId = persistence.getData("ownerId");
 
             if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
+                System.out.println("gay");
                 isOwner = true;
                 id = persistence.getData("id");
                 break;
