@@ -44,7 +44,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
     @FXML
     private Label errorUpdtLabel;
 
-    public void setUserController(UserController userController) {
+    public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
         this.subEventController = new SubEventController();
         this.eventController = new EventController();
@@ -52,7 +52,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         initial();
     }
 
-    private void initial() {
+    private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
         loadUserEvents();
     }
@@ -101,7 +101,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         return "";
     }
 
-    private void loadUserEvents() {
+    private void loadUserEvents() throws IOException {
         List<String> userEvents = eventController.list(userController.getData("id"), "fx");
         List<String> userSubEvents = subEventController.list(userController.getData("id"), "fx");
         eventComboBox.getItems().addAll(userEvents);

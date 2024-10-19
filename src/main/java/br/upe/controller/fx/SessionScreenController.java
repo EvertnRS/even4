@@ -1,26 +1,20 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.EventController;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
 public class SessionScreenController extends BaseController implements FxController {
     private UserController userController;
-    private EventController eventController;
     private SessionController sessionController;
 
     @FXML
@@ -32,14 +26,13 @@ public class SessionScreenController extends BaseController implements FxControl
     @FXML
     private AnchorPane sessionPane;
 
-    public void setUserController(UserController userController) {
+    public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
         this.sessionController = new SessionController();
-        this.eventController = new EventController();
         initial();
     }
 
-    private void initial() {
+    private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
         loadUserSessions();
     }
@@ -64,7 +57,7 @@ public class SessionScreenController extends BaseController implements FxControl
         genericButton("/fxml/createSessionScreen.fxml", sessionPane, userController, null);
     }
 
-    private void loadUserSessions() {
+    private void loadUserSessions() throws IOException {
         sessionVBox.getChildren().clear();
 
         sessionController.list(userController.getData("id"), "");
@@ -97,11 +90,17 @@ public class SessionScreenController extends BaseController implements FxControl
                     try {
                         handleEditSession(persistence.getData("name"));
                     } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                        throw new IllegalArgumentException(ex);
                     }
                 });
 
-                deleteButton.setOnAction(e -> handleDeleteSession(persistence.getData("id"), userController.getData("id")));
+                deleteButton.setOnAction(e -> {
+                    try {
+                        handleDeleteSession(persistence.getData("id"), userController.getData("id"));
+                    } catch (IOException ex) {
+                        throw new IllegalArgumentException(ex);
+                    }
+                });
 
                 HBox actionButtons = new HBox(10);
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
@@ -118,7 +117,7 @@ public class SessionScreenController extends BaseController implements FxControl
         genericButton("/fxml/updateEventScreen.fxml", sessionPane, userController, eventName);
     }
 
-    private void handleDeleteSession(String eventId, String userId) {
+    private void handleDeleteSession(String eventId, String userId) throws IOException {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
         confirmationAlert.setHeaderText("Deseja realmente excluir este sessão?");
@@ -132,7 +131,6 @@ public class SessionScreenController extends BaseController implements FxControl
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonSim) {
-            System.out.println(userId);
             sessionController.delete(eventId, userId);
             loadUserSessions();
         }

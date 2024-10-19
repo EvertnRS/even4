@@ -31,7 +31,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     @FXML
     private Label errorDelLabel;
 
-    public void setUserController(UserController userController) {
+    public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
         this.eventController = new EventController();
         initial();

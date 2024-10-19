@@ -7,6 +7,7 @@ import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -188,7 +189,7 @@ public class Session implements Persistence {
                 return;
             }
 
-            ArrayList<Persistence> sessionList = event.getSessionsList();
+            List<Persistence> sessionList = event.getSessionsList();
             if (sessionList == null) {
                 sessionList = new ArrayList<>(); // Inicialize a lista se estiver nula
             }

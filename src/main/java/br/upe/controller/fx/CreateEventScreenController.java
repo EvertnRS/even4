@@ -31,7 +31,7 @@ public class CreateEventScreenController extends BaseController implements FxCon
     @FXML
     private Label errorUpdtLabel;
 
-    public void setUserController(UserController userController) {
+    public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
         this.eventController = new EventController();
         initial();

@@ -1,6 +1,5 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
 import javafx.fxml.FXML;
@@ -32,7 +31,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
     @FXML
     private Label errorDelLabel;
 
-    public void setUserController(UserController userController) {
+    public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
         this.subEventController = new SubEventController();
         initial();

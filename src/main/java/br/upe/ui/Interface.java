@@ -2,6 +2,7 @@ package br.upe.ui;
 
 import br.upe.controller.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -32,6 +33,8 @@ public class Interface {
                         LOGGER.info("Opção inválida. Tente novamente.");
                 }
             } while (option != 0);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -54,7 +57,7 @@ public class Interface {
         }
     }
 
-    private static void loginFlow(Scanner sc) throws FileNotFoundException {
+    private static void loginFlow(Scanner sc) throws IOException {
         Object[] results = login(sc);
         boolean isLog = (boolean) results[0];
         Controller userLogin = (Controller) results[1];
@@ -64,7 +67,7 @@ public class Interface {
         }
     }
 
-    private static void userMenu(Scanner sc, Controller userLogin) throws FileNotFoundException {
+    private static void userMenu(Scanner sc, Controller userLogin) throws IOException {
         int option;
         do {
             printUserMenu();
@@ -109,7 +112,7 @@ public class Interface {
         LOGGER.info("Escolha uma opção: ");
     }
 
-    private static void createFlow(Scanner sc, Controller ec, Controller sec, Controller ses, Controller userLogin) throws FileNotFoundException {
+    private static void createFlow(Scanner sc, Controller ec, Controller sec, Controller ses, Controller userLogin) throws IOException {
         int option;
         do {
             LOGGER.info("Escolha o que deseja criar:");
@@ -138,7 +141,7 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void alterFlow(Scanner sc, Controller ec, Controller sec, Controller ses, Controller userLogin) throws FileNotFoundException {
+    private static void alterFlow(Scanner sc, Controller ec, Controller sec, Controller ses, Controller userLogin) throws IOException {
         int option;
         do {
             LOGGER.info("Escolha o que deseja alterar:");
@@ -167,7 +170,7 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void enterFlow(Scanner sc, Controller ses, Controller userLogin, Controller ac) throws FileNotFoundException {
+    private static void enterFlow(Scanner sc, Controller ses, Controller userLogin, Controller ac) throws IOException {
         SubmitArticleController submitArticleController = new SubmitArticleController();
         int option;
         do {
@@ -198,7 +201,7 @@ public class Interface {
     }
 
 
-    private static void listEvents(Scanner sc, Controller userLogin, Controller ac) throws FileNotFoundException {
+    private static void listEvents(Scanner sc, Controller userLogin, Controller ac) throws IOException {
         boolean isnull = ac.list(userLogin.getData("id"));
         if (isnull) {
             return;
@@ -223,7 +226,7 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void deleteAttendee(Scanner sc, Controller ac, Controller userLogin) {
+    private static void deleteAttendee(Scanner sc, Controller ac, Controller userLogin) throws IOException {
         int option;
         do {
             LOGGER.info("[1] - Deletar Inscrição");
@@ -242,7 +245,7 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void alterAttendee(Scanner sc, Controller ac) throws FileNotFoundException {
+    private static void alterAttendee(Scanner sc, Controller ac) throws IOException {
         int option;
         do {
             LOGGER.info("[1] - Alterar Nome");
@@ -263,14 +266,14 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void choiceEvent(Scanner sc, Controller ses, Controller userLogin, Controller ac) throws FileNotFoundException {
+    private static void choiceEvent(Scanner sc, Controller ses, Controller userLogin, Controller ac) throws IOException {
         ses.show(userLogin.getData("id"), "userId");
         LOGGER.info("Digite o id da Sessão que você quer entrar:");
         String sessionId = sc.nextLine();
         enterEvent(sc, ses, sessionId, userLogin, ac);
     }
 
-    private static void enterEvent(Scanner sc, Controller ses, String sessionId, Controller userLogin, Controller ac) throws FileNotFoundException {
+    private static void enterEvent(Scanner sc, Controller ses, String sessionId, Controller userLogin, Controller ac) throws IOException {
         ses.show(sessionId, "sessionId");
         int option;
         do {
@@ -290,7 +293,7 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void articleMenu(Scanner sc, SubmitArticleController submitArticleController) throws FileNotFoundException {
+    private static void articleMenu(Scanner sc, SubmitArticleController submitArticleController) throws IOException {
         int option;
 
         do {
@@ -335,7 +338,7 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void createEvent(Scanner sc, Controller ec, Controller userLogin) throws FileNotFoundException {
+    private static void createEvent(Scanner sc, Controller ec, Controller userLogin) throws IOException {
         LOGGER.info("Digite o nome do Evento: ");
         String nameEvent = sc.nextLine();
         LOGGER.info("Data do Evento: ");
@@ -349,7 +352,7 @@ public class Interface {
         }
     }
 
-    private static void alterEvent(Scanner sc, Controller ec, Controller userLogin) throws FileNotFoundException {
+    private static void alterEvent(Scanner sc, Controller ec, Controller userLogin) throws IOException {
         boolean isNull = ec.list(userLogin.getData("id"));
         if (isNull) {
             return;
@@ -386,7 +389,7 @@ public class Interface {
         System.out.print("Escolha uma opção: ");
     }
 
-    private static void updateEvent(Scanner sc, Controller ec, String changed, String userId) throws FileNotFoundException {
+    private static void updateEvent(Scanner sc, Controller ec, String changed, String userId) throws IOException {
         LOGGER.info("Digite o novo nome do Evento: ");
         String newName = sc.nextLine();
         LOGGER.info("Nova Data do Evento: ");
@@ -400,7 +403,7 @@ public class Interface {
         }
     }
 
-    private static void createSubEvent(Scanner sc, Controller ec, Controller sec, Controller userLogin) throws FileNotFoundException {
+    private static void createSubEvent(Scanner sc, Controller ec, Controller sec, Controller userLogin) throws IOException {
         boolean isNull = ec.list(userLogin.getData("id"));
         if (isNull) {
             return;
@@ -420,7 +423,7 @@ public class Interface {
         }
     }
 
-    private static void alterSubEvent(Scanner sc, Controller sec, Controller userLogin) throws FileNotFoundException {
+    private static void alterSubEvent(Scanner sc, Controller sec, Controller userLogin) throws IOException {
         boolean isNull = sec.list(userLogin.getData("id"));
         if (isNull) {
             return;
@@ -457,7 +460,7 @@ public class Interface {
         System.out.print("Escolha uma opção: ");
     }
 
-    private static void updateSubEvent(Scanner sc, Controller sec, String subChanged, String userId) throws FileNotFoundException {
+    private static void updateSubEvent(Scanner sc, Controller sec, String subChanged, String userId) throws IOException {
         LOGGER.info("Digite o novo nome do SubEvento: ");
         String newName = sc.nextLine();
         LOGGER.info("Nova Data do SubEvento: ");
@@ -473,7 +476,7 @@ public class Interface {
 
 
 
-    private static void createSession(Scanner sc, Controller ec, Controller sec, Controller ses, Controller userLogin) throws FileNotFoundException {
+    private static void createSession(Scanner sc, Controller ec, Controller sec, Controller ses, Controller userLogin) throws IOException {
         int optionSession;
         String type;
         do {
@@ -510,7 +513,7 @@ public class Interface {
         } while (optionSession != 0);
     }
 
-    private static void enterMenuSession(Scanner sc, Controller ses, String type, Controller userLogin) throws FileNotFoundException {
+    private static void enterMenuSession(Scanner sc, Controller ses, String type, Controller userLogin) throws IOException {
         LOGGER.info("Nome do Evento Pai: ");
         String fatherEvent = sc.nextLine();
         LOGGER.info("Digite o nome da Sessão: ");
@@ -530,7 +533,7 @@ public class Interface {
         }
     }
 
-    private static void alterSession(Scanner sc, Controller ses, Controller userLogin) throws FileNotFoundException {
+    private static void alterSession(Scanner sc, Controller ses, Controller userLogin) throws IOException {
         boolean isNull = ses.list(userLogin.getData("id"));
         if (isNull) {
             return;
@@ -560,7 +563,7 @@ public class Interface {
         } while (optionSession != 0);
     }
 
-    private static void updateSession(Scanner sc, Controller ses, String subChanged, String userId) throws FileNotFoundException {
+    private static void updateSession(Scanner sc, Controller ses, String subChanged, String userId) throws IOException {
         LOGGER.info("Digite o novo nome da Sessão: ");
         String newName = sc.nextLine();
         LOGGER.info("Nova Data da Sessão: ");
@@ -585,7 +588,7 @@ public class Interface {
         System.out.print("Escolha uma opção: ");
     }
 
-    public static Object[] login(Scanner sc) {
+    public static Object[] login(Scanner sc) throws IOException {
         Controller userController = new UserController();
         LOGGER.info("Digite seu email:");
         boolean isLog = false;
@@ -605,7 +608,7 @@ public class Interface {
         return new Object[]{isLog, userController};
     }
 
-    public static void signup(Scanner sc) throws FileNotFoundException {
+    public static void signup(Scanner sc) throws IOException {
         Controller userController = new UserController();
         LOGGER.info("Cadastre seu email:");
         if (sc.hasNextLine()) {
@@ -632,7 +635,7 @@ public class Interface {
         }
     }
 
-    public static boolean setup(Scanner sc, Controller userLogin) throws FileNotFoundException {
+    public static boolean setup(Scanner sc, Controller userLogin) throws IOException {
         int option;
         boolean isRemoved = false;
         do {
@@ -673,7 +676,7 @@ public class Interface {
         LOGGER.info("Escolha uma opção: ");
     }
 
-    private static void updateUserAccount(Scanner sc, Controller userLogin) throws FileNotFoundException {
+    private static void updateUserAccount(Scanner sc, Controller userLogin) throws IOException {
         int option;
         LOGGER.info("O que você deseja atualizar?");
         LOGGER.info("[1] - email");
@@ -706,7 +709,7 @@ public class Interface {
         }
     }
 
-    private static boolean deleteUserAccount(Scanner sc, Controller userLogin) {
+    private static boolean deleteUserAccount(Scanner sc, Controller userLogin) throws IOException {
         LOGGER.info("Deletar Conta?");
         LOGGER.info("[1] - Sim");
         LOGGER.info("[2] - Não");

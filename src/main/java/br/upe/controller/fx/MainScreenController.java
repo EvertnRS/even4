@@ -28,13 +28,13 @@ public class MainScreenController extends BaseController implements FxController
     private AnchorPane mainPane;
 
     @Override
-    public void setUserController(UserController userController) {
+    public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
         this.eventController = new EventController();
         initial();
     }
 
-    private void initial() {
+    private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
         loadUserEvents();
     }
@@ -59,7 +59,7 @@ public class MainScreenController extends BaseController implements FxController
         genericButton("/fxml/loginScreen.fxml", mainPane, userController, null);
     }
 
-    private void loadUserEvents() {
+    private void loadUserEvents() throws IOException {
         eventVBox.getChildren().clear();
 
         eventController.list(userController.getData("id"), "");
@@ -92,11 +92,17 @@ public class MainScreenController extends BaseController implements FxController
                     try {
                         handleEditEvent(persistence.getData("name"));
                     } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                        throw new IllegalArgumentException(ex);
                     }
                 });
 
-                deleteButton.setOnAction(e -> handleDeleteEvent(persistence.getData("id"), userController.getData("id")));
+                deleteButton.setOnAction(e -> {
+                    try {
+                        handleDeleteEvent(persistence.getData("id"), userController.getData("id"));
+                    } catch (IOException ex) {
+                        throw new IllegalArgumentException(ex);
+                    }
+                });
 
                 HBox actionButtons = new HBox(10);
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
@@ -109,7 +115,7 @@ public class MainScreenController extends BaseController implements FxController
         }
     }
 
-    private void handleDeleteEvent(String eventId, String userId) {
+    private void handleDeleteEvent(String eventId, String userId) throws IOException {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
         confirmationAlert.setHeaderText("Deseja realmente excluir este evento?");
@@ -123,7 +129,6 @@ public class MainScreenController extends BaseController implements FxController
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonSim) {
-            System.out.println(userId);
             eventController.delete(eventId, userId);
             loadUserEvents();
         }
