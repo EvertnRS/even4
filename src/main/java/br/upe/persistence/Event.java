@@ -2,21 +2,25 @@ package br.upe.persistence;
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 
 public class Event implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(Event.class.getName());
+    private static final String CONST_DESCRIPTION = "description";
+    private static final String CONST_LOCATION = "location";
+    private static final String OWNER_ID = "ownerId";
+    private static final String EVENT_PATH = "./db/events.csv";
     private String id;
     private String name;
     private String date;
     private String description;
     private String location;
     private String ownerId;
-    private ArrayList<Persistence> sessionsList;
+    private List<Persistence> sessionsList;
 
     public String getIdOwner() {
         return ownerId;
@@ -76,11 +80,11 @@ public class Event implements Persistence {
         this.location = location;
     }
 
-    public ArrayList<Persistence> getSessionsList() {
+    public List<Persistence> getSessionsList() {
         return sessionsList;
     }
 
-    public void setSessionsList(ArrayList<Persistence> sessionsList) {
+    public void setSessionsList(List<Persistence> sessionsList) {
         this.sessionsList = sessionsList;
     }
 
@@ -99,9 +103,9 @@ public class Event implements Persistence {
                 case "id" -> data = this.getId();
                 case "name" -> data = this.getName();
                 case "date" -> data = this.getDate();
-                case "description" -> data = this.getDescription();
-                case "location" -> data = this.getLocation();
-                case "ownerId" -> data = this.getIdOwner();
+                case CONST_DESCRIPTION -> data = this.getDescription();
+                case CONST_LOCATION -> data = this.getLocation();
+                case OWNER_ID -> data = this.getIdOwner();
                 case "listSize" -> data = String.valueOf(this.getSessionListLSize());
                 default -> throw new IOException();
             }
@@ -117,10 +121,10 @@ public class Event implements Persistence {
             switch (dataToSet) {
                 case "id" -> this.setId(data);
                 case "name" -> this.setName(data);
-                case "description" -> this.setDescription(data);
+                case CONST_DESCRIPTION -> this.setDescription(data);
                 case "date" -> this.setDate(data);
-                case "location" -> this.setLocation(data);
-                case "ownerId" -> this.setIdOwner(data);
+                case CONST_LOCATION -> this.setLocation(data);
+                case OWNER_ID -> this.setIdOwner(data);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -144,7 +148,7 @@ public class Event implements Persistence {
         this.id = generateId();
         String line = id + ";" + name + ";" + date + ";" + description + ";" + location + ";" + ownerId + "\n";
 
-        File f = new File("./db/events.csv");
+        File f = new File(EVENT_PATH);
         try {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(f, true))) {
                 writer.write(line);
@@ -162,7 +166,7 @@ public class Event implements Persistence {
     public  HashMap<String, Persistence> read() {
         HashMap<String, Persistence> list = new HashMap<>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("./db/events.csv"));
+            BufferedReader reader = new BufferedReader(new FileReader(EVENT_PATH));
             String line;
 
             while ((line = reader.readLine()) != null) {
@@ -208,12 +212,12 @@ public class Event implements Persistence {
 
         HashMap<String, Persistence> userHashMap = (HashMap<String, Persistence>) params[0];
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/events.csv"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(EVENT_PATH))) {
             for (Map.Entry<String, Persistence> entry : userHashMap.entrySet()) {
                 Persistence event = entry.getValue();
                 String line = event.getData("id") + ";" + event.getData("name") + ";" + event.getData("date")
-                        + ";" + event.getData("description")
-                        + ";" + event.getData("location") + ";" + event.getData("ownerId") + "\n";
+                        + ";" + event.getData(CONST_DESCRIPTION)
+                        + ";" + event.getData(CONST_LOCATION) + ";" + event.getData(OWNER_ID) + "\n";
                 writer.write(line);
             }
             writer.close();
@@ -230,12 +234,12 @@ public class Event implements Persistence {
             LOGGER.warning("Só pode ter 1 parametro");
         }
         HashMap<String, Persistence> eventHashMap = (HashMap<String, Persistence>) params[0];
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/events.csv"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(EVENT_PATH))) {
             for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                 Persistence event = entry.getValue();
                 String line = event.getData("id") + ";" + event.getData("name") + ";" + event.getData("date")
-                        + ";" + event.getData("description")
-                        + ";" + event.getData("location") + ";" + event.getData("ownerId") + "\n";
+                        + ";" + event.getData(CONST_DESCRIPTION)
+                        + ";" + event.getData(CONST_LOCATION) + ";" + event.getData(OWNER_ID) + "\n";
                 writer.write(line);
             }
             writer.close();

@@ -2,8 +2,7 @@ package br.upe.controller;
 
 import br.upe.persistence.Persistence;
 import br.upe.persistence.SubmitArticle;
-
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -34,7 +33,7 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public void create(Object... params) throws FileNotFoundException {
+    public void create(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("São necessários 2 parâmetros: nome do evento e caminho do arquivo.");
             return;
@@ -52,7 +51,7 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public void delete(Object... params) {
+    public void delete(Object... params) throws IOException {
         if (params.length != 1) {
             LOGGER.warning("São necessários 1 parâmetro: nome do arquivo.");
             return;
@@ -76,7 +75,7 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public void update(Object... params) {
+    public void update(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("São necessários 2 parâmetros: nome do artigo e caminho do novo arquivo.");
             return;
@@ -118,7 +117,7 @@ public class SubmitArticleController implements Controller {
         return false;
     }
 
-    private boolean getFatherEventId(String eventName) {
+    private boolean getFatherEventId(String eventName) throws IOException {
         EventController ec = new EventController();
         Map<String, Persistence> list = ec.getEventHashMap();
         boolean found = false;

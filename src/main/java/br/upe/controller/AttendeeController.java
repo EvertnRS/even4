@@ -17,7 +17,7 @@ public class AttendeeController implements Controller {
     private Map<String, Persistence> attendeeHashMap;
     private Persistence attendeeLog;
 
-    public AttendeeController() {
+    public AttendeeController() throws IOException {
         this.read();
     }
 
@@ -75,7 +75,7 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public void update(Object... params) throws FileNotFoundException {
+    public void update(Object... params) throws IOException {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
             return;
@@ -128,13 +128,13 @@ public class AttendeeController implements Controller {
 
 
     @Override
-    public void read() {
+    public void read() throws IOException {
         Persistence attendeePersistence = new Attendee();
         this.attendeeHashMap = attendeePersistence.read();
     }
 
     @Override
-    public void delete(Object... params) {
+    public void delete(Object... params) throws IOException {
         if ((params[1]).equals("id")) {
             Iterator<Map.Entry<String, Persistence>> iterator = attendeeHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -152,7 +152,7 @@ public class AttendeeController implements Controller {
     }
 
 
-    private boolean validateSessionId (String sessionId) {
+    private boolean validateSessionId (String sessionId) throws IOException {
         SessionController sessionController = new SessionController();
         Map<String, Persistence> sessH = sessionController.getSessionHashMap();
         boolean hasSession = false;
@@ -166,7 +166,7 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public boolean list(String idowner) {
+    public boolean list(String idowner) throws IOException {
         this.read();
         boolean isnull = true;
         try {
@@ -191,7 +191,7 @@ public class AttendeeController implements Controller {
         return isnull;
     }
 
-    private String[] getSessionById (String sessionId) {
+    private String[] getSessionById (String sessionId) throws IOException {
         String name = "";
         String description = "";
         String date = "";

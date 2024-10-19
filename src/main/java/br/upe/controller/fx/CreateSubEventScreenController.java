@@ -10,8 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -39,14 +37,14 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     @FXML
     private Label errorUpdtLabel;
 
-    public void setUserController(UserController userController) {
+    public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
         this.subEventController = new SubEventController();
         this.eventController = new EventController();
         initial();
     }
 
-    private void initial() {
+    private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
         loadUserEvents();
     }
@@ -75,7 +73,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         genericButton("/fxml/userScreen.fxml", newSubEventPane, userController, null);
     }
 
-    private void loadUserEvents() {
+    private void loadUserEvents() throws IOException {
         List<String> userEvents = eventController.list(userController.getData("id"), "fx");
         eventComboBox.getItems().addAll(userEvents);
     }

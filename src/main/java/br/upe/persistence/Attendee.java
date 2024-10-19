@@ -1,7 +1,5 @@
 package br.upe.persistence;
 
-import br.upe.controller.AttendeeController;
-
 import java.io.*;
 import java.security.SecureRandom;
 import java.time.Instant;
@@ -11,6 +9,10 @@ import java.util.logging.Logger;
 
 public class Attendee implements Persistence{
     private static final Logger LOGGER = Logger.getLogger(Attendee.class.getName());
+    private static final String ATTENDEE_PATH = "./db/attendee.csv";
+    private static final String WRITE_ERROR = "Erro na escrita do arquivo";
+    private static final String SESSION_ID = "sessionId";
+    private static final String USER_ID = "userId";
     private String id;
     private String userId;
     private String name;
@@ -63,60 +65,63 @@ public class Attendee implements Persistence{
         String line = id + ";" + userId + ";" + name + ";" + sessionId;
 
         try {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/attendee.csv", true))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(ATTENDEE_PATH, true))) {
                 writer.write(line);
                 writer.newLine();
             }
 
             LOGGER.warning("Cadastro Realizado");
         } catch (IOException writerEx) {
-            LOGGER.warning("Erro na escrita do arquivo");
+            LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
         }
     }
 
 
     @Override
-    public void delete(Object... params) {
+    public void delete(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> attendeeHashMap = (HashMap<String, Persistence>) params[0];
+        BufferedWriter writer = new BufferedWriter(new FileWriter(ATTENDEE_PATH));
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/attendee.csv"))) {
+        try (writer) {
             for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
                 Persistence attendee = entry.getValue();
-                String line = attendee.getData("id") + ";" + attendee.getData("userId") + ";" + attendee.getData("name") + ";" + attendee.getData("sessionId") + "\n";
+                String line = attendee.getData("id") + ";" + attendee.getData(USER_ID) + ";" + attendee.getData("name") + ";" + attendee.getData(SESSION_ID) + "\n";
                 writer.write(line);
             }
-            writer.close();
             LOGGER.warning("Inscrição Removida");
         } catch (IOException writerEx) {
-            LOGGER.warning("Erro na escrita do arquivo");
+            LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
+        } finally {
+            writer.close();
         }
     }
 
     @Override
-    public void update(Object... params) {
+    public void update(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> attendeeHashMap = (HashMap<String, Persistence>) params[0];
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/attendee.csv"))) {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(ATTENDEE_PATH));
+        try (writer) {
             for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
                 Persistence attendee = entry.getValue();
-                String line = attendee.getData("id") + ";" + attendee.getData("userId") + ";" + attendee.getData("name") + ";" + attendee.getData("sessionId") + "\n";
+                String line = attendee.getData("id") + ";" + attendee.getData(USER_ID) + ";" + attendee.getData("name") + ";" + attendee.getData(SESSION_ID) + "\n";
                 writer.write(line);
             }
-            writer.close();
             LOGGER.warning("Nome Atualizado");
         } catch (IOException writerEx) {
-            LOGGER.warning("Erro na escrita do arquivo");
+            LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
+        } finally {
+            writer.close();
         }
     }
 
@@ -126,8 +131,8 @@ public class Attendee implements Persistence{
         try {
             switch (dataToGet) {
                 case "name" -> data = this.getName();
-                case "sessionId" -> data = this.getSessionId();
-                case "userId" -> data = this.getUserId();
+                case SESSION_ID -> data = this.getSessionId();
+                case USER_ID -> data = this.getUserId();
                 case "id" -> data = this.getId();
                 default -> throw new IOException();
             }
@@ -143,9 +148,9 @@ public class Attendee implements Persistence{
         try {
             switch (dataToSet) {
                 case "name" -> this.setName(data);
-                case "sessionId" -> this.setSessionId(data);
+                case SESSION_ID -> this.setSessionId(data);
                 case "id" -> this.setId(data);
-                case "userId" -> this.setUserId(data);
+                case USER_ID -> this.setUserId(data);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -162,41 +167,42 @@ public class Attendee implements Persistence{
     }
 
     @Override
-    public HashMap<String, Persistence> read() {
+    public HashMap<String, Persistence> read() throws IOException {
         HashMap<String, Persistence> list = new HashMap<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("./db/attendee.csv"));
+        BufferedReader reader = new BufferedReader(new FileReader(ATTENDEE_PATH));
+        try (reader) {
             String line;
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length == 4) {
-                    String id = parts[0].trim();
-                    String userId = parts[1].trim();
-                    String name = parts[2].trim();
-                    String sessionId = parts[3].trim();
+                    String parsedId = parts[0].trim();
+                    String parsedUserId = parts[1].trim();
+                    String parsedName = parts[2].trim();
+                    String parsedSessionId = parts[3].trim();
 
                     Attendee attendee = new Attendee();
-                    attendee.setName(name);
-                    attendee.setSessionId(sessionId);
-                    attendee.setId(id);
-                    attendee.setUserId(userId);
+                    attendee.setName(parsedName);
+                    attendee.setSessionId(parsedSessionId);
+                    attendee.setId(parsedId);
+                    attendee.setUserId(parsedUserId);
                     list.put(attendee.getId(), attendee);
                 }
             }
-            reader.close();
 
         } catch (IOException readerEx) {
             LOGGER.warning("Erro ao ler o arquivo");
             readerEx.printStackTrace();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
+        } finally {
+            reader.close();
         }
         return list;
     }
 
     @Override
     public HashMap<String, Persistence> read(Object... params) {
-        return null;
+        return new HashMap<>();
     }
 }

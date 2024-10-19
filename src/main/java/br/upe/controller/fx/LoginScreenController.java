@@ -27,7 +27,11 @@ public class LoginScreenController extends BaseController implements FxControlle
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
-                        handleLogin();
+                        try {
+                            handleLogin();
+                        } catch (IOException e) {
+                            throw new IllegalArgumentException(e);
+                        }
                     }
                 });
             }
@@ -46,7 +50,7 @@ public class LoginScreenController extends BaseController implements FxControlle
         });
     }
 
-    public void handleLogin() {
+    public void handleLogin() throws IOException {
         String email = emailTextField.getText();
         String cpf = cpfTextField.getText();
 
