@@ -11,7 +11,7 @@ import static br.upe.ui.Validation.*;
 public class Interface {
     private static final Logger LOGGER = Logger.getLogger(Interface.class.getName());
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         LOGGER.info("Bem-Vindo ao Even4");
         try (Scanner sc = new Scanner(System.in)) {
             int option;
