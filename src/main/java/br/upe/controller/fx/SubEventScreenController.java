@@ -94,18 +94,18 @@ public class SubEventScreenController extends BaseController implements FxContro
     }
 
     private VBox createSubEventContainer(Persistence persistence, Map<String, Persistence> eventHashMap) {
-        VBox subeventContainer = new VBox();
-        subeventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+        VBox subEventContainer = new VBox();
+        subEventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-        Label subeventLabel = new Label(persistence.getData("name"));
-        subeventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
+        Label subEventLabel = new Label(persistence.getData("name"));
+        subEventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
         Label eventLabel = createEventLabel(persistence.getData("eventId"), eventHashMap);
 
         HBox actionButtons = createActionButtons(persistence);
 
-        subeventContainer.getChildren().addAll(subeventLabel, actionButtons, eventLabel);
-        return subeventContainer;
+        subEventContainer.getChildren().addAll(subEventLabel, actionButtons, eventLabel);
+        return subEventContainer;
     }
 
     private Label createEventLabel(String eventId, Map<String, Persistence> eventHashMap) {
