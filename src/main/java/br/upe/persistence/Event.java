@@ -163,56 +163,58 @@ public class Event implements Persistence {
 
 
     @Override
-    public  HashMap<String, Persistence> read() {
+    public  HashMap<String, Persistence> read() throws IOException {
         HashMap<String, Persistence> list = new HashMap<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(EVENT_PATH));
+        BufferedReader reader = new BufferedReader(new FileReader(EVENT_PATH));
+        try (reader) {
             String line;
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length == 6) {
-                    String id = parts[0].trim();
-                    String name = parts[1].trim();
-                    String date = parts[2].trim();
-                    String description = parts[3].trim();
-                    String location = parts[4].trim();
-                    String ownerId = parts[5].trim();
+                    String parsedId = parts[0].trim();
+                    String parsedName = parts[1].trim();
+                    String parsedDate = parts[2].trim();
+                    String parsedDescription = parts[3].trim();
+                    String parsedLocation = parts[4].trim();
+                    String parsedOwnerId = parts[5].trim();
 
                     Event event = new Event();
 
-                    event.setId(id);
-                    event.setName(name);
-                    event.setDate(date);
-                    event.setDescription(description);
-                    event.setLocation(location);
-                    event.setIdOwner(ownerId);
+                    event.setId(parsedId);
+                    event.setName(parsedName);
+                    event.setDate(parsedDate);
+                    event.setDescription(parsedDescription);
+                    event.setLocation(parsedLocation);
+                    event.setIdOwner(parsedOwnerId);
                     list.put(event.getId(), event);
                 }
             }
-            reader.close();
+
 
         } catch (IOException readerEx) {
             LOGGER.warning("Error occurred while reading:");
             readerEx.printStackTrace();
+        } finally {
+            reader.close();
         }
         return list;
     }
 
     @Override
     public HashMap<String, Persistence> read(Object... params) {
-        return null;
+        return new HashMap<>();
     }
 
     @Override
-    public void update(Object... params) {
+    public void update(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> userHashMap = (HashMap<String, Persistence>) params[0];
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(EVENT_PATH))) {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(EVENT_PATH));
+        try (writer) {
             for (Map.Entry<String, Persistence> entry : userHashMap.entrySet()) {
                 Persistence event = entry.getValue();
                 String line = event.getData("id") + ";" + event.getData("name") + ";" + event.getData("date")
@@ -220,21 +222,24 @@ public class Event implements Persistence {
                         + ";" + event.getData(CONST_LOCATION) + ";" + event.getData(OWNER_ID) + "\n";
                 writer.write(line);
             }
-            writer.close();
+
             LOGGER.warning("Evento Atualizado");
         } catch (IOException writerEx) {
             LOGGER.warning("Error occurred while writing:");
             writerEx.printStackTrace();
+        } finally {
+            writer.close();
         }
     }
 
     @Override
-    public void delete(Object... params) {
+    public void delete(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
         HashMap<String, Persistence> eventHashMap = (HashMap<String, Persistence>) params[0];
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(EVENT_PATH))) {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(EVENT_PATH));
+        try (writer) {
             for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                 Persistence event = entry.getValue();
                 String line = event.getData("id") + ";" + event.getData("name") + ";" + event.getData("date")
@@ -242,11 +247,13 @@ public class Event implements Persistence {
                         + ";" + event.getData(CONST_LOCATION) + ";" + event.getData(OWNER_ID) + "\n";
                 writer.write(line);
             }
-            writer.close();
+
             LOGGER.warning("Event Removed\n");
         } catch (IOException writerEx) {
             LOGGER.warning("Error occurred while writing:");
             writerEx.printStackTrace();
+        } finally {
+            writer.close();
         }
     }
 
