@@ -73,11 +73,11 @@ public class SessionScreenController extends BaseController implements FxControl
             Persistence persistence = entry.getValue();
             if (persistence.getData("ownerId").equals(userController.getData("id"))) {
 
-                VBox eventContainer = new VBox();
-                eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                VBox sessionContainer = new VBox();
+                sessionContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-                Label eventLabel = new Label(persistence.getData("name"));
-                eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
+                Label sessionLabel = new Label(persistence.getData("name"));
+                sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
 
                 Button editButton = new Button("Editar");
                 editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
@@ -106,9 +106,9 @@ public class SessionScreenController extends BaseController implements FxControl
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
                 actionButtons.getChildren().addAll(editButton, deleteButton);
 
-                eventContainer.getChildren().addAll(eventLabel, actionButtons);
+                sessionContainer.getChildren().addAll(sessionLabel, actionButtons);
 
-                sessionVBox.getChildren().add(eventContainer);
+                sessionVBox.getChildren().add(sessionContainer);
             }
         }
     }

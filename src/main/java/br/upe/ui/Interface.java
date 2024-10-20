@@ -1,3 +1,4 @@
+/*
 package br.upe.ui;
 
 import br.upe.controller.*;
@@ -724,4 +725,4 @@ public class Interface {
         }
     }
 
-}
+}*/

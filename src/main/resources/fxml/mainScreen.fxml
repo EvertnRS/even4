@@ -40,7 +40,7 @@
                <font>
                   <Font name="System Bold" size="68.0" />
                </font></Label>
-            <Button layoutX="28.0" layoutY="512.0" mnemonicParsing="false" onAction="#handleAddEvent" opacity="0.0" prefHeight="65.0" prefWidth="63.0" text="addEvent" />
+            <Button layoutX="28.0" layoutY="512.0" mnemonicParsing="false" onAction="#handleAddEvent" opacity="0.0" prefHeight="65.0" prefWidth="63.0" text="addEvent" style="-fx-cursor: hand"/>
             <Label layoutX="51.0" layoutY="22.0" text="Eventos Criados" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="22.0" />

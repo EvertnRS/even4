@@ -1,5 +1,4 @@
 package br.upe.ui;
-import br.upe.persistence.SubEvent;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
