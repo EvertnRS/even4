@@ -190,7 +190,7 @@ public class Interface {
                     choiceEvent(sc, ses, userLogin, ac);
                     break;
                 case 3:
-                    articleMenu(sc, submitArticleController);
+                    articleMenu(sc, submitArticleController, userLogin);
                     break;
                 case 0:
                     LOGGER.info("Voltando...");
@@ -294,7 +294,7 @@ public class Interface {
         } while (option != 0);
     }
 
-    private static void articleMenu(Scanner sc, SubmitArticleController submitArticleController) throws IOException {
+    private static void articleMenu(Scanner sc, SubmitArticleController submitArticleController, Controller userLogin) throws IOException {
         int option;
 
         do {
@@ -312,7 +312,7 @@ public class Interface {
                     String eventName = sc.next();
                     LOGGER.info("Digite o caminho do artigo:");
                     String filePath = sc.next();
-                    submitArticleController.create(eventName, filePath);
+                    submitArticleController.create(eventName, filePath, userLogin.getData("id"));
                     break;
                 case 2:
                     LOGGER.info("Digite o nome do evento do artigo a ser atualizado:");
@@ -725,4 +725,5 @@ public class Interface {
         }
     }
 
-}*/
+}
+*/

@@ -12,6 +12,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 
 <AnchorPane fx:id="submitPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.SubmitScreenController">
 
@@ -125,7 +126,7 @@
          <children>
             <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutY="62.0" prefHeight="502.0" prefWidth="878.0" vvalue="1.0">
                <content>
-                  <VBox fx:id="articleVBox" layoutX="161.0" layoutY="90.0" prefHeight="65.0" prefWidth="528.0" spacing="10" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+                  <VBox fx:id="articleVBox" layoutX="161.0" layoutY="90.0" prefHeight="65.0" prefWidth="528.0" spacing="10" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 10px;" alignment="CENTER" />
                </content>
             </ScrollPane>
             <Circle fill="#ff914d" layoutX="60.0" layoutY="544.0" radius="32.0" stroke="#ff914d" strokeType="INSIDE">
