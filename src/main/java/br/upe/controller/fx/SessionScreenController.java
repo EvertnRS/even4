@@ -115,7 +115,7 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     private void handleEditSession(String eventName) throws IOException {
-        genericButton("/fxml/updateEventScreen.fxml", sessionPane, userController, eventName);
+        genericButton("/fxml/updateSessionScreen.fxml", sessionPane, userController, eventName);
     }
 
     private void handleDeleteSession(String eventId, String userId) {
