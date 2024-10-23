@@ -2,6 +2,7 @@ package br.upe.controller;
 
 import br.upe.persistence.Session;
 import br.upe.persistence.Persistence;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -92,7 +93,6 @@ public class SessionController implements Controller {
 
     private void cascadeDelete(String id) throws IOException {
 
-        // Deletar todos os participantes relacionados às sessões do evento
         AttendeeController attendeeController = new AttendeeController();
         attendeeController.read();
         Iterator<Map.Entry<String, Persistence>> attendeeIterator = attendeeController.getAttendeeHashMap().entrySet().iterator();
@@ -111,7 +111,6 @@ public class SessionController implements Controller {
             }
         });
 
-        // Deletar todos os artigos relacionados ao SubEvento
         String subEventName = sessionHashMap.get(id).getData("name");
         SubmitArticleController articleController = new SubmitArticleController();
         articleController.read(subEventName);
@@ -285,7 +284,7 @@ public class SessionController implements Controller {
 
     @Override
     public void update(Object... params) throws IOException {
-        if (params.length != 6) {
+        if (params.length != 8) {
             LOGGER.warning("Só pode ter 6 parâmetros");
             return;
         }
@@ -296,6 +295,8 @@ public class SessionController implements Controller {
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
         String userId = (String) params[5];
+        String newStartTime = (String) params[6];
+        String newEndTime = (String) params[7];
 
         if (newName == null || newName.trim().isEmpty()) {
             LOGGER.warning("Nome não pode ser vazio");
@@ -312,10 +313,22 @@ public class SessionController implements Controller {
 
         boolean isOwner = false;
         for (Persistence session : sessionHashMap.values()) {
+
             if (session.getData(NAME).equals(oldName) && session.getData(OWNER_ID).equals(userId)) {
-                session.update(newName, newDate, newDescription, newLocation);
-                isOwner = true;
-                break;
+
+                if (session != null) {
+                    session.setData("name", newName);
+                    session.setData("date", newDate);
+                    session.setData(DESCRIPTION, newDescription);
+                    session.setData(LOCATION, newLocation);
+                    session.setData("startTime", newStartTime);
+                    session.setData("endTime", newEndTime);
+
+                    Persistence sessionPersistence = new Session();
+                    sessionPersistence.update(sessionHashMap);
+                    isOwner = true;
+                    break;
+                }
             }
         }
 
