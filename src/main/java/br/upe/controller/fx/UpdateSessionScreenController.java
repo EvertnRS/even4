@@ -35,7 +35,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     @FXML
     private Label errorDelLabel;
 
-    public void setUserController(UserController userController) {
+    public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
         this.SessionController = new SessionController();
         initial();
