@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="userPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/21.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.UserScreenController">
+<AnchorPane fx:id="userPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.UserScreenController">
 
     <children>
         <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
@@ -79,7 +79,7 @@
                 <Font size="14.0" />
             </font>
         </Label>
-        <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" onAction="#logout" opacity="0.0" prefHeight="35.0" prefWidth="72.0" text="logout" style="-fx-cursor: hand;"/>
+        <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" onAction="#logout" opacity="0.0" prefHeight="35.0" prefWidth="72.0" style="-fx-cursor: hand;" text="logout" />
         <Pane layoutX="-1.0" layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
             <effect>
                 <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
@@ -94,7 +94,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" onAction="#handleEvent" opacity="0.0" prefHeight="68.0" prefWidth="216.0" text="Event" style="-fx-cursor: hand;"/>
+            <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" onAction="#handleEvent" opacity="0.0" prefHeight="68.0" prefWidth="216.0" style="-fx-cursor: hand;" text="Event" />
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="215.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -111,7 +111,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" text="Subevent" onAction="#handleSubEvent" style="-fx-cursor: hand;"/>
+            <Button mnemonicParsing="false" onAction="#handleSubEvent" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Subevent" />
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -128,7 +128,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button layoutY="-5.0" mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="68.0" prefWidth="222.0" text="Session" style="-fx-cursor: hand;"/>
+            <Button layoutY="-5.0" mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="68.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Session" />
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -145,7 +145,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button layoutX="-2.0" layoutY="-9.0" mnemonicParsing="false" onAction="#handleSubmitEvent" opacity="0.0" prefHeight="68.0" prefWidth="222.0" text="submit" style="-fx-cursor: hand;"/>
+            <Button layoutX="-2.0" layoutY="-9.0" mnemonicParsing="false" onAction="#handleSubmitEvent" opacity="0.0" prefHeight="68.0" prefWidth="222.0" style="-fx-cursor: hand;" text="submit" />
             </children>
         </Pane>
         <Pane layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
@@ -164,5 +164,67 @@
                 </Label>
             </children>
         </Pane>
+        <!-- Código já existente para o layout -->
+        <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
+            <children>
+                <!-- Seção de Atualizar Perfil -->
+                <Label layoutX="39.0" layoutY="32.0" text="Atualizar Perfil" textFill="#ff914d">
+                    <font>
+                        <Font name="Inter Semi Bold" size="23.0" />
+                    </font>
+                </Label>
+                <Label layoutX="56.0" layoutY="85.0" text="Digite o seu novo endereço de email:">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="emailnewTextField" cache="true" layoutX="56.0" layoutY="124.0" prefHeight="42.0" prefWidth="293.0" promptText="     Email" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+                <Button layoutX="167.0" layoutY="203.0" mnemonicParsing="false" onAction="#updateUser" prefHeight="30.0" prefWidth="72.0" text="Atualizar">
+                    <style>
+                        -fx-background-color: #ff914d;
+                        -fx-text-fill: white;
+                        -fx-font-weight: bold;
+                        -fx-border-radius: 15;
+                        -fx-background-radius: 5;
+                        -fx-padding: 5 10 5 10;
+                        -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);
+                        -fx-cursor: hand;
+                    </style>
+                </Button>
+
+                <!-- Seção de Deletar Perfil -->
+                <Label layoutX="39.0" layoutY="323.0" text="Deletar Perfil" textFill="#ff914d">
+                    <font>
+                        <Font name="Inter Semi Bold" size="23.0" />
+                    </font>
+                </Label>
+                <Label layoutX="48.0" layoutY="378.0" text="Digite o cpf cadastrado:">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="cpfnewTextField" cache="true" layoutX="53.0" layoutY="419.0" prefHeight="42.0" prefWidth="293.0" promptText="     Cpf" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+                <Button layoutX="163.0" layoutY="506.0" mnemonicParsing="false" onAction="#deleteUser" prefHeight="30.0" prefWidth="72.0" text="Deletar">
+                    <style>
+                        -fx-background-color: #ff914d;
+                        -fx-text-fill: white;
+                        -fx-font-weight: bold;
+                        -fx-border-radius: 15;
+                        -fx-background-radius: 5;
+                        -fx-padding: 5 10 5 10;
+                        -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);
+                        -fx-cursor: hand;
+                    </style>
+                </Button>
+
+                <!-- Nova imagem adicionada abaixo da seção Deletar Perfil -->
+                <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="433.0" layoutY="155.0" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/userIcon.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </Pane>
+
     </children>
 </AnchorPane>
