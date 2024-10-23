@@ -13,10 +13,18 @@ public class SubmitArticleController implements Controller {
     private Map<String, Persistence> articleHashMap = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(SubmitArticleController.class.getName());
 
-    // Adição do método addArticle
     public void addArticle(SubmitArticle article) {
-        articleHashMap.put(article.getData("id"), article);
+        // Aqui estamos garantindo que o nome salvo será apenas "art.txt"
+        String articleName = new File(article.getData("name")).getName(); // Nome simples, sem prefixos ou caminho
+        String uniqueKey = article.getData("ownerId") + "_" + articleName; // Usa o nome simples no HashMap
+        articleHashMap.put(uniqueKey, article);
+        LOGGER.info("Artigo adicionado: " + uniqueKey); // Verifica o nome salvo no HashMap
     }
+
+
+
+
+
 
     @Override
     public void create(Object... params) throws IOException {
@@ -48,30 +56,36 @@ public class SubmitArticleController implements Controller {
     }
 
 
-
     @Override
     public void delete(Object... params) throws IOException {
-        // Método atualizado abaixo
         if (params.length != 1) {
             LOGGER.warning("São necessários 1 parâmetro: nome do arquivo.");
             return;
         }
 
-        String fileName = (String) params[0];
+        // Obtém o nome simples do arquivo
+        String fileName = new File((String) params[0]).getName();
         Persistence article = articleHashMap.get(fileName);
+
         if (article != null) {
-            article.delete(fileName);
+            article.delete(fileName); // Exclui o arquivo pelo nome simples
+            articleHashMap.remove(fileName); // Remove do HashMap
+            LOGGER.info("Artigo excluído: " + fileName);
         } else {
             LOGGER.warning("Artigo não encontrado: " + fileName);
         }
     }
+
+
+
+
 
     public boolean list(String userId) {
         LOGGER.info("Listando artigos para o usuário: %s".formatted(userId));
         articleHashMap.clear(); // Limpa o mapa de artigos antes de carregar novos
         // Chama o método read apenas com o userId para buscar todos os artigos
         read(userId); // O método read agora carrega todos os artigos associados ao userId
-
+        LOGGER.info("Artigos disponíveis no HashMap: " + articleHashMap.keySet());
         // Verifica se existem artigos carregados
         if (articleHashMap.isEmpty()) {
             LOGGER.warning("Nenhum artigo encontrado para o usuário: %s".formatted(userId));
@@ -116,17 +130,17 @@ public class SubmitArticleController implements Controller {
         return data;
     }
 
-    // Atualização do método create para incluir criação de artigos
     public void create(String eventName, String filePath, String userId) throws IOException {
         boolean eventFound = getFatherEventId(eventName);
         if (eventFound) {
-            SubmitArticle article = new SubmitArticle("", filePath, "ownerId");
+            SubmitArticle article = new SubmitArticle("", filePath, userId);
             article.create(eventName, filePath, userId);
-            addArticle(article);
+            addArticle(article); // Aqui você deve garantir que a chave é criada corretamente.
         } else {
             LOGGER.warning("Evento não encontrado.");
         }
     }
+
 
 
     public void read(String userId) {
