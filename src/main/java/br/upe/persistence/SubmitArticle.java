@@ -76,6 +76,7 @@ public class SubmitArticle implements Persistence {
             }
         }
 
+
         return articles;
     }
 
