@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -119,7 +121,9 @@ public class SubmitScreenController extends BaseController implements FxControll
         VBox articleContainer = new VBox();
         articleContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-        Label articleLabel = new Label(persistence.getData("name"));
+        // Usa apenas o nome simples do arquivo
+        String articleName = new File(persistence.getData("name")).getName();
+        Label articleLabel = new Label(articleName);
         articleLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
 
         Button editButton = new Button("Editar");
@@ -130,7 +134,7 @@ public class SubmitScreenController extends BaseController implements FxControll
 
         editButton.setOnAction(e -> {
             try {
-                handleEditArticle(persistence.getData("name"));
+                handleEditArticle(articleName); // Passa o nome simples
             } catch (IOException ex) {
                 throw new IllegalArgumentException(ex);
             }
@@ -138,7 +142,7 @@ public class SubmitScreenController extends BaseController implements FxControll
 
         deleteButton.setOnAction(e -> {
             try {
-                handleDeleteArticle(persistence.getData("name"), userController.getData("id"));
+                handleDeleteArticle(articleName, userController.getData("id")); // Passa o nome simples
             } catch (IOException ex) {
                 throw new IllegalArgumentException(ex);
             }
@@ -149,10 +153,9 @@ public class SubmitScreenController extends BaseController implements FxControll
         actionButtons.getChildren().addAll(editButton, deleteButton);
 
         articleContainer.getChildren().addAll(articleLabel, actionButtons);
-
-        // Adiciona o artigo ao VBox do evento
         eventVBox.getChildren().add(articleContainer);
     }
+
 
 
     private void handleEditArticle(String name) throws IOException {
@@ -160,20 +163,11 @@ public class SubmitScreenController extends BaseController implements FxControll
     }
 
     private void handleDeleteArticle(String articleName, String userId) throws IOException {
-        // Obtém o nome do evento associado ao artigo e verifica pelo formato "userId_articleName"
-        String eventName = null;
-        String articleKey = userId + "_" + articleName; // Combina o userId e o nome do artigo
+        // Verifica se o artigo existe no HashMap
+        Persistence article = submitArticleController.getArticleHashMap().get(articleName);
 
-        for (Map.Entry<String, Persistence> entry : submitArticleController.getArticleHashMap().entrySet()) {
-            Persistence article = entry.getValue();
-            if (entry.getKey().equals(articleKey)) { // Compara a chave gerada com userId + "_" + articleName
-                eventName = article.getData("eventName");
-                break;
-            }
-        }
-
-        // Se o nome do evento foi encontrado, confirma a exclusão
-        if (eventName != null) {
+        // Se o artigo foi encontrado, confirma a exclusão
+        if (article != null) {
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmação de Exclusão");
             confirmationAlert.setHeaderText("Deseja realmente excluir este artigo?");
@@ -187,17 +181,20 @@ public class SubmitScreenController extends BaseController implements FxControll
             Optional<ButtonType> result = confirmationAlert.showAndWait();
 
             if (result.isPresent() && result.get() == buttonSim) {
-                // Chama o método de exclusão no controlador de artigos usando o userId e o nome completo do artigo
-                submitArticleController.delete(eventName, articleKey, userId);
+                // Chama o método de exclusão no controlador de artigos usando apenas o nome do artigo
+                submitArticleController.delete(articleName); // Você não precisa do userId aqui
                 loadUserArticles(); // Recarrega os artigos para atualizar a tela
             }
         } else {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setTitle("Erro ao excluir artigo");
             errorAlert.setHeaderText(null);
-            errorAlert.setContentText("Artigo ou evento não encontrado.");
+            errorAlert.setContentText("Artigo não encontrado.");
             errorAlert.showAndWait();
         }
     }
+
+
+
 
 }
