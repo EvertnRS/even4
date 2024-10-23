@@ -9,6 +9,9 @@ import java.util.logging.Logger;
 
 public class User implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(User.class.getName());
+    private static final String CONST_EMAIL = "email";
+    private static final String USER_PATH = "./db/users.csv";
+    private static final String WRITE_ERROR = "Erro na escrita do arquivo";
     private String id;
     private String cpf;
     private String email;
@@ -26,7 +29,7 @@ public class User implements Persistence {
         String data = "";
         try {
             switch (dataToGet) {
-                case "email" -> data = this.getEmail();
+                case CONST_EMAIL -> data = this.getEmail();
                 case "cpf" -> data = this.getCpf();
                 case "id" -> data = this.getId();
                 default -> throw new IOException();
@@ -41,7 +44,7 @@ public class User implements Persistence {
     public void setData(String dataToSet, String data) {
         try {
             switch (dataToSet) {
-                case "email" -> this.setEmail(data);
+                case CONST_EMAIL -> this.setEmail(data);
                 case "cpf" -> this.setCpf(data);
                 case "id" -> this.setId(data);
                 default -> throw new IOException();
@@ -82,7 +85,7 @@ public class User implements Persistence {
 
     @Override
     public void setName(String email) {
-
+        throw new UnsupportedOperationException("setName operation is not supported.");
     }
 
     public void create(Object... params) {
@@ -99,98 +102,105 @@ public class User implements Persistence {
         String line = id + ";" + email + ";" + cpf;
 
         try {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/users.csv", true))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(USER_PATH, true))) {
                 writer.write(line);
                 writer.newLine();
             }
 
             LOGGER.warning("Usuário Criado");
         } catch (IOException writerEx) {
-            LOGGER.warning("Erro na escrita do arquivo");
+            LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
         }
     }
 
 
     @Override
-    public void update(Object... params) {
+    public void update(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> userHashMap = (HashMap<String, Persistence>) params[0];
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/users.csv"))) {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(USER_PATH));
+        try (writer) {
             for (Map.Entry<String, Persistence> entry : userHashMap.entrySet()) {
                 Persistence user = entry.getValue();
-                String line = user.getData("id") + ";" + user.getData("email") + ";" + user.getData("cpf") + "\n";
+                String line = user.getData("id") + ";" + user.getData(CONST_EMAIL) + ";" + user.getData("cpf") + "\n";
                 writer.write(line);
             }
-            writer.close();
+
             LOGGER.warning("Usuário Atualizado");
         } catch (IOException writerEx) {
-            LOGGER.warning("Erro na escrita do arquivo");
+            LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
+        } finally {
+            writer.close();
         }
     }
 
     @Override
-    public void delete(Object... params) {
+    public void delete(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
 
         HashMap<String, Persistence> userHashMap = (HashMap<String, Persistence>) params[0];
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("./db/users.csv"))) {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(USER_PATH));
+        try (writer) {
             for (Map.Entry<String, Persistence> entry : userHashMap.entrySet()) {
                 Persistence user = entry.getValue();
-                String line = user.getData("id") + ";" + user.getData("email") + ";" + user.getData("cpf") + "\n";
+                String line = user.getData("id") + ";" + user.getData(CONST_EMAIL) + ";" + user.getData("cpf") + "\n";
                 writer.write(line);
             }
-            writer.close();
+
             LOGGER.warning("Usuário Removido");
         } catch (IOException writerEx) {
-            LOGGER.warning("Erro na escrita do arquivo");
+            LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
+        } finally {
+            writer.close();
         }
     }
 
     @Override
-    public HashMap<String, Persistence> read() {
+    public HashMap<String, Persistence> read() throws IOException {
         HashMap<String, Persistence> list = new HashMap<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("./db/users.csv"));
+        BufferedReader reader = new BufferedReader(new FileReader(USER_PATH));
+        try (reader) {
+
             String line;
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length == 3) {
-                    String id = parts[0].trim();
-                    String email = parts[1].trim();
-                    String cpf = parts[2].trim();
+                    String parsedId = parts[0].trim();
+                    String parsedEmail = parts[1].trim();
+                    String parsedCpf = parts[2].trim();
 
                     User user = new User();
-                    user.setEmail(email);
-                    user.setCpf(cpf);
-                    user.setId(id);
+                    user.setEmail(parsedEmail);
+                    user.setCpf(parsedCpf);
+                    user.setId(parsedId);
                     list.put(user.getId(), user);
                 }
             }
-            reader.close();
+
 
         } catch (IOException readerEx) {
             LOGGER.warning("Erro ao ler o arquivo");
             readerEx.printStackTrace();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
+        } finally {
+            reader.close();
         }
         return list;
     }
 
     @Override
     public HashMap<String, Persistence> read(Object... params) {
-        return null;
+        return new HashMap<>();
     }
 
 }

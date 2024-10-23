@@ -1,17 +1,11 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-
 import java.io.IOException;
-
 import static br.upe.ui.Validation.isValidEmail;
 
 public class UserScreenController extends BaseController implements FxController {
@@ -59,7 +53,7 @@ public class UserScreenController extends BaseController implements FxController
         genericButton("/fxml/loginScreen.fxml", userPane, userController, null);
     }
 
-    public void updateUser(){
+    public void updateUser() throws IOException {
         String email = emailTextField.getText();
 
         if (isValidEmail(email)) {

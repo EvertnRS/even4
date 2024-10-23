@@ -1,11 +1,13 @@
 package br.upe.persistence;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class SubmitArticle implements Persistence {
-    private static final Logger LOGGER = Logger.getLogger(SubEvent.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SubmitArticle.class.getName());
     private String name;
     private String path;
 
@@ -23,19 +25,18 @@ public class SubmitArticle implements Persistence {
 
     @Override
     public void setData(String dataToSet, String data) {
-        switch (dataToSet) {
-            case "name":
-                this.name = data;
-                break;
-            case "path":
-                this.path = data;
-                break;
+        if ("name".equals(dataToSet)) {
+            this.name = data;
+        } else if ("path".equals(dataToSet)) {
+            this.path = data;
+        } else {
+            throw new IllegalArgumentException("Invalid dataToSet: " + dataToSet);
         }
     }
 
     @Override
     public HashMap<String, Persistence> read() {
-        return null;
+        return new HashMap<>();
     }
 
     public HashMap<String, Persistence> read(Object... params) {
@@ -50,7 +51,7 @@ public class SubmitArticle implements Persistence {
 
         File eventFolder = new File(eventFolderPath);
         if (!eventFolder.exists()) {
-            LOGGER.warning("Pasta do evento não encontrada: " + eventFolderPath);
+            LOGGER.warning("Pasta do evento não encontrada: %s".formatted(eventFolderPath));
             return articles;
         }
 
@@ -75,7 +76,7 @@ public class SubmitArticle implements Persistence {
 
     @Override
     public void setName(String email) {
-
+        throw new UnsupportedOperationException("setName operation is not supported.");
     }
 
     @Override
@@ -95,14 +96,14 @@ public class SubmitArticle implements Persistence {
         File destinationFile = new File(eventFolder, fileToMove.getName());
         if (!eventFolder.exists()) {
             if (eventFolder.mkdirs()) {
-                LOGGER.warning("Pasta do evento criada com sucesso: " + eventFolderPath);
+                LOGGER.warning("Pasta do evento criada com sucesso: %s".formatted(eventFolderPath));
             } else {
-                LOGGER.warning("Erro ao criar a pasta do evento: " + eventFolderPath);
+                LOGGER.warning("Erro ao criar a pasta do evento: %s".formatted(eventFolderPath));
                 return;
             }
         }
         if (!fileToMove.exists()) {
-            LOGGER.warning("Arquivo a ser movido não existe: " + filePath);
+            LOGGER.warning("Arquivo a ser movido não existe: %s".formatted(filePath));
             return;
         }
 
@@ -129,7 +130,7 @@ public class SubmitArticle implements Persistence {
 
         File newFile = new File(newFilePath);
         if (!newFile.exists()) {
-            LOGGER.warning("Novo arquivo não existe: " + newFilePath);
+            LOGGER.warning("Novo arquivo não existe: %s".formatted(newFilePath));
             return;
         }
 
@@ -140,12 +141,12 @@ public class SubmitArticle implements Persistence {
             for (File eventFolder : eventFolders) {
                 File oldFile = new File(eventFolder, articleName);
                 if (oldFile.exists()) {
-                    boolean deleted = oldFile.delete();
-                    if (deleted) {
-                        LOGGER.warning("Arquivo antigo deletado com sucesso: " + oldFile.getAbsolutePath());
-                    } else {
-                        LOGGER.warning("Erro ao deletar o arquivo: " + oldFile.getAbsolutePath());
-                        return;
+                    Path filePath = oldFile.toPath();
+                    try {
+                        Files.delete(filePath);
+                        LOGGER.warning("Arquivo antigo deletado com sucesso: %s".formatted(filePath.toAbsolutePath()));
+                    } catch (IOException e) {
+                        LOGGER.warning("Erro ao deletar o arquivo: %s - %s".formatted(filePath.toAbsolutePath(), e.getMessage()));
                     }
                 }
             }
@@ -169,10 +170,12 @@ public class SubmitArticle implements Persistence {
             for (File eventFolder : eventFolders) {
                 File fileToDelete = new File(eventFolder, fileName);
                 if (fileToDelete.exists()) {
-                    if (fileToDelete.delete()) {
+                    Path filePath = fileToDelete.toPath();
+                    try {
+                        Files.delete(filePath);
                         LOGGER.warning("Arquivo deletado com sucesso.");
-                    } else {
-                        LOGGER.warning("Erro ao deletar o arquivo.");
+                    } catch (IOException e) {
+                        LOGGER.warning("Erro ao deletar o arquivo: %s".formatted(e.getMessage()));
                     }
                     return;
                 }

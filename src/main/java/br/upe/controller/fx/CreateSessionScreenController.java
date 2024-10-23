@@ -44,7 +44,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
     @FXML
     private Label errorUpdtLabel;
 
-    public void setUserController(UserController userController) {
+    public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
         this.subEventController = new SubEventController();
         this.eventController = new EventController();
@@ -52,7 +52,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         initial();
     }
 
-    private void initial() {
+    private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
         loadUserEvents();
     }
@@ -101,7 +101,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         return "";
     }
 
-    private void loadUserEvents() {
+    private void loadUserEvents() throws IOException {
         List<String> userEvents = eventController.list(userController.getData("id"), "fx");
         List<String> userSubEvents = subEventController.list(userController.getData("id"), "fx");
         eventComboBox.getItems().addAll(userEvents);
@@ -122,8 +122,10 @@ public class CreateSessionScreenController extends BaseController implements FxC
         Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
         if (!validateEventDate(sessionDate, selectedEventName)) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
-        } else if (!isValidDate(sessionDate) || !areValidTimes(startTime, endTime) || sessionLocation.isEmpty() || sessionDescription.isEmpty() || isValidName(sessionName, sessionMap)) {
+        } else if (!isValidDate(sessionDate) || !areValidTimes(startTime, endTime)) {
             errorUpdtLabel.setText("Data ou horário inválido.");
+        }else if (sessionLocation.isEmpty() || sessionDescription.isEmpty() || isValidName(sessionName, sessionMap)){
+            errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
             sessionController.create(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, userController.getData("id"), type);
             sessionController.read();

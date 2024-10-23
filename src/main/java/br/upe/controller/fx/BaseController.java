@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -55,7 +54,7 @@ public abstract class BaseController {
         return false;
     }
 
-    public boolean validateEventDate(String date, String searchId) {
+    public boolean validateEventDate(String date, String searchId) throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         EventController eventController = new EventController();
@@ -78,6 +77,6 @@ public abstract class BaseController {
             return !inputDate.isBefore(eventDate);
     }
 
-    public abstract void setUserController(UserController userController);
+    public abstract void setUserController(UserController userController) throws IOException;
 }
 

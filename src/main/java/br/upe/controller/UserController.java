@@ -13,7 +13,7 @@ public class UserController implements Controller {
     private Map<String, Persistence> userHashMap;
     private Persistence userLog;
 
-    public UserController() {
+    public UserController() throws IOException {
         this.read();
     }
 
@@ -70,7 +70,7 @@ public class UserController implements Controller {
     }
 
     @Override
-    public void update(Object... params) {
+    public void update(Object... params) throws IOException {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
             return;
@@ -91,13 +91,13 @@ public class UserController implements Controller {
     }
 
     @Override
-    public void read() {
+    public void read() throws IOException {
         Persistence userPersistence = new User();
         this.userHashMap = userPersistence.read();
     }
 
     @Override
-    public void delete(Object... params) {
+    public void delete(Object... params) throws IOException {
         if ((params[1]).equals("id")) {
             Iterator<Map.Entry<String, Persistence>> iterator = userHashMap.entrySet().iterator();
             while (iterator.hasNext()) {

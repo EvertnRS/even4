@@ -27,7 +27,11 @@ public class LoginScreenController extends BaseController implements FxControlle
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
-                        handleLogin();
+                        try {
+                            handleLogin();
+                        } catch (IOException e) {
+                            throw new IllegalArgumentException(e);
+                        }
                     }
                 });
             }
@@ -46,17 +50,13 @@ public class LoginScreenController extends BaseController implements FxControlle
         });
     }
 
-    public void handleLogin() {
+    public void handleLogin() throws IOException {
         String email = emailTextField.getText();
         String cpf = cpfTextField.getText();
 
         UserController userController = new UserController();
         if (userController.loginValidate(email, cpf)) {
-            try {
-                genericButton("/fxml/mainScreen.fxml", loginAnchorPane, userController, null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            genericButton("/fxml/mainScreen.fxml", loginAnchorPane, userController, null);
         } else {
             errorLabel.setText("Login falhou! Verifique suas credenciais.");
         }

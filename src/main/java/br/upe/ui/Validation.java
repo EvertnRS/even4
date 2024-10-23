@@ -1,5 +1,4 @@
 package br.upe.ui;
-import br.upe.persistence.SubEvent;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +9,7 @@ import java.util.regex.Pattern;
 
 
 public class Validation {
-    private static final Logger LOGGER = Logger.getLogger(SubEvent.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(Validation.class.getName());
     private Validation() {
         throw new UnsupportedOperationException("Esta classe não pode ser instanciada.");
     }
@@ -41,7 +40,7 @@ public class Validation {
                 LocalDate dateNow = LocalDate.now();
 
                 if (dateValidate.isBefore(dateNow)) {
-                    LOGGER.warning("A data '" + dt + "' é anterior à data de hoje.");
+                    LOGGER.warning("A data '%s' é anterior à data de hoje.".formatted(dt));
                     return false;
                 }
 

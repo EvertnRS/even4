@@ -2,7 +2,6 @@ package br.upe.controller;
 
 import br.upe.persistence.Session;
 import br.upe.persistence.Persistence;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,7 +24,7 @@ public class SessionController implements Controller {
     private Map<String, Persistence> sessionHashMap;
     private Persistence sessionLog;
 
-    public SessionController() {
+    public SessionController() throws IOException {
         this.read();
     }
 
@@ -62,7 +61,7 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public void create(Object... params) {
+    public void create(Object... params) throws IOException {
         if (params.length != 9) {
             LOGGER.warning("Número incorreto de parâmetros. Esperado: 9");
             return;
@@ -91,7 +90,7 @@ public class SessionController implements Controller {
         session.create(eventId, name, date, description, location, startTime, endTime, userId, eventH);
     }
 
-    private void cascadeDelete(String id) {
+    private void cascadeDelete(String id) throws IOException {
 
         // Deletar todos os participantes relacionados às sessões do evento
         AttendeeController attendeeController = new AttendeeController();
@@ -104,7 +103,13 @@ public class SessionController implements Controller {
                 attendeeIterator.remove();
             }
         }
-        attendeeController.getAttendeeHashMap().values().forEach(attendee -> attendee.delete(attendeeController.getAttendeeHashMap()));
+        attendeeController.getAttendeeHashMap().values().forEach(attendee -> {
+            try {
+                attendee.delete(attendeeController.getAttendeeHashMap());
+            } catch (IOException e) {
+                throw new IllegalArgumentException(e);
+            }
+        });
 
         // Deletar todos os artigos relacionados ao SubEvento
         String subEventName = sessionHashMap.get(id).getData("name");
@@ -113,15 +118,21 @@ public class SessionController implements Controller {
         Iterator<Map.Entry<String, Persistence>> articleIterator = articleController.getArticleHashMap().entrySet().iterator();
         while (articleIterator.hasNext()) {
             Map.Entry<String, Persistence> entry = articleIterator.next();
-            if (entry.getValue().getData("eventId").equals(id)) {
+            if (entry.getValue().getData(EVENT_ID).equals(id)) {
                 articleIterator.remove();
             }
         }
-        articleController.getArticleHashMap().values().forEach(article -> article.delete(articleController.getArticleHashMap()));
+        articleController.getArticleHashMap().values().forEach(article -> {
+            try {
+                article.delete(articleController.getArticleHashMap());
+            } catch (IOException e) {
+                throw new IllegalArgumentException(e);
+            }
+        });
     }
 
     @Override
-    public void delete(Object... params) {
+    public void delete(Object... params) throws IOException {
         String ownerId = "";
         cascadeDelete((String) params[0]);
         for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
@@ -148,7 +159,7 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public boolean list(String ownerId) {
+    public boolean list(String ownerId) throws IOException {
         this.read();
         boolean isnull = true;
 
@@ -181,7 +192,7 @@ public class SessionController implements Controller {
         return isnull;
     }
 
-    public List<String> list(String ownerId, String type) {
+    public List<String> list(String ownerId, String type) throws IOException {
         if(type.equals("fx")){
             this.read();
             List<String> userEvents = new ArrayList<>();
@@ -205,7 +216,7 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public void show(Object... params) {
+    public void show(Object... params) throws IOException {
         this.read();
 
         String paramType = (String) params[1];
@@ -227,7 +238,7 @@ public class SessionController implements Controller {
         }
     }
 
-    private void logSessionDetails(Persistence persistence) {
+    private void logSessionDetails(Persistence persistence) throws IOException {
         String eventName = getEventName(persistence.getData(EVENT_ID));
         if (LOGGER.isLoggable(Level.WARNING)) {
             LOGGER.warning("Nome: " + persistence.getData(NAME) + " - " + "Id: " + persistence.getData(ID) +
@@ -243,7 +254,7 @@ public class SessionController implements Controller {
         return false;
     }
 
-    private String getEventName(String id) {
+    private String getEventName(String id) throws IOException {
         String name = "";
         EventController eventController = new EventController();
         Map<String, Persistence> evenH = eventController.getEventHashMap();
@@ -273,7 +284,7 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public void update(Object... params) throws FileNotFoundException {
+    public void update(Object... params) throws IOException {
         if (params.length != 6) {
             LOGGER.warning("Só pode ter 6 parâmetros");
             return;
@@ -314,12 +325,12 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public void read() {
+    public void read() throws IOException {
         Persistence persistence = new Session();
         this.sessionHashMap = persistence.read();
     }
 
-    private String getFatherEventId(String eventName, String eventType) {
+    private String getFatherEventId(String eventName, String eventType) throws IOException {
         String fatherId = "";
         if (eventType.equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
