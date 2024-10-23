@@ -1,7 +1,6 @@
 package br.upe.controller;
 import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,16 +9,17 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class EventController implements Controller {
-    private static final String OWNWERID = "ownerId";
+    private static final String OWNWER_ID = "ownerId";
     private static final String DESCRIPTION = "description";
     private static final String LOCATION = "location";
+    private static final String EVENT_ID = "eventId";
     private static final Logger LOGGER = Logger.getLogger(EventController.class.getName());
 
     private Map<String, Persistence> eventHashMap;
     private Persistence eventLog;
 
 
-    public EventController() {
+    public EventController() throws IOException {
         this.read();
     }
 
@@ -32,14 +32,14 @@ public class EventController implements Controller {
     }
 
     @Override
-    public boolean list(String ownerId){
+    public boolean list(String ownerId) throws IOException {
         this.read();
         boolean isnull = true;
         try {
             boolean found = false;
             for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData(OWNWERID).equals(ownerId)){
+                if (persistence.getData(OWNWER_ID).equals(ownerId)){
                     String eventName = persistence.getData("name");
                     if (eventName != null) {
                         LOGGER.warning(eventName);
@@ -58,7 +58,7 @@ public class EventController implements Controller {
         return isnull;
     }
 
-    public List<String> list(String ownerId, String type) {
+    public List<String> list(String ownerId, String type) throws IOException {
         if(type.equals("fx")){
             this.read();
             List<String> userEvents = new ArrayList<>();
@@ -66,7 +66,7 @@ public class EventController implements Controller {
             try {
                 for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                     Persistence persistence = entry.getValue();
-                    if (persistence.getData(OWNWERID).equals(ownerId)) {
+                    if (persistence.getData(OWNWER_ID).equals(ownerId)) {
                         userEvents.add(persistence.getData("name"));
                     }
                 }
@@ -83,7 +83,7 @@ public class EventController implements Controller {
 
     @Override
     public void show(Object... params) {
-        this.setEventHashMap(eventHashMap);
+        /*this.setEventHashMap(eventHashMap);
 
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
@@ -92,16 +92,12 @@ public class EventController implements Controller {
             if (!ownerId.equals(params[0])) {
                 String name = persistence.getData("name");
                 String id = persistence.getData("id");
-                LOGGER.warning("%s - %s".formatted(name, id));
             }
-        }
+        }*/
     }
 
-
-
-    @Override
-    public void update(Object... params) throws FileNotFoundException {
-        if (params.length != 6) {
+    public void update(Object... params) throws IOException {
+        if (!isValidParamsLength(params)) {
             LOGGER.warning("Só pode ter 6 parametros");
             return;
         }
@@ -113,61 +109,66 @@ public class EventController implements Controller {
         String newLocation = (String) params[4];
         String userId = (String) params[5];
 
-        boolean isOwner = false;
-        String id = null;
+        String id = getOwnerEventId(oldName, userId);
+        if (id == null) {
+            LOGGER.warning("Você não pode alterar este Evento");
+            return;
+        }
 
+        if (isNameInUseOrEmpty(newName)) {
+            LOGGER.warning("Nome em uso ou vazio");
+            return;
+        }
+
+        updateEvent(id, newName, newDate, newDescription, newLocation);
+    }
+
+    private boolean isValidParamsLength(Object... params) {
+        return params.length == 6;
+    }
+
+    private String getOwnerEventId(String oldName, String userId) {
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             String name = persistence.getData("name");
-            String ownerId = persistence.getData(OWNWERID);
+            String ownerId = persistence.getData(OWNWER_ID);
 
             if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
-                isOwner = true;
-                id = persistence.getData("id");
-                break;
+                return persistence.getData("id");
             }
         }
+        return null;
+    }
 
-        if (isOwner) {
-            boolean nameExists = false;
-            for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
-                Persistence event = entry.getValue();
-                String name = event.getData("name");
-                if (name.isEmpty() || name.equals(newName)) {
-                    nameExists = true;
-                    break;
-                }
+    private boolean isNameInUseOrEmpty(String newName) {
+        for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
+            Persistence event = entry.getValue();
+            String name = event.getData("name");
+            if (name.isEmpty() || name.equals(newName)) {
+                return true;
             }
+        }
+        return false;
+    }
 
-            if (nameExists) {
-                LOGGER.warning("Nome em uso ou vazio");
-                return;
-            }
-
-            if (id != null) {
-                Persistence newEvent = eventHashMap.get(id);
-                if (newEvent != null) {
-                    newEvent.setData("name", newName);
-                    newEvent.setData("date", newDate);
-                    newEvent.setData(DESCRIPTION, newDescription);
-                    newEvent.setData(LOCATION, newLocation);
-                    eventHashMap.put(id, newEvent);
-                    Persistence eventPersistence = new Event();
-                    eventPersistence.update(eventHashMap);
-                } else {
-                    LOGGER.warning("Evento não encontrado");
-                }
-            } else {
-                LOGGER.warning("Você não pode alterar este Evento");
-            }
+    private void updateEvent(String id, String newName, String newDate, String newDescription, String newLocation) throws IOException {
+        Persistence newEvent = eventHashMap.get(id);
+        if (newEvent != null) {
+            newEvent.setData("name", newName);
+            newEvent.setData("date", newDate);
+            newEvent.setData(DESCRIPTION, newDescription);
+            newEvent.setData(LOCATION, newLocation);
+            eventHashMap.put(id, newEvent);
+            Persistence eventPersistence = new Event();
+            eventPersistence.update(eventHashMap);
         } else {
-            LOGGER.warning("Você não pode alterar este Evento");
+            LOGGER.warning("Evento não encontrado");
         }
     }
 
 
     @Override
-    public void read() {
+    public void read() throws IOException {
         Persistence eventPersistence = new Event();
         this.eventHashMap = eventPersistence.read();
     }
@@ -223,25 +224,37 @@ public class EventController implements Controller {
 
     }
 
-    private void cascadeDelete(String id) {
+    private void cascadeDelete(String id) throws IOException {
         // Deletar todas as sessões relacionadas ao evento
         SessionController sessionController = new SessionController();
         sessionController.read();
         sessionController.getSessionHashMap().entrySet().removeIf(entry ->
-                entry.getValue().getData("eventId").equals(id)
+                entry.getValue().getData(EVENT_ID).equals(id)
         );
         sessionController.getSessionHashMap().values().forEach(session ->
-                session.delete(sessionController.getSessionHashMap())
+                {
+                    try {
+                        session.delete(sessionController.getSessionHashMap());
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
         );
 
         // Deletar todos os subeventos relacionados ao evento
         SubEventController subEventController = new SubEventController();
         subEventController.read();
         subEventController.getSubEventHashMap().entrySet().removeIf(entry ->
-                entry.getValue().getData("eventId").equals(id)
+                entry.getValue().getData(EVENT_ID).equals(id)
         );
         subEventController.getSubEventHashMap().values().forEach(subEvent ->
-                subEvent.delete(subEventController.getSubEventHashMap())
+                {
+                    try {
+                        subEvent.delete(subEventController.getSubEventHashMap());
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
         );
 
         // Deletar todos os participantes relacionados às sessões do evento
@@ -252,7 +265,13 @@ public class EventController implements Controller {
             return sessionController.getSessionHashMap().containsKey(sessionId);
         });
         attendeeController.getAttendeeHashMap().values().forEach(attendee ->
-                attendee.delete(attendeeController.getAttendeeHashMap())
+                {
+                    try {
+                        attendee.delete(attendeeController.getAttendeeHashMap());
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
         );
 
         // Deletar todos os artigos relacionados ao evento
@@ -260,22 +279,28 @@ public class EventController implements Controller {
         SubmitArticleController articleController = new SubmitArticleController();
         articleController.read(eventName);
         articleController.getArticleHashMap().entrySet().removeIf(entry ->
-                entry.getValue().getData("eventId").equals(id)
+                entry.getValue().getData(EVENT_ID).equals(id)
         );
         articleController.getArticleHashMap().values().forEach(article ->
-                article.delete(articleController.getArticleHashMap())
+                {
+                    try {
+                        article.delete(articleController.getArticleHashMap());
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException(e);
+                    }
+                }
         );
     }
 
 
     @Override
-    public void delete(Object... params) {
+    public void delete(Object... params) throws IOException {
         String ownerId = "";
         cascadeDelete((String) params[0]);
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(params[0])){
-                ownerId = persistence.getData(OWNWERID);
+                ownerId = persistence.getData(OWNWER_ID);
             }
         }
 
