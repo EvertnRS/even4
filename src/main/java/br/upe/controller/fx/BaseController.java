@@ -1,6 +1,5 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.Controller;
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
@@ -31,6 +30,9 @@ public abstract class BaseController {
             }
             if (screenController instanceof UpdateSubEventScreenController) {
                 ((UpdateSubEventScreenController) screenController).setEventName(eventName);
+            }
+            if (screenController instanceof UpdateSessionScreenController) {
+                ((UpdateSessionScreenController) screenController).setEventName(eventName);
             }
         }
 
