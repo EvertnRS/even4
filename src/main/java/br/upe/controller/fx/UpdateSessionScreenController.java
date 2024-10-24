@@ -11,8 +11,8 @@ import java.io.IOException;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
     private UserController userController;
-    private SessionController SessionController;
-    private String SessionName;
+    private SessionController sessionController;
+    private String sessionName;
 
     @FXML
     private AnchorPane editSessionPane;
@@ -37,12 +37,12 @@ public class UpdateSessionScreenController extends BaseController implements FxC
 
     public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
-        this.SessionController = new SessionController();
+        this.sessionController = new SessionController();
         initial();
     }
 
     public void setEventName(String eventName) {
-        this.SessionName = eventName;
+        this.sessionName = eventName;
     }
 
 
@@ -82,7 +82,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         String newStartTime = editStartTimeTextField.getText();
         String newEndTime = editEndTimeTextField.getText();
 
-        SessionController.update(SessionName, newSubName, newDate, newDescription, newLocation,  userController.getData("id"), newStartTime, newEndTime);
+        sessionController.update(sessionName, newSubName, newDate, newDescription, newLocation,  userController.getData("id"), newStartTime, newEndTime);
         handleEvent();
     }
 
