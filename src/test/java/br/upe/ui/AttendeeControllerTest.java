@@ -1,7 +1,6 @@
-/*
 package br.upe.ui;
 
-import br.upe.controller.AttendeeController;
+/*import br.upe.controller.AttendeeController;
 import br.upe.controller.EventController;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
