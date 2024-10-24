@@ -18,8 +18,7 @@ import java.util.Optional;
 
 public class SubmitScreenController extends BaseController implements FxController {
     private UserController userController;
-    private SubmitArticleController submitarticleController;
-    private SubmitArticleController submitArticleController = new SubmitArticleController(); // Instância adicional
+    private final SubmitArticleController submitArticleController = new SubmitArticleController(); // Instância adicional
 
     @FXML
     private Label userEmail;
@@ -32,11 +31,11 @@ public class SubmitScreenController extends BaseController implements FxControll
 
     public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
-        this.submitarticleController = new SubmitArticleController();
+        new SubmitArticleController();
         initial();
     }
 
-    private void initial() throws IOException {
+    private void initial() {
         userEmail.setText(userController.getData("email"));
         loadUserArticles();
     }
@@ -65,7 +64,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         genericButton("/fxml/loginScreen.fxml", submitPane, userController, null);
     }
 
-    private void loadUserArticles() throws IOException {
+    private void loadUserArticles() {
         articleVBox.getChildren().clear(); // Limpa os artigos na interface
 
         // Carrega os artigos do controlador usando apenas o ID do usuário
