@@ -1,7 +1,6 @@
-/*
 package br.upe.ui;
 
-import br.upe.controller.EventController;
+/*import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
