@@ -5,7 +5,9 @@ import br.upe.persistence.Persistence;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -189,6 +191,28 @@ public class AttendeeController implements Controller {
             e.printStackTrace();
         }
         return isnull;
+    }
+    public List<String> list(String ownerId, String type) throws IOException {
+        if(type.equals("fx")){
+            this.read();
+            List<String> userEvents = new ArrayList<>();
+
+            try {
+                for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
+                    Persistence persistence = entry.getValue();
+                    if (persistence.getData("userId").equals(ownerId)) {
+                        userEvents.add(persistence.getData("name"));
+                    }
+                }
+                if (userEvents.isEmpty()) {
+                    LOGGER.warning("Seu usuário atual não está participando de nenhum evento");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return userEvents;
+        }
+        return List.of();
     }
 
     private String[] getSessionById (String sessionId) throws IOException {
