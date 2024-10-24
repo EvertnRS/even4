@@ -316,19 +316,17 @@ public class SessionController implements Controller {
 
             if (session.getData(NAME).equals(oldName) && session.getData(OWNER_ID).equals(userId)) {
 
-                if (session != null) {
-                    session.setData("name", newName);
-                    session.setData("date", newDate);
-                    session.setData(DESCRIPTION, newDescription);
-                    session.setData(LOCATION, newLocation);
-                    session.setData("startTime", newStartTime);
-                    session.setData("endTime", newEndTime);
+                session.setData("name", newName);
+                session.setData("date", newDate);
+                session.setData(DESCRIPTION, newDescription);
+                session.setData(LOCATION, newLocation);
+                session.setData("startTime", newStartTime);
+                session.setData("endTime", newEndTime);
 
-                    Persistence sessionPersistence = new Session();
-                    sessionPersistence.update(sessionHashMap);
-                    isOwner = true;
-                    break;
-                }
+                Persistence sessionPersistence = new Session();
+                sessionPersistence.update(sessionHashMap);
+                isOwner = true;
+                break;
             }
         }
 

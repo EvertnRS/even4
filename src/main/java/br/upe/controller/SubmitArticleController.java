@@ -1,122 +1,23 @@
 package br.upe.controller;
 
-import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.Persistence;
-
-import java.io.File;
+import br.upe.persistence.SubmitArticle;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
 public class SubmitArticleController implements Controller {
-    private Map<String, Persistence> articleHashMap = new HashMap<>();
+    private Map<String, Persistence> articleHashMap;
     private static final Logger LOGGER = Logger.getLogger(SubmitArticleController.class.getName());
-
-    public void addArticle(SubmitArticle article) {
-        // Aqui estamos garantindo que o nome salvo será apenas "art.txt"
-        String articleName = new File(article.getData("name")).getName(); // Nome simples, sem prefixos ou caminho
-        String uniqueKey = article.getData("ownerId") + "_" + articleName; // Usa o nome simples no HashMap
-        articleHashMap.put(uniqueKey, article);
-        LOGGER.info("Artigo adicionado: " + uniqueKey); // Verifica o nome salvo no HashMap
-    }
-
-
-
-
-
-
-    @Override
-    public void create(Object... params) throws IOException {
-        // Método criado anteriormente
-    }
-
-    @Override
-    public void update(Object... params) throws IOException {
-        // Método atualizado abaixo
-        if (params.length != 2) {
-            LOGGER.warning("São necessários 2 parâmetros: nome do artigo e caminho do novo arquivo.");
-            return;
-        }
-
-        String articleName = (String) params[0];
-        String newFilePath = (String) params[1];
-
-        Persistence article = articleHashMap.get(articleName);
-        if (article != null) {
-            article.update(articleName, newFilePath);
-        } else {
-            LOGGER.warning("Artigo não encontrado: " + articleName);
-        }
-    }
-
-    @Override
-    public void read() throws IOException {
-
-    }
-
-
-    @Override
-    public void delete(Object... params) throws IOException {
-        if (params.length != 1) {
-            LOGGER.warning("São necessários 1 parâmetro: nome do arquivo.");
-            return;
-        }
-
-        // Obtém o nome simples do arquivo
-        String fileName = new File((String) params[0]).getName();
-        Persistence article = articleHashMap.get(fileName);
-
-        if (article != null) {
-            article.delete(fileName); // Exclui o arquivo pelo nome simples
-            articleHashMap.remove(fileName); // Remove do HashMap
-            LOGGER.info("Artigo excluído: " + fileName);
-        } else {
-            LOGGER.warning("Artigo não encontrado: " + fileName);
-        }
-    }
-
-
-
-
-
-    public boolean list(String userId) {
-        LOGGER.info("Listando artigos para o usuário: %s".formatted(userId));
-        articleHashMap.clear(); // Limpa o mapa de artigos antes de carregar novos
-        // Chama o método read apenas com o userId para buscar todos os artigos
-        read(userId); // O método read agora carrega todos os artigos associados ao userId
-        LOGGER.info("Artigos disponíveis no HashMap: " + articleHashMap.keySet());
-        // Verifica se existem artigos carregados
-        if (articleHashMap.isEmpty()) {
-            LOGGER.warning("Nenhum artigo encontrado para o usuário: %s".formatted(userId));
-        } else {
-            LOGGER.info("Artigos encontrados: %d".formatted(articleHashMap.size()));
-        }
-
-        return !articleHashMap.isEmpty(); // Retorna true se houver artigos
-    }
-
-
-
-    @Override
-    public void show(Object... params) throws IOException {
-        // Método criado anteriormente
-    }
-
-    @Override
-    public boolean loginValidate(String email, String cpf) {
-        return false;
-    }
 
     public Map<String, Persistence> getArticleHashMap() {
         return articleHashMap;
     }
-
     public void setArticleHashMap(Map<String, Persistence> articleHashMap) {
         this.articleHashMap = articleHashMap;
     }
 
-    // Método para obter dados do artigo
+    @Override
     public String getData(String dataToGet) {
         String data = "";
         try {
@@ -130,47 +31,105 @@ public class SubmitArticleController implements Controller {
         return data;
     }
 
-    public void create(String eventName, String filePath, String userId) throws IOException {
+    @Override
+    public void create(Object... params) throws IOException {
+        if (params.length != 3) {
+            LOGGER.warning("São necessários 2 parâmetros: nome do evento e caminho do arquivo.");
+            return;
+        }
+
+        String eventName = (String) params[0];
+        String filePath = (String) params[1];
+        String id = (String) params[2];
         boolean eventFound = getFatherEventId(eventName);
         if (eventFound) {
-            SubmitArticle article = new SubmitArticle("", filePath, userId);
-            article.create(eventName, filePath, userId);
-            addArticle(article); // Aqui você deve garantir que a chave é criada corretamente.
+            Persistence article = new SubmitArticle();
+            article.create(eventName, filePath, id);
         } else {
             LOGGER.warning("Evento não encontrado.");
         }
     }
 
+    @Override
+    public void delete(Object... params) throws IOException {
+        if (params.length != 1) {
+            LOGGER.warning("São necessários 2 parâmetro.");
+            return;
+        }
+
+        String fileName = (String) params[0];
+        System.out.println(fileName);
+        Persistence article = new SubmitArticle();
+        article.delete(fileName);
+    }
+
+    @Override
+    public boolean list(String idowner) {
+        // Método não implementado
+        return false;
+    }
+
+    @Override
+    public void show(Object... params) {
+        // Método não implementado
+    }
+
+    @Override
+    public void update(Object... params) throws IOException {
+        if (params.length != 3) {
+            LOGGER.warning("São necessários 3 parâmetros: nome do novo evento, nome do artigo e nome do evento antigo.");
+            return;
+        }
+        String newEventName = (String) params[0];
+        String oldEventName = (String) params[1];
+        String articleName = (String) params[2];
 
 
-    public void read(String userId) {
-        // Agora apenas usa o userId para buscar os artigos em todos os eventos
-        LOGGER.info("Iniciando leitura de artigos para o usuário: %s".formatted(userId));
+        Persistence article = new SubmitArticle();
+        article.update(newEventName, oldEventName, articleName);
+    }
 
-        // Lê os artigos para todos os eventos usando o SubmitArticle
-        SubmitArticle articlePersistence = new SubmitArticle("", "", userId); // Cria instância com userId
-        this.articleHashMap = articlePersistence.read(userId); // Chama o método read passando apenas o userId
+    @Override
+    public void read() {
+        // Método não implementado (Polimorfismo)
+    }
 
-        if (articleHashMap.isEmpty()) {
-            LOGGER.warning("Nenhum artigo encontrado para o usuário: %s".formatted(userId));
+    public void read(Object... params) {
+        if (params.length != 1) {
+            LOGGER.warning("É necessário 1 parâmetro: userId.");
+            return;
+        }
+
+        String userId = (String) params[0];
+        Persistence articlePersistence = new SubmitArticle();
+
+        // Armazena o resultado da leitura no campo articleHashMap
+        this.articleHashMap = articlePersistence.read(userId);
+
+        if (this.articleHashMap.isEmpty()) {
+
         } else {
-            LOGGER.info("Artigos encontrados: %d".formatted(articleHashMap.size()));
+            this.articleHashMap.forEach((key, value) -> LOGGER.info(key));
         }
     }
 
 
+    @Override
+    public boolean loginValidate(String email, String cpf) {
+        return false;
+    }
 
-
-    // Validação do evento
     private boolean getFatherEventId(String eventName) throws IOException {
         EventController ec = new EventController();
         Map<String, Persistence> list = ec.getEventHashMap();
+        boolean found = false;
         for (Map.Entry<String, Persistence> entry : list.entrySet()) {
             Persistence listindice = entry.getValue();
             if (listindice.getData("name").equals(eventName)) {
-                return true;
+                found = true;
+                break;
             }
         }
-        return false;
+        return found;
     }
 }
