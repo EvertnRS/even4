@@ -31,7 +31,7 @@ public class SubmitScreenController extends BaseController implements FxControll
 
     public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
-        SubmitArticleController submitarticleController = new SubmitArticleController();
+        new SubmitArticleController();
         initial();
     }
 
