@@ -52,7 +52,7 @@ public class SubmitArticleController implements Controller {
 
     @Override
     public void read() throws IOException {
-
+        // metodo não ultilizado
     }
 
 
