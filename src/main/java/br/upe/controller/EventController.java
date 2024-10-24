@@ -83,17 +83,7 @@ public class EventController implements Controller {
 
     @Override
     public void show(Object... params) {
-        /*this.setEventHashMap(eventHashMap);
-
-        for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            String ownerId = persistence.getData(OWNWERID);
-            // Verifica se o evento não é de propriedade do usuário e se possui sessões
-            if (!ownerId.equals(params[0])) {
-                String name = persistence.getData("name");
-                String id = persistence.getData("id");
-            }
-        }*/
+        /*Show ainda não ultilizado*/
     }
 
     public void update(Object... params) throws IOException {
