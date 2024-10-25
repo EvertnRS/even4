@@ -71,24 +71,34 @@ public class UserController implements Controller {
 
     @Override
     public void update(Object... params) throws IOException {
+
         if (params.length < 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
+            LOGGER.warning("Só pode ter 2 parâmetros");
             return;
         }
-        Persistence userPersistence = new User();
+
         String email = (String) params[0];
         String cpf = (String) params[1];
         Persistence user = userHashMap.get(this.userLog.getData("id"));
+
         if (user == null) {
-            LOGGER.warning("Usuário não encontrado");
+            LOGGER.warning("Usuário não encontrado para atualização");
             return;
         }
-        user.setData(EMAIL,email);
+
+        System.out.println("Atualizando usuário com ID: " + this.userLog.getData("id"));
+        System.out.println("Novo email: " + email);
+        System.out.println("CPF permanece como: " + cpf);
+
+        user.setData("email", email);
         user.setData("cpf", cpf);
+
         userHashMap.put(this.userLog.getData("id"), user);
 
+        Persistence userPersistence = new User();
         userPersistence.update(userHashMap);
     }
+
 
     @Override
     public void read() throws IOException {
