@@ -51,7 +51,7 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/SessionScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", submitPane, userController, null);
     }
 
     public void logout() throws IOException {
