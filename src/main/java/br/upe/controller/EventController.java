@@ -24,6 +24,7 @@ public class EventController implements Controller {
     }
 
     public Map<String, Persistence> getEventHashMap() {
+        System.out.println(eventHashMap);
         return eventHashMap;
     }
 
@@ -92,15 +93,16 @@ public class EventController implements Controller {
             return;
         }
 
-        String oldName = (String) params[0];
+        String eventId = (String) params[0];
         String newName = (String) params[1];
         String newDate = (String) params[2];
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
         String userId = (String) params[5];
 
-        String id = getOwnerEventId(oldName, userId);
-        if (id == null) {
+        String eventValid = getEventById(eventId);
+
+        if (eventValid == null) {
             LOGGER.warning("Você não pode alterar este Evento");
             return;
         }
@@ -110,7 +112,7 @@ public class EventController implements Controller {
             return;
         }
 
-        updateEvent(id, newName, newDate, newDescription, newLocation);
+        updateEvent(eventId, newName, newDate, newDescription, newLocation);
     }
 
     private boolean isValidParamsLength(Object... params) {
@@ -125,6 +127,16 @@ public class EventController implements Controller {
 
             if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
                 return persistence.getData("id");
+            }
+        }
+        return null;
+    }
+
+    private String getEventById(String id) {
+        for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
+            Persistence persistence = entry.getValue();
+            if (persistence.getData("id").equals(id)) {
+                return persistence.getData("name");
             }
         }
         return null;

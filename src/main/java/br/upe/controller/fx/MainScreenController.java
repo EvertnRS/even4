@@ -90,7 +90,7 @@ public class MainScreenController extends BaseController implements FxController
 
                 editButton.setOnAction(e -> {
                     try {
-                        handleEditEvent(persistence.getData("name"));
+                        handleEditEvent(persistence.getData("id"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -134,8 +134,8 @@ public class MainScreenController extends BaseController implements FxController
         }
     }
 
-    private void handleEditEvent(String eventName) throws IOException {
-        genericButton("/fxml/updateEventScreen.fxml", mainPane, userController, eventName);
+    private void handleEditEvent(String eventId) throws IOException {
+        genericButton("/fxml/updateEventScreen.fxml", mainPane, userController, eventId);
     }
 
     public void handleAddEvent() throws IOException {
