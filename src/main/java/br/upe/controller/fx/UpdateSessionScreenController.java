@@ -2,12 +2,17 @@ package br.upe.controller.fx;
 
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
+import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
+import java.util.Map;
+
+import static br.upe.ui.Validation.areValidTimes;
+import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
     private UserController userController;
@@ -78,12 +83,20 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         String newSubName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
-        String newDate = editDatePicker.getValue().toString();
+        String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
         String newStartTime = editStartTimeTextField.getText();
         String newEndTime = editEndTimeTextField.getText();
-
-        sessionController.update(sessionName, newSubName, newDate, newDescription, newLocation,  userController.getData("id"), newStartTime, newEndTime);
-        handleEvent();
+        Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+        if (!validateEventDate(newDate, newSubName)) {
+            errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
+        } else if (!isValidDate(newDate) || !areValidTimes(newStartTime, newEndTime)) {
+            errorUpdtLabel.setText("Data ou horário inválido.");
+        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(sessionName, sessionMap)){
+            errorUpdtLabel.setText("Erro no preenchimento das informações.");
+        }else {
+            sessionController.update(sessionName, newSubName, newDate, newDescription, newLocation,  userController.getData("id"), newStartTime, newEndTime);
+            sessionController.read();
+            handleSession();}
     }
 
 }
