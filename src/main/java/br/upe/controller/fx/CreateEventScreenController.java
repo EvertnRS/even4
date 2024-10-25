@@ -82,3 +82,5 @@ public class CreateEventScreenController extends BaseController implements FxCon
     }
 
 }
+
+

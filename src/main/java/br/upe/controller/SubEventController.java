@@ -205,17 +205,7 @@ public class SubEventController implements Controller {
 
     @Override
     public void show(Object... params) {
-        /*
-        this.read();
-        for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            String ownerId = persistence.getData(OWNWER_ID);
-            if (!ownerId.equals(params[0])){
-                String name = persistence.getData("name");
-                String id = persistence.getData("id");
-                LOGGER.warning("%s - %s".formatted(name, id));
-            }
-        }*/
+        /*Show ainda não ultilizado*/
     }
 
     @Override
