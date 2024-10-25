@@ -66,14 +66,28 @@ public class UserScreenController extends BaseController implements FxController
     }
 
     public void deleteUser() throws IOException {
-        String cpf = cpfTextField.getText();
+        String cpf = cpfTextField != null ? cpfTextField.getText() : "";
 
-        if (cpf.equals(userController.getData("cpf"))) {
-            userController.delete(userController.getData("id"), "id");
-            logout();
+        if (cpf == null || cpf.isEmpty()) {
+            errorDelLabel.setText("CPF não informado.");
+            return;
         }
-        else{
+
+        if (userController == null) {
+            System.out.println("userController está nulo");
+            return;
+        }
+
+        String cpfData = userController.getData("cpf");
+        String idData = userController.getData("id");
+
+        if (cpfData != null && cpf.equals(cpfData)) {
+            userController.delete(idData, "id");
+            logout();
+        } else {
             errorDelLabel.setText("Erro ao ler cpf! Verifique suas credenciais.");
         }
     }
+
+
 }

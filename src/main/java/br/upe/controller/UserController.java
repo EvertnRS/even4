@@ -99,18 +99,34 @@ public class UserController implements Controller {
     @Override
     public void delete(Object... params) throws IOException {
         if ((params[1]).equals("id")) {
+            String idToDelete = (String) params[0];
+            System.out.println("ID para deletar: " + idToDelete);
+
             Iterator<Map.Entry<String, Persistence>> iterator = userHashMap.entrySet().iterator();
+            boolean found = false;
+
             while (iterator.hasNext()) {
                 Map.Entry<String, Persistence> entry = iterator.next();
                 Persistence user = entry.getValue();
-                if (user.getData("id").equals(params[0])) {
+                String userId = (String) user.getData("id");
+
+                if (userId.equals(idToDelete)) {
                     iterator.remove();
+                    found = true;
+                    System.out.println("Usuário removido da memória.");
+                    break;
                 }
             }
-            Persistence userPersistence = new User();
-            userPersistence.delete(userHashMap);
+
+            if (found) {
+                Persistence userPersistence = new User();
+                userPersistence.delete(userHashMap);
+            } else {
+                System.out.println("Usuário com ID " + idToDelete + " não encontrado.");
+            }
         }
     }
+
 
     @Override
     public boolean list(String idowner) {
