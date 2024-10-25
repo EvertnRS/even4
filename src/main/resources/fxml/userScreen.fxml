@@ -69,6 +69,11 @@
                 </style>
             </Button>
             <Label fx:id="errorDelLabel" layoutX="78.0" layoutY="476.0" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
+           <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="554.0" layoutY="180.0" preserveRatio="true">
+               <image>
+                   <Image url="@/images/userIcon.png" />
+               </image>
+           </ImageView>
         </Pane>
         <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="135.0" style="-fx-text-fill: white;" text="Teste">
             <font>
@@ -164,68 +169,5 @@
                 </Label>
             </children>
         </Pane>
-        <!-- Código já existente para o layout -->
-        <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
-            <children>
-                <!-- Seção de Atualizar Perfil -->
-                <Label layoutX="39.0" layoutY="32.0" text="Atualizar Perfil" textFill="#ff914d">
-                    <font>
-                        <Font name="Inter Semi Bold" size="23.0" />
-                    </font>
-                </Label>
-                <Label layoutX="56.0" layoutY="85.0" text="Digite o seu novo endereço de email:">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="emailTextField" cache="true" layoutX="56.0" layoutY="124.0" prefHeight="42.0" prefWidth="293.0" promptText="     Email" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-                <Label fx:id="errorUpdateLabel" layoutX="100" layoutY="241.0" style="-fx-text-fill: red;" text="" />
-                <Button layoutX="167.0" layoutY="203.0" mnemonicParsing="false" onAction="#updateUser" prefHeight="30.0" prefWidth="72.0" text="Atualizar">
-                    <style>
-                        -fx-background-color: #ff914d;
-                        -fx-text-fill: white;
-                        -fx-font-weight: bold;
-                        -fx-border-radius: 15;
-                        -fx-background-radius: 5;
-                        -fx-padding: 5 10 5 10;
-                        -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);
-                        -fx-cursor: hand;
-                    </style>
-                </Button>
-
-                <!-- Seção de Deletar Perfil -->
-                <Label layoutX="39.0" layoutY="323.0" text="Deletar Perfil" textFill="#ff914d">
-                    <font>
-                        <Font name="Inter Semi Bold" size="23.0" />
-                    </font>
-                </Label>
-                <Label layoutX="48.0" layoutY="378.0" text="Digite o cpf cadastrado:">
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="cpfTextField" cache="true" layoutX="53.0" layoutY="419.0" prefHeight="42.0" prefWidth="293.0" promptText="     Cpf" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-                <Button layoutX="163.0" layoutY="506.0" mnemonicParsing="false" onAction="#deleteUser" prefHeight="30.0" prefWidth="72.0" text="Deletar">
-                    <style>
-                        -fx-background-color: #ff914d;
-                        -fx-text-fill: white;
-                        -fx-font-weight: bold;
-                        -fx-border-radius: 15;
-                        -fx-background-radius: 5;
-                        -fx-padding: 5 10 5 10;
-                        -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);
-                        -fx-cursor: hand;
-                    </style>
-                </Button>
-
-                <!-- Nova imagem adicionada abaixo da seção Deletar Perfil -->
-                <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="433.0" layoutY="155.0" preserveRatio="true">
-                    <image>
-                        <Image url="@/images/userIcon.png" />
-                    </image>
-                </ImageView>
-            </children>
-        </Pane>
-
     </children>
 </AnchorPane>
