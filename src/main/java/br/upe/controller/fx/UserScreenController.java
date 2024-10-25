@@ -22,6 +22,8 @@ public class UserScreenController extends BaseController implements FxController
     @FXML
     private Label errorUpdtLabel;
     @FXML
+    private Label errorUpdateLabel;
+    @FXML
     private Label errorDelLabel;
 
     public void setUserController(UserController userController) {
@@ -54,14 +56,14 @@ public class UserScreenController extends BaseController implements FxController
     }
 
     public void updateUser() throws IOException {
+
         String email = emailTextField.getText();
 
         if (isValidEmail(email)) {
             userController.update(email, userController.getData("cpf"));
-            initial();
-        }
-        else{
-            errorUpdtLabel.setText("Erro ao ler email! Verifique suas credenciais.");
+            logout();
+        } else {
+            errorUpdateLabel.setText("E-mail invalido!");
         }
     }
 
