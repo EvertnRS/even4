@@ -1,6 +1,7 @@
 package br.upe.persistence;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -230,7 +231,7 @@ public class Session implements Persistence {
     @Override
     public HashMap<String, Persistence> read() throws IOException {
         HashMap<String, Persistence> list = new HashMap<>();
-        BufferedReader reader = new BufferedReader(new FileReader(SESSION_PATH));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(SESSION_PATH), StandardCharsets.UTF_8));
         try (reader) {
             String line;
 

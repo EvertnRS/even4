@@ -120,9 +120,13 @@ public class CreateSessionScreenController extends BaseController implements FxC
         String type = verifyType(selectedEventName);
 
         Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
-        if (!validateEventDate(sessionDate, selectedEventName)) {
+        if (!isValidDate(sessionDate))
+        {
+            errorUpdtLabel.setText("Erro no preenchimento das informações.");
+        }
+        else if (!validateEventDate(sessionDate, selectedEventName)) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
-        } else if (!isValidDate(sessionDate) || !areValidTimes(startTime, endTime)) {
+        } else if (!areValidTimes(startTime, endTime)) {
             errorUpdtLabel.setText("Data ou horário inválido.");
         }else if (sessionLocation.isEmpty() || sessionDescription.isEmpty() || isValidName(sessionName, sessionMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");

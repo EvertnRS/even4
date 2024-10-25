@@ -1,4 +1,4 @@
-
+/*
 package br.upe.ui;
 import br.upe.controller.*;
 import java.io.FileNotFoundException;
@@ -670,4 +670,4 @@ public class Interface {
             return false;
         }
     }
-}
+}*/

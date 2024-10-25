@@ -1,6 +1,7 @@
 package br.upe.persistence;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.HashMap;
@@ -169,7 +170,7 @@ public class Attendee implements Persistence{
     @Override
     public HashMap<String, Persistence> read() throws IOException {
         HashMap<String, Persistence> list = new HashMap<>();
-        BufferedReader reader = new BufferedReader(new FileReader(ATTENDEE_PATH));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ATTENDEE_PATH), StandardCharsets.UTF_8));
         try (reader) {
             String line;
 
