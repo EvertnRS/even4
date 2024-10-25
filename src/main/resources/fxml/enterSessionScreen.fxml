@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="attendeePane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.EnterSessionScreenController">
+
+    <children>
+        <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
+            <image>
+                <Image url="@/images/userIcon.png" />
+            </image>
+        </ImageView>
+        <ImageView fx:id="exitView" fitHeight="34.0" fitWidth="29.0" layoutX="23.0" layoutY="508.0" preserveRatio="true">
+            <image>
+                <Image url="@/images/exit.png" />
+            </image>
+        </ImageView>
+        <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="134.0" style="-fx-text-fill: white;" text="Teste">
+            <font>
+                <Font name="Inter Semi Bold" size="12.0" />
+            </font>
+        </Label>
+        <Label layoutX="64.0" layoutY="512.0" text="Sair">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+        <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" onAction="#logout" opacity="0.0" prefHeight="35.0" prefWidth="72.0" style="-fx-cursor: hand;" text="logout" />
+        <Pane layoutX="222.0" prefHeight="582.0" prefWidth="878.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
+            <children>
+                <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutY="75.0" prefHeight="487.0" prefWidth="878.0" vvalue="1.0">
+                    <VBox fx:id="attendeeVBox" layoutX="161.0" layoutY="90.0" prefHeight="65.0" prefWidth="528.0" spacing="10" style="-fx-background-radius: 10; -fx-border-radius: 10;">
+                        <!-- Aqui será a lista de eventos -->
+                    </VBox>
+                </ScrollPane>
+                <Circle fill="#ff914d" layoutX="60.0" layoutY="544.0" radius="32.0" stroke="#ff914d" strokeType="INSIDE">
+                    <effect>
+                        <DropShadow offsetX="5.0" offsetY="4.0">
+                            <color>
+                                <Color red="0.7684210538864136" green="0.7684210538864136" blue="0.7684210538864136" />
+                            </color>
+                        </DropShadow>
+                    </effect>
+                </Circle>
+                <Label layoutX="36.0" layoutY="490.0" text="+" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="68.0" />
+                    </font>
+                </Label>
+                <Button layoutX="28.0" layoutY="512.0" mnemonicParsing="false" onAction="#handleAddAttendee" opacity="0.0" prefHeight="65.0" prefWidth="63.0" style="-fx-cursor: hand" text="addArtigos" />
+                <Label layoutX="51.0" layoutY="22.0" text="Inscrição" textFill="#ff914d">
+                    <font>
+                        <Font name="Inter Semi Bold" size="22.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+        <Pane layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+            <effect>
+                <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
+                    <color>
+                        <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+                    </color>
+                </DropShadow>
+            </effect>
+            <children>
+                <Label layoutX="34.0" layoutY="19.0" text="Eventos" textFill="WHITE">
+                    <font>
+                        <Font name="Inter Semi Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Button layoutY="2.0" mnemonicParsing="false" onAction="#handleEvent" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Event" />
+            </children>
+        </Pane>
+        <Pane layoutX="-1.0" layoutY="215.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: ff914d; -fx-background-radius: 10 0 0 10;">
+            <effect>
+                <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
+                    <color>
+                        <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+                    </color>
+                </DropShadow>
+            </effect>
+            <children>
+                <Label layoutX="35.0" layoutY="19.0" text="SubEventos" textFill="WHITE">
+                    <font>
+                        <Font name="Inter Semi Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Button layoutY="2.0" mnemonicParsing="false" onAction="#handleSubEvent" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Subevent" />
+            </children>
+        </Pane>
+        <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
+            <effect>
+                <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
+                    <color>
+                        <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+                    </color>
+                </DropShadow>
+            </effect>
+            <children>
+                <Label layoutX="35.0" layoutY="19.0" text="Sessões" textFill="#ff914d">
+                    <font>
+                        <Font name="Inter Semi Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Button layoutY="-2.0" mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Session" textFill="#ff914d" />
+            </children>
+        </Pane>
+        <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+            <effect>
+                <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
+                    <color>
+                        <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+                    </color>
+                </DropShadow>
+            </effect>
+            <children>
+                <Label layoutX="35.0" layoutY="19.0" text="Submeter Artigo" textFill="WHITE">
+                    <font>
+                        <Font name="Inter Semi Bold" size="16.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
+        <Pane layoutX="-1.0" layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+            <effect>
+                <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
+                    <color>
+                        <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+                    </color>
+                </DropShadow>
+            </effect>
+            <children>
+                <Label layoutX="35.0" layoutY="19.0" text="Perfil" textFill="WHITE">
+                    <font>
+                        <Font name="Inter Semi Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" onAction="#handleUser" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="user" />
+            </children>
+        </Pane>
+    </children>
+</AnchorPane>
