@@ -203,7 +203,7 @@
                         <Font size="14.0" />
                     </font>
                 </Label>
-                <TextField fx:id="cpfnewTextField" cache="true" layoutX="53.0" layoutY="419.0" prefHeight="42.0" prefWidth="293.0" promptText="     Cpf" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+                <TextField fx:id="cpfTextField" cache="true" layoutX="53.0" layoutY="419.0" prefHeight="42.0" prefWidth="293.0" promptText="     Cpf" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
                 <Button layoutX="163.0" layoutY="506.0" mnemonicParsing="false" onAction="#deleteUser" prefHeight="30.0" prefWidth="72.0" text="Deletar">
                     <style>
                         -fx-background-color: #ff914d;
