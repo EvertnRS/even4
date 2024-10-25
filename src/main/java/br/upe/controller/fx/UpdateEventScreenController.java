@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Map;
 
 import static br.upe.ui.Validation.isValidDate;
@@ -17,6 +18,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     private UserController userController;
     private EventController eventController;
     private String eventName;
+    private String eventId;
 
     @FXML
     private AnchorPane editEventPane;
@@ -43,6 +45,11 @@ public class UpdateEventScreenController extends BaseController implements FxCon
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
+        loadEventDetails();
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
 
@@ -74,7 +81,30 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         genericButton("/fxml/userScreen.fxml", editEventPane, userController, null);
     }
 
+    private void loadEventDetails() {
+        Map<String, Persistence> eventMap = eventController.getEventHashMap();
+        Persistence event = eventMap.get(eventName);
+
+        if (event != null) {
+            editNameTextField.setText(event.getData("name"));
+            editLocationTextField.setText(event.getData("location"));
+            editDescriptionTextField.setText(event.getData("description"));
+
+            String eventDate = event.getData("date");
+            if (eventDate != null && !eventDate.isEmpty()) {
+                editDatePicker.setValue(LocalDate.parse(eventDate));
+            }
+        } else {
+            errorUpdtLabel.setText("Evento não encontrado.");
+        }
+    }
+
+
     public void updateEvent() throws IOException {
+
+
+        System.out.println("Evento selecionado: " + eventId);
+
         String newName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
