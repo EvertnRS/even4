@@ -59,6 +59,12 @@
                         <Font name="Inter Semi Bold" size="22.0" />
                     </font>
                 </Label>
+            <Label layoutX="773.0" layoutY="33.0" text="X" textFill="#ff914d">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+               <Button layoutX="768.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="35.0" prefWidth="23.0" style="-fx-cursor: hand;" text="back" />
             </children>
         </Pane>
         <Pane layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">

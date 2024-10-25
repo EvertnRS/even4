@@ -132,7 +132,7 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <Button layoutX="772.0" layoutY="68.0" mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="29.0" prefWidth="29.0" style="-fx-cursor: hand;" text="back" />
+            <Button layoutX="772.0" layoutY="68.0" mnemonicParsing="false" onAction="#handleSubmitEvent" opacity="0.0" prefHeight="29.0" prefWidth="29.0" style="-fx-cursor: hand;" text="back" />
             <TextField fx:id="namesTextField" layoutX="300.0" layoutY="195.0" prefHeight="42.0" prefWidth="293.0" promptText="Digite o Caminho do Artigo" />
             <Button layoutX="400.0" layoutY="270.0" mnemonicParsing="false" onAction="#createArticle" prefHeight="42.0" prefWidth="93.0" style="&#10;                 " text="Enviar" />
             <ComboBox fx:id="eventComboBox" layoutX="300.0" layoutY="134.0" prefHeight="42.0" prefWidth="293.0" promptText="Nome do Evento" />
