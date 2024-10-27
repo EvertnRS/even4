@@ -70,7 +70,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/SessionScreen.fxml", newSessionPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", newSessionPane, userController, null);
     }
 
     public void logout() throws IOException {
