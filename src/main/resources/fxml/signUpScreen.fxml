@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="registerAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.SignUpController">
+<AnchorPane fx:id="registerAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.SignUpController">
 
     <ImageView fx:id="imageView" fitHeight="378.0" fitWidth="368.0" layoutX="296.0" layoutY="-87.0" preserveRatio="true">
         <image>
@@ -15,8 +15,10 @@
 
     <Pane id="loginDiv" layoutX="262.0" layoutY="234.0" prefHeight="306.0" prefWidth="435.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: ffffff;" stylesheets="@../stylesheets/loginScreen.css">
         <children>
-            <TextField fx:id="cpfTextField" cache="true" layoutX="71.0" layoutY="134.0" prefHeight="42.0" prefWidth="293.0" promptText="     CPF" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-            <TextField fx:id="emailTextField" cache="true" layoutX="71.0" layoutY="74.0" prefHeight="42.0" prefWidth="293.0" promptText="     Email" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <TextField fx:id="cpfTextField" cache="true" layoutX="71.0" layoutY="134.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <TextField fx:id="emailTextField" cache="true" layoutX="71.0" layoutY="74.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <Text fx:id="cpfPlaceholder" fill="DARKGREY" layoutX="90.0" layoutY="160.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="CPF" />
+            <Text fx:id="emailPlaceholder" fill="DARKGRAY" layoutX="86.0" layoutY="100.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Email" />
             <Label layoutX="35.0" layoutY="14.0" prefHeight="26.0" prefWidth="74.0" text="Sign Up" textFill="#ff914d">
                 <font>
                     <Font name="System Bold" size="20.0" />
@@ -37,6 +39,6 @@
 
             <Label layoutX="130.0" layoutY="260.0" text="Já é cadastrado?" />
             <Label layoutX="237.0" layoutY="260.0" text="Sign In" textFill="#ff914d" />
-            <Button layoutX="235.0" layoutY="256.0" mnemonicParsing="false" onAction="#returnToLogin" opacity="0.0" prefHeight="25.0" prefWidth="45.0" text=" " style="-fx-cursor: hand;"/>
+            <Button layoutX="235.0" layoutY="256.0" mnemonicParsing="false" onAction="#returnToLogin" opacity="0.0" prefHeight="25.0" prefWidth="45.0" style="-fx-cursor: hand;" text=" " />
         </children></Pane>
 </AnchorPane>

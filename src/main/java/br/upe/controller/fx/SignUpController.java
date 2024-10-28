@@ -6,6 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import static br.upe.ui.Validation.isValidCPF;
 import static br.upe.ui.Validation.isValidEmail;
@@ -20,6 +22,12 @@ public class SignUpController extends BaseController implements FxController {
 
     @FXML
     private AnchorPane registerAnchorPane;
+
+    @FXML
+    private Text cpfPlaceholder;
+
+    @FXML
+    private Text emailPlaceholder;
 
     @FXML
     private Label errorLabel;
@@ -51,6 +59,12 @@ public class SignUpController extends BaseController implements FxController {
                 emailTextField.requestFocus();
             }
         });
+        setupPlaceholders();
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(emailTextField, emailPlaceholder);
+        PlaceholderUtils.setupPlaceholder(cpfTextField, cpfPlaceholder);
     }
 
     public void handleRegister() throws IOException {

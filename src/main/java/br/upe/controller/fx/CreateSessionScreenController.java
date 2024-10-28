@@ -5,12 +5,13 @@ import br.upe.controller.SessionController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,6 +23,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
     private SubEventController subEventController;
     private EventController eventController;
     private SessionController sessionController;
+    private final ObservableList<String> eventList = FXCollections.observableArrayList();
 
     @FXML
     private AnchorPane newSessionPane;
@@ -30,17 +32,33 @@ public class CreateSessionScreenController extends BaseController implements FxC
     @FXML
     private TextField nameTextField;
     @FXML
+    private Text namePlaceholder;
+    @FXML
     private DatePicker datePicker;
+    @FXML
+    private Text datePlaceholder;
     @FXML
     private TextField locationTextField;
     @FXML
+    private Text locationPlaceholder;
+    @FXML
     private TextField descriptionTextField;
+    @FXML
+    private Text descriptionPlaceholder;
     @FXML
     private TextField startTimeTextField;
     @FXML
+    private Text startTimePlaceholder;
+    @FXML
     private TextField endTimeTextField;
     @FXML
-    private ComboBox<String> eventComboBox;
+    private Text endTimePlaceholder;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private Text searchFieldPlaceholder;
+    @FXML
+    private ListView<String> suggestionsListView;
     @FXML
     private Label errorUpdtLabel;
 
@@ -54,7 +72,18 @@ public class CreateSessionScreenController extends BaseController implements FxC
 
     private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
+        setupPlaceholders();
         loadUserEvents();
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(nameTextField, namePlaceholder);
+        PlaceholderUtils.setupPlaceholder(searchField, searchFieldPlaceholder);
+        PlaceholderUtils.setupPlaceholder(datePicker, datePlaceholder);
+        PlaceholderUtils.setupPlaceholder(locationTextField, locationPlaceholder);
+        PlaceholderUtils.setupPlaceholder(descriptionTextField, descriptionPlaceholder);
+        PlaceholderUtils.setupPlaceholder(startTimeTextField, startTimePlaceholder);
+        PlaceholderUtils.setupPlaceholder(endTimeTextField, endTimePlaceholder);
     }
 
     public void handleEvent() throws IOException {
@@ -104,8 +133,27 @@ public class CreateSessionScreenController extends BaseController implements FxC
     private void loadUserEvents() throws IOException {
         List<String> userEvents = eventController.list(userController.getData("id"), "fx");
         List<String> userSubEvents = subEventController.list(userController.getData("id"), "fx");
-        eventComboBox.getItems().addAll(userEvents);
-        eventComboBox.getItems().addAll(userSubEvents);
+        eventList.addAll(userEvents);
+        eventList.addAll(userSubEvents);
+
+        FilteredList<String> filteredItems = new FilteredList<>(eventList, p -> true);
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredItems.setPredicate(event -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                return event.toLowerCase().contains(lowerCaseFilter);
+            });
+            suggestionsListView.setItems(filteredItems);
+            suggestionsListView.setVisible(!filteredItems.isEmpty());
+        });
+
+        suggestionsListView.setOnMouseClicked(event -> {
+            String selectedEvent = suggestionsListView.getSelectionModel().getSelectedItem();
+            searchField.setText(selectedEvent);
+            suggestionsListView.setVisible(false);
+        });
     }
 
 
@@ -116,7 +164,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         String sessionDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
         String startTime = startTimeTextField.getText();
         String endTime = endTimeTextField.getText();
-        String selectedEventName = eventComboBox.getSelectionModel().getSelectedItem();
+        String selectedEventName = searchField.getText();
         String type = verifyType(selectedEventName);
 
         Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();

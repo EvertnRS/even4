@@ -7,9 +7,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import java.io.IOException;
 import java.util.Map;
-
 import static br.upe.ui.Validation.isValidDate;
 
 public class CreateEventScreenController extends BaseController implements FxController {
@@ -23,11 +23,19 @@ public class CreateEventScreenController extends BaseController implements FxCon
     @FXML
     private TextField nameTextField;
     @FXML
+    private Text namePlaceholder;
+    @FXML
     private DatePicker datePicker;
+    @FXML
+    private Text datePlaceholder;
     @FXML
     private TextField locationTextField;
     @FXML
+    private Text locationPlaceholder;
+    @FXML
     private TextField descriptionTextField;
+    @FXML
+    private Text descriptionPlaceholder;
     @FXML
     private Label errorUpdtLabel;
 
@@ -39,6 +47,14 @@ public class CreateEventScreenController extends BaseController implements FxCon
 
     private void initial() {
         userEmail.setText(userController.getData("email"));
+        setupPlaceholders();
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(nameTextField, namePlaceholder);
+        PlaceholderUtils.setupPlaceholder(datePicker, datePlaceholder);
+        PlaceholderUtils.setupPlaceholder(locationTextField, locationPlaceholder);
+        PlaceholderUtils.setupPlaceholder(descriptionTextField, descriptionPlaceholder);
     }
 
     public void handleEvent() throws IOException {

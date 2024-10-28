@@ -5,6 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 
 public class LoginScreenController extends BaseController implements FxController{
@@ -17,6 +19,12 @@ public class LoginScreenController extends BaseController implements FxControlle
 
     @FXML
     private AnchorPane loginAnchorPane;
+
+    @FXML
+    private Text cpfPlaceholder;
+
+    @FXML
+    private Text emailPlaceholder;
 
     @FXML
     private Label errorLabel;
@@ -48,6 +56,13 @@ public class LoginScreenController extends BaseController implements FxControlle
                 emailTextField.requestFocus();
             }
         });
+
+        setupPlaceholders();
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(emailTextField, emailPlaceholder);
+        PlaceholderUtils.setupPlaceholder(cpfTextField, cpfPlaceholder);
     }
 
     public void handleLogin() throws IOException {

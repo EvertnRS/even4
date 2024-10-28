@@ -8,6 +8,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -26,15 +28,27 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     @FXML
     private TextField editNameTextField;
     @FXML
+    private Text namePlaceholder;
+    @FXML
     private DatePicker editDatePicker;
+    @FXML
+    private Text datePlaceholder;
     @FXML
     private TextField editLocationTextField;
     @FXML
+    private Text locationPlaceholder;
+    @FXML
     private TextField editDescriptionTextField;
+    @FXML
+    private Text descriptionPlaceholder;
     @FXML
     private TextField editStartTimeTextField;
     @FXML
+    private Text startTimePlaceholder;
+    @FXML
     private TextField editEndTimeTextField;
+    @FXML
+    private Text endTimePlaceholder;
     @FXML
     private Label errorUpdtLabel;
     @FXML
@@ -53,6 +67,15 @@ public class UpdateSessionScreenController extends BaseController implements FxC
 
     private void initial() {
         userEmail.setText(userController.getData("email"));
+        setupPlaceholders();
+    }
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(editNameTextField, namePlaceholder);
+        PlaceholderUtils.setupPlaceholder(editDatePicker, datePlaceholder);
+        PlaceholderUtils.setupPlaceholder(editLocationTextField, locationPlaceholder);
+        PlaceholderUtils.setupPlaceholder(editDescriptionTextField, descriptionPlaceholder);
+        PlaceholderUtils.setupPlaceholder(editStartTimeTextField, startTimePlaceholder);
+        PlaceholderUtils.setupPlaceholder(editEndTimeTextField, endTimePlaceholder);
     }
 
     public void handleEvent() throws IOException {
