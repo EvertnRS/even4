@@ -1,9 +1,13 @@
+
 package br.upe.ui;
 
-/*import br.upe.controller.UserController;
+
+import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,12 +16,12 @@ class UserControllerTest {
     private UserController userController;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         userController = new UserController();
     }
 
     @Test
-    void testCreateUser() {
+    void testCreateUser() throws IOException {
         userExists();
 
         Map<String, Persistence> userHashMap = userController.getUserHashMap();
@@ -28,7 +32,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testUpdateUser() {
+    void testUpdateUser() throws IOException {
         userExists();
 
         userController.update("updateduser@example.com", "11223344556");
@@ -41,7 +45,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testRead() {
+    void testRead() throws IOException {
         userExists();
 
         String userReaded = "";
@@ -49,7 +53,7 @@ class UserControllerTest {
         for (Map.Entry<String, Persistence> entry : userHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("email").equals("newuser@example.com")) {
-                userReaded = persistence.getData("id");;
+                userReaded = persistence.getData("id");
             }
         }
 
@@ -58,7 +62,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testDeleteUser() {
+    void testDeleteUser() throws IOException {
         userExists();
 
         userController.delete(userController.getData("id"), "id");
@@ -69,7 +73,7 @@ class UserControllerTest {
 
     }
 
-    void userExists() {
+    void userExists() throws IOException {
         boolean userExists = userController.getUserHashMap().values().stream()
                 .anyMatch(user -> user.getData("email").equals("newuser@example.com"));
 
@@ -81,4 +85,4 @@ class UserControllerTest {
         boolean loginSuccessful = userController.loginValidate("newuser@example.com", "09876543211");
         assertTrue(loginSuccessful, "Login falhou, não é possível atualizar o usuário");
     }
-}*/
+}

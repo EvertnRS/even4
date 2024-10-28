@@ -62,7 +62,7 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
         genericButton("/fxml/userScreen.fxml", submitPane, userController, null);
     }
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = eventController.list(userController.getData("id"), "fx");
+        List<String> userEvents = eventController.list(userController.getData("id"), "submit");
         eventComboBox.getItems().addAll(userEvents);
     }
     @FXML
