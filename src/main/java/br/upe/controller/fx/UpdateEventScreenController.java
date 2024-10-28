@@ -8,6 +8,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
@@ -27,11 +29,19 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     @FXML
     private TextField editNameTextField;
     @FXML
+    private Text namePlaceholder;
+    @FXML
     private DatePicker editDatePicker;
+    @FXML
+    private Text datePlaceholder;
     @FXML
     private TextField editLocationTextField;
     @FXML
+    private Text locationPlaceholder;
+    @FXML
     private TextField editDescriptionTextField;
+    @FXML
+    private Text descriptionPlaceholder;
     @FXML
     private Label errorUpdtLabel;
     @FXML
@@ -55,6 +65,14 @@ public class UpdateEventScreenController extends BaseController implements FxCon
 
     private void initial() {
         userEmail.setText(userController.getData("email"));
+        setupPlaceholders();
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(editNameTextField, namePlaceholder);
+        PlaceholderUtils.setupPlaceholder(editDatePicker, datePlaceholder);
+        PlaceholderUtils.setupPlaceholder(editLocationTextField, locationPlaceholder);
+        PlaceholderUtils.setupPlaceholder(editDescriptionTextField, descriptionPlaceholder);
     }
 
     public void handleEvent() throws IOException {
