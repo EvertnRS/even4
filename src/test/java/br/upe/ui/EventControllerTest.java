@@ -1,12 +1,11 @@
 package br.upe.ui;
 
-/*import br.upe.controller.EventController;
-import br.upe.persistence.Event;
+import br.upe.controller.EventController;
 import br.upe.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,15 +13,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class EventControllerTest {
 
     private EventController eventController;
-    private Event testEvent;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         eventController = new EventController();
     }
 
     @Test
-    void testCreateEvent() {
+    void testCreateEvent() throws IOException {
         eventExists();
 
         Map<String, Persistence> eventMap = eventController.getEventHashMap();
@@ -33,8 +31,8 @@ class EventControllerTest {
         eventDelete("New Event");
     }
 
-    @Test
-    void testUpdateEvent() throws FileNotFoundException {
+    /*@Test
+    void testUpdateEvent() throws IOException {
         eventExists();
 
 
@@ -47,10 +45,10 @@ class EventControllerTest {
         assertTrue(eventUpdated, "O Evento não foi atualizado.");
 
         eventDelete("Updated Event");
-    }
+    }*/
 
     @Test
-    void testReadEvent() {
+    void testReadEvent() throws IOException {
         eventExists();
 
         String eventReaded = "";
@@ -67,7 +65,7 @@ class EventControllerTest {
     }
 
     @Test
-    void testDeleteEvent() {
+    void testDeleteEvent() throws IOException {
         eventExists();
         eventDelete("New Event");
 
@@ -76,7 +74,7 @@ class EventControllerTest {
         assertTrue(eventDeleted, "O Evento não foi deletado.");
     }
 
-    void eventExists() {
+    void eventExists() throws IOException {
         boolean eventExists = eventController.getEventHashMap().values().stream()
                 .anyMatch(event -> event.getData("name").equals("New Event"));
 
@@ -86,9 +84,8 @@ class EventControllerTest {
         }
     }
 
-    void eventDelete(String eventName) {
+    void eventDelete(String eventName) throws IOException {
         String eventId = eventController.getEventHashMap().values().stream().filter(event -> event.getData("name").equals(eventName)).findFirst().map(event -> event.getData("id")).orElse(null);
         eventController.delete(eventId, "id1");
     }
 }
-*/

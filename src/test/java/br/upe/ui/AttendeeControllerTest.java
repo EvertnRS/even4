@@ -1,6 +1,6 @@
 package br.upe.ui;
 
-/*import br.upe.controller.AttendeeController;
+import br.upe.controller.AttendeeController;
 import br.upe.controller.EventController;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
@@ -8,7 +8,7 @@ import br.upe.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +21,7 @@ class AttendeeControllerTest {
     private AttendeeController attendeeController;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         attendeeController = new AttendeeController();
         userController = new UserController();
         eventController = new EventController();
@@ -29,7 +29,7 @@ class AttendeeControllerTest {
     }
 
     @Test
-    void testCreateAttendee() throws FileNotFoundException {
+    void testCreateAttendee() throws IOException {
         attendeeExists();
 
         Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
@@ -41,7 +41,7 @@ class AttendeeControllerTest {
     }
 
     @Test
-    void testUpdateAttendee() throws FileNotFoundException {
+    void testUpdateAttendee() throws IOException {
         attendeeExists();
 
         attendeeController.update("Duda", sessionController.getSessionHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null));
@@ -55,7 +55,7 @@ class AttendeeControllerTest {
     }
 
     @Test
-    void testReadAttendee() throws FileNotFoundException {
+    void testReadAttendee() throws IOException {
         attendeeExists();
 
         String attendeeReaded = "";
@@ -71,7 +71,7 @@ class AttendeeControllerTest {
     }
 
     @Test
-    void testDeleteAttendee() throws FileNotFoundException {
+    void testDeleteAttendee() throws IOException {
         attendeeExists();
         attendeeDelete();
 
@@ -82,7 +82,7 @@ class AttendeeControllerTest {
 
     }
 
-    void attendeeExists() throws FileNotFoundException {
+    void attendeeExists() throws IOException {
         boolean sessionExists = attendeeController.getAttendeeHashMap().values().stream()
                 .anyMatch(attendee -> attendee.getData("name").equals("Man"));
 
@@ -106,7 +106,7 @@ class AttendeeControllerTest {
         }
     }
 
-    void attendeeDelete() {
+    void attendeeDelete() throws IOException {
         boolean loginSuccessful = userController.loginValidate("newuser@example.com", "09876543211");
         assertTrue(loginSuccessful, "Login falhou, não é possível atualizar o usuário");
         String userId = userController.getData("id");
@@ -121,4 +121,3 @@ class AttendeeControllerTest {
         eventController.delete(eventId, userId);
     }
 }
-*/
