@@ -29,20 +29,18 @@ public class SubmitScreenController extends BaseController implements FxControll
     @FXML
     private AnchorPane submitPane;
 
-    // Configura o UserController e inicializa a tela de artigos
     public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
-        initial();  // Chamar a inicialização direta aqui
+        initial();
     }
 
-    // Método de inicialização da interface
+
     private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));  // Exibe o e-mail do usuário
         loadUserArticles();  // Carrega os artigos do usuário
     }
 
 
-    // Botões para navegação entre telas
     public void handleEvent() throws IOException {
         genericButton("/fxml/mainScreen.fxml", submitPane, userController, null);
     }
@@ -67,11 +65,11 @@ public class SubmitScreenController extends BaseController implements FxControll
         genericButton("/fxml/loginScreen.fxml", submitPane, userController, null);
     }
 
-    // Carrega os artigos do usuário logado
+
     private void loadUserArticles() throws IOException {
         articleVBox.getChildren().clear();  // Limpa a interface
 
-        // Chama o método read para obter os artigos do usuário
+
         submitArticleController.read(userController.getData("id"));
 
         Map<String, Persistence> articles = submitArticleController.getArticleHashMap();
@@ -88,20 +86,20 @@ public class SubmitScreenController extends BaseController implements FxControll
         scrollPane.setStyle("-fx-padding: 20px;");
         articleVBox.setAlignment(Pos.CENTER);
 
-        // Cria contêineres para cada artigo
+
         for (Map.Entry<String, Persistence> entry : articles.entrySet()) {
             Persistence article = entry.getValue();
 
-            // Aqui, não há mais verificação de ID
-            // Obtém o nome do artigo antes do "="
+
             String articleName = new File(article.getData("name")).getName().split("=")[0].trim();
 
-            createArticleContainer(article, articleVBox); // Adiciona o artigo diretamente
+
+            createArticleContainer(article, articleVBox);
         }
     }
 
 
-    // Cria contêiner para exibir cada artigo individualmente
+
     private void createArticleContainer(Persistence article, VBox eventVBox) {
         VBox articleContainer = new VBox();
         articleContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
@@ -144,7 +142,7 @@ public class SubmitScreenController extends BaseController implements FxControll
     }
 
 
-    // Lógica de exclusão do artigo
+
     private void handleDeleteArticle(String articleName) throws IOException {
 
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -161,7 +159,7 @@ public class SubmitScreenController extends BaseController implements FxControll
 
         if (result.isPresent() && result.get() == buttonSim) {
             submitArticleController.delete(articleName);
-            loadUserArticles();  // Recarrega os artigos para atualizar a tela
+            loadUserArticles();
         }
     }
 

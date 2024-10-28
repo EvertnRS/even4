@@ -1,12 +1,12 @@
 package br.upe.ui;
 
-/*import br.upe.controller.EventController;
+import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.persistence.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,13 +17,13 @@ class SubEventControllerTest {
     private EventController eventController;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         eventController = new EventController();
         subEventController = new SubEventController();
     }
 
     @Test
-    void testCreateSubEvent() throws FileNotFoundException {
+    void testCreateSubEvent() throws IOException {
         subEventExists();
 
         Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
@@ -34,8 +34,8 @@ class SubEventControllerTest {
         subEventDelete("New SubEvent");
     }
 
-    @Test
-    void testUpdateSubEvent() throws FileNotFoundException {
+    /*@Test
+    void testUpdateSubEvent() throws IOException {
         subEventExists();
 
         subEventController.update("New SubEvent", "Updated SubEvent", "02/12/2024", "Updated SubEvent Description", "New Location", "owner-id");
@@ -46,10 +46,10 @@ class SubEventControllerTest {
         assertTrue(subEventUpdated, "O SubEvento não foi atualizado.");
 
         subEventDelete("Updated SubEvent");
-    }
+    }*/
 
     @Test
-    void testReadSubEvent() throws FileNotFoundException {
+    void testReadSubEvent() throws IOException {
         subEventExists();
 
         String subEventReaded = "";
@@ -66,7 +66,7 @@ class SubEventControllerTest {
     }
 
     @Test
-    void testDeleteSubEvent() throws FileNotFoundException {
+    void testDeleteSubEvent() throws IOException {
         subEventExists();
 
         subEventDelete("New SubEvent");
@@ -77,7 +77,7 @@ class SubEventControllerTest {
         assertTrue(subEventDeleted, "O SubEvento não foi deletado.");
     }
 
-    void subEventExists() throws FileNotFoundException {
+    void subEventExists() throws IOException {
         boolean subEventExists = subEventController.getSubEventHashMap().values().stream()
                 .anyMatch(subEvent -> subEvent.getData("name").equals("New SubEvent"));
 
@@ -89,7 +89,7 @@ class SubEventControllerTest {
         }
     }
 
-    void subEventDelete(String subEventName) {
+    void subEventDelete(String subEventName) throws IOException {
         String subEventId = subEventController.getSubEventHashMap().values().stream().filter(subSubEvent -> subSubEvent.getData("name").equals(subEventName)).findFirst().map(subEvent -> subEvent.getData("id")).orElse(null);
         subEventController.delete(subEventId, "owner-id");
 
@@ -97,4 +97,3 @@ class SubEventControllerTest {
         eventController.delete(eventId, "owner-id");
     }
 }
-*/

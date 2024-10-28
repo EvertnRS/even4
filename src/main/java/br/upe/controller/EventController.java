@@ -79,6 +79,23 @@ public class EventController implements Controller {
             }
             return userEvents;
         }
+        else if (type.equals("submit")){
+            this.read();
+            List<String> userEvents = new ArrayList<>();
+
+            try {
+                for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
+                    Persistence persistence = entry.getValue();
+                    userEvents.add(persistence.getData("name"));
+                }
+                if (userEvents.isEmpty()) {
+                    LOGGER.warning("Seu usuário atual é organizador de nenhum evento");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return userEvents;
+        }
         return List.of();
     }
 

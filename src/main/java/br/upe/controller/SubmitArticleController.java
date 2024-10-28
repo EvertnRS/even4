@@ -103,7 +103,7 @@ public class SubmitArticleController implements Controller {
         String userId = (String) params[0];
         Persistence articlePersistence = new SubmitArticle();
 
-        // Armazena o resultado da leitura no campo articleHashMap
+
         this.articleHashMap = articlePersistence.read(userId);
 
         if (this.articleHashMap.isEmpty()) {
