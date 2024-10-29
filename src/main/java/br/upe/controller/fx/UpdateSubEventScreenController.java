@@ -18,7 +18,7 @@ import static br.upe.ui.Validation.isValidDate;
 public class UpdateSubEventScreenController extends BaseController implements FxController {
     private UserController userController;
     private SubEventController subEventController;
-    private String subeventName;
+    private String subEventName;
 
     @FXML
     private AnchorPane editSubEventPane;
@@ -52,7 +52,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
     }
 
     public void setEventName(String eventName) {
-        this.subeventName = eventName;
+        this.subEventName = eventName;
     }
 
 
@@ -103,7 +103,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
 
-            subEventController.update(subeventName, newSubName, newDate, newDescription, newLocation, userController.getData("id"));
+            subEventController.update(subEventName, newSubName, newDate, newDescription, newLocation, userController.getData("id"));
             handleSubEvent();
         }
     }

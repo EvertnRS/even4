@@ -94,7 +94,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
                 // Exibe o nome da sessão
                 Label sessionLabel = new Label(persistence.getData("name"));
-                sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
+                sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
                 // Label para exibir o nome do evento ou subevento
                 Label controller;

@@ -172,7 +172,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }
-        else if (!validateEventDate(sessionDate, selectedEventName)) {
+        else if (validateEventDate(sessionDate, selectedEventName)) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
         } else if (!areValidTimes(startTime, endTime)) {
             errorUpdtLabel.setText("Data ou horário inválido.");
