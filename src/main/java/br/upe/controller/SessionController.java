@@ -158,48 +158,14 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public boolean list(String ownerId) throws IOException {
-        this.read();
-        boolean isnull = true;
-
-        try {
-            boolean found = false;
-
-            for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
-                Persistence persistence = entry.getValue();
-                String currentOwnerId = persistence.getData(OWNER_ID);
-
-                if (ownerId.equals(currentOwnerId)) {
-
-                    if (LOGGER.isLoggable(Level.WARNING)) {
-                        LOGGER.warning(persistence.getData(NAME));
-                    }
-
-                    found = true;
-                    isnull = false;
-                }
-            }
-
-            if (!found && LOGGER.isLoggable(Level.WARNING)) {
-                LOGGER.warning("Seu usuário atual não é organizador de nenhuma Sessão\n");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return isnull;
-    }
-
-    public List<String> list(String ownerId, String type) throws IOException {
-        if(type.equals("fx")){
+    public List<String> list(Object... params) throws IOException {
             this.read();
             List<String> userEvents = new ArrayList<>();
 
             try {
                 for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
                     Persistence persistence = entry.getValue();
-                    if (persistence.getData(OWNER_ID).equals(ownerId)) {
+                    if (persistence.getData(OWNER_ID).equals(params[0])) {
                         userEvents.add(persistence.getData("name"));
                     }
                 }
@@ -211,41 +177,10 @@ public class SessionController implements Controller {
             }
             return userEvents;
         }
-        return List.of();
-    }
 
     @Override
     public boolean loginValidate(String email, String cpf) {
         return false;
-    }
-
-    private String getEventName(String id) throws IOException {
-        String name = "";
-        EventController eventController = new EventController();
-        Map<String, Persistence> evenH = eventController.getEventHashMap();
-        boolean isEvent = false;
-        for (Map.Entry<String, Persistence> entry : evenH.entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData("id").equals(id)) {
-                name = persistence.getData("name");
-                isEvent = true;
-                break;
-            }
-        }
-
-        if (!isEvent) {
-            SubEventController subEventController = new SubEventController();
-            Map<String, Persistence> subEvenH = subEventController.getSubEventHashMap();
-            for (Map.Entry<String, Persistence> entry : subEvenH.entrySet()) {
-                Persistence persistence = entry.getValue();
-                if (persistence.getData("id").equals(id)) {
-                    name = persistence.getData("name");
-                    break;
-                }
-            }
-        }
-
-        return name;
     }
 
     @Override

@@ -65,8 +65,8 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public boolean list(String idowner) throws IOException {
-        return false;
+    public List<String> list(Object... params) throws IOException {
+        return List.of();
     }
 
     @Override
