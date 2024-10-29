@@ -13,7 +13,6 @@ import java.util.Map;
 import static br.upe.ui.Validation.isValidDate;
 
 public class CreateEventScreenController extends BaseController implements FxController {
-    private UserController userController;
     private Facade facade;
 
     @FXML
@@ -45,7 +44,7 @@ public class CreateEventScreenController extends BaseController implements FxCon
     }
 
     private void initial() {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         setupPlaceholders();
     }
 

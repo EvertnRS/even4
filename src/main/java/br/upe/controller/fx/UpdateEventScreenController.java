@@ -19,8 +19,6 @@ import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateEventScreenController extends BaseController implements FxController {
     private Facade facade;
-    private EventController eventController;
-    private String eventName;
     private String eventId;
 
     @FXML
@@ -50,17 +48,12 @@ public class UpdateEventScreenController extends BaseController implements FxCon
 
     public void setFacade(Facade facade) throws IOException {
         this.facade = facade;
-        this.eventController = new EventController();
         initial();
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-        loadEventDetails();
     }
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+        loadEventDetails();
     }
 
 
@@ -101,8 +94,8 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     }
 
     private void loadEventDetails() {
-        Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        Persistence event = eventMap.get(eventName);
+        Map<String, Persistence> eventMap = facade.getEventHashMap();
+        Persistence event = eventMap.get(eventId);
 
         if (event != null) {
             editNameTextField.setText(event.getData("name"));
@@ -121,18 +114,15 @@ public class UpdateEventScreenController extends BaseController implements FxCon
 
     public void updateEvent() throws IOException {
 
-
-        System.out.println("Evento selecionado: " + eventId);
-
         String newName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
-        Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventName, eventMap)) {
+        Map<String, Persistence> eventMap = facade.getEventHashMap();
+        if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventId, eventMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            eventController.update(eventName, newName, newDate, newDescription, newLocation, facade.getUserData("id"));
+            facade.updateEvent(eventId, newName, newDate, newDescription, newLocation, facade.getUserData("id"));
             handleEvent();
         }
     }

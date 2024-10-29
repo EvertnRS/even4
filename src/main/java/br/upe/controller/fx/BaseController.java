@@ -2,7 +2,6 @@ package br.upe.controller.fx;
 
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
-import br.upe.controller.UserController;
 import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +16,7 @@ import java.util.Map;
 
 public abstract class BaseController {
 
-    public void genericButton(String path, AnchorPane pane, Facade facade, String eventName) throws IOException {
+    public void genericButton(String path, AnchorPane pane, Facade facade, String eventId) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         AnchorPane screen = loader.load();
 
@@ -26,13 +25,13 @@ public abstract class BaseController {
             screenController.setFacade(facade);
 
             if (screenController instanceof UpdateEventScreenController) {
-                ((UpdateEventScreenController) screenController).setEventName(eventName);
+                ((UpdateEventScreenController) screenController).setEventId(eventId);
             }
             if (screenController instanceof UpdateSubEventScreenController) {
-                ((UpdateSubEventScreenController) screenController).setEventName(eventName);
+                ((UpdateSubEventScreenController) screenController).setEventName(eventId);
             }
             if (screenController instanceof UpdateSubmitScreenController) {
-                ((UpdateSubmitScreenController) screenController).setEventName(eventName);
+                ((UpdateSubmitScreenController) screenController).setEventName(eventId);
             }
         }
 
