@@ -204,11 +204,6 @@ public class SubEventController implements Controller {
     }
 
     @Override
-    public void show(Object... params) {
-        /*Show ainda não ultilizado*/
-    }
-
-    @Override
     public void update(Object... params) throws IOException {
         if (!isValidParamsLength(params)) {
             LOGGER.warning("Só pode ter 6 parametros");

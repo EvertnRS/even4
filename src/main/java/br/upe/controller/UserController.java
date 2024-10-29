@@ -144,11 +144,6 @@ public class UserController implements Controller {
         return false;
     }
 
-    @Override
-    public void show(Object... params) {
-        // Método não implementado
-    }
-
     public boolean loginValidate(String email, String cpf) {
         for (Map.Entry<String, Persistence> entry : this.userHashMap.entrySet()) {
             Persistence user = entry.getValue();

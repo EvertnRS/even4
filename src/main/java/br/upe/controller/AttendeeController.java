@@ -238,12 +238,6 @@ public class AttendeeController implements Controller {
         return new String[] {name, description, date, location, startTime};
     }
 
-
-    @Override
-    public void show(Object... params) {
-        //Método não implementado
-    }
-
     @Override
     public boolean loginValidate(String email, String cpf) {
         //Método não implementado
