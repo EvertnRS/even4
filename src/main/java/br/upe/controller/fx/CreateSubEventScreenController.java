@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
@@ -18,7 +19,7 @@ import javafx.scene.text.Text;
 import static br.upe.ui.Validation.isValidDate;
 
 public class CreateSubEventScreenController extends BaseController implements FxController {
-    private UserController userController;
+    private Facade facade;
     private SubEventController subEventController;
     private EventController eventController;
     private final ObservableList<String> eventList = FXCollections.observableArrayList();
@@ -55,8 +56,8 @@ public class CreateSubEventScreenController extends BaseController implements Fx
 
 
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
+    public void setFacade(Facade facade) throws IOException {
+        this.facade = facade;
         this.subEventController = new SubEventController();
         this.eventController = new EventController();
         initial();
@@ -64,7 +65,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
 
 
     private void initial() throws IOException {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         loadUserEvents();
         setupPlaceholders();
     }
@@ -78,31 +79,31 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newSubEventPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", newSubEventPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", newSubEventPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", newSubEventPane, facade, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newSubEventPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", newSubEventPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", newSubEventPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", newSubEventPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", newSubEventPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", newSubEventPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", newSubEventPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", newSubEventPane, facade, null);
     }
 
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = eventController.list(userController.getData("id"), "fx");
+        List<String> userEvents = eventController.list(facade.getUserData("id"), "fx");
         eventList.setAll(userEvents);
 
         FilteredList<String> filteredItems = new FilteredList<>(eventList, p -> true);
@@ -139,7 +140,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         } else if (!isValidDate(subEventDate) || subEventLocation.isEmpty() || subEventDescription.isEmpty() || isValidName(subEventName, subEventMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            subEventController.create(selectedEventName, subEventName, subEventDate, subEventDescription, subEventLocation, userController.getData("id"));
+            subEventController.create(selectedEventName, subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
             subEventController.read();
             handleSubEvent();
         }

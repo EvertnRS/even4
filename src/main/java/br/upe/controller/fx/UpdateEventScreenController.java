@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 
 import br.upe.controller.EventController;
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -17,7 +18,7 @@ import java.util.Map;
 import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateEventScreenController extends BaseController implements FxController {
-    private UserController userController;
+    private Facade facade;
     private EventController eventController;
     private String eventName;
     private String eventId;
@@ -47,8 +48,8 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     @FXML
     private Label errorDelLabel;
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
+    public void setFacade(Facade facade) throws IOException {
+        this.facade = facade;
         this.eventController = new EventController();
         initial();
     }
@@ -64,7 +65,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
 
 
     private void initial() {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         setupPlaceholders();
     }
 
@@ -76,27 +77,27 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", editEventPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", editEventPane, facade, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", editEventPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", editEventPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", editEventPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", editEventPane, facade, null);
     }
 
     private void loadEventDetails() {
@@ -131,7 +132,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventName, eventMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            eventController.update(eventName, newName, newDate, newDescription, newLocation, userController.getData("id"));
+            eventController.update(eventName, newName, newDate, newDescription, newLocation, facade.getUserData("id"));
             handleEvent();
         }
     }

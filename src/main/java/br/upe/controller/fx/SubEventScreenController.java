@@ -3,6 +3,7 @@ package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SubEventScreenController extends BaseController implements FxController{
-    UserController userController;
+    private Facade facade;
     SubEventController subEventController;
     EventController eventController;
 
@@ -28,8 +29,8 @@ public class SubEventScreenController extends BaseController implements FxContro
     @FXML
     private AnchorPane subEventPane;
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
+    public void setFacade(Facade facade) throws IOException {
+        this.facade = facade;
         this.subEventController = new SubEventController();
         this.eventController = new EventController();
         initial();
@@ -37,38 +38,38 @@ public class SubEventScreenController extends BaseController implements FxContro
 
 
     private void initial() throws IOException {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         loadUserSubEvents();
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", subEventPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", subEventPane, facade, null);
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", subEventPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", subEventPane, facade, null);
     }
 
     public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", subEventPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", subEventPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", subEventPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", subEventPane, facade, null);
     }
 
     public void handleAddSubEvent() throws IOException {
-        genericButton("/fxml/createSubEventScreen.fxml", subEventPane, userController, null);
+        genericButton("/fxml/createSubEventScreen.fxml", subEventPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", subEventPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", subEventPane, facade, null);
     }
 
     private void loadUserSubEvents() throws IOException {
         subEventVBox.getChildren().clear();
 
-        subEventController.list(userController.getData("id"), "");
+        subEventController.list(facade.getUserData("id"), "");
 
         configureScrollPane();
         subEventVBox.setAlignment(Pos.CENTER);
@@ -90,7 +91,7 @@ public class SubEventScreenController extends BaseController implements FxContro
     }
 
     private boolean isUserOwner(Persistence persistence) {
-        return persistence.getData("ownerId").equals(userController.getData("id"));
+        return persistence.getData("ownerId").equals(facade.getUserData("id"));
     }
 
     private VBox createSubEventContainer(Persistence persistence, Map<String, Persistence> eventHashMap) {
@@ -143,7 +144,7 @@ public class SubEventScreenController extends BaseController implements FxContro
 
     private void handleDeleteSubEventSafely(String subEventId) {
         try {
-            handleDeleteSubEvent(subEventId, userController.getData("id"));
+            handleDeleteSubEvent(subEventId, facade.getUserData("id"));
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
@@ -151,7 +152,7 @@ public class SubEventScreenController extends BaseController implements FxContro
 
 
     private void handleEditSubEvent(String eventName) throws IOException {
-        genericButton("/fxml/updateSubEventScreen.fxml", subEventPane, userController, eventName);
+        genericButton("/fxml/updateSubEventScreen.fxml", subEventPane, facade, eventName);
     }
 
     private void handleDeleteSubEvent(String eventId, String userId) throws IOException {

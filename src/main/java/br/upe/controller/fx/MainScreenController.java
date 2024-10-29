@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.*;
+import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -15,8 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MainScreenController extends BaseController implements FxController {
-    UserController userController;
-    EventController eventController;
+    private Facade facade;
+    private EventController eventController;
 
     @FXML
     private VBox eventVBox;
@@ -28,41 +29,41 @@ public class MainScreenController extends BaseController implements FxController
     private AnchorPane mainPane;
 
     @Override
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
+    public void setFacade(Facade facade) throws IOException {
+        this.facade = facade;
         this.eventController = new EventController();
         initial();
     }
 
     private void initial() throws IOException {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         loadUserEvents();
     }
 
     public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", mainPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", mainPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", mainPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", mainPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", mainPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", mainPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", mainPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", mainPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", mainPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", mainPane, facade, null);
     }
 
     private void loadUserEvents() throws IOException {
         eventVBox.getChildren().clear();
 
-        eventController.list(userController.getData("id"), "");
+        eventController.list(facade.getUserData("id"), "");
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
@@ -73,7 +74,7 @@ public class MainScreenController extends BaseController implements FxController
 
         for (Map.Entry<String, Persistence> entry : eventController.getEventHashMap().entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("ownerId").equals(userController.getData("id"))) {
+            if (persistence.getData("ownerId").equals(facade.getUserData("id"))) {
 
                 VBox eventContainer = new VBox();
                 eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
@@ -98,7 +99,7 @@ public class MainScreenController extends BaseController implements FxController
 
                 deleteButton.setOnAction(e -> {
                     try {
-                        handleDeleteEvent(persistence.getData("id"), userController.getData("id"));
+                        handleDeleteEvent(persistence.getData("id"), facade.getUserData("id"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -135,11 +136,11 @@ public class MainScreenController extends BaseController implements FxController
     }
 
     private void handleEditEvent(String eventId) throws IOException {
-        genericButton("/fxml/updateEventScreen.fxml", mainPane, userController, eventId);
+        genericButton("/fxml/updateEventScreen.fxml", mainPane, facade, eventId);
     }
 
     public void handleAddEvent() throws IOException {
-        genericButton("/fxml/createEventScreen.fxml", mainPane, userController, null);
+        genericButton("/fxml/createEventScreen.fxml", mainPane, facade, null);
     }
 
 }
