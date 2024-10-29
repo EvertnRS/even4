@@ -39,9 +39,8 @@ public class CreateEventScreenController extends BaseController implements FxCon
     @FXML
     private Label errorUpdtLabel;
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
-        this.facade = new Facade();
+    public void setFacade(Facade facade) throws IOException {
+        this.facade = facade;
         initial();
     }
 
@@ -58,27 +57,27 @@ public class CreateEventScreenController extends BaseController implements FxCon
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newEventPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", newEventPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", newEventPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", newEventPane, facade, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newEventPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", newEventPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", newEventPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", newEventPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", newEventPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", newEventPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", newEventPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", newEventPane, facade, null);
     }
 
     public void createEvent() throws IOException {
@@ -91,7 +90,7 @@ public class CreateEventScreenController extends BaseController implements FxCon
         if (!isValidDate(eventDate) || eventLocation.isEmpty() || eventDescription.isEmpty() || isValidName(eventName, eventMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            facade.createEvent(eventName, eventDate, eventDescription, eventLocation, userController.getData("id"));
+            facade.createEvent(eventName, eventDate, eventDescription, eventLocation, facade.getUserData("id"));
             facade.readEvent();
             handleEvent();
         }

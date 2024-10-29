@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 
 import br.upe.controller.SubmitArticleController;
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SubmitScreenController extends BaseController implements FxController {
-    private UserController userController;
+    private Facade facade;
     private final SubmitArticleController submitArticleController = new SubmitArticleController(); // Instância do controlador de artigos
 
     @FXML
@@ -30,41 +31,41 @@ public class SubmitScreenController extends BaseController implements FxControll
     private AnchorPane submitPane;
 
     // Configura o UserController e inicializa a tela de artigos
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
-        initial();  // Chamar a inicialização direta aqui
+    public void setFacade(Facade facade) throws IOException {
+        this.facade = facade;
+        initial();
     }
 
     // Método de inicialização da interface
     private void initial() throws IOException {
-        userEmail.setText(userController.getData("email"));  // Exibe o e-mail do usuário
+        userEmail.setText(facade.getUserData("email"));  // Exibe o e-mail do usuário
         loadUserArticles();  // Carrega os artigos do usuário
     }
 
 
     // Botões para navegação entre telas
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", submitPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", submitPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", submitPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", submitPane, facade, null);
     }
 
     public void handleAddArticle() throws IOException {
-        genericButton("/fxml/createSubmitScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/createSubmitScreen.fxml", submitPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", submitPane, facade, null);
     }
 
     // Carrega os artigos do usuário logado
@@ -72,7 +73,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         articleVBox.getChildren().clear();  // Limpa a interface
 
         // Chama o método read para obter os artigos do usuário
-        submitArticleController.read(userController.getData("id"));
+        submitArticleController.read(facade.getUserData("id"));
 
         Map<String, Persistence> articles = submitArticleController.getArticleHashMap();
         System.out.println(articles);
@@ -140,7 +141,7 @@ public class SubmitScreenController extends BaseController implements FxControll
 
 
     private void handleEditArticle(String articleName) throws IOException {
-        genericButton("/fxml/updateSubmitScreen.fxml", submitPane, userController, articleName);
+        genericButton("/fxml/updateSubmitScreen.fxml", submitPane, facade, articleName);
     }
 
 

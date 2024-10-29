@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -71,6 +72,7 @@ public class SignUpController extends BaseController implements FxController {
         String email = emailTextField.getText().trim();
         String cpf = cpfTextField.getText().trim();
 
+        //trocar para facade
         UserController userController = new UserController();
         if (isValidEmail(email) && isValidCPF(cpf)) {
             userController.create(email.trim(), cpf.trim());
@@ -85,7 +87,7 @@ public class SignUpController extends BaseController implements FxController {
     }
 
     @Override
-    public void setUserController(UserController userController) {
+    public void setFacade(Facade facade) {
         // Método não implementado
     }
 

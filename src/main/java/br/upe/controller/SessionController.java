@@ -4,10 +4,7 @@ import br.upe.persistence.Session;
 import br.upe.persistence.Persistence;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +23,7 @@ public class SessionController implements Controller {
     private Persistence sessionLog;
 
     public SessionController() throws IOException {
+        this.sessionHashMap = new HashMap<>();
         this.read();
     }
 
@@ -35,6 +33,9 @@ public class SessionController implements Controller {
 
     public void setSessionHashMap(Map<String, Persistence> sessionHashMap) {
         this.sessionHashMap = sessionHashMap;
+        if (!sessionHashMap.isEmpty()) {
+            this.sessionLog = sessionHashMap.values().iterator().next();
+        }
     }
 
     @Override
@@ -44,6 +45,7 @@ public class SessionController implements Controller {
             LOGGER.warning("Sessão não inicializada.");
             return "";
         }
+
         try {
             switch (dataToGet) {
                 case ID -> data = this.sessionLog.getData(ID);
@@ -61,7 +63,6 @@ public class SessionController implements Controller {
         return data;
     }
 
-    @Override
     public void create(Object... params) throws IOException {
         if (params.length != 9) {
             LOGGER.warning("Número incorreto de parâmetros. Esperado: 9");
@@ -78,7 +79,6 @@ public class SessionController implements Controller {
         String userId = (String) params[7];
 
         Map<String, Persistence> eventH;
-
         if (params[8].equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
             eventH = eventController.getEventHashMap();
@@ -89,6 +89,9 @@ public class SessionController implements Controller {
 
         Persistence session = new Session();
         session.create(eventId, name, date, description, location, startTime, endTime, userId, eventH);
+        sessionHashMap.put(session.getData(ID), session);
+
+        this.sessionLog = session;
     }
 
     private void cascadeDelete(String id) throws IOException {

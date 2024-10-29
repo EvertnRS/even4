@@ -14,12 +14,12 @@ public class Facade {
     private final SubmitArticleController submitArticleController;
     private final UserController userController;
 
-    public Facade() throws IOException {
-        this.eventController = new EventController();
+    public Facade(UserController userController) throws IOException {
+        this.userController = userController;
         this.sessionController = new SessionController();
         this.subEventController = new SubEventController();
         this.submitArticleController = new SubmitArticleController();
-        this.userController = new UserController();
+        this.eventController = new EventController();
     }
 
     // EventController methods
@@ -129,5 +129,9 @@ public class Facade {
 
     public boolean loginValidate(String email, String cpf) {
         return userController.loginValidate(email, cpf);
+    }
+
+    public String getUserData(String dataToGet) {
+        return userController.getData(dataToGet);
     }
 }

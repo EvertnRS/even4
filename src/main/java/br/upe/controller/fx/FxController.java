@@ -1,8 +1,7 @@
 package br.upe.controller.fx;
-import br.upe.controller.UserController;
-
+import br.upe.facade.Facade;
 import java.io.IOException;
 
 public interface FxController {
-    void setUserController(UserController userController) throws IOException;
+    void setFacade(Facade facade) throws IOException;
 }
