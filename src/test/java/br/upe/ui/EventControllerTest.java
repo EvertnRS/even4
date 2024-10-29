@@ -31,21 +31,28 @@ class EventControllerTest {
         eventDelete("New Event");
     }
 
-    /*@Test
+    @Test
     void testUpdateEvent() throws IOException {
         eventExists();
 
+        String eventId = eventController.getEventHashMap().values().stream()
+                .filter(event -> event.getData("name").equals("New Event"))
+                .findFirst()
+                .map(event -> event.getData("id"))
+                .orElse(null);
 
-        eventController.update("New Event", "Updated Event", "31/12/2024", "Updated Description", "Updated Location", "id1");
+        assertNotNull(eventId, "Event ID should not be null");
+
+        eventController.update(eventId, "Updated Event", "31/12/2024", "Updated Description", "Updated Location", "id1");
         eventController.read();
 
         Map<String, Persistence> eventMap = eventController.getEventHashMap();
         boolean eventUpdated = eventMap.values().stream()
                 .anyMatch(event -> event.getData("name").equals("Updated Event") && event.getData("description").equals("Updated Description"));
-        assertTrue(eventUpdated, "O Evento não foi atualizado.");
+        assertTrue(eventUpdated, "The event was not updated.");
 
         eventDelete("Updated Event");
-    }*/
+    }
 
     @Test
     void testReadEvent() throws IOException {
