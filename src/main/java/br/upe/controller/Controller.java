@@ -8,7 +8,7 @@ public interface Controller {
     void update(Object... params) throws IOException;
     void read() throws IOException;
     void delete(Object... params) throws IOException;
-    boolean list(String idowner) throws IOException;
+    List<String> list(Object... params) throws IOException;
     boolean loginValidate(String email, String cpf);
     String getData(String dataToGet);
 }
