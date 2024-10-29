@@ -51,6 +51,10 @@ public class Facade {
         eventController.delete(params);
     }
 
+    public String getEventData(String dataToGet) {
+        return eventController.getData(dataToGet);
+    }
+
     // SessionController methods
     public Map<String, Persistence> getSessionHashMap() {
         return sessionController.getSessionHashMap();

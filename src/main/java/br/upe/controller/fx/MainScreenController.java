@@ -17,7 +17,6 @@ import java.util.Optional;
 
 public class MainScreenController extends BaseController implements FxController {
     private Facade facade;
-    private EventController eventController;
 
     @FXML
     private VBox eventVBox;
@@ -31,7 +30,6 @@ public class MainScreenController extends BaseController implements FxController
     @Override
     public void setFacade(Facade facade) throws IOException {
         this.facade = facade;
-        this.eventController = new EventController();
         initial();
     }
 
@@ -63,7 +61,7 @@ public class MainScreenController extends BaseController implements FxController
     private void loadUserEvents() throws IOException {
         eventVBox.getChildren().clear();
 
-        eventController.list(facade.getUserData("id"), "");
+        facade.listEvents(facade.getUserData("id"), "");
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
@@ -72,7 +70,7 @@ public class MainScreenController extends BaseController implements FxController
 
         eventVBox.setAlignment(Pos.CENTER);
 
-        for (Map.Entry<String, Persistence> entry : eventController.getEventHashMap().entrySet()) {
+        for (Map.Entry<String, Persistence> entry : facade.getEventHashMap().entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("ownerId").equals(facade.getUserData("id"))) {
 
@@ -130,7 +128,7 @@ public class MainScreenController extends BaseController implements FxController
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonSim) {
-            eventController.delete(eventId, userId);
+            facade.deleteEvent(eventId, userId);
             loadUserEvents();
         }
     }
