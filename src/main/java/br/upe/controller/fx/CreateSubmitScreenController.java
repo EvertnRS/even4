@@ -1,12 +1,19 @@
 package br.upe.controller.fx;
 import br.upe.controller.*;
+import br.upe.persistence.Event;
+import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public class CreateSubmitScreenController extends BaseController implements FxController {
@@ -35,7 +42,7 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
 
     private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
-        loadUserEvents();
+        loadArticles();
     }
 
     public void handleEvent() throws IOException {
@@ -61,10 +68,19 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     public void handleUser() throws IOException {
         genericButton("/fxml/userScreen.fxml", submitPane, userController, null);
     }
-    private void loadUserEvents() throws IOException {
-        List<String> userEvents = eventController.list(userController.getData("id"), "submit");
-        eventComboBox.getItems().addAll(userEvents);
+    private void loadArticles() throws IOException {
+        Event eventController = new Event();
+
+        HashMap<String, Persistence> allEvents = eventController.read();
+
+        eventComboBox.getItems().clear();
+
+        for (Persistence event : allEvents.values()) {
+            eventComboBox.getItems().add(event.getData("name"));
+        }
     }
+
+
     @FXML
     private void createArticle()throws IOException {
         String novoEventName = eventComboBox.getSelectionModel().getSelectedItem();
@@ -72,6 +88,28 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
         submitArticleController.create(novoEventName, nameArticle, userController.getData("id"));
         handleSubmitEvent();
 
+    }
+
+    @FXML
+    private void openFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Selecione um Artigo");
+
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"),
+                new FileChooser.ExtensionFilter("Text Files", "*.txt")
+        );
+
+
+        Stage stage = (Stage) submitPane.getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+        if (selectedFile != null) {
+            namesTextField.setText(selectedFile.getAbsolutePath());
+        } else {
+            errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+        }
     }
 
 }
