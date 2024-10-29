@@ -3,6 +3,7 @@ package br.upe.controller;
 import br.upe.persistence.Persistence;
 import br.upe.persistence.SubmitArticle;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -64,14 +65,8 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public boolean list(String idowner) {
-        // Método não implementado
+    public boolean list(String idowner) throws IOException {
         return false;
-    }
-
-    @Override
-    public void show(Object... params) {
-        // Método não implementado
     }
 
     @Override
