@@ -79,7 +79,7 @@ public class MainScreenController extends BaseController implements FxController
                 eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
                 Label eventLabel = new Label(persistence.getData("name"));
-                eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
+                eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
                 Button editButton = new Button("Editar");
                 editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
