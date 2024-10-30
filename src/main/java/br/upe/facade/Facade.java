@@ -22,6 +22,7 @@ public class Facade {
         this.eventController = new EventController();
     }
 
+
     // EventController methods
     public Map<String, Persistence> getEventHashMap() {
         return eventController.getEventHashMap();
@@ -55,6 +56,7 @@ public class Facade {
         return eventController.getData(dataToGet);
     }
 
+
     // SessionController methods
     public Map<String, Persistence> getSessionHashMap() {
         return sessionController.getSessionHashMap();
@@ -76,13 +78,10 @@ public class Facade {
         sessionController.delete(params);
     }
 
+
     // SubEventController methods
     public Map<String, Persistence> getSubEventHashMap() {
         return subEventController.getSubEventHashMap();
-    }
-
-    public boolean listSubEvents(String ownerId) throws IOException {
-        return subEventController.list(ownerId);
     }
 
     public List<String> listSubEvents(String ownerId, String type) throws IOException {
@@ -95,6 +94,14 @@ public class Facade {
 
     public void deleteSubEvent(Object... params) throws IOException {
         subEventController.delete(params);
+    }
+
+    public void createSubEvent(Object... params) throws IOException {
+        subEventController.create(params);
+    }
+
+    public void readSubEvent() throws IOException {
+        subEventController.read();
     }
 
     // SubmitArticleController methods

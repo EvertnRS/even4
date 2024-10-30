@@ -1,10 +1,7 @@
 package br.upe.controller.fx;
-import br.upe.controller.EventController;
-import br.upe.controller.SubEventController;
-import br.upe.controller.UserController;
+
 import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
-import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -20,8 +17,6 @@ import static br.upe.ui.Validation.isValidDate;
 
 public class CreateSubEventScreenController extends BaseController implements FxController {
     private Facade facade;
-    private SubEventController subEventController;
-    private EventController eventController;
     private final ObservableList<String> eventList = FXCollections.observableArrayList();
 
 
@@ -58,8 +53,6 @@ public class CreateSubEventScreenController extends BaseController implements Fx
 
     public void setFacade(Facade facade) throws IOException {
         this.facade = facade;
-        this.subEventController = new SubEventController();
-        this.eventController = new EventController();
         initial();
     }
 
@@ -103,7 +96,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     }
 
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = eventController.list(facade.getUserData("id"), "fx");
+        List<String> userEvents = facade.listSubEvents(facade.getUserData("id"), "fx");
         eventList.setAll(userEvents);
 
         FilteredList<String> filteredItems = new FilteredList<>(eventList, p -> true);
@@ -134,14 +127,14 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         String subEventDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
         String selectedEventName = searchField.getText();
 
-        Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
+        Map<String, Persistence> subEventMap = facade.getSubEventHashMap();
         if (!validateEventDate(subEventDate, selectedEventName)) {
             errorUpdtLabel.setText("Data do subEvento não pode ser anterior a data do evento.");
         } else if (!isValidDate(subEventDate) || subEventLocation.isEmpty() || subEventDescription.isEmpty() || isValidName(subEventName, subEventMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            subEventController.create(selectedEventName, subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
-            subEventController.read();
+            facade.createSubEvent(selectedEventName, subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
+            facade.readSubEvent();
             handleSubEvent();
         }
     }
