@@ -1,7 +1,5 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.SubEventController;
-import br.upe.controller.UserController;
 import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
@@ -10,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-
 import java.io.IOException;
 import java.util.Map;
 
@@ -18,8 +15,7 @@ import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSubEventScreenController extends BaseController implements FxController {
     private Facade facade;
-    private SubEventController subEventController;
-    private String subeventName;
+    private String subEventName;
 
     @FXML
     private AnchorPane editSubEventPane;
@@ -46,14 +42,13 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
     @FXML
     private Label errorDelLabel;
 
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(Facade facade) {
         this.facade = facade;
-        this.subEventController = new SubEventController();
         initial();
     }
 
     public void setEventName(String eventName) {
-        this.subeventName = eventName;
+        this.subEventName = eventName;
     }
 
 
@@ -99,12 +94,11 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue().toString();
 
-        Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
+        Map<String, Persistence> subEventMap = facade.getSubEventHashMap();
         if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newSubName, subEventMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-
-            subEventController.update(subeventName, newSubName, newDate, newDescription, newLocation, facade.getUserData("id"));
+            facade.updateSubEvent(subEventName, newSubName, newDate, newDescription, newLocation, facade.getUserData("id"));
             handleSubEvent();
         }
     }

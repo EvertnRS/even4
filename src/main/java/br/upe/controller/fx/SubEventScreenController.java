@@ -1,8 +1,5 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.EventController;
-import br.upe.controller.SubEventController;
-import br.upe.controller.UserController;
 import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
@@ -17,8 +14,6 @@ import java.util.Optional;
 
 public class SubEventScreenController extends BaseController implements FxController{
     private Facade facade;
-    SubEventController subEventController;
-    EventController eventController;
 
     @FXML
     private Label userEmail;
@@ -31,8 +26,6 @@ public class SubEventScreenController extends BaseController implements FxContro
 
     public void setFacade(Facade facade) throws IOException {
         this.facade = facade;
-        this.subEventController = new SubEventController();
-        this.eventController = new EventController();
         initial();
     }
 
@@ -69,14 +62,14 @@ public class SubEventScreenController extends BaseController implements FxContro
     private void loadUserSubEvents() throws IOException {
         subEventVBox.getChildren().clear();
 
-        subEventController.list(facade.getUserData("id"), "");
+        facade.listSubEvents(facade.getUserData("id"), "");
 
         configureScrollPane();
         subEventVBox.setAlignment(Pos.CENTER);
 
-        Map<String, Persistence> eventHashMap = eventController.getEventHashMap();
+        Map<String, Persistence> eventHashMap = facade.getEventHashMap();
 
-        subEventController.getSubEventHashMap().entrySet().stream()
+        facade.getSubEventHashMap().entrySet().stream()
                 .filter(entry -> isUserOwner(entry.getValue()))
                 .forEach(entry -> {
                     VBox subeventContainer = createSubEventContainer(entry.getValue(), eventHashMap);
@@ -169,10 +162,8 @@ public class SubEventScreenController extends BaseController implements FxContro
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonSim) {
-            subEventController.delete(eventId, userId);
+            facade.deleteSubEvent(eventId, userId);
             loadUserSubEvents();
         }
     }
-
-
 }
