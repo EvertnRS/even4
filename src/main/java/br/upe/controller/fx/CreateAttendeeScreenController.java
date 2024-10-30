@@ -10,6 +10,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,8 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
     @FXML
     private TextField nameTextField;
     @FXML
+    private Text namePlaceholder;
+    @FXML
     private Label errorUpdtLabel;
 
     public void setFacade(Facade facade) throws IOException {
@@ -41,12 +45,17 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadUserEvents();
+        setupPlaceholders();
     }
 
     private void loadUserEvents() throws IOException {
         List<String> userEvents = sessionController.list(facade.getUserData("id"), "fx");
         eventComboBox.getItems().addAll(userEvents);
 
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(nameTextField, namePlaceholder);
     }
 
     public void handleEvent() throws IOException {

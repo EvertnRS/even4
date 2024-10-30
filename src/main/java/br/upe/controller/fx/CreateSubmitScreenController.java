@@ -7,6 +7,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -25,6 +27,8 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     @FXML
     private ComboBox<String> eventComboBox;
     @FXML
+    private Text namePlaceholder;
+    @FXML
     private Label errorUpdtLabel;
 
     public void setFacade(Facade facade) throws IOException {
@@ -37,6 +41,11 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadUserEvents();
+        setupPlaceholders();
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(namesTextField, namePlaceholder);
     }
 
     public void handleEvent() throws IOException {

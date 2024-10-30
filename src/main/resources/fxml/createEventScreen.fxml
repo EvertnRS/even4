@@ -32,8 +32,8 @@
                   <Font name="Inter Semi Bold" size="23.0" />
                </font>
             </Label>
-             <TextField fx:id="nameTextField" cache="true" layoutX="300.0" layoutY="197.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-             <Text fx:id="namePlaceholder" fill="DARKGREY" layoutX="309.0" layoutY="223.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Nome do Evento" />
+             <TextField fx:id="nameTextField" cache="true" layoutX="300.0" layoutY="197.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+             <Text fx:id="namePlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="225.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Nome do Evento" />
              <Button layoutX="386.0" layoutY="500.0" mnemonicParsing="false" onAction="#createEvent" prefHeight="42.0" prefWidth="93.0" text="Criar">
                  <style>
                      -fx-background-color: #ff914d;
@@ -47,12 +47,12 @@
                  </style>
              </Button>
              <Label fx:id="errorUpdtLabel" layoutX="391.0" layoutY="457.0" prefHeight="17.0" prefWidth="93.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
-            <DatePicker fx:id="datePicker" layoutX="300.0" layoutY="264.0" prefHeight="35.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-             <Text fx:id="datePlaceholder" fill="DARKGREY" layoutX="309.0" layoutY="286.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Escolha a Data do Evento" />
-            <TextField fx:id="descriptionTextField" layoutX="300.0" layoutY="329.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-             <Text fx:id="descriptionPlaceholder" fill="DARKGREY" layoutX="309.0" layoutY="355.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite a Descrição do Evento" />
-            <TextField fx:id="locationTextField" layoutX="300.0" layoutY="396.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-             <Text fx:id="locationPlaceholder" fill="DARKGREY" layoutX="308.0" layoutY="422.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Local do Evento" wrappingWidth="129.12890625" />
+            <DatePicker fx:id="datePicker" layoutX="300.0" layoutY="264.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+             <Text fx:id="datePlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="292.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Escolha a Data do Evento" />
+            <TextField fx:id="descriptionTextField" layoutX="300.0" layoutY="329.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+             <Text fx:id="descriptionPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="357.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite a Descrição do Evento" />
+            <TextField fx:id="locationTextField" layoutX="300.0" layoutY="396.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+             <Text fx:id="locationPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="424.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Local do Evento" wrappingWidth="129.12890625" />
             <Label layoutX="785.0" layoutY="65.0" text="X" textFill="#ff914d">
                <font>
                   <Font name="System Bold" size="24.0" />
