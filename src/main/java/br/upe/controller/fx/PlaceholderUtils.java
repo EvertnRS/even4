@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import javafx.animation.TranslateTransition;
+import javafx.scene.Cursor;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
@@ -13,10 +14,10 @@ public class PlaceholderUtils {
         TranslateTransition transition = new TranslateTransition(Duration.millis(200), placeholder);
         if (focus) {
             transition.setFromY(0);
-            transition.setToY(-15);
+            transition.setToY(-13);
             placeholder.setFill(Color.BLACK);
         } else {
-            transition.setFromY(-15);
+            transition.setFromY(-13);
             transition.setToY(0);
             placeholder.setFill(Color.DARKGRAY);
         }
@@ -24,12 +25,23 @@ public class PlaceholderUtils {
     }
 
     public static void setupPlaceholder(Control control, Text placeholder) {
+        if (!isControlEmpty(control)) {
+            animatePlaceholder(placeholder, true);
+        }
+
         control.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (Boolean.TRUE.equals(newValue)) {
                 animatePlaceholder(placeholder, true);
             } else if (isControlEmpty(control)) {
                 animatePlaceholder(placeholder, false);
             }
+        });
+
+        placeholder.setOnMouseEntered(event -> placeholder.setCursor(Cursor.TEXT));
+        placeholder.setOnMouseExited(event -> placeholder.setCursor(Cursor.DEFAULT));
+
+        placeholder.setOnMouseClicked(event -> {
+            control.requestFocus();
         });
     }
 

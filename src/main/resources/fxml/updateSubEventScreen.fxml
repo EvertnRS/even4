@@ -27,8 +27,8 @@
                         <Font name="Inter Semi Bold" size="23.0" />
                     </font>
                 </Label>
-                <TextField fx:id="editNameTextField" cache="true" layoutX="300.0" layoutY="197.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-                <Text fx:id="namePlaceholder" fill="DARKGRAY" layoutX="309.0" layoutY="223.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Novo Nome do SubEvento" />
+                <TextField fx:id="editNameTextField" cache="true" layoutX="300.0" layoutY="197.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+                <Text fx:id="namePlaceholder" fill="DARKGRAY" layoutX="315.0" layoutY="225.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Novo Nome do SubEvento" />
                 <Button layoutX="386.0" layoutY="500.0" mnemonicParsing="false" onAction="#updateSubEvent" prefHeight="42.0" prefWidth="93.0" text="Atualizar">
                     <style>
                         -fx-background-color: #ff914d;
@@ -42,12 +42,12 @@
                     </style>
                 </Button>
                 <Label fx:id="errorUpdtLabel" layoutX="83.0" layoutY="180.0" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
-                <DatePicker fx:id="editDatePicker" layoutX="300.0" layoutY="264.0" prefHeight="35.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-                <Text fx:id="datePlaceholder" fill="DARKGRAY" layoutX="309.0" layoutY="286.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Escolha a Data do SubEvento" />
-                <TextField fx:id="editDescriptionTextField" layoutX="300.0" layoutY="329.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-                <Text fx:id="descriptionPlaceholder" fill="DARKGRAY" layoutX="309.0" layoutY="355.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite a Nova Descrição do SubEvento" />
-                <TextField fx:id="editLocationTextField" layoutX="300.0" layoutY="396.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-                <Text fx:id="locationPlaceholder" fill="DARKGRAY" layoutX="309.0" layoutY="422.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Novo Local" />
+                <DatePicker fx:id="editDatePicker" layoutX="300.0" layoutY="251.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+                <Text fx:id="datePlaceholder" fill="DARKGRAY" layoutX="315.0" layoutY="279.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Escolha a Data do SubEvento" />
+                <TextField fx:id="editDescriptionTextField" layoutX="300.0" layoutY="305.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+                <Text fx:id="descriptionPlaceholder" fill="DARKGRAY" layoutX="315.0" layoutY="333.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite a Nova Descrição do SubEvento" />
+                <TextField fx:id="editLocationTextField" layoutX="300.0" layoutY="359.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+                <Text fx:id="locationPlaceholder" fill="DARKGRAY" layoutX="315.0" layoutY="387.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Novo Local" />
                 <Label layoutX="773.0" layoutY="65.0" text="X" textFill="#ff914d">
                     <font>
                         <Font name="System Bold" size="24.0" />

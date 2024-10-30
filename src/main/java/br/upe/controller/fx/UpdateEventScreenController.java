@@ -59,7 +59,6 @@ public class UpdateEventScreenController extends BaseController implements FxCon
 
     private void initial() {
         userEmail.setText(facade.getUserData("email"));
-        setupPlaceholders();
     }
 
     private void setupPlaceholders() {
@@ -106,6 +105,8 @@ public class UpdateEventScreenController extends BaseController implements FxCon
             if (eventDate != null && !eventDate.isEmpty()) {
                 editDatePicker.setValue(LocalDate.parse(eventDate));
             }
+
+            setupPlaceholders();
         } else {
             errorUpdtLabel.setText("Evento não encontrado.");
         }

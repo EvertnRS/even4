@@ -9,6 +9,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -23,6 +25,8 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     private Label userEmail;
     @FXML
     private TextField editDescriptionTextField;
+    @FXML
+    private Text descriptionPlaceholder;
     @FXML
     private Label errorUpdtLabel;
     @FXML
@@ -50,6 +54,11 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadUserEvents();
+        setupPlaceholders();
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(editDescriptionTextField, descriptionPlaceholder);
     }
     private void loadUserEvents() throws IOException {
         List<String> userEvents = eventController.list(facade.getUserData("id"), "fx");
