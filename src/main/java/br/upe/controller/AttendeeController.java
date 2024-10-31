@@ -122,9 +122,6 @@ public class AttendeeController implements Controller {
             LOGGER.warning(String.format("Nenhum attendee encontrado para a sessão %s", sessionId));
         }
 
-
-
-
         attendeePersistence.update(this.attendeeHashMap);
     }
 
@@ -153,7 +150,6 @@ public class AttendeeController implements Controller {
         }
     }
 
-
     private boolean validateSessionId (String sessionId) throws IOException {
         SessionController sessionController = new SessionController();
         Map<String, Persistence> sessH = sessionController.getSessionHashMap();
@@ -168,39 +164,14 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public boolean list(String idowner) throws IOException {
-        this.read();
-        boolean isnull = true;
-        try {
-            boolean found = false;
-            for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
-                Persistence persistence = entry.getValue();
-                if (persistence.getData(USER_ID).equals(idowner)){
-                    String[] results = getSessionById(persistence.getData(SESSION_ID));
-                    LOGGER.log(Level.WARNING, "Nome: {0} - Data: {1}\nDescrição: {2} - Local: {3} - Hora: {4}\n",
-                            new Object[]{results[0], results[2], results[1], results[3], results[4]});
-
-                    found = true;
-                    isnull = false;
-                }
-            }
-            if (!found){
-                LOGGER.warning("Seu usuário atual não é inscrito em nenhum evento\n");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return isnull;
-    }
-    public List<String> list(String ownerId, String type) throws IOException {
-        if(type.equals("fx")){
+    public List<String> list(Object... params) throws IOException {
             this.read();
             List<String> userEvents = new ArrayList<>();
 
             try {
                 for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
                     Persistence persistence = entry.getValue();
-                    if (persistence.getData("userId").equals(ownerId)) {
+                    if (persistence.getData(USER_ID).equals(params[0])) {
                         userEvents.add(persistence.getData("name"));
                     }
                 }
@@ -211,37 +182,6 @@ public class AttendeeController implements Controller {
                 e.printStackTrace();
             }
             return userEvents;
-        }
-        return List.of();
-    }
-
-    private String[] getSessionById (String sessionId) throws IOException {
-        String name = "";
-        String description = "";
-        String date = "";
-        String location = "";
-        String startTime = "";
-        SessionController sessionController = new SessionController();
-        Map<String, Persistence> sessH = sessionController.getSessionHashMap();
-
-        for (Map.Entry<String, Persistence> entry : sessH.entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData("id").equals(sessionId)) {
-                name = persistence.getData("name");
-                description = persistence.getData("description");
-                date = persistence.getData("date");
-                location = persistence.getData("location");
-                startTime = persistence.getData("startTime");
-                break;
-            }
-        }
-        return new String[] {name, description, date, location, startTime};
-    }
-
-
-    @Override
-    public void show(Object... params) {
-        //Método não implementado
     }
 
     @Override

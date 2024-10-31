@@ -116,7 +116,7 @@
       </Pane>
       <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <children>
-            <Label layoutX="378.0" layoutY="68.0" text="Submeter" textAlignment="CENTER" textFill="#ff914d">
+            <Label layoutX="386.0" layoutY="67.0" text="Submeter" textAlignment="CENTER" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="23.0" />
                </font>

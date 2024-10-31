@@ -3,6 +3,7 @@ package br.upe.controller;
 import br.upe.persistence.Persistence;
 import br.upe.persistence.SubmitArticle;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -64,14 +65,8 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public boolean list(String idowner) {
-        // Método não implementado
-        return false;
-    }
-
-    @Override
-    public void show(Object... params) {
-        // Método não implementado
+    public List<String> list(Object... params) throws IOException {
+        return List.of();
     }
 
     @Override
@@ -103,7 +98,7 @@ public class SubmitArticleController implements Controller {
         String userId = (String) params[0];
         Persistence articlePersistence = new SubmitArticle();
 
-        // Armazena o resultado da leitura no campo articleHashMap
+
         this.articleHashMap = articlePersistence.read(userId);
 
         if (this.articleHashMap.isEmpty()) {

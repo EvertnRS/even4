@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class EventController implements Controller {
-    private static final String OWNWER_ID = "ownerId";
+    private static final String OWNER_ID = "ownerId";
     private static final String DESCRIPTION = "description";
     private static final String LOCATION = "location";
     private static final String EVENT_ID = "eventId";
@@ -33,41 +33,14 @@ public class EventController implements Controller {
     }
 
     @Override
-    public boolean list(String ownerId) throws IOException {
-        this.read();
-        boolean isnull = true;
-        try {
-            boolean found = false;
-            for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
-                Persistence persistence = entry.getValue();
-                if (persistence.getData(OWNWER_ID).equals(ownerId)){
-                    String eventName = persistence.getData("name");
-                    if (eventName != null) {
-                        LOGGER.warning(eventName);
-                    }
-                    found = true;
-                    isnull = false;
-                }
-            }
-            if (!found){
-                LOGGER.warning("Seu usuário atual Não é organizador de nenhum evento");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return isnull;
-    }
-
-    public List<String> list(String ownerId, String type) throws IOException {
-        if(type.equals("fx")){
+    public List<String> list(Object... params) throws IOException {
             this.read();
             List<String> userEvents = new ArrayList<>();
 
             try {
                 for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
                     Persistence persistence = entry.getValue();
-                    if (persistence.getData(OWNWER_ID).equals(ownerId)) {
+                    if (persistence.getData(OWNER_ID).equals(params[0])) {
                         userEvents.add(persistence.getData("name"));
                     }
                 }
@@ -79,30 +52,6 @@ public class EventController implements Controller {
             }
             return userEvents;
         }
-        else if (type.equals("submit")){
-            this.read();
-            List<String> userEvents = new ArrayList<>();
-
-            try {
-                for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
-                    Persistence persistence = entry.getValue();
-                    userEvents.add(persistence.getData("name"));
-                }
-                if (userEvents.isEmpty()) {
-                    LOGGER.warning("Seu usuário atual é organizador de nenhum evento");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return userEvents;
-        }
-        return List.of();
-    }
-
-    @Override
-    public void show(Object... params) {
-        /*Show ainda não ultilizado*/
-    }
 
     public void update(Object... params) throws IOException {
         if (!isValidParamsLength(params)) {
@@ -141,7 +90,7 @@ public class EventController implements Controller {
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             String name = persistence.getData("name");
-            String ownerId = persistence.getData(OWNWER_ID);
+            String ownerId = persistence.getData(OWNER_ID);
 
             if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
                 return persistence.getData("id");
@@ -320,7 +269,7 @@ public class EventController implements Controller {
         for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(params[0])){
-                ownerId = persistence.getData(OWNWER_ID);
+                ownerId = persistence.getData(OWNER_ID);
             }
         }
 

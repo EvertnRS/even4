@@ -1,7 +1,6 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -87,7 +86,7 @@ public class SignUpController extends BaseController implements FxController {
     }
 
     @Override
-    public void setFacade(Facade facade) {
+    public void setUserController(UserController userController) {
         // Método não implementado
     }
 

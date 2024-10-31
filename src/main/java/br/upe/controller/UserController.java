@@ -4,6 +4,7 @@ import br.upe.persistence.Persistence;
 import br.upe.persistence.User;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -137,16 +138,10 @@ public class UserController implements Controller {
         }
     }
 
-
     @Override
-    public boolean list(String idowner) {
+    public List<String> list(Object... params) {
         // Método não implementado
-        return false;
-    }
-
-    @Override
-    public void show(Object... params) {
-        // Método não implementado
+        return List.of();
     }
 
     public boolean loginValidate(String email, String cpf) {

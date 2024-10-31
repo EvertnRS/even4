@@ -2,7 +2,6 @@ package br.upe.controller.fx;
 
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -18,7 +17,7 @@ import static br.upe.ui.Validation.areValidTimes;
 import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
-    private Facade facade;
+    private UserController userController;
     private SessionController sessionController;
     private String sessionName;
 
@@ -55,8 +54,8 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     @FXML
     private Label errorDelLabel;
 
-    public void setFacade(Facade facade) throws IOException {
-        this.facade = facade;
+    public void setUserController(UserController userController) throws IOException {
+        this.userController = userController;
         this.sessionController = new SessionController();
         initial();
     }
@@ -67,7 +66,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
 
 
     private void initial() {
-        userEmail.setText(facade.getUserData("email"));
+        userEmail.setText(userController.getData("email"));
         setupPlaceholders();
     }
     private void setupPlaceholders() {
@@ -80,27 +79,27 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", editSessionPane, facade, null);
+        genericButton("/fxml/mainScreen.fxml", editSessionPane, userController, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", editSessionPane, facade, null);
+        genericButton("/fxml/subEventScreen.fxml", editSessionPane, userController, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", editSessionPane, facade, null);
+        genericButton("/fxml/submitScreen.fxml", editSessionPane, userController, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", editSessionPane, facade, null);
+        genericButton("/fxml/sessionScreen.fxml", editSessionPane, userController, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", editSessionPane, facade, null);
+        genericButton("/fxml/loginScreen.fxml", editSessionPane, userController, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", editSessionPane, facade, null);
+        genericButton("/fxml/userScreen.fxml", editSessionPane, userController, null);
     }
 
     public void updateSession() throws IOException {
@@ -115,12 +114,13 @@ public class UpdateSessionScreenController extends BaseController implements FxC
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
         } else if (!isValidDate(newDate) || !areValidTimes(newStartTime, newEndTime)) {
             errorUpdtLabel.setText("Data ou horário inválido.");
-        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(sessionName, sessionMap)){
+        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newSubName, sessionMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            sessionController.update(sessionName, newSubName, newDate, newDescription, newLocation,  facade.getUserData("id"), newStartTime, newEndTime);
+            sessionController.update(sessionName, newSubName, newDate, newDescription, newLocation,  userController.getData("id"), newStartTime, newEndTime);
             sessionController.read();
-            handleSession();}
+            handleSession();
+        }
     }
 
 }
