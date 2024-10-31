@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +17,7 @@ import javafx.scene.text.Text;
 import static br.upe.ui.Validation.isValidDate;
 
 public class CreateSubEventScreenController extends BaseController implements FxController {
-    private Facade facade;
+    private FacadeInterface facade;
     private final ObservableList<String> eventList = FXCollections.observableArrayList();
 
 
@@ -51,7 +52,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
 
 
 
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
         initial();
     }
@@ -96,7 +97,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     }
 
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = facade.listSubEvents(facade.getUserData("id"), "fx");
+        List<String> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
         eventList.setAll(userEvents);
 
         FilteredList<String> filteredItems = new FilteredList<>(eventList, p -> true);

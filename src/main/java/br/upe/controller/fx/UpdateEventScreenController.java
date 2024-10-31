@@ -3,6 +3,7 @@ package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -18,7 +19,7 @@ import java.util.Map;
 import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateEventScreenController extends BaseController implements FxController {
-    private Facade facade;
+    private FacadeInterface facade;
     private String eventId;
 
     @FXML
@@ -46,7 +47,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     @FXML
     private Label errorDelLabel;
 
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
         initial();
     }

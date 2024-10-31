@@ -2,20 +2,21 @@ package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 
 public class SubmitEventScreenController extends BaseController implements FxController{
-    private Facade facade;
+    private FacadeInterface facade;
 
     @FXML
     private Label userEmail;
     @FXML
     private AnchorPane submitPane;
 
-    public void setFacade(Facade facade) {
+    public void setFacade(FacadeInterface facade) {
         this.facade = facade;
         initial();
     }

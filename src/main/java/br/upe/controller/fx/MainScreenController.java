@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 
 import br.upe.controller.*;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MainScreenController extends BaseController implements FxController {
-    private Facade facade;
+    private FacadeInterface facade;
 
     @FXML
     private VBox eventVBox;
@@ -28,7 +29,7 @@ public class MainScreenController extends BaseController implements FxController
     private AnchorPane mainPane;
 
     @Override
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
         initial();
     }

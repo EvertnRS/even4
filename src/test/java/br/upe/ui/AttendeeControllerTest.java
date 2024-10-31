@@ -32,7 +32,7 @@ class AttendeeControllerTest {
     void testCreateAttendee() throws IOException {
         attendeeExists();
 
-        Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
+        Map<String, Persistence> attendeeMap = attendeeController.getHashMap();
         boolean attendeeCreated = attendeeMap.values().stream()
                 .anyMatch(attendee -> attendee.getData("name").equals("Man"));
         assertTrue(attendeeCreated, "O participante criado não foi encontrado.");
@@ -44,9 +44,9 @@ class AttendeeControllerTest {
     void testUpdateAttendee() throws IOException {
         attendeeExists();
 
-        attendeeController.update("Duda", sessionController.getSessionHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null));
+        attendeeController.update("Duda", sessionController.getHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null));
 
-        Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
+        Map<String, Persistence> attendeeMap = attendeeController.getHashMap();
         boolean attendeeUpdated = attendeeMap.values().stream()
                 .anyMatch(attendee -> attendee.getData("name").equals("Duda"));
         assertTrue(attendeeUpdated, "O Participante não foi atualizado.");
@@ -59,10 +59,10 @@ class AttendeeControllerTest {
         attendeeExists();
 
         String attendeeReaded = "";
-        Map<String, Persistence> attendeeHashMap = attendeeController.getAttendeeHashMap();
+        Map<String, Persistence> attendeeHashMap = attendeeController.getHashMap();
         for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("sessionId").equals(sessionController.getSessionHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null))) {
+            if (persistence.getData("sessionId").equals(sessionController.getHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null))) {
                 attendeeReaded = persistence.getData("name");
             }
         }
@@ -75,7 +75,7 @@ class AttendeeControllerTest {
         attendeeExists();
         attendeeDelete();
 
-        Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
+        Map<String, Persistence> attendeeMap = attendeeController.getHashMap();
         boolean attendeeDeleted = attendeeMap.values().stream()
                 .noneMatch(attendee -> attendee.getData("name").equals("Man"));
         assertTrue(attendeeDeleted, "A sessão não foi deletada.");
@@ -83,7 +83,7 @@ class AttendeeControllerTest {
     }
 
     void attendeeExists() throws IOException {
-        boolean sessionExists = attendeeController.getAttendeeHashMap().values().stream()
+        boolean sessionExists = attendeeController.getHashMap().values().stream()
                 .anyMatch(attendee -> attendee.getData("name").equals("Man"));
 
         if (!sessionExists) {
@@ -98,7 +98,7 @@ class AttendeeControllerTest {
             sessionController.create("Event2", "Session1", "01/12/2024", "Session Description", "Session Location", "08:00", "10:00", userId, "Event");
             sessionController.read();
 
-            String sessionId = sessionController.getSessionHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null);
+            String sessionId = sessionController.getHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null);
             attendeeController.create("Man", sessionId, userId);
             attendeeController.read();
 
@@ -112,12 +112,12 @@ class AttendeeControllerTest {
         String userId = userController.getData("id");
         userController.delete(userId, "id");
 
-        String sessionId = sessionController.getSessionHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null);
+        String sessionId = sessionController.getHashMap().values().stream().filter(subSession -> subSession.getData("name").equals("Session1")).findFirst().map(session -> session.getData("id")).orElse(null);
         sessionController.delete(sessionId, userId);
 
         attendeeController.delete(userId, "id", sessionId);
 
-        String eventId = eventController.getEventHashMap().values().stream().filter(event -> event.getData("name").equals("Event2")).findFirst().map(event -> event.getData("id")).orElse(null);
+        String eventId = eventController.getHashMap().values().stream().filter(event -> event.getData("name").equals("Event2")).findFirst().map(event -> event.getData("id")).orElse(null);
         eventController.delete(eventId, userId);
     }
 }

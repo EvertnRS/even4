@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import static br.upe.ui.Validation.isValidEmail;
 
 public class UserScreenController extends BaseController implements FxController {
-    private Facade facade;
+    private FacadeInterface facade;
 
     @FXML
     private AnchorPane userPane;
@@ -27,7 +28,7 @@ public class UserScreenController extends BaseController implements FxController
     @FXML
     private Label errorDelLabel;
 
-    public void setFacade(Facade facade) {
+    public void setFacade(FacadeInterface facade) {
         this.facade = facade;
         initial();
     }

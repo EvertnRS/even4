@@ -1,9 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.AttendeeController;
-import br.upe.controller.SessionController;
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -17,8 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class EnterSessionScreenController extends BaseController implements FxController{
-    private Facade facade;
-    AttendeeController attendeeController;
+    private FacadeInterface facade;
 
     @FXML
     private VBox attendeeVBox;
@@ -29,9 +26,8 @@ public class EnterSessionScreenController extends BaseController implements FxCo
     @FXML
     private AnchorPane attendeePane;
 
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
-        this.attendeeController = new AttendeeController();
         initial();
     }
 
@@ -66,7 +62,7 @@ public class EnterSessionScreenController extends BaseController implements FxCo
     private void loadSessions() throws IOException {
         attendeeVBox.getChildren().clear();
 
-        attendeeController.list(facade.getUserData("id"), "");
+        facade.listAttendees(facade.getUserData("id"), "");
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
@@ -75,7 +71,7 @@ public class EnterSessionScreenController extends BaseController implements FxCo
 
         attendeeVBox.setAlignment(Pos.CENTER);
 
-        for (Map.Entry<String, Persistence> entry : attendeeController.getAttendeeHashMap().entrySet()) {
+        for (Map.Entry<String, Persistence> entry : facade.getAttendeeHashMap().entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("userId").equals(facade.getUserData("id"))) {
 
@@ -135,7 +131,7 @@ public class EnterSessionScreenController extends BaseController implements FxCo
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonSim) {
-            attendeeController.delete(userId, "id", sessionId);
+            facade.deleteAttendee(userId, "id", sessionId);
             loadSessions();
         }
     }

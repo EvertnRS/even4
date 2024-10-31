@@ -3,6 +3,7 @@ package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 public abstract class BaseController {
 
-    public void genericButton(String path, AnchorPane pane, Facade facade, String eventId) throws IOException {
+    public void genericButton(String path, AnchorPane pane, FacadeInterface facade, String eventId) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         AnchorPane screen = loader.load();
 
@@ -59,8 +60,8 @@ public abstract class BaseController {
 
         EventController eventController = new EventController();
         SubEventController subEventController = new SubEventController();
-        Map<String, Persistence> parentMap = new HashMap<>(eventController.getEventHashMap());
-        parentMap.putAll(subEventController.getSubEventHashMap());
+        Map<String, Persistence> parentMap = new HashMap<>(eventController.getHashMap());
+        parentMap.putAll(subEventController.getHashMap());
 
 
         String parentDateString = "";
@@ -77,6 +78,6 @@ public abstract class BaseController {
             return !inputDate.isBefore(eventDate);
     }
 
-    public abstract void setFacade(Facade facade) throws IOException;
+    public abstract void setFacade(FacadeInterface facade) throws IOException;
 }
 

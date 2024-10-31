@@ -4,6 +4,7 @@ import br.upe.persistence.Persistence;
 import br.upe.persistence.User;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -17,7 +18,7 @@ public class UserController implements Controller {
         this.read();
     }
 
-    public Map<String, Persistence> getUserHashMap() {
+    public Map<String, Persistence> getHashMap() {
         return userHashMap;
     }
 
@@ -142,6 +143,11 @@ public class UserController implements Controller {
     public boolean list(String idowner) {
         // Método não implementado
         return false;
+    }
+
+    @Override
+    public List<String> list(String idowner, String type) throws IOException {
+        return List.of();
     }
 
     @Override

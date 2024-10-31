@@ -23,7 +23,7 @@ public class EventController implements Controller {
         this.read();
     }
 
-    public Map<String, Persistence> getEventHashMap() {
+    public Map<String, Persistence> getHashMap() {
         System.out.println(eventHashMap);
         return eventHashMap;
     }
@@ -58,6 +58,7 @@ public class EventController implements Controller {
 
         return isnull;
     }
+
 
     public List<String> list(String ownerId, String type) throws IOException {
         if(type.equals("fx")){
@@ -248,13 +249,13 @@ public class EventController implements Controller {
         // Deletar todas as sessões relacionadas ao evento
         SessionController sessionController = new SessionController();
         sessionController.read();
-        sessionController.getSessionHashMap().entrySet().removeIf(entry ->
+        sessionController.getHashMap().entrySet().removeIf(entry ->
                 entry.getValue().getData(EVENT_ID).equals(id)
         );
-        sessionController.getSessionHashMap().values().forEach(session ->
+        sessionController.getHashMap().values().forEach(session ->
                 {
                     try {
-                        session.delete(sessionController.getSessionHashMap());
+                        session.delete(sessionController.getHashMap());
                     } catch (IOException e) {
                         throw new IllegalArgumentException(e);
                     }
@@ -264,13 +265,13 @@ public class EventController implements Controller {
         // Deletar todos os subeventos relacionados ao evento
         SubEventController subEventController = new SubEventController();
         subEventController.read();
-        subEventController.getSubEventHashMap().entrySet().removeIf(entry ->
+        subEventController.getHashMap().entrySet().removeIf(entry ->
                 entry.getValue().getData(EVENT_ID).equals(id)
         );
-        subEventController.getSubEventHashMap().values().forEach(subEvent ->
+        subEventController.getHashMap().values().forEach(subEvent ->
                 {
                     try {
-                        subEvent.delete(subEventController.getSubEventHashMap());
+                        subEvent.delete(subEventController.getHashMap());
                     } catch (IOException e) {
                         throw new IllegalArgumentException(e);
                     }
@@ -280,14 +281,14 @@ public class EventController implements Controller {
         // Deletar todos os participantes relacionados às sessões do evento
         AttendeeController attendeeController = new AttendeeController();
         attendeeController.read();
-        attendeeController.getAttendeeHashMap().entrySet().removeIf(entry -> {
+        attendeeController.getHashMap().entrySet().removeIf(entry -> {
             String sessionId = entry.getValue().getData("sessionId");
-            return sessionController.getSessionHashMap().containsKey(sessionId);
+            return sessionController.getHashMap().containsKey(sessionId);
         });
-        attendeeController.getAttendeeHashMap().values().forEach(attendee ->
+        attendeeController.getHashMap().values().forEach(attendee ->
                 {
                     try {
-                        attendee.delete(attendeeController.getAttendeeHashMap());
+                        attendee.delete(attendeeController.getHashMap());
                     } catch (IOException e) {
                         throw new IllegalArgumentException(e);
                     }
@@ -298,13 +299,13 @@ public class EventController implements Controller {
         String eventName = eventHashMap.get(id).getData("name");
         SubmitArticleController articleController = new SubmitArticleController();
         articleController.read(eventName);
-        articleController.getArticleHashMap().entrySet().removeIf(entry ->
+        articleController.getHashMap().entrySet().removeIf(entry ->
                 entry.getValue().getData(EVENT_ID).equals(id)
         );
-        articleController.getArticleHashMap().values().forEach(article ->
+        articleController.getHashMap().values().forEach(article ->
                 {
                     try {
-                        article.delete(articleController.getArticleHashMap());
+                        article.delete(articleController.getHashMap());
                     } catch (IOException e) {
                         throw new IllegalArgumentException(e);
                     }

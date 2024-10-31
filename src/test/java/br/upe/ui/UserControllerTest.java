@@ -24,7 +24,7 @@ class UserControllerTest {
     void testCreateUser() throws IOException {
         userExists();
 
-        Map<String, Persistence> userHashMap = userController.getUserHashMap();
+        Map<String, Persistence> userHashMap = userController.getHashMap();
         boolean userCreated = userHashMap.values().stream()
                 .anyMatch(user -> user.getData("email").equals("newuser@example.com"));
         assertTrue(userCreated);
@@ -49,7 +49,7 @@ class UserControllerTest {
         userExists();
 
         String userReaded = "";
-        Map<String, Persistence> userHashMap = userController.getUserHashMap();
+        Map<String, Persistence> userHashMap = userController.getHashMap();
         for (Map.Entry<String, Persistence> entry : userHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("email").equals("newuser@example.com")) {
@@ -67,14 +67,14 @@ class UserControllerTest {
 
         userController.delete(userController.getData("id"), "id");
 
-        boolean deleteSuccessful = userController.getUserHashMap().values().stream()
+        boolean deleteSuccessful = userController.getHashMap().values().stream()
                 .anyMatch(user -> user.getData("email").equals("newuser@example.com"));
         assertFalse(deleteSuccessful);
 
     }
 
     void userExists() throws IOException {
-        boolean userExists = userController.getUserHashMap().values().stream()
+        boolean userExists = userController.getHashMap().values().stream()
                 .anyMatch(user -> user.getData("email").equals("newuser@example.com"));
 
         if (!userExists) {

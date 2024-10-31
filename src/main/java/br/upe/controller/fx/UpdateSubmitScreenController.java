@@ -4,6 +4,7 @@ import br.upe.controller.SubmitArticleController;
 import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -13,9 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class UpdateSubmitScreenController extends BaseController implements FxController {
-    private SubmitArticleController SubmitArticleController;
-    private EventController eventController;
-    private Facade facade;
+    private FacadeInterface facade;
 
     @FXML
     private AnchorPane submitPane;
@@ -35,10 +34,8 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
 
     private String SessionName;
 
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
-        this.SubmitArticleController = new SubmitArticleController();
-        this.eventController = new EventController();
         initial();
     }
 
@@ -52,7 +49,7 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
         loadUserEvents();
     }
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = eventController.list(facade.getUserData("id"), "fx");
+        List<String> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
         eventComboBox.getItems().addAll(userEvents);
         eventComboBox1.getItems().addAll(userEvents);
 
@@ -92,7 +89,7 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
         String oldEventName = eventComboBox1.getSelectionModel().getSelectedItem();
         String nameArticle = editDescriptionTextField.getText();
 
-        SubmitArticleController.update(novoEventName, oldEventName, nameArticle);
+        facade.updateArticle(novoEventName, oldEventName, nameArticle);
         handleSubmit();
     }
 
