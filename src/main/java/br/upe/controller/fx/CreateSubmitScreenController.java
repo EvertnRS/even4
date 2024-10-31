@@ -4,12 +4,9 @@ import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
-
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -32,8 +29,6 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     @FXML
     private ComboBox<String> eventComboBox;
     @FXML
-    private Text namePlaceholder;
-    @FXML
     private Label errorUpdtLabel;
 
     public void setUserController(UserController userController) throws IOException {
@@ -46,11 +41,6 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
         loadArticles();
-        setupPlaceholders();
-    }
-
-    private void setupPlaceholders() {
-        PlaceholderUtils.setupPlaceholder(namesTextField, namePlaceholder);
     }
 
     public void handleEvent() throws IOException {
