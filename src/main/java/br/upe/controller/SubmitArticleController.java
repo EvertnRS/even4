@@ -3,6 +3,7 @@ package br.upe.controller;
 import br.upe.persistence.Persistence;
 import br.upe.persistence.SubmitArticle;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -10,7 +11,7 @@ public class SubmitArticleController implements Controller {
     private Map<String, Persistence> articleHashMap;
     private static final Logger LOGGER = Logger.getLogger(SubmitArticleController.class.getName());
 
-    public Map<String, Persistence> getArticleHashMap() {
+    public Map<String, Persistence> getHashMap() {
         return articleHashMap;
     }
     public void setArticleHashMap(Map<String, Persistence> articleHashMap) {
@@ -70,6 +71,11 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
+    public List<String> list(String idowner, String type) throws IOException {
+        return List.of();
+    }
+
+    @Override
     public void show(Object... params) {
         // Método não implementado
     }
@@ -121,7 +127,7 @@ public class SubmitArticleController implements Controller {
 
     private boolean getFatherEventId(String eventName) throws IOException {
         EventController ec = new EventController();
-        Map<String, Persistence> list = ec.getEventHashMap();
+        Map<String, Persistence> list = ec.getHashMap();
         boolean found = false;
         for (Map.Entry<String, Persistence> entry : list.entrySet()) {
             Persistence listindice = entry.getValue();

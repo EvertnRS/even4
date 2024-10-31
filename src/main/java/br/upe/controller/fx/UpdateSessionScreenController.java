@@ -3,6 +3,7 @@ package br.upe.controller.fx;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -18,8 +19,7 @@ import static br.upe.ui.Validation.areValidTimes;
 import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
-    private Facade facade;
-    private SessionController sessionController;
+    private FacadeInterface facade;
     private String sessionName;
 
     @FXML
@@ -55,9 +55,8 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     @FXML
     private Label errorDelLabel;
 
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
-        this.sessionController = new SessionController();
         initial();
     }
 
@@ -110,7 +109,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
         String newStartTime = editStartTimeTextField.getText();
         String newEndTime = editEndTimeTextField.getText();
-        Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessionMap = facade.getSessionHashMap();
         if (!validateEventDate(newDate, newSubName)) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
         } else if (!isValidDate(newDate) || !areValidTimes(newStartTime, newEndTime)) {
@@ -118,8 +117,8 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(sessionName, sessionMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            sessionController.update(sessionName, newSubName, newDate, newDescription, newLocation,  facade.getUserData("id"), newStartTime, newEndTime);
-            sessionController.read();
+            facade.updateSession(sessionName, newSubName, newDate, newDescription, newLocation,  facade.getUserData("id"), newStartTime, newEndTime);
+            facade.readSession();
             handleSession();}
     }
 

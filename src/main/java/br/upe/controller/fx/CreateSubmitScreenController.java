@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 import br.upe.controller.*;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -12,9 +13,7 @@ import java.util.List;
 
 public class CreateSubmitScreenController extends BaseController implements FxController {
 
-    private Facade facade;
-    private SubmitArticleController submitArticleController;
-    private EventController eventController;
+    private FacadeInterface facade;
 
     @FXML
     private AnchorPane submitPane;
@@ -27,10 +26,8 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     @FXML
     private Label errorUpdtLabel;
 
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
-        this.eventController = new EventController();
-        this.submitArticleController = new SubmitArticleController();
         initial();
     }
 
@@ -63,14 +60,14 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
         genericButton("/fxml/userScreen.fxml", submitPane, facade, null);
     }
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = eventController.list(facade.getUserData("id"), "submit");
+        List<String> userEvents = facade.listEvents(facade.getUserData("id"), "submit");
         eventComboBox.getItems().addAll(userEvents);
     }
     @FXML
     private void createArticle()throws IOException {
         String novoEventName = eventComboBox.getSelectionModel().getSelectedItem();
         String nameArticle = namesTextField.getText();
-        submitArticleController.create(novoEventName, nameArticle, facade.getUserData("id"));
+        facade.createArticle(novoEventName, nameArticle, facade.getUserData("id"));
         handleSubmitEvent();
 
     }

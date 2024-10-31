@@ -27,7 +27,7 @@ public class SessionController implements Controller {
         this.read();
     }
 
-    public Map<String, Persistence> getSessionHashMap() {
+    public Map<String, Persistence> getHashMap() {
         return sessionHashMap;
     }
 
@@ -81,10 +81,10 @@ public class SessionController implements Controller {
         Map<String, Persistence> eventH;
         if (params[8].equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
-            eventH = eventController.getEventHashMap();
+            eventH = eventController.getHashMap();
         } else {
             SubEventController subEventController = new SubEventController();
-            eventH = subEventController.getSubEventHashMap();
+            eventH = subEventController.getHashMap();
         }
 
         Persistence session = new Session();
@@ -98,7 +98,7 @@ public class SessionController implements Controller {
 
         AttendeeController attendeeController = new AttendeeController();
         attendeeController.read();
-        Iterator<Map.Entry<String, Persistence>> attendeeIterator = attendeeController.getAttendeeHashMap().entrySet().iterator();
+        Iterator<Map.Entry<String, Persistence>> attendeeIterator = attendeeController.getHashMap().entrySet().iterator();
         while (attendeeIterator.hasNext()) {
             Map.Entry<String, Persistence> entry = attendeeIterator.next();
             String sessionId = entry.getValue().getData("sessionId");
@@ -106,9 +106,9 @@ public class SessionController implements Controller {
                 attendeeIterator.remove();
             }
         }
-        attendeeController.getAttendeeHashMap().values().forEach(attendee -> {
+        attendeeController.getHashMap().values().forEach(attendee -> {
             try {
-                attendee.delete(attendeeController.getAttendeeHashMap());
+                attendee.delete(attendeeController.getHashMap());
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -117,16 +117,16 @@ public class SessionController implements Controller {
         String subEventName = sessionHashMap.get(id).getData("name");
         SubmitArticleController articleController = new SubmitArticleController();
         articleController.read(subEventName);
-        Iterator<Map.Entry<String, Persistence>> articleIterator = articleController.getArticleHashMap().entrySet().iterator();
+        Iterator<Map.Entry<String, Persistence>> articleIterator = articleController.getHashMap().entrySet().iterator();
         while (articleIterator.hasNext()) {
             Map.Entry<String, Persistence> entry = articleIterator.next();
             if (entry.getValue().getData(EVENT_ID).equals(id)) {
                 articleIterator.remove();
             }
         }
-        articleController.getArticleHashMap().values().forEach(article -> {
+        articleController.getHashMap().values().forEach(article -> {
             try {
-                article.delete(articleController.getArticleHashMap());
+                article.delete(articleController.getHashMap());
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -259,7 +259,7 @@ public class SessionController implements Controller {
     private String getEventName(String id) throws IOException {
         String name = "";
         EventController eventController = new EventController();
-        Map<String, Persistence> evenH = eventController.getEventHashMap();
+        Map<String, Persistence> evenH = eventController.getHashMap();
         boolean isEvent = false;
         for (Map.Entry<String, Persistence> entry : evenH.entrySet()) {
             Persistence persistence = entry.getValue();
@@ -272,7 +272,7 @@ public class SessionController implements Controller {
 
         if (!isEvent) {
             SubEventController subEventController = new SubEventController();
-            Map<String, Persistence> subEvenH = subEventController.getSubEventHashMap();
+            Map<String, Persistence> subEvenH = subEventController.getHashMap();
             for (Map.Entry<String, Persistence> entry : subEvenH.entrySet()) {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData("id").equals(id)) {
@@ -348,7 +348,7 @@ public class SessionController implements Controller {
         String fatherId = "";
         if (eventType.equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
-            Map<String, Persistence> eventH = eventController.getEventHashMap();
+            Map<String, Persistence> eventH = eventController.getHashMap();
             for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
                 Persistence eventIndice = entry.getValue();
                 if (eventIndice.getData(NAME).equals(eventName)) {
@@ -358,7 +358,7 @@ public class SessionController implements Controller {
             }
         } else {
             SubEventController subEventController = new SubEventController();
-            Map<String, Persistence> eventH = subEventController.getSubEventHashMap();
+            Map<String, Persistence> eventH = subEventController.getHashMap();
             for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
                 Persistence eventIndice = entry.getValue();
                 if (eventIndice.getData(NAME).equals(eventName)) {

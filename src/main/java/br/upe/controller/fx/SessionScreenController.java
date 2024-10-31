@@ -5,6 +5,7 @@ import br.upe.controller.SessionController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -17,10 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SessionScreenController extends BaseController implements FxController {
-    private Facade facade;
-    private SessionController sessionController;
-    private EventController eventController;
-    private SubEventController subEventController;
+    private FacadeInterface facade;
 
     @FXML
     private Label userEmail;
@@ -31,11 +29,8 @@ public class SessionScreenController extends BaseController implements FxControl
     @FXML
     private AnchorPane sessionPane;
 
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
-        this.sessionController = new SessionController();
-        this.eventController = new EventController();
-        this.subEventController = new SubEventController();
         initial();
     }
 
@@ -71,7 +66,7 @@ public class SessionScreenController extends BaseController implements FxControl
         sessionVBox.getChildren().clear();
 
         // Carregar as sessões do usuário
-        sessionController.list(facade.getUserData("id"), "");
+        facade.listSessions(facade.getUserData("id"), "");
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
@@ -80,11 +75,11 @@ public class SessionScreenController extends BaseController implements FxControl
         sessionVBox.setAlignment(Pos.CENTER);
 
         // Obter os eventos e subeventos existentes
-        Map<String, Persistence> eventHashMap = eventController.getEventHashMap();
-        Map<String, Persistence> subEventHashMap = subEventController.getSubEventHashMap();
+        Map<String, Persistence> eventHashMap = facade.getEventHashMap();
+        Map<String, Persistence> subEventHashMap = facade.getSubEventHashMap();
 
         // Iterar sobre cada sessão
-        for (Map.Entry<String, Persistence> entry : sessionController.getSessionHashMap().entrySet()) {
+        for (Map.Entry<String, Persistence> entry : facade.getSessionHashMap().entrySet()) {
             Persistence persistence = entry.getValue();
 
             // Verifica se a sessão pertence ao usuário logado
@@ -178,7 +173,7 @@ public class SessionScreenController extends BaseController implements FxControl
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonSim) {
-            sessionController.delete(eventId, userId);
+            facade.deleteSession(eventId, userId);
             loadUserSessions();
         }
     }

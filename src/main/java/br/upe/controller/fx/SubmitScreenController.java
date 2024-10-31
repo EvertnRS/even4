@@ -3,6 +3,7 @@ package br.upe.controller.fx;
 import br.upe.controller.SubmitArticleController;
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -18,8 +19,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SubmitScreenController extends BaseController implements FxController {
-    private Facade facade;
-    private final SubmitArticleController submitArticleController = new SubmitArticleController(); // Instância do controlador de artigos
+    private FacadeInterface facade;
+
 
     @FXML
     private Label userEmail;
@@ -31,7 +32,7 @@ public class SubmitScreenController extends BaseController implements FxControll
     private AnchorPane submitPane;
 
     // Configura o UserController e inicializa a tela de artigos
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
         initial();
     }
@@ -73,9 +74,9 @@ public class SubmitScreenController extends BaseController implements FxControll
         articleVBox.getChildren().clear();  // Limpa a interface
 
         // Chama o método read para obter os artigos do usuário
-        submitArticleController.read(facade.getUserData("id"));
+        facade.readArticle(facade.getUserData("id"));
 
-        Map<String, Persistence> articles = submitArticleController.getArticleHashMap();
+        Map<String, Persistence> articles = facade.getArticleHashMap();
         System.out.println(articles);
         if (articles.isEmpty()) {
             Label noArticlesLabel = new Label("Nenhum artigo encontrado.");
@@ -161,7 +162,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonSim) {
-            submitArticleController.delete(articleName);
+            facade.deleteArticle(articleName);
             loadUserArticles();  // Recarrega os artigos para atualizar a tela
         }
     }

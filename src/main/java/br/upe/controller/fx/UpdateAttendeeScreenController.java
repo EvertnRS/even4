@@ -4,6 +4,7 @@ import br.upe.controller.AttendeeController;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -15,9 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UpdateAttendeeScreenController extends BaseController implements FxController {
-    private Facade facade;
-    private SessionController sessionController;
-    private AttendeeController attendeeController;
+    private FacadeInterface facade;
     @FXML
     private ComboBox<String> eventComboBox;
     @FXML
@@ -29,10 +28,8 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
     @FXML
     private Label errorUpdtLabel;
 
-    public void setFacade(Facade facade) throws IOException {
+    public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
-        this.sessionController = new SessionController();
-        this.attendeeController = new AttendeeController();
         initial();
     }
 
@@ -42,7 +39,7 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
     }
 
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = sessionController.list(facade.getUserData("id"), "fx");
+        List<String> userEvents = facade.listSessions(facade.getUserData("id"), "fx");
         eventComboBox.getItems().addAll(userEvents);
 
     }
@@ -80,7 +77,7 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
         String selectedSessionName = eventComboBox.getSelectionModel().getSelectedItem();
         String sessionId = "";
 
-        Map<String, Persistence> sessionHashMap = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessionHashMap = facade.getSessionHashMap();
         for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("name").equals(selectedSessionName)) {
@@ -88,12 +85,12 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
             }
         }
 
-        Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
+        Map<String, Persistence> attendeeMap = facade.getAttendeeHashMap();
         if (isValidName(attendeeName, attendeeMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            attendeeController.update(attendeeName,sessionId);
-            attendeeController.read();
+            facade.updateAttendee(attendeeName,sessionId);
+            facade.readAttendee();
             handleInscription();
         }
 

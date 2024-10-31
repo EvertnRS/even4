@@ -23,7 +23,7 @@ public class AttendeeController implements Controller {
         this.read();
     }
 
-    public Map<String, Persistence> getAttendeeHashMap() {
+    public Map<String, Persistence> getHashMap() {
         return attendeeHashMap;
     }
 
@@ -156,7 +156,7 @@ public class AttendeeController implements Controller {
 
     private boolean validateSessionId (String sessionId) throws IOException {
         SessionController sessionController = new SessionController();
-        Map<String, Persistence> sessH = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessH = sessionController.getHashMap();
         boolean hasSession = false;
         for (Map.Entry<String, Persistence> entry : sessH.entrySet()) {
             Persistence session = entry.getValue();
@@ -222,7 +222,7 @@ public class AttendeeController implements Controller {
         String location = "";
         String startTime = "";
         SessionController sessionController = new SessionController();
-        Map<String, Persistence> sessH = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessH = sessionController.getHashMap();
 
         for (Map.Entry<String, Persistence> entry : sessH.entrySet()) {
             Persistence persistence = entry.getValue();

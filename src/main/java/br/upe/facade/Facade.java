@@ -6,26 +6,27 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Facade {
+public class Facade implements FacadeInterface {
+    private final Controller eventController;
+    private final Controller sessionController;
+    private final Controller subEventController;
+    private final Controller submitArticleController;
+    private final Controller attendeeController;
+    private final Controller userController;
 
-    private final EventController eventController;
-    private final SessionController sessionController;
-    private final SubEventController subEventController;
-    private final SubmitArticleController submitArticleController;
-    private final UserController userController;
-
-    public Facade(UserController userController) throws IOException {
+    public Facade(Controller userController) throws IOException {
         this.userController = userController;
+        this.eventController = new EventController();
         this.sessionController = new SessionController();
         this.subEventController = new SubEventController();
         this.submitArticleController = new SubmitArticleController();
-        this.eventController = new EventController();
+        this.attendeeController = new AttendeeController();
     }
 
 
     // EventController methods
     public Map<String, Persistence> getEventHashMap() {
-        return eventController.getEventHashMap();
+        return eventController.getHashMap();
     }
 
     public boolean listEvents(String ownerId) throws IOException {
@@ -36,7 +37,7 @@ public class Facade {
         return eventController.list(ownerId, type);
     }
 
-    public void createEvent(Object... params) {
+    public void createEvent(Object... params) throws IOException {
         eventController.create(params);
     }
 
@@ -59,7 +60,7 @@ public class Facade {
 
     // SessionController methods
     public Map<String, Persistence> getSessionHashMap() {
-        return sessionController.getSessionHashMap();
+        return sessionController.getHashMap();
     }
 
     public boolean listSessions(String ownerId) throws IOException {
@@ -68,6 +69,14 @@ public class Facade {
 
     public List<String> listSessions(String ownerId, String type) throws IOException {
         return sessionController.list(ownerId, type);
+    }
+
+    public void createSession(Object... params) throws IOException {
+        sessionController.create(params);
+    }
+
+    public void readSession() throws IOException {
+        sessionController.read();
     }
 
     public void updateSession(Object... params) throws IOException {
@@ -81,7 +90,7 @@ public class Facade {
 
     // SubEventController methods
     public Map<String, Persistence> getSubEventHashMap() {
-        return subEventController.getSubEventHashMap();
+        return subEventController.getHashMap();
     }
 
     public List<String> listSubEvents(String ownerId, String type) throws IOException {
@@ -106,7 +115,7 @@ public class Facade {
 
     // SubmitArticleController methods
     public Map<String, Persistence> getArticleHashMap() {
-        return submitArticleController.getArticleHashMap();
+        return submitArticleController.getHashMap();
     }
 
     public void createArticle(Object... params) throws IOException {
@@ -121,12 +130,16 @@ public class Facade {
         submitArticleController.update(params);
     }
 
-    // UserController methods
-    public Map<String, Persistence> getUserHashMap() {
-        return userController.getUserHashMap();
+    public void readArticle(String id) throws IOException {
+        submitArticleController.read();
     }
 
-    public void createUser(Object... params) {
+    // UserController methods
+    public Map<String, Persistence> getUserHashMap() {
+        return userController.getHashMap();
+    }
+
+    public void createUser(Object... params) throws IOException {
         userController.create(params);
     }
 
@@ -144,5 +157,30 @@ public class Facade {
 
     public String getUserData(String dataToGet) {
         return userController.getData(dataToGet);
+    }
+
+    // AttendeeController methods
+    public Map<String, Persistence> getAttendeeHashMap() {
+        return attendeeController.getHashMap();
+    }
+
+    public void createAttendee(Object... params) throws IOException {
+        attendeeController.create(params);
+    }
+
+    public void readAttendee() throws IOException {
+        attendeeController.read();
+    }
+
+    public void updateAttendee(Object... params) throws IOException {
+        attendeeController.update(params);
+    }
+
+    public List<String> listAttendees(String ownerId, String type) throws IOException {
+        return attendeeController.list(ownerId, type);
+    }
+
+    public void deleteAttendee(Object... params) throws IOException {
+        attendeeController.delete(params);
     }
 }
