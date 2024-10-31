@@ -5,6 +5,7 @@ import br.upe.controller.SessionController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
+import br.upe.persistence.User;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -18,8 +19,8 @@ import java.util.Optional;
 public class SessionScreenController extends BaseController implements FxController {
     private UserController userController;
     private SessionController sessionController;
-    EventController eventController;
-    SubEventController subEventController;
+    private EventController eventController;
+    private SubEventController subEventController;
 
     @FXML
     private Label userEmail;

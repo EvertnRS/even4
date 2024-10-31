@@ -15,9 +15,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SubEventScreenController extends BaseController implements FxController{
-    UserController userController;
-    SubEventController subEventController;
-    EventController eventController;
+    private UserController userController;
+    private SubEventController subEventController;
+    private EventController eventController;
 
     @FXML
     private Label userEmail;
@@ -172,6 +172,4 @@ public class SubEventScreenController extends BaseController implements FxContro
             loadUserSubEvents();
         }
     }
-
-
 }

@@ -64,6 +64,7 @@ public class EventController implements Controller {
         String newDate = (String) params[2];
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
+        //por que não ta usando?
         String userId = (String) params[5];
 
         String eventValid = getEventById(eventId);

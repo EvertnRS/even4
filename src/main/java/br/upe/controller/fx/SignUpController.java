@@ -71,6 +71,7 @@ public class SignUpController extends BaseController implements FxController {
         String email = emailTextField.getText().trim();
         String cpf = cpfTextField.getText().trim();
 
+        //trocar para facade
         UserController userController = new UserController();
         if (isValidEmail(email) && isValidCPF(cpf)) {
             userController.create(email.trim(), cpf.trim());

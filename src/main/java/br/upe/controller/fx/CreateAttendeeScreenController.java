@@ -9,6 +9,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +18,9 @@ import java.util.Map;
 import static br.upe.ui.Validation.isValidDate;
 
 public class CreateAttendeeScreenController extends BaseController implements FxController {
-    private UserController userController;
     private SessionController sessionController;
     private AttendeeController attendeeController;
+    private UserController userController;
     @FXML
     private ComboBox<String> eventComboBox;
     @FXML
@@ -27,6 +29,8 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
     private Label userEmail;
     @FXML
     private TextField nameTextField;
+    @FXML
+    private Text namePlaceholder;
     @FXML
     private Label errorUpdtLabel;
 
@@ -40,12 +44,17 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
     private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
         loadUserEvents();
+        setupPlaceholders();
     }
 
     private void loadUserEvents() throws IOException {
         List<String> userEvents = sessionController.list(userController.getData("id"), "fx");
         eventComboBox.getItems().addAll(userEvents);
 
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(nameTextField, namePlaceholder);
     }
 
     public void handleEvent() throws IOException {

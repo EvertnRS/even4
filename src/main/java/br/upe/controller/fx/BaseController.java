@@ -16,7 +16,7 @@ import java.util.Map;
 
 public abstract class BaseController {
 
-    public void genericButton(String path, AnchorPane pane, UserController userController, String eventName) throws IOException {
+    public void genericButton(String path, AnchorPane pane, UserController userController, String eventId) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         AnchorPane screen = loader.load();
 
@@ -25,16 +25,16 @@ public abstract class BaseController {
             screenController.setUserController(userController);
 
             if (screenController instanceof UpdateEventScreenController) {
-                ((UpdateEventScreenController) screenController).setEventName(eventName);
+                ((UpdateEventScreenController) screenController).setEventId(eventId);
             }
             if (screenController instanceof UpdateSubEventScreenController) {
-                ((UpdateSubEventScreenController) screenController).setEventName(eventName);
+                ((UpdateSubEventScreenController) screenController).setEventName(eventId);
             }
             if (screenController instanceof UpdateSessionScreenController) {
-                ((UpdateSessionScreenController) screenController).setEventName(eventName);
+                ((UpdateSessionScreenController) screenController).setEventName(eventId);
             }
             if (screenController instanceof UpdateSubmitScreenController) {
-                ((UpdateSubmitScreenController) screenController).setEventName(eventName);
+                ((UpdateSubmitScreenController) screenController).setEventName(eventId);
             }
         }
 
@@ -65,7 +65,6 @@ public abstract class BaseController {
         Map<String, Persistence> parentMap = new HashMap<>(eventController.getEventHashMap());
         parentMap.putAll(subEventController.getSubEventHashMap());
 
-
         String parentDateString = "";
         for (Map.Entry<String, Persistence> entry : parentMap.entrySet()) {
             Persistence listIndex = entry.getValue();
@@ -74,10 +73,14 @@ public abstract class BaseController {
                 break;
             }
         }
-            LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
-            LocalDate inputDate = LocalDate.parse(date, formatter);
+        LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
+        LocalDate inputDate = LocalDate.parse(date, formatter);
 
-            return !inputDate.isBefore(eventDate);
+        System.out.println("Event Date: " + eventDate);
+        System.out.println("Input Date: " + inputDate);
+        System.out.println("Comparison: " + !inputDate.isBefore(eventDate));
+
+        return !inputDate.isBefore(eventDate);
     }
 
     public abstract void setUserController(UserController userController) throws IOException;

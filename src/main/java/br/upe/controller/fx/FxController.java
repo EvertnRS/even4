@@ -1,6 +1,5 @@
 package br.upe.controller.fx;
 import br.upe.controller.UserController;
-
 import java.io.IOException;
 
 public interface FxController {
