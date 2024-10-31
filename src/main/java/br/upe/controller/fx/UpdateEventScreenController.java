@@ -3,6 +3,7 @@ package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
+import br.upe.persistence.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -19,7 +20,6 @@ import static br.upe.ui.Validation.isValidDate;
 public class UpdateEventScreenController extends BaseController implements FxController {
     private UserController userController;
     private EventController eventController;
-    private String eventName;
     private String eventId;
 
     @FXML
@@ -53,19 +53,14 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         initial();
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-        loadEventDetails();
-    }
-
     public void setEventId(String eventId) {
         this.eventId = eventId;
+        loadEventDetails();
     }
 
 
     private void initial() {
         userEmail.setText(userController.getData("email"));
-        setupPlaceholders();
     }
 
     private void setupPlaceholders() {
@@ -101,7 +96,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
 
     private void loadEventDetails() {
         Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        Persistence event = eventMap.get(eventName);
+        Persistence event = eventMap.get(eventId);
 
         if (event != null) {
             editNameTextField.setText(event.getData("name"));
@@ -112,6 +107,8 @@ public class UpdateEventScreenController extends BaseController implements FxCon
             if (eventDate != null && !eventDate.isEmpty()) {
                 editDatePicker.setValue(LocalDate.parse(eventDate));
             }
+
+            setupPlaceholders();
         } else {
             errorUpdtLabel.setText("Evento não encontrado.");
         }
@@ -120,18 +117,15 @@ public class UpdateEventScreenController extends BaseController implements FxCon
 
     public void updateEvent() throws IOException {
 
-
-        System.out.println("Evento selecionado: " + eventId);
-
         String newName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
         Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventName, eventMap)) {
+        if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventId, eventMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            eventController.update(eventName, newName, newDate, newDescription, newLocation, userController.getData("id"));
+            eventController.update(eventId, newName, newDate, newDescription, newLocation, userController.getData("id"));
             handleEvent();
         }
     }

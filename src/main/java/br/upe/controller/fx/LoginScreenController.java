@@ -9,7 +9,7 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 
-public class LoginScreenController extends BaseController implements FxController{
+public class LoginScreenController extends BaseController implements FxController {
 
     @FXML
     private TextField emailTextField;
@@ -81,9 +81,9 @@ public class LoginScreenController extends BaseController implements FxControlle
         genericButton("/fxml/signUpScreen.fxml", loginAnchorPane, null, null);
     }
 
-    @Override
-    public void setUserController(UserController userController) {
-        // Método não implementado
-    }
 
+    @Override
+    public void setUserController(UserController userController) throws IOException {
+        //Método não implementado
+    }
 }

@@ -8,7 +8,10 @@ import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -25,6 +28,10 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     private AnchorPane submitPane;
     @FXML
     private Label userEmail;
+    @FXML
+    private TextField editDescriptionTextField;
+    @FXML
+    private Text descriptionPlaceholder;
     @FXML
     private Label errorUpdtLabel;
     @FXML
@@ -52,6 +59,12 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     private void initial() throws IOException {
         userEmail.setText(userController.getData("email"));
         loadArticles();
+        userEmail.setText(userController.getData("email"));
+        setupPlaceholders();
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(editDescriptionTextField, descriptionPlaceholder);
     }
     private void loadArticles() throws IOException {
         Event eventController = new Event();

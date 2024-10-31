@@ -1,13 +1,13 @@
 package br.upe.controller.fx;
-
 import br.upe.controller.UserController;
+import br.upe.persistence.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 
 public class SubmitEventScreenController extends BaseController implements FxController{
-    UserController userController;
+    private UserController userController;
 
     @FXML
     private Label userEmail;

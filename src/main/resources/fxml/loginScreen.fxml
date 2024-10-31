@@ -15,10 +15,10 @@
 
    <Pane id="loginDiv" layoutX="262.0" layoutY="234.0" prefHeight="306.0" prefWidth="435.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: ffffff;" stylesheets="@../stylesheets/loginScreen.css">
       <children>
-         <TextField fx:id="cpfTextField" cache="true" layoutX="71.0" layoutY="134.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-         <TextField fx:id="emailTextField" cache="true" layoutX="71.0" layoutY="74.0" prefHeight="42.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-          <Text fx:id="cpfPlaceholder" fill="DARKGREY" layoutX="90.0" layoutY="160.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="CPF" />
-          <Text fx:id="emailPlaceholder" fill="DARKGRAY" layoutX="86.0" layoutY="100.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Email" />
+         <TextField fx:id="cpfTextField" cache="true" layoutX="71.0" layoutY="134.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+         <TextField fx:id="emailTextField" cache="true" layoutX="71.0" layoutY="74.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+          <Text fx:id="cpfPlaceholder" fill="DARKGREY" layoutX="86.0" layoutY="162.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="CPF" />
+          <Text fx:id="emailPlaceholder" fill="DARKGRAY" layoutX="86.0" layoutY="102.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Email" />
          <Label layoutX="35.0" layoutY="14.0" prefHeight="26.0" prefWidth="74.0" text="Sign In" textFill="#ff914d">
             <font>
                <Font name="System Bold" size="20.0" />

@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 
 import br.upe.controller.*;
 import br.upe.persistence.Persistence;
+import br.upe.persistence.User;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -15,8 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MainScreenController extends BaseController implements FxController {
-    UserController userController;
-    EventController eventController;
+    private UserController userController;
+    private EventController eventController;
 
     @FXML
     private VBox eventVBox;

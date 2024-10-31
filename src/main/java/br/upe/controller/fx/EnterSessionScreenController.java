@@ -4,6 +4,7 @@ import br.upe.controller.AttendeeController;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
+import br.upe.persistence.User;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class EnterSessionScreenController extends BaseController implements FxController{
-    UserController userController;
+    private UserController userController;
     AttendeeController attendeeController;
 
     @FXML
