@@ -34,19 +34,28 @@ class SubEventControllerTest {
         subEventDelete("New SubEvent");
     }
 
-    /*@Test
+    @Test
     void testUpdateSubEvent() throws IOException {
         subEventExists();
 
-        subEventController.update("New SubEvent", "Updated SubEvent", "02/12/2024", "Updated SubEvent Description", "New Location", "owner-id");
+        String subEventName = subEventController.getSubEventHashMap().values().stream()
+                .filter(subEvent -> subEvent.getData("name").equals("New SubEvent"))
+                .findFirst()
+                .map(subEvent -> subEvent.getData("name"))
+                .orElse(null);
+
+        assertNotNull(subEventName, "SubEvent name should not be null");
+
+        subEventController.update(subEventName, "Updated SubEvent", "02/12/2024", "Updated SubEvent Description", "New Location", "owner-id");
+        subEventController.read();
 
         Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
         boolean subEventUpdated = subEventMap.values().stream()
                 .anyMatch(subEvent -> subEvent.getData("name").equals("Updated SubEvent") && subEvent.getData("description").equals("Updated SubEvent Description"));
-        assertTrue(subEventUpdated, "O SubEvento não foi atualizado.");
+        assertTrue(subEventUpdated, "The SubEvent was not updated.");
 
         subEventDelete("Updated SubEvent");
-    }*/
+    }
 
     @Test
     void testReadSubEvent() throws IOException {

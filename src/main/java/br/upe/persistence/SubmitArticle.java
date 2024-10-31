@@ -34,7 +34,7 @@ public class SubmitArticle implements Persistence {
             case "path":
                 this.path = value;
                 break;
-            case "event":  // Adiciona "event" como uma chave válida
+            case "event":
                 this.event = value;
                 break;
             default:
@@ -51,7 +51,7 @@ public class SubmitArticle implements Persistence {
     public HashMap<String, Persistence> read(Object... params) {
         HashMap<String, Persistence> userArticles = new HashMap<>();
 
-        // Verifica se foi passado o ID do usuário corretamente
+
         if (params.length != 1) {
             LOGGER.warning("É necessário 1 parâmetro: ID do usuário.");
             return userArticles;
@@ -63,24 +63,24 @@ public class SubmitArticle implements Persistence {
 
         File articlesFolder = new File(articlesPath);
 
-        // Verifica se a pasta Articles existe
+
         if (!articlesFolder.exists() || !articlesFolder.isDirectory()) {
             LOGGER.warning("Pasta Articles não encontrada: %s".formatted(articlesPath));
             return userArticles;
         }
 
-        // Percorre todas as pastas de eventos dentro de Articles
+
         File[] eventFolders = articlesFolder.listFiles(File::isDirectory);
         if (eventFolders != null) {
             for (File eventFolder : eventFolders) {
-                // Percorre os arquivos dentro da pasta do evento
+
                 File[] articleFiles = eventFolder.listFiles();
                 if (articleFiles != null) {
                     for (File articleFile : articleFiles) {
-                        // Verifica se o arquivo contém o ID do usuário no nome
+
                         String fileName = articleFile.getName();
                         if (fileName.endsWith("_" + userId)) {
-                            // Cria um objeto SubmitArticle e adiciona ao HashMap
+
                             SubmitArticle article = new SubmitArticle();
                             article.setData("name", fileName);
                             article.setData("path", articleFile.getAbsolutePath());
@@ -166,20 +166,20 @@ public class SubmitArticle implements Persistence {
         File oldEventFolder = new File(userHome + "\\even4\\db\\Articles\\" + oldEventName);
         File newEventFolder = new File(userHome + "\\even4\\db\\Articles\\" + newEventName);
 
-        // Verifica se o evento antigo existe
+
         if (!oldEventFolder.exists()) {
             LOGGER.warning("Evento antigo não encontrado: %s".formatted(oldEventName));
             return;
         }
 
-        // Verifica se o artigo existe na pasta do evento antigo
+
         File oldFile = new File(oldEventFolder, articleName);
         if (!oldFile.exists()) {
             LOGGER.warning("Artigo não encontrado no evento antigo: %s".formatted(articleName));
             return;
         }
 
-        // Cria a pasta do novo evento, se não existir
+
         if (!newEventFolder.exists()) {
             if (newEventFolder.mkdirs()) {
                 LOGGER.warning("Pasta do novo evento criada: %s".formatted(newEventFolder.getAbsolutePath()));
@@ -189,7 +189,7 @@ public class SubmitArticle implements Persistence {
             }
         }
 
-        // Move o artigo para a pasta do novo evento
+
         File destinationFile = new File(newEventFolder, articleName);
         try {
             if (oldFile.renameTo(destinationFile)) {

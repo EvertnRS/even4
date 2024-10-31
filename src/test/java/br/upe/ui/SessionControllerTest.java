@@ -32,19 +32,28 @@ class SessionControllerTest {
         sessionDelete("New Session");
     }
 
-    /*@Test
+    @Test
     void testUpdateSession() throws IOException {
         sessionExists();
 
-        sessionController.update("New Session", "Updated Session", "02/12/2024", "Updated Session Description", "New Location", "id2");
+        String sessionName = sessionController.getSessionHashMap().values().stream()
+                .filter(session -> session.getData("name").equals("New Session"))
+                .findFirst()
+                .map(session -> session.getData("name"))
+                .orElse(null);
+
+        assertNotNull(sessionName, "Session name should not be null");
+
+        sessionController.update(sessionName, "Updated Session", "02/12/2024", "Updated Session Description", "New Location", "id2", "08:00", "10:00");
+        sessionController.read();
 
         Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
         boolean sessionUpdated = sessionMap.values().stream()
                 .anyMatch(session -> session.getData("name").equals("Updated Session") && session.getData("description").equals("Updated Session Description"));
-        assertTrue(sessionUpdated, "O SubEvento não foi atualizado.");
+        assertTrue(sessionUpdated, "The session was not updated.");
 
         sessionDelete("Updated Session");
-    }*/
+    }
 
     @Test
     void testReadSession() throws IOException {

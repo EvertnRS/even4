@@ -4,8 +4,8 @@ import br.upe.controller.EventController;
 import br.upe.controller.SessionController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
+import br.upe.persistence.User;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SessionScreenController extends BaseController implements FxController {
-    private Facade facade;
+    private UserController userController;
     private SessionController sessionController;
     private EventController eventController;
     private SubEventController subEventController;
@@ -31,8 +31,8 @@ public class SessionScreenController extends BaseController implements FxControl
     @FXML
     private AnchorPane sessionPane;
 
-    public void setFacade(Facade facade) throws IOException {
-        this.facade = facade;
+    public void setUserController(UserController userController) throws IOException {
+        this.userController = userController;
         this.sessionController = new SessionController();
         this.eventController = new EventController();
         this.subEventController = new SubEventController();
@@ -40,38 +40,38 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     private void initial() throws IOException {
-        userEmail.setText(facade.getUserData("email"));
+        userEmail.setText(userController.getData("email"));
         loadUserSessions();
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/userScreen.fxml", sessionPane, userController, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/subEventScreen.fxml", sessionPane, userController, null);
     }
 
     public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/submitScreen.fxml", sessionPane, userController, null);
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/mainScreen.fxml", sessionPane, userController, null);
     }
 
     public void handleAddSession() throws IOException {
-        genericButton("/fxml/createSessionScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/createSessionScreen.fxml", sessionPane, userController, null);
     }
     public void handleInscricaoSession() throws IOException {
-        genericButton("/fxml/enterSessionScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/enterSessionScreen.fxml", sessionPane, userController, null);
     }
 
     private void loadUserSessions() throws IOException {
         sessionVBox.getChildren().clear();
 
         // Carregar as sessões do usuário
-        sessionController.list(facade.getUserData("id"), "");
+        sessionController.list(userController.getData("id"), "");
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
@@ -88,14 +88,14 @@ public class SessionScreenController extends BaseController implements FxControl
             Persistence persistence = entry.getValue();
 
             // Verifica se a sessão pertence ao usuário logado
-            if (persistence.getData("ownerId").equals(facade.getUserData("id"))) {
+            if (persistence.getData("ownerId").equals(userController.getData("id"))) {
 
                 VBox sessionContainer = new VBox();
                 sessionContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
                 // Exibe o nome da sessão
                 Label sessionLabel = new Label(persistence.getData("name"));
-                sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
+                sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
                 // Label para exibir o nome do evento ou subevento
                 Label controller;
@@ -139,7 +139,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
                 deleteButton.setOnAction(e -> {
                     try {
-                        handleDeleteSession(persistence.getData("id"), facade.getUserData("id"));
+                        handleDeleteSession(persistence.getData("id"), userController.getData("id"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -161,7 +161,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
 
     private void handleEditSession(String eventName) throws IOException {
-        genericButton("/fxml/updateSessionScreen.fxml", sessionPane, facade, eventName);
+        genericButton("/fxml/updateSessionScreen.fxml", sessionPane, userController, eventName);
     }
 
     private void handleDeleteSession(String eventId, String userId) throws IOException {
@@ -184,6 +184,6 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/loginScreen.fxml", sessionPane, userController, null);
     }
 }

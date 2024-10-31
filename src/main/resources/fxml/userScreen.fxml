@@ -71,7 +71,7 @@
                 </style>
             </Button>
             <Label fx:id="errorDelLabel" layoutX="78.0" layoutY="476.0" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
-           <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="554.0" layoutY="180.0" preserveRatio="true">
+           <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="551.0" layoutY="155.0" preserveRatio="true">
                <image>
                    <Image url="@/images/userIcon.png" />
                </image>

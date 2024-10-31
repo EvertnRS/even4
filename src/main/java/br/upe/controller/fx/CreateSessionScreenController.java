@@ -4,8 +4,8 @@ import br.upe.controller.EventController;
 import br.upe.controller.SessionController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
+import br.upe.persistence.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -20,7 +20,7 @@ import java.util.Map;
 import static br.upe.ui.Validation.*;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
-    private Facade facade;
+    private UserController userController;
     private SubEventController subEventController;
     private EventController eventController;
     private SessionController sessionController;
@@ -63,8 +63,8 @@ public class CreateSessionScreenController extends BaseController implements FxC
     @FXML
     private Label errorUpdtLabel;
 
-    public void setFacade(Facade facade) throws IOException {
-        this.facade = facade;
+    public void setUserController(UserController userController) throws IOException {
+        this.userController = userController;
         this.subEventController = new SubEventController();
         this.eventController = new EventController();
         this.sessionController = new SessionController();
@@ -72,7 +72,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     private void initial() throws IOException {
-        userEmail.setText(facade.getUserData("email"));
+        userEmail.setText(userController.getData("email"));
         setupPlaceholders();
         loadUserEvents();
     }
@@ -88,27 +88,27 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newSessionPane, facade, null);
+        genericButton("/fxml/mainScreen.fxml", newSessionPane, userController, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", newSessionPane, facade, null);
+        genericButton("/fxml/subEventScreen.fxml", newSessionPane, userController, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newSessionPane, facade, null);
+        genericButton("/fxml/submitScreen.fxml", newSessionPane, userController, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", newSessionPane, facade, null);
+        genericButton("/fxml/sessionScreen.fxml", newSessionPane, userController, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", newSessionPane, facade, null);
+        genericButton("/fxml/loginScreen.fxml", newSessionPane, userController, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", newSessionPane, facade, null);
+        genericButton("/fxml/userScreen.fxml", newSessionPane, userController, null);
     }
 
     public String verifyType(String name) {
@@ -132,8 +132,8 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = eventController.list(facade.getUserData("id"), "fx");
-        List<String> userSubEvents = subEventController.list(facade.getUserData("id"), "fx");
+        List<String> userEvents = eventController.list(userController.getData("id"), "fx");
+        List<String> userSubEvents = subEventController.list(userController.getData("id"), "fx");
         eventList.addAll(userEvents);
         eventList.addAll(userSubEvents);
 
@@ -176,11 +176,11 @@ public class CreateSessionScreenController extends BaseController implements FxC
         else if (!validateEventDate(sessionDate, selectedEventName)) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
         } else if (!areValidTimes(startTime, endTime)) {
-            errorUpdtLabel.setText("Data ou horário inválido.");
+            errorUpdtLabel.setText("Horário inválido.");
         }else if (sessionLocation.isEmpty() || sessionDescription.isEmpty() || isValidName(sessionName, sessionMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            sessionController.create(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, facade.getUserData("id"), type);
+            sessionController.create(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, userController.getData("id"), type);
             sessionController.read();
             handleSession();
         }

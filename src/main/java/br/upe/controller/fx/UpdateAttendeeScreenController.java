@@ -3,7 +3,6 @@ package br.upe.controller.fx;
 import br.upe.controller.AttendeeController;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UpdateAttendeeScreenController extends BaseController implements FxController {
-    private Facade facade;
+    private UserController userController;
     private SessionController sessionController;
     private AttendeeController attendeeController;
     @FXML
@@ -33,15 +32,15 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
     @FXML
     private Label errorUpdtLabel;
 
-    public void setFacade(Facade facade) throws IOException {
-        this.facade = facade;
+    public void setUserController(UserController userController) throws IOException {
+        this.userController = userController;
         this.sessionController = new SessionController();
         this.attendeeController = new AttendeeController();
         initial();
     }
 
     private void initial() throws IOException {
-        userEmail.setText(facade.getUserData("email"));
+        userEmail.setText(userController.getData("email"));
         loadUserEvents();
         setupPlaceholders();
     }
@@ -51,37 +50,37 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
     }
 
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = sessionController.list(facade.getUserData("id"), "fx");
+        List<String> userEvents = sessionController.list(userController.getData("id"), "fx");
         eventComboBox.getItems().addAll(userEvents);
 
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newAttendeePane, facade, null);
+        genericButton("/fxml/mainScreen.fxml", newAttendeePane, userController, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", newAttendeePane, facade, null);
+        genericButton("/fxml/subEventScreen.fxml", newAttendeePane, userController, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newAttendeePane, facade, null);
+        genericButton("/fxml/submitScreen.fxml", newAttendeePane, userController, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", newAttendeePane, facade, null);
+        genericButton("/fxml/sessionScreen.fxml", newAttendeePane, userController, null);
     }
 
     public void handleInscription() throws IOException {
-        genericButton("/fxml/enterSessionScreen.fxml", newAttendeePane, facade, null);
+        genericButton("/fxml/enterSessionScreen.fxml", newAttendeePane, userController, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", newAttendeePane, facade, null);
+        genericButton("/fxml/loginScreen.fxml", newAttendeePane, userController, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", newAttendeePane, facade, null);
+        genericButton("/fxml/userScreen.fxml", newAttendeePane, userController, null);
     }
 
     public void updateAttendee() throws IOException {
