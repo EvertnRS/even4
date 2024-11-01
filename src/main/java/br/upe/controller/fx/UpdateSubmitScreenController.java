@@ -53,6 +53,7 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
         userEmail.setText(userController.getData("email"));
         loadArticles();
     }
+
     private void loadArticles() throws IOException {
         Event eventController = new Event();
 

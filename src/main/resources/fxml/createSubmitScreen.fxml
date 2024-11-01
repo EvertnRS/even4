@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="submitPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.CreateSubmitScreenController">
+<AnchorPane fx:id="submitPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.CreateSubmitScreenController">
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
          <image>
@@ -116,7 +116,7 @@
       </Pane>
       <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <children>
-            <Label layoutX="369.0" layoutY="67.0" text="Submeter" textAlignment="CENTER" textFill="#ff914d">
+            <Label layoutX="386.0" layoutY="67.0" text="Submeter" textAlignment="CENTER" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="23.0" />
                </font>
@@ -128,10 +128,27 @@
                </font>
             </Label>
             <Button layoutX="772.0" layoutY="68.0" mnemonicParsing="false" onAction="#handleSubmitEvent" opacity="0.0" prefHeight="29.0" prefWidth="29.0" style="-fx-cursor: hand;" text="back" />
-            <TextField fx:id="namesTextField" layoutX="272.0" layoutY="195.0" prefHeight="42.0" prefWidth="293.0" promptText="Selecione o Artigo ao Lado" />
-            <Button layoutX="372.0" layoutY="270.0" mnemonicParsing="false" onAction="#createArticle" prefHeight="42.0" prefWidth="93.0" style="&#10;                 " text="Enviar" />
-            <ComboBox fx:id="eventComboBox" layoutX="272.0" layoutY="134.0" prefHeight="42.0" prefWidth="350.0" promptText="Nome do Evento" />
-            <Button layoutX="575.0" layoutY="195.0" mnemonicParsing="false" onAction="#openFileChooser" prefHeight="42.0" prefWidth="47.0" text="..." />
+            <TextField fx:id="namesTextField" layoutX="300.0" layoutY="188.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10;" />
+            <Text fx:id="namePlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="216.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Caminho do Artigo" />
+            <Button layoutX="386.0" layoutY="270.0" mnemonicParsing="false" onAction="#createArticle" prefHeight="42.0" prefWidth="93.0" text="Enviar"
+                    style="-fx-background-color: #ff914d;
+      -fx-text-fill: white;
+      -fx-font-weight: bold;
+      -fx-border-radius: 15;
+      -fx-background-radius: 5;
+      -fx-padding: 5 10 5 10;
+      -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);
+      -fx-cursor: hand;" />
+            <ComboBox fx:id="eventComboBox" layoutX="300.0" layoutY="134.0" prefHeight="47.0" prefWidth="293.0" promptText="Nome do Evento" style="-fx-background-radius: 10;" />
+            <Button layoutX="610.0" layoutY="190.0" mnemonicParsing="false" onAction="#openFileChooser" prefHeight="42.0" prefWidth="47.0" text="..."
+                    style="-fx-background-color: #ff914d;
+      -fx-text-fill: white;
+      -fx-font-weight: bold;
+      -fx-border-radius: 15;
+      -fx-background-radius: 5;
+      -fx-padding: 5 10 5 10;
+      -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);
+      -fx-cursor: hand;" />
          </children>
       </Pane>
    </children>
