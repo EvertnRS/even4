@@ -1,9 +1,6 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.AttendeeController;
 import br.upe.facade.FacadeInterface;
-import br.upe.controller.SessionController;
-import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -99,6 +96,11 @@ public class EnterSessionScreenController extends BaseController implements FxCo
                 Button deleteButton = new Button("Excluir");
                 deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
+                Button detailsButton = new Button("Detalhes");
+                detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
+                detailsButton.setOnAction(e ->
+                        handleDetailAttendee(sessionHashMap, persistence.getData("id")));
 
                 editButton.setOnAction(e -> {
                     try {
@@ -126,13 +128,29 @@ public class EnterSessionScreenController extends BaseController implements FxCo
 
                 HBox actionButtons = new HBox(10);
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
-                actionButtons.getChildren().addAll(certificateButton ,editButton, deleteButton);
+                actionButtons.getChildren().addAll(certificateButton, detailsButton, editButton, deleteButton);
 
                 eventContainer.getChildren().addAll(eventLabel, actionButtons, sessionLabel);
 
                 attendeeVBox.getChildren().add(eventContainer);
             }
         }
+    }
+
+    private void handleDetailAttendee(Map<String, Persistence> sessionHashMap, String id) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Detalhes do Participante");
+        alert.setHeaderText("Detalhes do Participante");
+
+        Persistence attendee = facade.getAttendeeHashMap().get(id);
+        Persistence owner = facade.getUserHashMap().get(attendee.getData("userId"));
+
+        String content = "Nome: " + attendee.getData("name") + "\n" +
+                "Sessão: " + sessionHashMap.get(attendee.getData("sessionId")).getData("name") + "\n" +
+                "Administrador: " + owner.getData("email") + "\n";
+
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     private void handleCertificate(String attendeeId) throws IOException {

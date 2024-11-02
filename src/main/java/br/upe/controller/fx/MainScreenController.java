@@ -1,7 +1,5 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.*;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
@@ -87,6 +85,11 @@ public class MainScreenController extends BaseController implements FxController
                 Button deleteButton = new Button("Excluir");
                 deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
+                Button detailsButton = new Button("Detalhes");
+                detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
+                detailsButton.setOnAction(e ->
+                    handleDetailEvent(persistence.getData("id")));
 
                 editButton.setOnAction(e -> {
                     try {
@@ -106,13 +109,31 @@ public class MainScreenController extends BaseController implements FxController
 
                 HBox actionButtons = new HBox(10);
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
-                actionButtons.getChildren().addAll(editButton, deleteButton);
+                actionButtons.getChildren().addAll(detailsButton,editButton, deleteButton);
 
                 eventContainer.getChildren().addAll(eventLabel, actionButtons);
 
                 eventVBox.getChildren().add(eventContainer);
             }
         }
+    }
+
+    private void handleDetailEvent(String id) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Detalhes do Evento");
+        alert.setHeaderText("Detalhes do Evento");
+
+        Persistence event = facade.getEventHashMap().get(id);
+        Persistence owner = facade.getUserHashMap().get(event.getData("ownerId"));
+
+        String content = "Nome: " + event.getData("name") + "\n" +
+                "Data: " + event.getData("date") + "\n" +
+                "Descrição: " + event.getData("description") + "\n" +
+                "Local: " + event.getData("location") + "\n" +
+                "Administrador: " + owner.getData("email") + "\n";
+
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     private void handleDeleteEvent(String eventId, String userId) throws IOException {

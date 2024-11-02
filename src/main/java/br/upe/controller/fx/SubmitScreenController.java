@@ -1,8 +1,5 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.SubmitArticleController;
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
@@ -93,13 +90,13 @@ public class SubmitScreenController extends BaseController implements FxControll
 
 
 
-            createArticleContainer(article, articleVBox); // Adiciona o artigo diretamente
+            createArticleContainer(article, articleVBox, articles); // Adiciona o artigo diretamente
         }
     }
 
 
 
-    private void createArticleContainer(Persistence article, VBox articleVBox) {
+    private void createArticleContainer(Persistence article, VBox articleVBox, Map<String, Persistence> articles) {
         VBox articleContainer = new VBox();
         articleContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
@@ -112,14 +109,14 @@ public class SubmitScreenController extends BaseController implements FxControll
         eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
 
         // Botões de ação, alinhados à direita
-        HBox actionButtons = createActionButtons(article);
+        HBox actionButtons = createActionButtons(article, articles);
 
         // Ordem de adição dos elementos: artigo, evento, botões
         articleContainer.getChildren().addAll(articleLabel, actionButtons, eventLabel);
         articleVBox.getChildren().add(articleContainer);
     }
 
-    private HBox createActionButtons(Persistence article) {
+    private HBox createActionButtons(Persistence article, Map<String, Persistence> articles) {
         Button editButton = new Button("Editar");
         editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
         editButton.setOnAction(e -> {
@@ -140,10 +137,29 @@ public class SubmitScreenController extends BaseController implements FxControll
             }
         });
 
+        Button detailsButton = new Button("Detalhes");
+        detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
+        detailsButton.setOnAction(e ->
+                handleDetailArticle(articles, article.getData("id")));
+
         HBox actionButtons = new HBox(10);
         actionButtons.setAlignment(Pos.CENTER_RIGHT);
-        actionButtons.getChildren().addAll(editButton, deleteButton);
+        actionButtons.getChildren().addAll(detailsButton, editButton, deleteButton);
         return actionButtons;
+    }
+
+    private void handleDetailArticle(Map<String, Persistence> articles, String id) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Persistence article = articles.get(id);
+        alert.setTitle("Detalhes do Artigo");
+        alert.setHeaderText("Detalhes do Artigo");
+        String content = "Nome: " + article.getData("name") + "\n" +
+                "Caminho: " + article.getData("path") + "\n" +
+                "Evento: " + article.getData("event") + "\n";
+
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 

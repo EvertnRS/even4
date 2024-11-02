@@ -97,7 +97,7 @@ public class SubEventScreenController extends BaseController implements FxContro
 
         Label eventLabel = createEventLabel(persistence.getData("eventId"), eventHashMap);
 
-        HBox actionButtons = createActionButtons(persistence);
+        HBox actionButtons = createActionButtons(persistence, eventHashMap);
 
         subEventContainer.getChildren().addAll(subEventLabel, actionButtons, eventLabel);
         return subEventContainer;
@@ -113,7 +113,7 @@ public class SubEventScreenController extends BaseController implements FxContro
         return eventLabel;
     }
 
-    private HBox createActionButtons(Persistence persistence) {
+    private HBox createActionButtons(Persistence persistence, Map<String, Persistence> eventHashMap) {
         Button editButton = new Button("Editar");
         editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
         editButton.setOnAction(e -> handleEditSubEventSafely(persistence.getData("name")));
@@ -122,10 +122,35 @@ public class SubEventScreenController extends BaseController implements FxContro
         deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
         deleteButton.setOnAction(e -> handleDeleteSubEventSafely(persistence.getData("id")));
 
+        Button detailsButton = new Button("Detalhes");
+        detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
+        detailsButton.setOnAction(e ->
+                handleDetailSubEvent(eventHashMap, persistence.getData("id")));
+
         HBox actionButtons = new HBox(10);
         actionButtons.setAlignment(Pos.CENTER_RIGHT);
-        actionButtons.getChildren().addAll(editButton, deleteButton);
+        actionButtons.getChildren().addAll(detailsButton, editButton, deleteButton);
         return actionButtons;
+    }
+
+    private void handleDetailSubEvent(Map<String, Persistence> eventHashMap, String id) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Detalhes do SubEvento");
+        alert.setHeaderText("Detalhes do SubEvento");
+
+        Persistence subEvent = facade.getSubEventHashMap().get(id);
+        Persistence owner = facade.getUserHashMap().get(subEvent.getData("ownerId"));
+
+        String content = "Nome: " + subEvent.getData("name") + "\n" +
+                "Descrição: " + subEvent.getData("description") + "\n" +
+                "Data: " + subEvent.getData("date") + "\n" +
+                "Local: " + subEvent.getData("location") + "\n" +
+                "Evento: " + eventHashMap.get(subEvent.getData("eventId")).getData("name") + "\n" +
+                "Administrador: " + owner.getData("email") + "\n";
+
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     private void handleEditSubEventSafely(String subEventName) {
