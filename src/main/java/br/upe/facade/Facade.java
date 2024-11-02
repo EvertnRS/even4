@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-
 public class Facade implements FacadeInterface {
     private final Controller eventController;
     private final Controller sessionController;
@@ -141,6 +140,10 @@ public class Facade implements FacadeInterface {
 
     public void createUser(Object... params) throws IOException {
         userController.create(params);
+    }
+
+    public void readUser() throws IOException {
+        userController.read();
     }
 
     public void updateUser(Object... params) throws IOException {

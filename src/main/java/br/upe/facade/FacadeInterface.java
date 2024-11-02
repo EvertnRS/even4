@@ -45,6 +45,7 @@ public interface FacadeInterface {
     void createUser(Object... params) throws IOException;
     void updateUser(Object... params) throws IOException;
     void deleteUser(Object... params) throws IOException;
+    void readUser() throws IOException;
     boolean loginValidate(String email, String cpf);
     String getUserData(String dataToGet);
 
