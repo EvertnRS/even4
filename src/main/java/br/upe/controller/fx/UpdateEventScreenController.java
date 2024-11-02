@@ -3,7 +3,6 @@ package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
-import br.upe.persistence.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -44,8 +43,6 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     private Text descriptionPlaceholder;
     @FXML
     private Label errorUpdtLabel;
-    @FXML
-    private Label errorDelLabel;
 
     public void setUserController(UserController userController) throws IOException {
         this.userController = userController;
@@ -122,9 +119,12 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
         Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventId, eventMap)) {
+        if (!isValidDate(newDate)) {
+            errorUpdtLabel.setText("Data inválida.");
+        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventId, eventMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
-        }else {
+        }
+        else{
             eventController.update(eventId, newName, newDate, newDescription, newLocation, userController.getData("id"));
             handleEvent();
         }

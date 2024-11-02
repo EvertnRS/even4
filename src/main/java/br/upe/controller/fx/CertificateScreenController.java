@@ -1,0 +1,190 @@
+package br.upe.controller.fx;
+
+import br.upe.controller.AttendeeController;
+import br.upe.controller.SessionController;
+import br.upe.controller.UserController;
+import br.upe.persistence.Persistence;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.time.Duration;
+import java.util.Objects;
+
+public class CertificateScreenController extends BaseController implements FxController {
+    private static final String SESSION_ID = "sessionId";
+    private UserController userController;
+    private AttendeeController attendeeController;
+    private SessionController sessionController;
+    private String attendeeId;
+
+    @FXML
+    private AnchorPane certificationPane;
+    @FXML
+    private Label userEmail;
+    @FXML
+    private TextField addresTextField;
+    @FXML
+    private Label errorUpdtLabel;
+    @FXML
+    private ImageView exampleCertificate;
+
+    public void setUserController(UserController userController) throws IOException {
+        this.userController = userController;
+        initial();
+    }
+
+    public void setEventName(String attendeeId) throws IOException {
+        this.attendeeController = new AttendeeController();
+        this.sessionController = new SessionController();
+        this.attendeeId = attendeeId;
+    }
+
+    private void initial() {
+        userEmail.setText(userController.getData("email"));
+        Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/DefaultCertificate.png")).toExternalForm());
+        exampleCertificate.setImage(image);
+
+    }
+
+    public void handleEvent() throws IOException {
+        genericButton("/fxml/mainScreen.fxml", certificationPane, userController, null);
+    }
+
+    public void handleSubEvent() throws IOException {
+        genericButton("/fxml/subEventScreen.fxml", certificationPane, userController, null);
+    }
+
+    public void handleSubmitEvent() throws IOException {
+        genericButton("/fxml/submitScreen.fxml", certificationPane, userController, null);
+    }
+
+    public void handleSession() throws IOException {
+        genericButton("/fxml/sessionScreen.fxml", certificationPane, userController, null);
+    }
+
+    public void logout() throws IOException {
+        genericButton("/fxml/loginScreen.fxml", certificationPane, userController, null);
+    }
+
+    public void handleUser() throws IOException {
+        genericButton("/fxml/userScreen.fxml", certificationPane, userController, null);
+    }
+
+    public void handleInscriptionSession() throws IOException {
+        genericButton("/fxml/enterSessionScreen.fxml", certificationPane, userController, null);
+    }
+
+    @FXML
+    private void createArticle()throws IOException {
+        String certificateAddres = addresTextField.getText();
+        drawCertificate(certificateAddres);
+        handleInscriptionSession();
+    }
+
+    private void drawCertificate(String certificateAddres) {
+        try {
+            BufferedImage certificate = ImageIO.read(new File(getClass().getResource("/images/EmptyCertificate.png").toURI()));
+
+            BufferedImage newCertificate = new BufferedImage(
+                    certificate.getWidth(),
+                    certificate.getHeight(),
+                    BufferedImage.TYPE_INT_ARGB
+            );
+
+            Graphics2D g2d = newCertificate.createGraphics();
+            Graphics2D g2dName = newCertificate.createGraphics();
+            g2d.drawImage(certificate, 0, 0, null);
+
+            g2d.setFont(new Font("Arial", Font.BOLD, 45));
+            g2d.setColor(Color.BLACK);
+            g2dName.setFont(new Font("Arial", Font.BOLD, 60));
+            g2dName.setColor(Color.BLACK);
+
+            Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
+            Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+            String attendeeName = attendeeMap.get(attendeeId).getData("name");
+
+            String eventName = sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("name");
+
+            String startTime = sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("startTime");
+            String endTime = sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("endTime");
+            String workload = timeDifference(startTime, endTime);
+
+            String eventDate = sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("date");
+
+            int xName = 130;
+            int yName = 400;
+            int xEvent = 630;
+            int yEvent = 500;
+            int xWorkload = 650;
+            int yWorkload = 587;
+            int xData = 130;
+            int yData = 950;
+
+            g2dName.drawString(attendeeName, xName, yName);
+            g2d.drawString(eventName, xEvent, yEvent);
+            g2d.drawString(workload, xWorkload, yWorkload);
+            g2d.drawString(eventDate, xData, yData);
+
+            g2d.dispose();
+
+            File directory = new File(certificateAddres);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            File outputFile = new File(directory, "certificate.png");
+
+            ImageIO.write(newCertificate, "png", outputFile);
+            System.out.println("Certificate saved to: " + outputFile.getAbsolutePath());
+        } catch (IOException e) {
+            errorUpdtLabel.setText("Error: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String timeDifference(String startTimeStr, String endTimeStr) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime startTime = LocalTime.parse(startTimeStr, formatter);
+        LocalTime endTime = LocalTime.parse(endTimeStr, formatter);
+
+        Duration duration = Duration.between(startTime, endTime);
+
+        long hours = duration.toHours();
+
+        return String.format("%d hora(s)", hours);
+    }
+
+
+    @FXML
+    private void openDirectoryChooser() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Selecione uma Pasta");
+
+        Stage stage = (Stage) certificationPane.getScene().getWindow();
+        File selectedDirectory = directoryChooser.showDialog(stage);
+
+        if (selectedDirectory != null) {
+            addresTextField.setText(selectedDirectory.getAbsolutePath());
+        } else {
+            errorUpdtLabel.setText("Nenhuma pasta selecionada.");
+        }
+    }
+}
