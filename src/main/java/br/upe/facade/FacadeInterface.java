@@ -22,6 +22,7 @@ public interface FacadeInterface {
     void readSession() throws IOException;
     void updateSession(Object... params) throws IOException;
     void deleteSession(Object... params) throws IOException;
+    String getSessionData(String dataToGet);
 
     // SubEventController methods
     Map<String, Persistence> getSubEventHashMap();

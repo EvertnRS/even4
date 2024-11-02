@@ -79,6 +79,10 @@ public class Facade implements FacadeInterface {
         sessionController.delete(params);
     }
 
+    public String getSessionData(String dataToGet) {
+        return sessionController.getData(dataToGet);
+    }
+
 
     // SubEventController methods
     public Map<String, Persistence> getSubEventHashMap() {
