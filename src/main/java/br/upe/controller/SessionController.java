@@ -16,6 +16,8 @@ public class SessionController implements Controller {
     private static final String OWNER_ID = "ownerId";
     private static final String EVENT_ID = "eventId";
     private static final String LOCATION = "location";
+    private static final String STARTTIME = "startTime";
+    private static final String ENDTIME = "endTime";
     private static final String EVENT_TYPE = "Event";
     private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
 
@@ -55,6 +57,8 @@ public class SessionController implements Controller {
                 case LOCATION -> data = this.sessionLog.getData(LOCATION);
                 case EVENT_ID -> data = this.sessionLog.getData(EVENT_ID);
                 case OWNER_ID -> data = this.sessionLog.getData(OWNER_ID);
+                case STARTTIME -> data = this.sessionLog.getData(STARTTIME);
+                case ENDTIME -> data = this.sessionLog.getData(ENDTIME);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -224,8 +228,8 @@ public class SessionController implements Controller {
                 session.setData("date", newDate);
                 session.setData(DESCRIPTION, newDescription);
                 session.setData(LOCATION, newLocation);
-                session.setData("startTime", newStartTime);
-                session.setData("endTime", newEndTime);
+                session.setData(STARTTIME, newStartTime);
+                session.setData(ENDTIME, newEndTime);
 
                 Persistence sessionPersistence = new Session();
                 sessionPersistence.update(sessionHashMap);

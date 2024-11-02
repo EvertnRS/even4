@@ -36,6 +36,9 @@ public abstract class BaseController {
             if (screenController instanceof UpdateSubmitScreenController) {
                 ((UpdateSubmitScreenController) screenController).setEventName(eventId);
             }
+            if (screenController instanceof CertificateScreenController) {
+                ((CertificateScreenController) screenController).setEventName(eventId);
+            }
         }
 
 
