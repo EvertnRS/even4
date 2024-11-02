@@ -14,6 +14,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -47,10 +49,21 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
         PlaceholderUtils.setupPlaceholder(nameTextField, namePlaceholder);
     }
 
-    private void loadUserEvents() throws IOException {
-        List<String> userEvents = facade.listSessions(facade.getUserData("id"), "fx");
-        eventComboBox.getItems().addAll(userEvents);
+    private void loadUserEvents(){
+        Map<String, Persistence> sessionHashMap = facade.getSessionHashMap();
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        List<String> filteredSessions = sessionHashMap.values().stream()
+                .filter(session -> {
+                    String sessionDateStr = session.getData("date");
+                    LocalDate sessionDate = LocalDate.parse(sessionDateStr, formatter);
+                    return sessionDate.isAfter(today);
+                })
+                .map(session -> session.getData("name"))
+                .toList();
+
+        eventComboBox.getItems().addAll(filteredSessions);
     }
 
     public void handleEvent() throws IOException {

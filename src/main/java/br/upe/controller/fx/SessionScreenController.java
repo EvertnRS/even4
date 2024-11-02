@@ -1,10 +1,5 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.EventController;
-import br.upe.controller.SessionController;
-import br.upe.controller.SubEventController;
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
@@ -14,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -70,13 +66,11 @@ public class SessionScreenController extends BaseController implements FxControl
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
-
         scrollPane.setStyle("-fx-padding: 20px;");
         sessionVBox.setAlignment(Pos.CENTER);
 
-        // Obter os eventos e subeventos existentes
-        Map<String, Persistence> eventHashMap = facade.getEventHashMap();
-        Map<String, Persistence> subEventHashMap = facade.getSubEventHashMap();
+        Map<String, Persistence> parentMap = new HashMap<>(facade.getEventHashMap());
+        parentMap.putAll(facade.getSubEventHashMap());
 
         // Iterar sobre cada sessão
         for (Map.Entry<String, Persistence> entry : facade.getSessionHashMap().entrySet()) {
@@ -98,32 +92,30 @@ public class SessionScreenController extends BaseController implements FxControl
                 // Verifica se a sessão está associada a um evento ou subevento
                 String eventId = persistence.getData("eventId");
 
-                if (eventHashMap.containsKey(eventId)) {
-                    // Se for um evento, exibe o nome do evento
-                    String nameEvent = eventHashMap.get(eventId).getData("name");
-                    Label eventLabel = new Label(nameEvent);
+                if (parentMap.containsKey(eventId)) {
+                    // Se for um evento ou subevento, exibe o nome
+                    String name = parentMap.get(eventId).getData("name");
+                    Label eventLabel = new Label(name);
                     controller = eventLabel;
                     eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
-                } else if (subEventHashMap.containsKey(eventId)) {
-                    // Se for um subevento, exibe o nome do subevento
-                    String nameSubEvent = subEventHashMap.get(eventId).getData("name");
-                    Label subEventLabel = new Label(nameSubEvent);
-                    controller = subEventLabel;
-                    subEventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
                 } else {
                     // Se o evento ou subevento não for encontrado, não exibe nada ou uma mensagem padrão
                     controller = new Label("Evento/Subevento não encontrado");
                     controller.setStyle("-fx-font-size: 18px; -fx-text-fill: #ff0000;");
                 }
 
-                // Botões de ação (Editar, Excluir)
+                // Botões de ação (Editar, Excluir, Detalhes)
                 Button editButton = new Button("Editar");
                 editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
                 Button deleteButton = new Button("Excluir");
                 deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                // Ações dos botões
+                Button detailsButton = new Button("Detalhes");
+                detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
+                detailsButton.setOnAction(e -> handleDetailSession(parentMap, persistence.getData("id")));
+
                 editButton.setOnAction(e -> {
                     try {
                         handleEditSession(persistence.getData("name"));
@@ -143,7 +135,7 @@ public class SessionScreenController extends BaseController implements FxControl
                 // Layout dos botões de ação
                 HBox actionButtons = new HBox(10);
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
-                actionButtons.getChildren().addAll(editButton, deleteButton);
+                actionButtons.getChildren().addAll(detailsButton, editButton, deleteButton);
 
                 // Adiciona os componentes à VBox
                 sessionContainer.getChildren().addAll(sessionLabel, actionButtons, controller);
@@ -157,6 +149,31 @@ public class SessionScreenController extends BaseController implements FxControl
 
     private void handleEditSession(String eventName) throws IOException {
         genericButton("/fxml/updateSessionScreen.fxml", sessionPane, facade, eventName);
+    }
+
+    private void handleDetailSession(Map<String, Persistence> parentMap, String id) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Detalhes do Evento");
+        alert.setHeaderText("Detalhes do Evento");
+
+        Persistence session = facade.getSessionHashMap().get(id);
+        Persistence owner = facade.getUserHashMap().get(session.getData("ownerId"));
+
+        String parentName = parentMap.containsKey(session.getData("eventId"))
+                ? parentMap.get(session.getData("eventId")).getData("name")
+                : "Evento/Subevento não encontrado";
+
+        String content = "Nome: " + session.getData("name") + "\n" +
+                "Data: " + session.getData("date") + "\n" +
+                "Descrição: " + session.getData("description") + "\n" +
+                "Início: " + session.getData("startTime") + "\n" +
+                "Término: " + session.getData("endTime") + "\n" +
+                "Local: " + session.getData("location") + "\n" +
+                "Evento/Subevento: " + parentName + "\n" +
+                "Administrador: " + owner.getData("email") + "\n";
+
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     private void handleDeleteSession(String eventId, String userId) throws IOException {

@@ -1,8 +1,5 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.AttendeeController;
-import br.upe.controller.SessionController;
-import br.upe.controller.UserController;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
@@ -21,8 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Objects;
 
 public class CertificateScreenController extends BaseController implements FxController {
@@ -41,7 +38,7 @@ public class CertificateScreenController extends BaseController implements FxCon
     @FXML
     private ImageView exampleCertificate;
 
-    public void setFacade(FacadeInterface facade) throws IOException {
+    public void setFacade(FacadeInterface facade) {
         this.facade = facade;
         initial();
     }
@@ -147,25 +144,29 @@ public class CertificateScreenController extends BaseController implements FxCon
             File outputFile = new File(directory, "certificate.png");
 
             ImageIO.write(newCertificate, "png", outputFile);
-            System.out.println("Certificate saved to: " + outputFile.getAbsolutePath());
         } catch (IOException e) {
-            errorUpdtLabel.setText("Error: " + e.getMessage());
+            errorUpdtLabel.setText("Erro: " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private String timeDifference(String startTimeStr, String endTimeStr) {
+    public String timeDifference(String startTimeStr, String endTimeStr) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime startTime = LocalTime.parse(startTimeStr, formatter);
         LocalTime endTime = LocalTime.parse(endTimeStr, formatter);
 
-        Duration duration = Duration.between(startTime, endTime);
+        Duration duration;
+
+        if (startTime.isAfter(endTime) || startTime.equals(endTime)) {
+            duration = Duration.between(startTime, endTime).plusHours(24);
+        } else {
+            duration = Duration.between(startTime, endTime);
+        }
 
         long hours = duration.toHours();
-
         return String.format("%d hora(s)", hours);
     }
 
