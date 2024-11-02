@@ -14,16 +14,12 @@ public class SubmitArticle implements Persistence {
 
     @Override
     public String getData(String dataToGet) {
-        switch (dataToGet) {
-            case "name":
-                return this.name;
-            case "path":
-                return this.path;
-                case "event":
-                    return this.event;
-            default:
-                return "";
-        }
+        return switch (dataToGet) {
+            case "name" -> this.name;
+            case "path" -> this.path;
+            case "event" -> this.event;
+            default -> "";
+        };
     }
 
     public void setData(String key, String value) {

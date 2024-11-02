@@ -2,7 +2,6 @@ package br.upe.controller.fx;
 
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXMLLoader;

@@ -1,22 +1,18 @@
 package br.upe.controller.fx;
-import br.upe.controller.AttendeeController;
-import br.upe.controller.SessionController;
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
-
-import static br.upe.ui.Validation.isValidDate;
+import java.util.stream.Collectors;
 
 public class CreateAttendeeScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -38,16 +34,27 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
         initial();
     }
 
-    private void initial() throws IOException {
+    private void initial(){
         userEmail.setText(facade.getUserData("email"));
         loadUserEvents();
         setupPlaceholders();
     }
 
-    private void loadUserEvents() throws IOException {
-        List<String> userEvents = facade.listSessions(facade.getUserData("id"), "fx");
-        eventComboBox.getItems().addAll(userEvents);
+    private void loadUserEvents(){
+        Map<String, Persistence> sessionHashMap = facade.getSessionHashMap();
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        List<String> filteredSessions = sessionHashMap.values().stream()
+                .filter(session -> {
+                    String sessionDateStr = session.getData("date");
+                    LocalDate sessionDate = LocalDate.parse(sessionDateStr, formatter);
+                    return sessionDate.isAfter(today);
+                })
+                .map(session -> session.getData("name"))
+                .toList();
+
+        eventComboBox.getItems().addAll(filteredSessions);
     }
 
     private void setupPlaceholders() {
