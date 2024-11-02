@@ -12,6 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
 
@@ -88,6 +90,10 @@ public class EnterSessionScreenController extends BaseController implements FxCo
 
                 Label sessionLabel = createSessionLabel(persistence.getData("sessionId"), sessionHashMap);
 
+                Button certificateButton = new Button("Certificado");
+                certificateButton.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #ff914d; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                verifyCertification(certificateButton, sessionHashMap.get(persistence.getData("sessionId")).getData("date"));
+
                 Button editButton = new Button("Editar");
                 editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
@@ -111,15 +117,35 @@ public class EnterSessionScreenController extends BaseController implements FxCo
                     }
                 });
 
+                certificateButton.setOnAction(e -> {
+                    try {
+                        handleCertificate(persistence.getData("id"));
+                    } catch (IOException ex) {
+                        throw new IllegalArgumentException(ex);
+                    }
+                });
+
                 HBox actionButtons = new HBox(10);
                 actionButtons.setAlignment(Pos.CENTER_RIGHT);
-                actionButtons.getChildren().addAll(editButton, deleteButton);
+                actionButtons.getChildren().addAll(certificateButton ,editButton, deleteButton);
 
                 eventContainer.getChildren().addAll(eventLabel, actionButtons, sessionLabel);
 
                 attendeeVBox.getChildren().add(eventContainer);
             }
         }
+    }
+
+    private void handleCertificate(String attendeeId) throws IOException {
+        genericButton("/fxml/certificateScreen.fxml", attendeePane, userController, attendeeId);
+    }
+
+    private void verifyCertification(Button certificateButton, String sessionDateStr) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate sessionDate = LocalDate.parse(sessionDateStr, formatter);
+            LocalDate currentDate = LocalDate.now();
+
+            certificateButton.setVisible(currentDate.isAfter(sessionDate));
     }
 
     private Label createSessionLabel(String eventId, Map<String, Persistence> sessionHashMap) {
@@ -135,6 +161,7 @@ public class EnterSessionScreenController extends BaseController implements FxCo
     private void handleEditAttendee(String eventName) throws IOException {
         genericButton("/fxml/updateAttendeeScreen.fxml", attendeePane, userController, eventName);
     }
+
     private void handleDeleteAttendee(String userId, String sessionId) throws IOException {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
