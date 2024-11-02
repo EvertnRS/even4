@@ -58,7 +58,7 @@ public class SessionScreenController extends BaseController implements FxControl
     public void handleAddSession() throws IOException {
         genericButton("/fxml/createSessionScreen.fxml", sessionPane, facade, null);
     }
-    public void handleInscricaoSession() throws IOException {
+    public void handleInscriptionSession() throws IOException {
         genericButton("/fxml/enterSessionScreen.fxml", sessionPane, facade, null);
     }
 
@@ -90,7 +90,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
                 // Exibe o nome da sessão
                 Label sessionLabel = new Label(persistence.getData("name"));
-                sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
+                sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
                 // Label para exibir o nome do evento ou subevento
                 Label controller;

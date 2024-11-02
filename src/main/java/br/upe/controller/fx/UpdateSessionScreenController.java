@@ -114,7 +114,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
         } else if (!isValidDate(newDate) || !areValidTimes(newStartTime, newEndTime)) {
             errorUpdtLabel.setText("Data ou horário inválido.");
-        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(sessionName, sessionMap)){
+        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newSubName, sessionMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
             facade.updateSession(sessionName, newSubName, newDate, newDescription, newLocation,  facade.getUserData("id"), newStartTime, newEndTime);

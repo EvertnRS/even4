@@ -1,5 +1,4 @@
 package br.upe.controller.fx;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 
 import java.io.IOException;

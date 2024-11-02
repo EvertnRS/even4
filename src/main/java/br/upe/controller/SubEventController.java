@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class SubEventController implements Controller {
     private static final String DESCRIPTION = "description";
     private static final String LOCATION = "location";
-    private static final String OWNWER_ID = "ownerId";
+    private static final String OWNER_ID = "ownerId";
     private static final String EVENT_ID = "eventId";
     private static final Logger LOGGER = Logger.getLogger(SubEventController.class.getName());
     private Map<String, Persistence> subEventHashMap;
@@ -41,7 +41,7 @@ public class SubEventController implements Controller {
                 case "date" -> data = String.valueOf(this.subEventLog.getData("date"));
                 case LOCATION -> data = this.subEventLog.getData(LOCATION);
                 case EVENT_ID -> data = this.subEventLog.getData(EVENT_ID);
-                case OWNWER_ID -> data = this.subEventLog.getData(OWNWER_ID);
+                case OWNER_ID -> data = this.subEventLog.getData(OWNER_ID);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -134,7 +134,7 @@ public class SubEventController implements Controller {
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(params[0])){
-                ownerId = persistence.getData(OWNWER_ID);
+                ownerId = persistence.getData(OWNER_ID);
             }
         }
 
@@ -155,57 +155,24 @@ public class SubEventController implements Controller {
     }
 
     @Override
-    public boolean list(String idowner) throws IOException {
+    public List<String> list(Object... params) throws IOException {
         this.read();
-        boolean isnull = true;
+        List<String> userEvents = new ArrayList<>();
+
         try {
-            boolean found = false;
             for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
-                if (persistence.getData(OWNWER_ID).equals(idowner)){
-                    String eventName = persistence.getData("name");
-                    if (eventName != null) {
-                        LOGGER.warning(eventName);
-                    }
-                    found = true;
-                    isnull = false;
+                if (persistence.getData(OWNER_ID).equals(params[0])) {
+                    userEvents.add(persistence.getData("name"));
                 }
             }
-            if (!found){
-                LOGGER.warning("Seu usuário atual é organizador de nenhum SubEvento\n");
+            if (userEvents.isEmpty()) {
+                LOGGER.warning("Seu usuário atual é organizador de nenhum subevento");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return isnull;
-    }
-
-    public List<String> list(String ownerId, String type) throws IOException {
-        if(type.equals("fx")){
-            this.read();
-            List<String> userEvents = new ArrayList<>();
-
-            try {
-                for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
-                    Persistence persistence = entry.getValue();
-                    if (persistence.getData(OWNWER_ID).equals(ownerId)) {
-                        userEvents.add(persistence.getData("name"));
-                    }
-                }
-                if (userEvents.isEmpty()) {
-                    LOGGER.warning("Seu usuário atual é organizador de nenhum subevento");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return userEvents;
-        }
-        return List.of();
-    }
-
-    @Override
-    public void show(Object... params) {
-        /*Show ainda não ultilizado*/
+        return userEvents;
     }
 
     @Override
@@ -244,7 +211,7 @@ public class SubEventController implements Controller {
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             String name = persistence.getData("name");
-            String ownerId = persistence.getData(OWNWER_ID);
+            String ownerId = persistence.getData(OWNER_ID);
 
             if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
                 LOGGER.info("Owner found for the sub-event.");

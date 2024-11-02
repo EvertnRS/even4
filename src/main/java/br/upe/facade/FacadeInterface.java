@@ -8,8 +8,7 @@ import java.util.Map;
 public interface FacadeInterface {
     // EventController methods
     Map<String, Persistence> getEventHashMap() ;
-    boolean listEvents(String ownerId) throws IOException;
-    List<String> listEvents(String ownerId, String type) throws IOException;
+    List<String> listEvents(Object... params) throws IOException;
     void createEvent(Object... params) throws IOException;
     void readEvent() throws IOException;
     void updateEvent(Object... params) throws IOException;
@@ -18,8 +17,7 @@ public interface FacadeInterface {
 
     // SessionController methods
     Map<String, Persistence> getSessionHashMap();
-    boolean listSessions(String ownerId) throws IOException;
-    List<String> listSessions(String ownerId, String type) throws IOException;
+    List<String> listSessions(Object... params) throws IOException;
     void createSession(Object... params) throws IOException;
     void readSession() throws IOException;
     void updateSession(Object... params) throws IOException;
@@ -27,7 +25,7 @@ public interface FacadeInterface {
 
     // SubEventController methods
     Map<String, Persistence> getSubEventHashMap();
-    List<String> listSubEvents(String ownerId, String type) throws IOException;
+    List<String> listSubEvents(Object... params) throws IOException;
     void updateSubEvent(Object... params) throws IOException;
     void deleteSubEvent(Object... params) throws IOException;
     void createSubEvent(Object... params) throws IOException;
@@ -54,6 +52,6 @@ public interface FacadeInterface {
     void createAttendee(Object... params) throws IOException;
     void readAttendee() throws IOException;
     void updateAttendee(Object... params) throws IOException;
-    List<String> listAttendees(String ownerId, String type) throws IOException;
+    List<String> listAttendees(Object... params) throws IOException;
     void deleteAttendee(Object... params) throws IOException;
 }

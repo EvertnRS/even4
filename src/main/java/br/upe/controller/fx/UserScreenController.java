@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import static br.upe.ui.Validation.isValidEmail;
 
@@ -20,11 +22,13 @@ public class UserScreenController extends BaseController implements FxController
     @FXML
     private TextField emailTextField;
     @FXML
+    private Text emailPlaceholder;
+    @FXML
     private TextField cpfTextField;
     @FXML
-    private Label errorUpdtLabel;
+    private Text cpfPlaceholder;
     @FXML
-    private Label errorUpdateLabel;
+    private Label errorUpdtLabel;
     @FXML
     private Label errorDelLabel;
 
@@ -35,6 +39,12 @@ public class UserScreenController extends BaseController implements FxController
 
     private void initial() {
         userEmail.setText(facade.getUserData("email"));
+        setupPlaceholders();
+    }
+
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(emailTextField, emailPlaceholder);
+        PlaceholderUtils.setupPlaceholder(cpfTextField, cpfPlaceholder);
     }
 
     public void handleEvent() throws IOException {
@@ -65,7 +75,7 @@ public class UserScreenController extends BaseController implements FxController
             facade.updateUser(email, facade.getUserData("cpf"));
             logout();
         } else {
-            errorUpdateLabel.setText("E-mail invalido!");
+            errorUpdtLabel.setText("E-mail invalido!");
         }
     }
 

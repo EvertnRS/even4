@@ -44,8 +44,6 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     private Text descriptionPlaceholder;
     @FXML
     private Label errorUpdtLabel;
-    @FXML
-    private Label errorDelLabel;
 
     public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
@@ -107,6 +105,8 @@ public class UpdateEventScreenController extends BaseController implements FxCon
             if (eventDate != null && !eventDate.isEmpty()) {
                 editDatePicker.setValue(LocalDate.parse(eventDate));
             }
+
+            setupPlaceholders();
         } else {
             errorUpdtLabel.setText("Evento não encontrado.");
         }
@@ -120,9 +120,12 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
         Map<String, Persistence> eventMap = facade.getEventHashMap();
-        if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventId, eventMap)) {
+        if (!isValidDate(newDate)) {
+            errorUpdtLabel.setText("Data inválida.");
+        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventId, eventMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
-        }else {
+        }
+        else{
             facade.updateEvent(eventId, newName, newDate, newDescription, newLocation, facade.getUserData("id"));
             handleEvent();
         }

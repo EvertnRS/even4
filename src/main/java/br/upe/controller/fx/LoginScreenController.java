@@ -84,6 +84,7 @@ public class LoginScreenController extends BaseController implements FxControlle
         genericButton("/fxml/signUpScreen.fxml", loginAnchorPane, null, null);
     }
 
+
     @Override
     public void setFacade(FacadeInterface facade) {
         // Método não implementado
