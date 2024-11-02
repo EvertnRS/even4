@@ -1,6 +1,5 @@
 package br.upe.controller.fx;
-import br.upe.controller.*;
-import br.upe.persistence.Event;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -12,13 +11,11 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Map;
 
 public class CreateSubmitScreenController extends BaseController implements FxController {
 
-    private UserController userController;
-    private SubmitArticleController submitArticleController;
-    private EventController eventController;
+    private FacadeInterface facade;
 
     @FXML
     private AnchorPane submitPane;
@@ -31,45 +28,42 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     @FXML
     private Label errorUpdtLabel;
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
-        this.eventController = new EventController();
-        this.submitArticleController = new SubmitArticleController();
+    public void setFacade(FacadeInterface facade) throws IOException {
+        this.facade = facade;
         initial();
     }
 
     private void initial() throws IOException {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         loadArticles();
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", submitPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", submitPane, facade, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", submitPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", submitPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", submitPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", submitPane, facade, null);
     }
     private void loadArticles() throws IOException {
-        Event eventController = new Event();
 
-        HashMap<String, Persistence> allEvents = eventController.read();
+        Map<String, Persistence> allEvents = facade.getEventHashMap();
 
         eventComboBox.getItems().clear();
 
@@ -83,7 +77,7 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     private void createArticle()throws IOException {
         String novoEventName = eventComboBox.getSelectionModel().getSelectedItem();
         String nameArticle = namesTextField.getText();
-        submitArticleController.create(novoEventName, nameArticle, userController.getData("id"));
+        facade.createArticle(novoEventName, nameArticle, facade.getUserData("id"));
         handleSubmitEvent();
 
     }

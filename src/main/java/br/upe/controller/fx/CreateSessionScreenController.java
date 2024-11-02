@@ -4,6 +4,8 @@ import br.upe.controller.EventController;
 import br.upe.controller.SessionController;
 import br.upe.controller.SubEventController;
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import br.upe.persistence.User;
 import javafx.collections.FXCollections;
@@ -20,10 +22,7 @@ import java.util.Map;
 import static br.upe.ui.Validation.*;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
-    private UserController userController;
-    private SubEventController subEventController;
-    private EventController eventController;
-    private SessionController sessionController;
+    private FacadeInterface facade;
     private final ObservableList<String> eventList = FXCollections.observableArrayList();
 
     @FXML
@@ -63,16 +62,13 @@ public class CreateSessionScreenController extends BaseController implements FxC
     @FXML
     private Label errorUpdtLabel;
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
-        this.subEventController = new SubEventController();
-        this.eventController = new EventController();
-        this.sessionController = new SessionController();
+    public void setFacade(FacadeInterface facade) throws IOException {
+        this.facade = facade;
         initial();
     }
 
     private void initial() throws IOException {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         setupPlaceholders();
         loadUserEvents();
     }
@@ -88,33 +84,33 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newSessionPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", newSessionPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", newSessionPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", newSessionPane, facade, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newSessionPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", newSessionPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", newSessionPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", newSessionPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", newSessionPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", newSessionPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", newSessionPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", newSessionPane, facade, null);
     }
 
     public String verifyType(String name) {
 
-        Map<String, Persistence> eventMap = eventController.getEventHashMap();
-        Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
+        Map<String, Persistence> eventMap = facade.getEventHashMap();
+        Map<String, Persistence> subEventMap = facade.getSubEventHashMap();
         for (Map.Entry<String, Persistence> entry : eventMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("name").equals(name)) {
@@ -132,8 +128,8 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = eventController.list(userController.getData("id"), "fx");
-        List<String> userSubEvents = subEventController.list(userController.getData("id"), "fx");
+        List<String> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
+        List<String> userSubEvents = facade.listSubEvents(facade.getUserData("id"), "fx");
         eventList.addAll(userEvents);
         eventList.addAll(userSubEvents);
 
@@ -168,7 +164,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         String selectedEventName = searchField.getText();
         String type = verifyType(selectedEventName);
 
-        Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessionMap = facade.getSessionHashMap();
         if (!isValidDate(sessionDate))
         {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
@@ -180,8 +176,8 @@ public class CreateSessionScreenController extends BaseController implements FxC
         }else if (sessionLocation.isEmpty() || sessionDescription.isEmpty() || isValidName(sessionName, sessionMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            sessionController.create(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, userController.getData("id"), type);
-            sessionController.read();
+            facade.createSession(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, facade.getUserData("id"), type);
+            facade.readSession();
             handleSession();
         }
     }

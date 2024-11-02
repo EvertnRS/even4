@@ -2,6 +2,8 @@ package br.upe.controller.fx;
 
 import br.upe.controller.SubmitArticleController;
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +19,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class SubmitScreenController extends BaseController implements FxController {
-    private UserController userController;
-    private final SubmitArticleController submitArticleController = new SubmitArticleController(); // Instância do controlador de artigos
+    private FacadeInterface facade;
+
 
     @FXML
     private Label userEmail;
@@ -29,50 +31,50 @@ public class SubmitScreenController extends BaseController implements FxControll
     @FXML
     private AnchorPane submitPane;
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
+    // Configura o UserController e inicializa a tela de artigos
+    public void setFacade(FacadeInterface facade) throws IOException {
+        this.facade = facade;
         initial();
     }
 
     private void initial() throws IOException {
-        userEmail.setText(userController.getData("email"));  // Exibe o e-mail do usuário
+        userEmail.setText(facade.getUserData("email"));  // Exibe o e-mail do usuário
         loadUserArticles();  // Carrega os artigos do usuário
     }
 
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", submitPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", submitPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", submitPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", submitPane, facade, null);
     }
 
     public void handleAddArticle() throws IOException {
-        genericButton("/fxml/createSubmitScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/createSubmitScreen.fxml", submitPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", submitPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", submitPane, facade, null);
     }
 
 
     private void loadUserArticles() throws IOException {
         articleVBox.getChildren().clear();  // Limpa a interface
 
+        // Chama o método read para obter os artigos do usuário
+        facade.readArticle(facade.getUserData("id"));
 
-        submitArticleController.read(userController.getData("id"));
-
-        Map<String, Persistence> articles = submitArticleController.getArticleHashMap();
-        System.out.println(articles);
+        Map<String, Persistence> articles = facade.getArticleHashMap();
         if (articles.isEmpty()) {
             Label noArticlesLabel = new Label("Nenhum artigo encontrado.");
             noArticlesLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #999999;");
@@ -91,8 +93,7 @@ public class SubmitScreenController extends BaseController implements FxControll
 
 
 
-
-            createArticleContainer(article, articleVBox);
+            createArticleContainer(article, articleVBox); // Adiciona o artigo diretamente
         }
     }
 
@@ -150,7 +151,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/updateSubmitScreen.fxml"));
         AnchorPane pane = loader.load();
         UpdateSubmitScreenController controller = loader.getController();
-        controller.setUserController(userController);
+        controller.setFacade(facade);
         controller.setEventName(eventName); // Passa o eventName atual para o controller
         controller.setNameArticle(articleName); // Passa o nome do artigo
         submitPane.getChildren().setAll(pane);  // Exibe a nova tela
@@ -173,8 +174,8 @@ public class SubmitScreenController extends BaseController implements FxControll
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonSim) {
-            submitArticleController.delete(articleName);
-            loadUserArticles();
+            facade.deleteArticle(articleName);
+            loadUserArticles();  // Recarrega os artigos para atualizar a tela
         }
     }
 

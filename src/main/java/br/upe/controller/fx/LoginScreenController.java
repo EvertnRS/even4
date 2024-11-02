@@ -1,5 +1,7 @@
 package br.upe.controller.fx;
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -70,8 +72,9 @@ public class LoginScreenController extends BaseController implements FxControlle
         String cpf = cpfTextField.getText();
 
         UserController userController = new UserController();
-        if (userController.loginValidate(email, cpf)) {
-            genericButton("/fxml/mainScreen.fxml", loginAnchorPane, userController, null);
+        FacadeInterface facade = (FacadeInterface) new Facade(userController);
+        if (facade.loginValidate(email, cpf)) {
+            genericButton("/fxml/mainScreen.fxml", loginAnchorPane, facade, null);
         } else {
             errorLabel.setText("Login falhou! Verifique suas credenciais.");
         }
@@ -83,7 +86,9 @@ public class LoginScreenController extends BaseController implements FxControlle
 
 
     @Override
-    public void setUserController(UserController userController) throws IOException {
-        //Método não implementado
+    public void setFacade(FacadeInterface facade) {
+        // Método não implementado
     }
+
+
 }

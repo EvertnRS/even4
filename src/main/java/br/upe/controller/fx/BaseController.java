@@ -2,7 +2,8 @@ package br.upe.controller.fx;
 
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
-import br.upe.controller.UserController;
+import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,13 +17,13 @@ import java.util.Map;
 
 public abstract class BaseController {
 
-    public void genericButton(String path, AnchorPane pane, UserController userController, String eventId) throws IOException {
+    public void genericButton(String path, AnchorPane pane, FacadeInterface facade, String eventId) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         AnchorPane screen = loader.load();
 
-        if (userController != null){
+        if (facade != null){
             FxController screenController = loader.getController();
-            screenController.setUserController(userController);
+            screenController.setFacade(facade);
 
             if (screenController instanceof UpdateEventScreenController) {
                 ((UpdateEventScreenController) screenController).setEventId(eventId);
@@ -65,8 +66,9 @@ public abstract class BaseController {
 
         EventController eventController = new EventController();
         SubEventController subEventController = new SubEventController();
-        Map<String, Persistence> parentMap = new HashMap<>(eventController.getEventHashMap());
-        parentMap.putAll(subEventController.getSubEventHashMap());
+        Map<String, Persistence> parentMap = new HashMap<>(eventController.getHashMap());
+        parentMap.putAll(subEventController.getHashMap());
+
 
         String parentDateString = "";
         for (Map.Entry<String, Persistence> entry : parentMap.entrySet()) {
@@ -76,16 +78,12 @@ public abstract class BaseController {
                 break;
             }
         }
-        LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
-        LocalDate inputDate = LocalDate.parse(date, formatter);
+            LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
+            LocalDate inputDate = LocalDate.parse(date, formatter);
 
-        System.out.println("Event Date: " + eventDate);
-        System.out.println("Input Date: " + inputDate);
-        System.out.println("Comparison: " + !inputDate.isBefore(eventDate));
-
-        return !inputDate.isBefore(eventDate);
+            return !inputDate.isBefore(eventDate);
     }
 
-    public abstract void setUserController(UserController userController) throws IOException;
+    public abstract void setFacade(FacadeInterface facade) throws IOException;
 }
 

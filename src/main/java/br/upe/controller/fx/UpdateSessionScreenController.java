@@ -2,6 +2,8 @@ package br.upe.controller.fx;
 
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -17,8 +19,7 @@ import static br.upe.ui.Validation.areValidTimes;
 import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
-    private UserController userController;
-    private SessionController sessionController;
+    private FacadeInterface facade;
     private String sessionName;
 
     @FXML
@@ -54,9 +55,8 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     @FXML
     private Label errorDelLabel;
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
-        this.sessionController = new SessionController();
+    public void setFacade(FacadeInterface facade) throws IOException {
+        this.facade = facade;
         initial();
     }
 
@@ -66,7 +66,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
 
 
     private void initial() {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         setupPlaceholders();
     }
     private void setupPlaceholders() {
@@ -79,27 +79,27 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", editSessionPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", editSessionPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", editSessionPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", editSessionPane, facade, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", editSessionPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", editSessionPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", editSessionPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", editSessionPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", editSessionPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", editSessionPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", editSessionPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", editSessionPane, facade, null);
     }
 
     public void updateSession() throws IOException {
@@ -109,7 +109,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
         String newStartTime = editStartTimeTextField.getText();
         String newEndTime = editEndTimeTextField.getText();
-        Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessionMap = facade.getSessionHashMap();
         if (!validateEventDate(newDate, newSubName)) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
         } else if (!isValidDate(newDate) || !areValidTimes(newStartTime, newEndTime)) {
@@ -117,10 +117,9 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newSubName, sessionMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
-            sessionController.update(sessionName, newSubName, newDate, newDescription, newLocation,  userController.getData("id"), newStartTime, newEndTime);
-            sessionController.read();
-            handleSession();
-        }
+            facade.updateSession(sessionName, newSubName, newDate, newDescription, newLocation,  facade.getUserData("id"), newStartTime, newEndTime);
+            facade.readSession();
+            handleSession();}
     }
 
 }

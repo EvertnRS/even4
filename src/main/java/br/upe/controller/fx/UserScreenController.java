@@ -1,6 +1,8 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -11,7 +13,7 @@ import java.io.IOException;
 import static br.upe.ui.Validation.isValidEmail;
 
 public class UserScreenController extends BaseController implements FxController {
-    private UserController userController;
+    private FacadeInterface facade;
 
     @FXML
     private AnchorPane userPane;
@@ -28,17 +30,15 @@ public class UserScreenController extends BaseController implements FxController
     @FXML
     private Label errorUpdtLabel;
     @FXML
-    private Label errorUpdateLabel;
-    @FXML
     private Label errorDelLabel;
 
-    public void setUserController(UserController userController) {
-        this.userController = userController;
+    public void setFacade(FacadeInterface facade) {
+        this.facade = facade;
         initial();
     }
 
     private void initial() {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         setupPlaceholders();
     }
 
@@ -48,23 +48,23 @@ public class UserScreenController extends BaseController implements FxController
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", userPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", userPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", userPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", userPane, facade, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", userPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", userPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", userPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", userPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", userPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", userPane, facade, null);
     }
 
     public void updateUser() throws IOException {
@@ -72,10 +72,10 @@ public class UserScreenController extends BaseController implements FxController
         String email = emailTextField.getText();
 
         if (isValidEmail(email)) {
-            userController.update(email, userController.getData("cpf"));
+            facade.updateUser(email, facade.getUserData("cpf"));
             logout();
         } else {
-            errorUpdateLabel.setText("E-mail invalido!");
+            errorUpdtLabel.setText("E-mail invalido!");
         }
     }
 
@@ -87,16 +87,16 @@ public class UserScreenController extends BaseController implements FxController
             return;
         }
 
-        if (userController == null) {
-            System.out.println("userController está nulo");
+        if (facade == null) {
+            System.out.println("facade está nulo");
             return;
         }
 
-        String cpfData = userController.getData("cpf");
-        String idData = userController.getData("id");
+        String cpfData = facade.getUserData("cpf");
+        String idData = facade.getUserData("id");
 
         if (cpfData != null && cpf.equals(cpfData)) {
-            userController.delete(idData, "id");
+            facade.deleteUser(idData, "id");
             logout();
         } else {
             errorDelLabel.setText("Erro ao ler cpf! Verifique suas credenciais.");
