@@ -2,7 +2,6 @@ package br.upe.controller.fx;
 
 import br.upe.controller.*;
 import br.upe.persistence.Persistence;
-import br.upe.persistence.User;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
