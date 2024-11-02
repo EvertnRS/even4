@@ -78,8 +78,8 @@ public class SubEventScreenController extends BaseController implements FxContro
         subEventController.getSubEventHashMap().entrySet().stream()
                 .filter(entry -> isUserOwner(entry.getValue()))
                 .forEach(entry -> {
-                    VBox subeventContainer = createSubEventContainer(entry.getValue(), eventHashMap);
-                    subEventVBox.getChildren().add(subeventContainer);
+                    VBox subEventContainer = createSubEventContainer(entry.getValue(), eventHashMap);
+                    subEventVBox.getChildren().add(subEventContainer);
                 });
     }
 
