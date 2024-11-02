@@ -2,6 +2,8 @@ package br.upe.controller.fx;
 
 import br.upe.controller.EventController;
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -17,8 +19,7 @@ import java.util.Map;
 import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateEventScreenController extends BaseController implements FxController {
-    private UserController userController;
-    private EventController eventController;
+    private FacadeInterface facade;
     private String eventId;
 
     @FXML
@@ -44,9 +45,8 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     @FXML
     private Label errorUpdtLabel;
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
-        this.eventController = new EventController();
+    public void setFacade(FacadeInterface facade) throws IOException {
+        this.facade = facade;
         initial();
     }
 
@@ -57,7 +57,8 @@ public class UpdateEventScreenController extends BaseController implements FxCon
 
 
     private void initial() {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
+        setupPlaceholders();
     }
 
     private void setupPlaceholders() {
@@ -68,31 +69,31 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", editEventPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", editEventPane, facade, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", editEventPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", editEventPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", editEventPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", editEventPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", editEventPane, facade, null);
     }
 
     private void loadEventDetails() {
-        Map<String, Persistence> eventMap = eventController.getEventHashMap();
+        Map<String, Persistence> eventMap = facade.getEventHashMap();
         Persistence event = eventMap.get(eventId);
 
         if (event != null) {
@@ -118,14 +119,14 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
-        Map<String, Persistence> eventMap = eventController.getEventHashMap();
+        Map<String, Persistence> eventMap = facade.getEventHashMap();
         if (!isValidDate(newDate)) {
             errorUpdtLabel.setText("Data inválida.");
         }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventId, eventMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }
         else{
-            eventController.update(eventId, newName, newDate, newDescription, newLocation, userController.getData("id"));
+            facade.updateEvent(eventId, newName, newDate, newDescription, newLocation, facade.getUserData("id"));
             handleEvent();
         }
     }

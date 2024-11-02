@@ -3,6 +3,7 @@ package br.upe.controller.fx;
 import br.upe.controller.AttendeeController;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
+import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -26,9 +27,7 @@ import java.util.Objects;
 
 public class CertificateScreenController extends BaseController implements FxController {
     private static final String SESSION_ID = "sessionId";
-    private UserController userController;
-    private AttendeeController attendeeController;
-    private SessionController sessionController;
+    private FacadeInterface facade;
     private String attendeeId;
 
     @FXML
@@ -42,50 +41,48 @@ public class CertificateScreenController extends BaseController implements FxCon
     @FXML
     private ImageView exampleCertificate;
 
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
+    public void setFacade(FacadeInterface facade) throws IOException {
+        this.facade = facade;
         initial();
     }
 
-    public void setEventName(String attendeeId) throws IOException {
-        this.attendeeController = new AttendeeController();
-        this.sessionController = new SessionController();
+    public void setEventName(String attendeeId) {
         this.attendeeId = attendeeId;
     }
 
     private void initial() {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getEventData("email"));
         Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/DefaultCertificate.png")).toExternalForm());
         exampleCertificate.setImage(image);
 
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", certificationPane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", certificationPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", certificationPane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", certificationPane, facade, null);
     }
 
     public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", certificationPane, userController, null);
+        genericButton("/fxml/submitScreen.fxml", certificationPane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", certificationPane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", certificationPane, facade, null);
     }
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", certificationPane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", certificationPane, facade, null);
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", certificationPane, userController, null);
+        genericButton("/fxml/userScreen.fxml", certificationPane, facade, null);
     }
 
     public void handleInscriptionSession() throws IOException {
-        genericButton("/fxml/enterSessionScreen.fxml", certificationPane, userController, null);
+        genericButton("/fxml/enterSessionScreen.fxml", certificationPane, facade, null);
     }
 
     @FXML
@@ -114,8 +111,8 @@ public class CertificateScreenController extends BaseController implements FxCon
             g2dName.setFont(new Font("Arial", Font.BOLD, 60));
             g2dName.setColor(Color.BLACK);
 
-            Map<String, Persistence> attendeeMap = attendeeController.getAttendeeHashMap();
-            Map<String, Persistence> sessionMap = sessionController.getSessionHashMap();
+            Map<String, Persistence> attendeeMap = facade.getAttendeeHashMap();
+            Map<String, Persistence> sessionMap = facade.getSessionHashMap();
             String attendeeName = attendeeMap.get(attendeeId).getData("name");
 
             String eventName = sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("name");

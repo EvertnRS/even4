@@ -18,7 +18,7 @@ public class UserController implements Controller {
         this.read();
     }
 
-    public Map<String, Persistence> getUserHashMap() {
+    public Map<String, Persistence> getHashMap() {
         return userHashMap;
     }
 

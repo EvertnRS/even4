@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.AttendeeController;
+import br.upe.facade.FacadeInterface;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
 import br.upe.persistence.Persistence;
@@ -18,9 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class EnterSessionScreenController extends BaseController implements FxController{
-    private UserController userController;
-    private AttendeeController attendeeController;
-    private SessionController sessionController;
+    private FacadeInterface facade;
 
     @FXML
     private VBox attendeeVBox;
@@ -31,43 +30,43 @@ public class EnterSessionScreenController extends BaseController implements FxCo
     @FXML
     private AnchorPane attendeePane;
 
-
-    public void setUserController(UserController userController) throws IOException {
-        this.userController = userController;
-        this.attendeeController = new AttendeeController();
-        this.sessionController = new SessionController();
+    public void setFacade(FacadeInterface facade) throws IOException {
+        this.facade = facade;
         initial();
     }
 
     private void initial() throws IOException {
-        userEmail.setText(userController.getData("email"));
+        userEmail.setText(facade.getUserData("email"));
         loadSessions();
     }
 
     public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", attendeePane, userController, null);
+        genericButton("/fxml/userScreen.fxml", attendeePane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", attendeePane, userController, null);
+        genericButton("/fxml/subEventScreen.fxml", attendeePane, facade, null);
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", attendeePane, userController, null);
+        genericButton("/fxml/mainScreen.fxml", attendeePane, facade, null);
     }
 
     public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", attendeePane, userController, null);
+        genericButton("/fxml/sessionScreen.fxml", attendeePane, facade, null);
+    }
+    public void handleAddSession() throws IOException{
+        genericButton("/fxml/sessionScreen.fxml",attendeePane, facade,null);
     }
 
 
     public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", attendeePane, userController, null);
+        genericButton("/fxml/loginScreen.fxml", attendeePane, facade, null);
     }
     private void loadSessions() throws IOException {
         attendeeVBox.getChildren().clear();
 
-        attendeeController.list(userController.getData("id"), "");
+        facade.listAttendees(facade.getUserData("id"), "");
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
@@ -76,11 +75,11 @@ public class EnterSessionScreenController extends BaseController implements FxCo
 
         attendeeVBox.setAlignment(Pos.CENTER);
 
-        Map<String, Persistence> sessionHashMap = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessionHashMap = facade.getSessionHashMap();
 
-        for (Map.Entry<String, Persistence> entry : attendeeController.getAttendeeHashMap().entrySet()) {
+        for (Map.Entry<String, Persistence> entry : facade.getAttendeeHashMap().entrySet()) {
             Persistence persistence = entry.getValue();
-            if (persistence.getData("userId").equals(userController.getData("id"))) {
+            if (persistence.getData("userId").equals(facade.getUserData("id"))) {
 
                 VBox eventContainer = new VBox();
                 eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
@@ -111,7 +110,7 @@ public class EnterSessionScreenController extends BaseController implements FxCo
 
                 deleteButton.setOnAction(e -> {
                     try {
-                        handleDeleteAttendee(userController.getData("id"),persistence.getData("sessionId"));
+                        handleDeleteAttendee(facade.getUserData("id"),persistence.getData("sessionId"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -137,7 +136,7 @@ public class EnterSessionScreenController extends BaseController implements FxCo
     }
 
     private void handleCertificate(String attendeeId) throws IOException {
-        genericButton("/fxml/certificateScreen.fxml", attendeePane, userController, attendeeId);
+        genericButton("/fxml/certificateScreen.fxml", attendeePane, facade, attendeeId);
     }
 
     private void verifyCertification(Button certificateButton, String sessionDateStr) {
@@ -159,9 +158,8 @@ public class EnterSessionScreenController extends BaseController implements FxCo
     }
 
     private void handleEditAttendee(String eventName) throws IOException {
-        genericButton("/fxml/updateAttendeeScreen.fxml", attendeePane, userController, eventName);
+        genericButton("/fxml/updateAttendeeScreen.fxml", attendeePane, facade, eventName);
     }
-
     private void handleDeleteAttendee(String userId, String sessionId) throws IOException {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
@@ -176,11 +174,11 @@ public class EnterSessionScreenController extends BaseController implements FxCo
         Optional<ButtonType> result = confirmationAlert.showAndWait();
 
         if (result.isPresent() && result.get() == buttonSim) {
-            attendeeController.delete(userId, "id", sessionId);
+            facade.deleteAttendee(userId, "id", sessionId);
             loadSessions();
         }
     }
     public void handleAddAttendee() throws IOException {
-        genericButton("/fxml/createAttendeeScreen.fxml", attendeePane, userController, null);
+        genericButton("/fxml/createAttendeeScreen.fxml", attendeePane, facade, null);
     }
 }

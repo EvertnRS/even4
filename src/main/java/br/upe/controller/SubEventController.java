@@ -22,7 +22,7 @@ public class SubEventController implements Controller {
         this.read();
     }
 
-    public Map<String, Persistence> getSubEventHashMap() {
+    public Map<String, Persistence> getHashMap() {
         return subEventHashMap;
     }
 
@@ -72,16 +72,16 @@ public class SubEventController implements Controller {
         // Deletar todas as sessões relacionadas ao SubEvento
         SessionController sessionController = new SessionController();
         sessionController.read();
-        Iterator<Map.Entry<String, Persistence>> sessionIterator = sessionController.getSessionHashMap().entrySet().iterator();
+        Iterator<Map.Entry<String, Persistence>> sessionIterator = sessionController.getHashMap().entrySet().iterator();
         while (sessionIterator.hasNext()) {
             Map.Entry<String, Persistence> entry = sessionIterator.next();
             if (entry.getValue().getData(EVENT_ID).equals(id)) {
                 sessionIterator.remove();
             }
         }
-        sessionController.getSessionHashMap().values().forEach(session -> {
+        sessionController.getHashMap().values().forEach(session -> {
             try {
-                session.delete(sessionController.getSessionHashMap());
+                session.delete(sessionController.getHashMap());
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -90,17 +90,17 @@ public class SubEventController implements Controller {
         // Deletar todos os participantes relacionados às sessões do evento
         AttendeeController attendeeController = new AttendeeController();
         attendeeController.read();
-        Iterator<Map.Entry<String, Persistence>> attendeeIterator = attendeeController.getAttendeeHashMap().entrySet().iterator();
+        Iterator<Map.Entry<String, Persistence>> attendeeIterator = attendeeController.getHashMap().entrySet().iterator();
         while (attendeeIterator.hasNext()) {
             Map.Entry<String, Persistence> entry = attendeeIterator.next();
             String sessionId = entry.getValue().getData("sessionId");
-            if (sessionController.getSessionHashMap().containsKey(sessionId)) {
+            if (sessionController.getHashMap().containsKey(sessionId)) {
                 attendeeIterator.remove();
             }
         }
-        attendeeController.getAttendeeHashMap().values().forEach(attendee -> {
+        attendeeController.getHashMap().values().forEach(attendee -> {
             try {
-                attendee.delete(attendeeController.getAttendeeHashMap());
+                attendee.delete(attendeeController.getHashMap());
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -110,16 +110,16 @@ public class SubEventController implements Controller {
         String subEventName = subEventHashMap.get(id).getData("name");
         SubmitArticleController articleController = new SubmitArticleController();
         articleController.read(subEventName);
-        Iterator<Map.Entry<String, Persistence>> articleIterator = articleController.getArticleHashMap().entrySet().iterator();
+        Iterator<Map.Entry<String, Persistence>> articleIterator = articleController.getHashMap().entrySet().iterator();
         while (articleIterator.hasNext()) {
             Map.Entry<String, Persistence> entry = articleIterator.next();
             if (entry.getValue().getData(EVENT_ID).equals(id)) {
                 articleIterator.remove();
             }
         }
-        articleController.getArticleHashMap().values().forEach(article -> {
+        articleController.getHashMap().values().forEach(article -> {
             try {
-                article.delete(articleController.getArticleHashMap());
+                article.delete(articleController.getHashMap());
             } catch (IOException e) {
                 throw new IllegalArgumentException(e);
             }
@@ -264,7 +264,7 @@ public class SubEventController implements Controller {
     private String getFatherEventId(String searchId) throws IOException {
         EventController ec = new EventController();
         String fatherId = "";
-        Map<String, Persistence> list = ec.getEventHashMap();
+        Map<String, Persistence> list = ec.getHashMap();
         boolean found = false;
         for (Map.Entry<String, Persistence> entry : list.entrySet()) {
             Persistence listindice = entry.getValue();

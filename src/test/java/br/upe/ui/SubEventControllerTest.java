@@ -26,7 +26,7 @@ class SubEventControllerTest {
     void testCreateSubEvent() throws IOException {
         subEventExists();
 
-        Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
+        Map<String, Persistence> subEventMap = subEventController.getHashMap();
         boolean subEventCreated = subEventMap.values().stream()
                 .anyMatch(subEvent -> subEvent.getData("name").equals("New SubEvent"));
         assertTrue(subEventCreated, "O SubEvento criado não foi encontrado.");
@@ -38,7 +38,7 @@ class SubEventControllerTest {
     void testUpdateSubEvent() throws IOException {
         subEventExists();
 
-        String subEventName = subEventController.getSubEventHashMap().values().stream()
+        String subEventName = subEventController.getHashMap().values().stream()
                 .filter(subEvent -> subEvent.getData("name").equals("New SubEvent"))
                 .findFirst()
                 .map(subEvent -> subEvent.getData("name"))
@@ -49,7 +49,7 @@ class SubEventControllerTest {
         subEventController.update(subEventName, "Updated SubEvent", "02/12/2024", "Updated SubEvent Description", "New Location", "owner-id");
         subEventController.read();
 
-        Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
+        Map<String, Persistence> subEventMap = subEventController.getHashMap();
         boolean subEventUpdated = subEventMap.values().stream()
                 .anyMatch(subEvent -> subEvent.getData("name").equals("Updated SubEvent") && subEvent.getData("description").equals("Updated SubEvent Description"));
         assertTrue(subEventUpdated, "The SubEvent was not updated.");
@@ -62,7 +62,7 @@ class SubEventControllerTest {
         subEventExists();
 
         String subEventReaded = "";
-        Map<String, Persistence> subEventHashMap = subEventController.getSubEventHashMap();
+        Map<String, Persistence> subEventHashMap = subEventController.getHashMap();
         for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("ownerId").equals("owner-id")) {
@@ -80,14 +80,14 @@ class SubEventControllerTest {
 
         subEventDelete("New SubEvent");
 
-        Map<String, Persistence> subEventMap = subEventController.getSubEventHashMap();
+        Map<String, Persistence> subEventMap = subEventController.getHashMap();
         boolean subEventDeleted = subEventMap.values().stream()
                 .noneMatch(subEvent -> subEvent.getData("name").equals("New SubEvent"));
         assertTrue(subEventDeleted, "O SubEvento não foi deletado.");
     }
 
     void subEventExists() throws IOException {
-        boolean subEventExists = subEventController.getSubEventHashMap().values().stream()
+        boolean subEventExists = subEventController.getHashMap().values().stream()
                 .anyMatch(subEvent -> subEvent.getData("name").equals("New SubEvent"));
 
         if (!subEventExists) {
@@ -99,10 +99,10 @@ class SubEventControllerTest {
     }
 
     void subEventDelete(String subEventName) throws IOException {
-        String subEventId = subEventController.getSubEventHashMap().values().stream().filter(subSubEvent -> subSubEvent.getData("name").equals(subEventName)).findFirst().map(subEvent -> subEvent.getData("id")).orElse(null);
+        String subEventId = subEventController.getHashMap().values().stream().filter(subSubEvent -> subSubEvent.getData("name").equals(subEventName)).findFirst().map(subEvent -> subEvent.getData("id")).orElse(null);
         subEventController.delete(subEventId, "owner-id");
 
-        String eventId = eventController.getEventHashMap().values().stream().filter(event -> event.getData("name").equals("Event1")).findFirst().map(event -> event.getData("id")).orElse(null);
+        String eventId = eventController.getHashMap().values().stream().filter(event -> event.getData("name").equals("Event1")).findFirst().map(event -> event.getData("id")).orElse(null);
         eventController.delete(eventId, "owner-id");
     }
 }

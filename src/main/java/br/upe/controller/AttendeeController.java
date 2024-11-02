@@ -23,7 +23,7 @@ public class AttendeeController implements Controller {
         this.read();
     }
 
-    public Map<String, Persistence> getAttendeeHashMap() {
+    public Map<String, Persistence> getHashMap() {
         return attendeeHashMap;
     }
 
@@ -150,9 +150,10 @@ public class AttendeeController implements Controller {
         }
     }
 
+
     private boolean validateSessionId (String sessionId) throws IOException {
         SessionController sessionController = new SessionController();
-        Map<String, Persistence> sessH = sessionController.getSessionHashMap();
+        Map<String, Persistence> sessH = sessionController.getHashMap();
         boolean hasSession = false;
         for (Map.Entry<String, Persistence> entry : sessH.entrySet()) {
             Persistence session = entry.getValue();
@@ -182,6 +183,29 @@ public class AttendeeController implements Controller {
                 e.printStackTrace();
             }
             return userEvents;
+    }
+
+    private String[] getSessionById (String sessionId) throws IOException {
+        String name = "";
+        String description = "";
+        String date = "";
+        String location = "";
+        String startTime = "";
+        SessionController sessionController = new SessionController();
+        Map<String, Persistence> sessH = sessionController.getHashMap();
+
+        for (Map.Entry<String, Persistence> entry : sessH.entrySet()) {
+            Persistence persistence = entry.getValue();
+            if (persistence.getData("id").equals(sessionId)) {
+                name = persistence.getData("name");
+                description = persistence.getData("description");
+                date = persistence.getData("date");
+                location = persistence.getData("location");
+                startTime = persistence.getData("startTime");
+                break;
+            }
+        }
+        return new String[] {name, description, date, location, startTime};
     }
 
     @Override
