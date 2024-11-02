@@ -1,15 +1,17 @@
 package br.upe.controller.fx;
-import br.upe.controller.*;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 public class CreateSubmitScreenController extends BaseController implements FxController {
 
@@ -33,7 +35,7 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
 
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
-        loadUserEvents();
+        loadArticles();
     }
 
     public void handleEvent() throws IOException {
@@ -59,10 +61,18 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     public void handleUser() throws IOException {
         genericButton("/fxml/userScreen.fxml", submitPane, facade, null);
     }
-    private void loadUserEvents() throws IOException {
-        List<String> userEvents = facade.listEvents(facade.getUserData("id"), "submit");
-        eventComboBox.getItems().addAll(userEvents);
+    private void loadArticles() throws IOException {
+
+        Map<String, Persistence> allEvents = facade.getEventHashMap();
+
+        eventComboBox.getItems().clear();
+
+        for (Persistence event : allEvents.values()) {
+            eventComboBox.getItems().add(event.getData("name"));
+        }
     }
+
+
     @FXML
     private void createArticle()throws IOException {
         String novoEventName = eventComboBox.getSelectionModel().getSelectedItem();
@@ -70,6 +80,28 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
         facade.createArticle(novoEventName, nameArticle, facade.getUserData("id"));
         handleSubmitEvent();
 
+    }
+
+    @FXML
+    private void openFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Selecione um Artigo");
+
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"),
+                new FileChooser.ExtensionFilter("Text Files", "*.txt")
+        );
+
+
+        Stage stage = (Stage) submitPane.getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+        if (selectedFile != null) {
+            namesTextField.setText(selectedFile.getAbsolutePath());
+        } else {
+            errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+        }
     }
 
 }

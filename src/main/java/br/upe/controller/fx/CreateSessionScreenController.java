@@ -7,6 +7,7 @@ import br.upe.controller.UserController;
 import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Persistence;
+import br.upe.persistence.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -171,7 +172,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         else if (!validateEventDate(sessionDate, selectedEventName)) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
         } else if (!areValidTimes(startTime, endTime)) {
-            errorUpdtLabel.setText("Data ou horário inválido.");
+            errorUpdtLabel.setText("Horário inválido.");
         }else if (sessionLocation.isEmpty() || sessionDescription.isEmpty() || isValidName(sessionName, sessionMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {

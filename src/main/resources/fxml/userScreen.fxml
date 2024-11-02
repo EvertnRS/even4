@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="userPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.UserScreenController">
+<AnchorPane fx:id="userPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.UserScreenController">
 
     <children>
         <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
@@ -36,7 +36,8 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-             <TextField fx:id="emailTextField" cache="true" layoutX="56.0" layoutY="124.0" prefHeight="42.0" prefWidth="293.0" promptText="     Email" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+             <TextField fx:id="emailTextField" cache="true" layoutX="56.0" layoutY="124.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+             <Text fx:id="emailPlaceholder" fill="DARKGRAY" layoutX="71.0" layoutY="151.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Email" />
              <Button layoutX="167.0" layoutY="203.0" mnemonicParsing="false" onAction="#updateUser" prefHeight="30.0" prefWidth="72.0" text="Atualizar">
                  <style>
                      -fx-background-color: #ff914d;
@@ -55,7 +56,8 @@
                 <font>
                     <Font size="14.0" />
                 </font></Label>
-            <TextField fx:id="cpfTextField" cache="true" layoutX="53.0" layoutY="419.0" prefHeight="42.0" prefWidth="293.0" promptText="     Cpf" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <TextField fx:id="cpfTextField" cache="true" layoutX="53.0" layoutY="419.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <Text fx:id="cpfPlaceholder" fill="DARKGRAY" layoutX="68.0" layoutY="447.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="CPF" />
             <Button layoutX="163.0" layoutY="506.0" mnemonicParsing="false" onAction="#deleteUser" prefHeight="30.0" prefWidth="72.0" text="Deletar">
                 <style>
                     -fx-background-color: #ff914d;
@@ -69,7 +71,7 @@
                 </style>
             </Button>
             <Label fx:id="errorDelLabel" layoutX="78.0" layoutY="476.0" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
-           <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="554.0" layoutY="180.0" preserveRatio="true">
+           <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="551.0" layoutY="155.0" preserveRatio="true">
                <image>
                    <Image url="@/images/userIcon.png" />
                </image>

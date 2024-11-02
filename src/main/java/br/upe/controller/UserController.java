@@ -138,21 +138,10 @@ public class UserController implements Controller {
         }
     }
 
-
     @Override
-    public boolean list(String idowner) {
+    public List<String> list(Object... params) {
         // Método não implementado
-        return false;
-    }
-
-    @Override
-    public List<String> list(String idowner, String type) throws IOException {
         return List.of();
-    }
-
-    @Override
-    public void show(Object... params) {
-        // Método não implementado
     }
 
     public boolean loginValidate(String email, String cpf) {

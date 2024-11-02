@@ -28,12 +28,8 @@ public class Facade implements FacadeInterface {
         return eventController.getHashMap();
     }
 
-    public boolean listEvents(String ownerId) throws IOException {
-        return eventController.list(ownerId);
-    }
-
-    public List<String> listEvents(String ownerId, String type) throws IOException {
-        return eventController.list(ownerId, type);
+    public List<String> listEvents(Object... params) throws IOException {
+        return eventController.list(params);
     }
 
     public void createEvent(Object... params) throws IOException {
@@ -62,12 +58,9 @@ public class Facade implements FacadeInterface {
         return sessionController.getHashMap();
     }
 
-    public boolean listSessions(String ownerId) throws IOException {
-        return sessionController.list(ownerId);
-    }
 
-    public List<String> listSessions(String ownerId, String type) throws IOException {
-        return sessionController.list(ownerId, type);
+    public List<String> listSessions(Object... params) throws IOException {
+        return sessionController.list(params);
     }
 
     public void createSession(Object... params) throws IOException {
@@ -92,8 +85,8 @@ public class Facade implements FacadeInterface {
         return subEventController.getHashMap();
     }
 
-    public List<String> listSubEvents(String ownerId, String type) throws IOException {
-        return subEventController.list(ownerId, type);
+    public List<String> listSubEvents(Object... params) throws IOException {
+        return subEventController.list(params);
     }
 
     public void updateSubEvent(Object... params) throws IOException {
@@ -179,8 +172,8 @@ public class Facade implements FacadeInterface {
         attendeeController.update(params);
     }
 
-    public List<String> listAttendees(String ownerId, String type) throws IOException {
-        return attendeeController.list(ownerId, type);
+    public List<String> listAttendees(Object... params) throws IOException {
+        return attendeeController.list(params);
     }
 
     public void deleteAttendee(Object... params) throws IOException {

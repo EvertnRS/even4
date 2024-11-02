@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="submitPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.UpdateSubmitScreenController">
+<AnchorPane fx:id="certificationPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.CertificateScreenController">
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
          <image>
@@ -64,7 +64,7 @@
             <Button layoutY="2.0" mnemonicParsing="false" onAction="#handleSubEvent" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Subevent" />
          </children>
       </Pane>
-      <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+      <Pane layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <effect>
             <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
                <color>
@@ -73,7 +73,7 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="Sessões" textFill="WHITE">
+            <Label layoutX="35.0" layoutY="19.0" text="Sessões" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
@@ -81,7 +81,7 @@
             <Button layoutY="-2.0" mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Session" />
          </children>
       </Pane>
-      <Pane layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
+      <Pane layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
          <effect>
             <DropShadow height="15.65" offsetX="-1.0" offsetY="6.0" radius="3.4125" width="0.0">
                <color>
@@ -90,12 +90,12 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="Submeter Artigo" textFill="#ff914d">
+            <Label layoutX="35.0" layoutY="19.0" text="Submeter Artigo" textFill="WHITE">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button layoutX="-4.0" layoutY="-5.0" mnemonicParsing="false" onAction="#handleSubmit" opacity="0.0" prefHeight="65.0" prefWidth="231.0" style="-fx-cursor: hand;" text="Submit" />
+            <Button layoutX="1.0" layoutY="-5.0" mnemonicParsing="false" onAction="#handleSubmitEvent" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Submit" />
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -117,20 +117,27 @@
       </Pane>
       <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <children>
-            <Label layoutX="383.0" layoutY="80.0" text="Editar Artigo" textFill="#ff914d">
+            <Label layoutX="384.0" layoutY="68.0" text="Certificado" textAlignment="CENTER" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="23.0" />
                </font>
             </Label>
-            <Button layoutX="399.0" layoutY="239.0" mnemonicParsing="false" onAction="#updateArticle" prefHeight="42.0" prefWidth="93.0" style="-fx-background-color: #ff914d;       -fx-text-fill: white;       -fx-font-weight: bold;       -fx-border-radius: 15;       -fx-background-radius: 5;       -fx-padding: 5 10 5 10;       -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);       -fx-cursor: hand;" text="Atualizar" />
-            <Label fx:id="errorUpdtLabel" layoutX="299.0" layoutY="208.0" prefHeight="17.0" prefWidth="293.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
-            <Label layoutX="773.0" layoutY="65.0" text="X" textFill="#ff914d">
+            <Label fx:id="errorUpdtLabel" layoutX="285.0" layoutY="427.0" prefHeight="17.0" prefWidth="293.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
+            <Label layoutX="779.0" layoutY="66.0" text="X" textFill="#ff914d">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <Button layoutX="766.0" layoutY="68.0" mnemonicParsing="false" onAction="#handleSubmit" opacity="0.0" prefHeight="29.0" prefWidth="29.0" style="-fx-cursor: hand;" text="back" />
-            <ComboBox fx:id="eventComboBox" layoutX="299.0" layoutY="147.0" prefHeight="42.0" prefWidth="293.0" promptText="Novo Evento a ser Atualizado o Artigo" />
+            <Button layoutX="772.0" layoutY="68.0" mnemonicParsing="false" onAction="#handleSubmitEvent" opacity="0.0" prefHeight="29.0" prefWidth="29.0" style="-fx-cursor: hand;" text="back" />
+            <TextField fx:id="addresTextField" layoutX="285.0" layoutY="349.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10;" />
+            <Text fx:id="namePlaceholder" fill="DARKGREY" layoutX="300.0" layoutY="377.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Caminho do Artigo" />
+            <Button layoutX="400.0" layoutY="459.0" mnemonicParsing="false" onAction="#createArticle" prefHeight="42.0" prefWidth="93.0" style="-fx-background-color: #ff914d;       -fx-text-fill: white;       -fx-font-weight: bold;       -fx-border-radius: 15;       -fx-background-radius: 5;       -fx-padding: 5 10 5 10;       -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);       -fx-cursor: hand;" text="Salvar" />
+            <Button layoutX="595.0" layoutY="351.0" mnemonicParsing="false" onAction="#openDirectoryChooser" prefHeight="42.0" prefWidth="47.0" style="-fx-background-color: #ff914d;       -fx-text-fill: white;       -fx-font-weight: bold;       -fx-border-radius: 15;       -fx-background-radius: 5;       -fx-padding: 5 10 5 10;       -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);       -fx-cursor: hand;" text="..." />
+            <ImageView fx:id="exampleCertificate" fitHeight="207.0" fitWidth="380.0" layoutX="279.0" layoutY="126.0" preserveRatio="true">
+               <image>
+                  <Image url="@/images/DefaultCertificate.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

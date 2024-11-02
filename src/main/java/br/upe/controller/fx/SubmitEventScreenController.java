@@ -1,5 +1,4 @@
 package br.upe.controller.fx;
-
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
