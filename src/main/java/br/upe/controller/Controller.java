@@ -5,6 +5,7 @@ import br.upe.persistence.Persistence;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface Controller {
     void create(Object... params) throws IOException;
@@ -14,5 +15,5 @@ public interface Controller {
     List<String> list(Object... params) throws IOException;
     boolean loginValidate(String email, String cpf);
     String getData(String dataToGet);
-    Map<String, Persistence> getHashMap();
+    Map<UUID, Persistence> getHashMap();
 }

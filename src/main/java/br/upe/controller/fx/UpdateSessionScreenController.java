@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 import static br.upe.ui.Validation.areValidTimes;
 import static br.upe.ui.Validation.isValidDate;
@@ -109,7 +110,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
         String newStartTime = editStartTimeTextField.getText();
         String newEndTime = editEndTimeTextField.getText();
-        Map<String, Persistence> sessionMap = facade.getSessionHashMap();
+        Map<UUID, Persistence> sessionMap = facade.getSessionHashMap();
         if (!validateEventDate(newDate, newSubName)) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
         } else if (!isValidDate(newDate) || !areValidTimes(newStartTime, newEndTime)) {

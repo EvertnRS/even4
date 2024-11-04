@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class EnterSessionScreenController extends BaseController implements FxController{
     private FacadeInterface facade;
@@ -72,23 +73,23 @@ public class EnterSessionScreenController extends BaseController implements FxCo
 
         attendeeVBox.setAlignment(Pos.CENTER);
 
-        Map<String, Persistence> sessionHashMap = facade.getSessionHashMap();
+        Map<UUID, Persistence> sessionHashMap = facade.getSessionHashMap();
 
-        for (Map.Entry<String, Persistence> entry : facade.getAttendeeHashMap().entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : facade.getAttendeeHashMap().entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("userId").equals(facade.getUserData("id"))) {
 
                 VBox eventContainer = new VBox();
                 eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-                Label eventLabel = new Label(persistence.getData("name"));
+                Label eventLabel = new Label((String) persistence.getData("name"));
                 eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #333333;");
 
-                Label sessionLabel = createSessionLabel(persistence.getData("sessionId"), sessionHashMap);
+                Label sessionLabel = createSessionLabel((UUID) persistence.getData("sessionId"), sessionHashMap);
 
                 Button certificateButton = new Button("Certificado");
                 certificateButton.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #ff914d; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
-                verifyCertification(certificateButton, sessionHashMap.get(persistence.getData("sessionId")).getData("date"));
+                verifyCertification(certificateButton, (String) sessionHashMap.get((UUID) persistence.getData("sessionId")).getData("date"));
 
                 Button editButton = new Button("Editar");
                 editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
@@ -100,11 +101,11 @@ public class EnterSessionScreenController extends BaseController implements FxCo
                 detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
                 detailsButton.setOnAction(e ->
-                        handleDetailAttendee(sessionHashMap, persistence.getData("id")));
+                        handleDetailAttendee(sessionHashMap, (UUID) persistence.getData("id")));
 
                 editButton.setOnAction(e -> {
                     try {
-                        handleEditAttendee(persistence.getData("name"));
+                        handleEditAttendee((String) persistence.getData("name"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -112,7 +113,7 @@ public class EnterSessionScreenController extends BaseController implements FxCo
 
                 deleteButton.setOnAction(e -> {
                     try {
-                        handleDeleteAttendee(facade.getUserData("id"),persistence.getData("sessionId"));
+                        handleDeleteAttendee(facade.getUserData("id"),(String) persistence.getData("sessionId"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -120,7 +121,7 @@ public class EnterSessionScreenController extends BaseController implements FxCo
 
                 certificateButton.setOnAction(e -> {
                     try {
-                        handleCertificate(persistence.getData("id"));
+                        handleCertificate((String) persistence.getData("id"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -137,16 +138,16 @@ public class EnterSessionScreenController extends BaseController implements FxCo
         }
     }
 
-    private void handleDetailAttendee(Map<String, Persistence> sessionHashMap, String id) {
+    private void handleDetailAttendee(Map<UUID, Persistence> sessionHashMap, UUID id) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Detalhes do Participante");
         alert.setHeaderText("Detalhes do Participante");
 
         Persistence attendee = facade.getAttendeeHashMap().get(id);
-        Persistence owner = facade.getUserHashMap().get(attendee.getData("userId"));
+        Persistence owner = facade.getUserHashMap().get((UUID) attendee.getData("userId"));
 
         String content = "Nome: " + attendee.getData("name") + "\n" +
-                "Sessão: " + sessionHashMap.get(attendee.getData("sessionId")).getData("name") + "\n" +
+                "Sessão: " + sessionHashMap.get((UUID) attendee.getData("sessionId")).getData("name") + "\n" +
                 "Administrador: " + owner.getData("email") + "\n";
 
         alert.setContentText(content);
@@ -165,10 +166,10 @@ public class EnterSessionScreenController extends BaseController implements FxCo
             certificateButton.setVisible(currentDate.isAfter(sessionDate));
     }
 
-    private Label createSessionLabel(String eventId, Map<String, Persistence> sessionHashMap) {
+    private Label createSessionLabel(UUID eventId, Map<UUID, Persistence> sessionHashMap) {
         Label sessionLabel = new Label();
         String nameEvent = (sessionHashMap != null && sessionHashMap.containsKey(eventId))
-                ? sessionHashMap.get(eventId).getData("name")
+                ? (String) sessionHashMap.get(eventId).getData("name")
                 : "Evento não encontrado";
         sessionLabel.setText(nameEvent);
         sessionLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");

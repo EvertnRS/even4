@@ -3,10 +3,7 @@ package br.upe.controller;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.Persistence;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class SubEventController implements Controller {
@@ -15,18 +12,18 @@ public class SubEventController implements Controller {
     private static final String OWNER_ID = "ownerId";
     private static final String EVENT_ID = "eventId";
     private static final Logger LOGGER = Logger.getLogger(SubEventController.class.getName());
-    private Map<String, Persistence> subEventHashMap;
+    private Map<UUID, Persistence> subEventHashMap;
     private Persistence subEventLog;
 
     public SubEventController() throws IOException {
         this.read();
     }
 
-    public Map<String, Persistence> getHashMap() {
+    public Map<UUID, Persistence> getHashMap() {
         return subEventHashMap;
     }
 
-    public void setEventHashMap(Map<String, Persistence> subEventHashMap) {
+    public void setEventHashMap(Map<UUID, Persistence> subEventHashMap) {
         this.subEventHashMap = subEventHashMap;
     }
 
@@ -35,13 +32,13 @@ public class SubEventController implements Controller {
         String data = "";
         try {
             switch (dataToGet) {
-                case "id" -> data = this.subEventLog.getData("id");
-                case "name" -> data = this.subEventLog.getData("name");
-                case DESCRIPTION -> data = this.subEventLog.getData(DESCRIPTION);
+                case "id" -> data = (String) this.subEventLog.getData("id");
+                case "name" -> data = (String) this.subEventLog.getData("name");
+                case DESCRIPTION -> data = (String) this.subEventLog.getData(DESCRIPTION);
                 case "date" -> data = String.valueOf(this.subEventLog.getData("date"));
-                case LOCATION -> data = this.subEventLog.getData(LOCATION);
-                case EVENT_ID -> data = this.subEventLog.getData(EVENT_ID);
-                case OWNER_ID -> data = this.subEventLog.getData(OWNER_ID);
+                case LOCATION -> data = (String) this.subEventLog.getData(LOCATION);
+                case EVENT_ID -> data = (String) this.subEventLog.getData(EVENT_ID);
+                case OWNER_ID -> data = (String) this.subEventLog.getData(OWNER_ID);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -72,9 +69,9 @@ public class SubEventController implements Controller {
         // Deletar todas as sessões relacionadas ao SubEvento
         SessionController sessionController = new SessionController();
         sessionController.read();
-        Iterator<Map.Entry<String, Persistence>> sessionIterator = sessionController.getHashMap().entrySet().iterator();
+        Iterator<Map.Entry<UUID, Persistence>> sessionIterator = sessionController.getHashMap().entrySet().iterator();
         while (sessionIterator.hasNext()) {
-            Map.Entry<String, Persistence> entry = sessionIterator.next();
+            Map.Entry<UUID, Persistence> entry = sessionIterator.next();
             if (entry.getValue().getData(EVENT_ID).equals(id)) {
                 sessionIterator.remove();
             }
@@ -90,10 +87,10 @@ public class SubEventController implements Controller {
         // Deletar todos os participantes relacionados às sessões do evento
         AttendeeController attendeeController = new AttendeeController();
         attendeeController.read();
-        Iterator<Map.Entry<String, Persistence>> attendeeIterator = attendeeController.getHashMap().entrySet().iterator();
+        Iterator<Map.Entry<UUID, Persistence>> attendeeIterator = attendeeController.getHashMap().entrySet().iterator();
         while (attendeeIterator.hasNext()) {
-            Map.Entry<String, Persistence> entry = attendeeIterator.next();
-            String sessionId = entry.getValue().getData("sessionId");
+            Map.Entry<UUID, Persistence> entry = attendeeIterator.next();
+            String sessionId = (String) entry.getValue().getData("sessionId");
             if (sessionController.getHashMap().containsKey(sessionId)) {
                 attendeeIterator.remove();
             }
@@ -107,12 +104,12 @@ public class SubEventController implements Controller {
         });
 
         // Deletar todos os artigos relacionados ao SubEvento
-        String subEventName = subEventHashMap.get(id).getData("name");
+        String subEventName = (String) subEventHashMap.get(id).getData("name");
         SubmitArticleController articleController = new SubmitArticleController();
         articleController.read(subEventName);
-        Iterator<Map.Entry<String, Persistence>> articleIterator = articleController.getHashMap().entrySet().iterator();
+        Iterator<Map.Entry<UUID, Persistence>> articleIterator = articleController.getHashMap().entrySet().iterator();
         while (articleIterator.hasNext()) {
-            Map.Entry<String, Persistence> entry = articleIterator.next();
+            Map.Entry<UUID, Persistence> entry = articleIterator.next();
             if (entry.getValue().getData(EVENT_ID).equals(id)) {
                 articleIterator.remove();
             }
@@ -131,17 +128,17 @@ public class SubEventController implements Controller {
     public void delete(Object... params) throws IOException {
         String ownerId = "";
         cascadeDelete((String) params[0]);
-        for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(params[0])){
-                ownerId = persistence.getData(OWNER_ID);
+                ownerId = (String) persistence.getData(OWNER_ID);
             }
         }
 
         if ((params[1]).equals(ownerId)) {
-            Iterator<Map.Entry<String, Persistence>> iterator = subEventHashMap.entrySet().iterator();
+            Iterator<Map.Entry<UUID, Persistence>> iterator = subEventHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, Persistence> entry = iterator.next();
+                Map.Entry<UUID, Persistence> entry = iterator.next();
                 Persistence subEventindice = entry.getValue();
                 if (subEventindice.getData("id").equals(params[0])) {
                     iterator.remove();
@@ -160,10 +157,11 @@ public class SubEventController implements Controller {
         List<String> userEvents = new ArrayList<>();
 
         try {
-            for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
+            for (Map.Entry<UUID, Persistence> entry : subEventHashMap.entrySet()) {
                 Persistence persistence = entry.getValue();
                 if (persistence.getData(OWNER_ID).equals(params[0])) {
-                    userEvents.add(persistence.getData("name"));
+                    String eventName = (String) persistence.getData("name");
+                    userEvents.add(eventName);
                 }
             }
             if (userEvents.isEmpty()) {
@@ -208,23 +206,23 @@ public class SubEventController implements Controller {
     }
 
     private String getOwnerSubEventId(String oldName, String userId) {
-        for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
-            String name = persistence.getData("name");
-            String ownerId = persistence.getData(OWNER_ID);
+            String name = (String) persistence.getData("name");
+            String ownerId = (String) persistence.getData(OWNER_ID);
 
             if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
                 LOGGER.info("Owner found for the sub-event.");
-                return persistence.getData("id");
+                return (String) persistence.getData("id");
             }
         }
         return null;
     }
 
     private boolean isNameInUseOrEmpty(String newName) {
-        for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence subEvent = entry.getValue();
-            String name = subEvent.getData("name");
+            String name = (String) subEvent.getData("name");
             if (name.isEmpty() || name.equals(newName)) {
                 return true;
             }
@@ -239,7 +237,7 @@ public class SubEventController implements Controller {
             newSubEvent.setData("date", newDate);
             newSubEvent.setData(DESCRIPTION, newDescription);
             newSubEvent.setData(LOCATION, newLocation); // Using the constant LOCATION
-            subEventHashMap.put(id, newSubEvent);
+            subEventHashMap.put(UUID.fromString(id), newSubEvent);
 
             Persistence subEventPersistence = new SubEvent();
             subEventPersistence.update(subEventHashMap);
@@ -264,12 +262,12 @@ public class SubEventController implements Controller {
     private String getFatherEventId(String searchId) throws IOException {
         EventController ec = new EventController();
         String fatherId = "";
-        Map<String, Persistence> list = ec.getHashMap();
+        Map<UUID, Persistence> list = ec.getHashMap();
         boolean found = false;
-        for (Map.Entry<String, Persistence> entry : list.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : list.entrySet()) {
             Persistence listindice = entry.getValue();
             if (listindice.getData("name").equals(searchId)) {
-                fatherId = listindice.getData("id");
+                fatherId = (String) listindice.getData("id");
                 found = true;
                 break;
             }

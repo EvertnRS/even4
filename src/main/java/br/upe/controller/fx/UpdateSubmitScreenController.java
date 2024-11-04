@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class UpdateSubmitScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -45,12 +46,13 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     private void loadArticles() throws IOException {
         Event eventController = new Event();
 
-        HashMap<String, Persistence> allEvents = eventController.read();
+        HashMap<UUID, Persistence> allEvents = eventController.read();
 
         eventComboBox.getItems().clear();
 
         for (Persistence event : allEvents.values()) {
-            eventComboBox.getItems().add(event.getData("name"));
+            String eventName = (String) event.getData("name");
+            eventComboBox.getItems().add(eventName);
         }
     }
 

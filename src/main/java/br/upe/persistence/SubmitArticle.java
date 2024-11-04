@@ -4,34 +4,40 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class SubmitArticle implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(SubmitArticle.class.getName());
+    private UUID id;
     private String name;
     private String path;
     private String event;
 
     @Override
-    public String getData(String dataToGet) {
+    public Object getData(String dataToGet) {
         return switch (dataToGet) {
             case "name" -> this.name;
             case "path" -> this.path;
             case "event" -> this.event;
+            case "id" -> this.id;
             default -> "";
         };
     }
 
-    public void setData(String key, String value) {
+    public void setData(String key, Object value) {
         switch (key) {
             case "name":
-                this.name = value;
+                this.name = (String) value;
                 break;
             case "path":
-                this.path = value;
+                this.path = (String) value;
                 break;
             case "event":
-                this.event = value;
+                this.event = (String) value;
+                break;
+            case "id":
+                this.id = (UUID) value;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid dataToSet: " + key);
@@ -40,12 +46,13 @@ public class SubmitArticle implements Persistence {
 
 
     @Override
-    public HashMap<String, Persistence> read() {
+    public HashMap<UUID, Persistence> read() {
         return new HashMap<>();
     }
 
-    public HashMap<String, Persistence> read(Object... params) {
-        HashMap<String, Persistence> userArticles = new HashMap<>();
+
+    public HashMap<UUID, Persistence> read(Object... params) {
+        HashMap<UUID, Persistence> userArticles = new HashMap<>();
 
 
         if (params.length != 1) {
@@ -81,8 +88,8 @@ public class SubmitArticle implements Persistence {
                             article.setData("name", fileName);
                             article.setData("path", articleFile.getAbsolutePath());
                             article.setData("event", eventFolder.getName());
-
-                            userArticles.put(fileName, article);
+                            UUID articleId = UUID.randomUUID();
+                            userArticles.put(articleId, article);
                         }
                     }
                 }
@@ -90,17 +97,6 @@ public class SubmitArticle implements Persistence {
         }
 
         return userArticles;
-    }
-
-
-    @Override
-    public String getName() {
-        return "";
-    }
-
-    @Override
-    public void setName(String email) {
-        throw new UnsupportedOperationException("setName operation is not supported.");
     }
 
     @Override

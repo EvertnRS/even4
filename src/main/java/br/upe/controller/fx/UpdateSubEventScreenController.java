@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 import static br.upe.ui.Validation.isValidDate;
 
@@ -95,7 +96,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue().toString();
 
-        Map<String, Persistence> subEventMap = facade.getSubEventHashMap();
+        Map<UUID, Persistence> subEventMap = facade.getSubEventHashMap();
         if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newSubName, subEventMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {

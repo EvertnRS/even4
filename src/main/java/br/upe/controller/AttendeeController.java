@@ -5,10 +5,7 @@ import br.upe.persistence.Persistence;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,18 +13,18 @@ public class AttendeeController implements Controller {
     private static final String USER_ID = "userId";
     private static final String SESSION_ID = "sessionId";
     private static final Logger LOGGER = Logger.getLogger(AttendeeController.class.getName());
-    private Map<String, Persistence> attendeeHashMap;
+    private Map<UUID, Persistence> attendeeHashMap;
     private Persistence attendeeLog;
 
     public AttendeeController() throws IOException {
         this.read();
     }
 
-    public Map<String, Persistence> getHashMap() {
+    public Map<UUID, Persistence> getHashMap() {
         return attendeeHashMap;
     }
 
-    public void setAttendeeHashMap(Map<String, Persistence> attendeeHashMap) {
+    public void setAttendeeHashMap(Map<UUID, Persistence> attendeeHashMap) {
         this.attendeeHashMap = attendeeHashMap;
     }
 
@@ -57,7 +54,7 @@ public class AttendeeController implements Controller {
                 return;
             }
 
-            for (Map.Entry<String, Persistence> entry : this.attendeeHashMap.entrySet()) {
+            for (Map.Entry<UUID, Persistence> entry : this.attendeeHashMap.entrySet()) {
                 Persistence attendee = entry.getValue();
                 if (attendee.getData(USER_ID).equals(userId) && attendee.getData(SESSION_ID).equals(sessionId)) {
                     throw new IOException();
@@ -93,9 +90,9 @@ public class AttendeeController implements Controller {
         }
 
         boolean nameExists = false;
-        for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : attendeeHashMap.entrySet()) {
             Persistence attendee = entry.getValue();
-            String name = attendee.getData("name");
+            String name = (String) attendee.getData("name");
             if (name.isEmpty() || name.equals(newName)) {
                 nameExists = true;
                 break;
@@ -108,11 +105,12 @@ public class AttendeeController implements Controller {
         }
 
         boolean found = false;
-        for (Map.Entry<String, Persistence> entry : this.attendeeHashMap.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : this.attendeeHashMap.entrySet()) {
             Persistence attendee = entry.getValue();
             if (attendee.getData(SESSION_ID).equals(sessionId)) {
                 attendee.setData("name", newName);
-                this.attendeeHashMap.put(attendee.getData("id"), attendee);
+                UUID attendeeId = (UUID) attendee.getData("id");
+                this.attendeeHashMap.put(attendeeId, attendee);
                 found = true;
                 break;
             }
@@ -135,9 +133,9 @@ public class AttendeeController implements Controller {
     @Override
     public void delete(Object... params) throws IOException {
         if ((params[1]).equals("id")) {
-            Iterator<Map.Entry<String, Persistence>> iterator = attendeeHashMap.entrySet().iterator();
+            Iterator<Map.Entry<UUID, Persistence>> iterator = attendeeHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, Persistence> entry = iterator.next();
+                Map.Entry<UUID, Persistence> entry = iterator.next();
                 Persistence attendee = entry.getValue();
 
                 if (attendee.getData(USER_ID).equals(params[0]) && attendee.getData(SESSION_ID).equals(params[2])) {
@@ -153,9 +151,9 @@ public class AttendeeController implements Controller {
 
     private boolean validateSessionId (String sessionId) throws IOException {
         SessionController sessionController = new SessionController();
-        Map<String, Persistence> sessH = sessionController.getHashMap();
+        Map<UUID, Persistence> sessH = sessionController.getHashMap();
         boolean hasSession = false;
-        for (Map.Entry<String, Persistence> entry : sessH.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : sessH.entrySet()) {
             Persistence session = entry.getValue();
             if (session.getData("id").equals(sessionId)) {
                 hasSession = true;
@@ -170,10 +168,11 @@ public class AttendeeController implements Controller {
             List<String> userEvents = new ArrayList<>();
 
             try {
-                for (Map.Entry<String, Persistence> entry : attendeeHashMap.entrySet()) {
+                for (Map.Entry<UUID, Persistence> entry : attendeeHashMap.entrySet()) {
                     Persistence persistence = entry.getValue();
                     if (persistence.getData(USER_ID).equals(params[0])) {
-                        userEvents.add(persistence.getData("name"));
+                        String EventName = (String) persistence.getData("name");
+                        userEvents.add(EventName);
                     }
                 }
                 if (userEvents.isEmpty()) {
@@ -196,10 +195,10 @@ public class AttendeeController implements Controller {
         String data = "";
         try {
             switch (dataToGet) {
-                case "name" -> data = this.attendeeLog.getData("name");
-                case SESSION_ID -> data = this.attendeeLog.getData(SESSION_ID);
-                case "id" -> data = this.attendeeLog.getData("id");
-                case USER_ID -> data = this.attendeeLog.getData(USER_ID);
+                case "name" -> data = (String) this.attendeeLog.getData("name");
+                case SESSION_ID -> data = (String) this.attendeeLog.getData(SESSION_ID);
+                case "id" -> data = (String) this.attendeeLog.getData("id");
+                case USER_ID -> data = (String) this.attendeeLog.getData(USER_ID);
                 default -> throw new IOException();
             }
         } catch (IOException e) {

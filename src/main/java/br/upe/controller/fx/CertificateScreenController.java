@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class CertificateScreenController extends BaseController implements FxController {
     private static final String SESSION_ID = "sessionId";
@@ -108,17 +109,17 @@ public class CertificateScreenController extends BaseController implements FxCon
             g2dName.setFont(new Font("Arial", Font.BOLD, 60));
             g2dName.setColor(Color.BLACK);
 
-            Map<String, Persistence> attendeeMap = facade.getAttendeeHashMap();
-            Map<String, Persistence> sessionMap = facade.getSessionHashMap();
-            String attendeeName = attendeeMap.get(attendeeId).getData("name");
+            Map<UUID, Persistence> attendeeMap = facade.getAttendeeHashMap();
+            Map<UUID, Persistence> sessionMap = facade.getSessionHashMap();
+            String attendeeName = (String) attendeeMap.get(attendeeId).getData("name");
 
-            String eventName = sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("name");
+            String eventName = (String) sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("name");
 
-            String startTime = sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("startTime");
-            String endTime = sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("endTime");
+            String startTime = (String) sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("startTime");
+            String endTime = (String) sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("endTime");
             String workload = timeDifference(startTime, endTime);
 
-            String eventDate = sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("date");
+            String eventDate = (String) sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("date");
 
             int xName = 130;
             int yName = 400;

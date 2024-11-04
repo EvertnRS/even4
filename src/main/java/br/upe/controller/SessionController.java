@@ -21,7 +21,7 @@ public class SessionController implements Controller {
     private static final String EVENT_TYPE = "Event";
     private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
 
-    private Map<String, Persistence> sessionHashMap;
+    private Map<UUID, Persistence> sessionHashMap;
     private Persistence sessionLog;
 
     public SessionController() throws IOException {
@@ -29,11 +29,11 @@ public class SessionController implements Controller {
         this.read();
     }
 
-    public Map<String, Persistence> getHashMap() {
+    public Map<UUID, Persistence> getHashMap() {
         return sessionHashMap;
     }
 
-    public void setSessionHashMap(Map<String, Persistence> sessionHashMap) {
+    public void setSessionHashMap(Map<UUID, Persistence> sessionHashMap) {
         this.sessionHashMap = sessionHashMap;
         if (!sessionHashMap.isEmpty()) {
             this.sessionLog = sessionHashMap.values().iterator().next();
@@ -50,15 +50,15 @@ public class SessionController implements Controller {
 
         try {
             switch (dataToGet) {
-                case ID -> data = this.sessionLog.getData(ID);
-                case NAME -> data = this.sessionLog.getData(NAME);
-                case DESCRIPTION -> data = this.sessionLog.getData(DESCRIPTION);
+                case ID -> data = (String) this.sessionLog.getData(ID);
+                case NAME -> data = (String) this.sessionLog.getData(NAME);
+                case DESCRIPTION -> data = (String) this.sessionLog.getData(DESCRIPTION);
                 case "date" -> data = String.valueOf(this.sessionLog.getData("date"));
-                case LOCATION -> data = this.sessionLog.getData(LOCATION);
-                case EVENT_ID -> data = this.sessionLog.getData(EVENT_ID);
-                case OWNER_ID -> data = this.sessionLog.getData(OWNER_ID);
-                case STARTTIME -> data = this.sessionLog.getData(STARTTIME);
-                case ENDTIME -> data = this.sessionLog.getData(ENDTIME);
+                case LOCATION -> data = (String) this.sessionLog.getData(LOCATION);
+                case EVENT_ID -> data = (String) this.sessionLog.getData(EVENT_ID);
+                case OWNER_ID -> data = (String) this.sessionLog.getData(OWNER_ID);
+                case STARTTIME -> data = (String) this.sessionLog.getData(STARTTIME);
+                case ENDTIME -> data = (String) this.sessionLog.getData(ENDTIME);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -82,7 +82,7 @@ public class SessionController implements Controller {
         String endTime = (String) params[6];
         String userId = (String) params[7];
 
-        Map<String, Persistence> eventH;
+        Map<UUID, Persistence> eventH;
         if (params[8].equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
             eventH = eventController.getHashMap();
@@ -93,19 +93,20 @@ public class SessionController implements Controller {
 
         Persistence session = new Session();
         session.create(eventId, name, date, description, location, startTime, endTime, userId, eventH);
-        sessionHashMap.put(session.getData(ID), session);
+        UUID sessionId = (UUID) session.getData(ID);
+        sessionHashMap.put(sessionId, session);
 
         this.sessionLog = session;
     }
-
+    /*
     private void cascadeDelete(String id) throws IOException {
 
         AttendeeController attendeeController = new AttendeeController();
         attendeeController.read();
-        Iterator<Map.Entry<String, Persistence>> attendeeIterator = attendeeController.getHashMap().entrySet().iterator();
+        Iterator<Map.Entry<UUID, Persistence>> attendeeIterator = attendeeController.getHashMap().entrySet().iterator();
         while (attendeeIterator.hasNext()) {
-            Map.Entry<String, Persistence> entry = attendeeIterator.next();
-            String sessionId = entry.getValue().getData("sessionId");
+            Map.Entry<UUID, Persistence> entry = attendeeIterator.next();
+            UUID sessionId = (UUID) entry.getValue().getData("sessionId");
             if (sessionHashMap.containsKey(sessionId)) {
                 attendeeIterator.remove();
             }
@@ -118,7 +119,7 @@ public class SessionController implements Controller {
             }
         });
 
-        String subEventName = sessionHashMap.get(id).getData("name");
+        String subEventName = (String) sessionHashMap.get(id).getData("name");
         SubmitArticleController articleController = new SubmitArticleController();
         articleController.read(subEventName);
         Iterator<Map.Entry<String, Persistence>> articleIterator = articleController.getHashMap().entrySet().iterator();
@@ -135,23 +136,22 @@ public class SessionController implements Controller {
                 throw new IllegalArgumentException(e);
             }
         });
-    }
+    }*/
 
     @Override
     public void delete(Object... params) throws IOException {
         String ownerId = "";
-        cascadeDelete((String) params[0]);
-        for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : sessionHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData(ID).equals(params[0])) {
-                ownerId = persistence.getData(OWNER_ID);
+                ownerId = (String) persistence.getData(OWNER_ID);
             }
         }
 
         if ((params[1]).equals(ownerId)) {
-            Iterator<Map.Entry<String, Persistence>> iterator = sessionHashMap.entrySet().iterator();
+            Iterator<Map.Entry<UUID, Persistence>> iterator = sessionHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, Persistence> entry = iterator.next();
+                Map.Entry<UUID, Persistence> entry = iterator.next();
                 Persistence sessionIndice = entry.getValue();
                 if (sessionIndice.getData(ID).equals(params[0])) {
                     iterator.remove();
@@ -170,10 +170,11 @@ public class SessionController implements Controller {
             List<String> userEvents = new ArrayList<>();
 
             try {
-                for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
+                for (Map.Entry<UUID, Persistence> entry : sessionHashMap.entrySet()) {
                     Persistence persistence = entry.getValue();
                     if (persistence.getData(OWNER_ID).equals(params[0])) {
-                        userEvents.add(persistence.getData("name"));
+                        String eventName = (String) persistence.getData("name");
+                        userEvents.add(eventName);
                     }
                 }
                 if (userEvents.isEmpty()) {
@@ -256,21 +257,21 @@ public class SessionController implements Controller {
         String fatherId = "";
         if (eventType.equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
-            Map<String, Persistence> eventH = eventController.getHashMap();
-            for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
+            Map<UUID, Persistence> eventH = eventController.getHashMap();
+            for (Map.Entry<UUID, Persistence> entry : eventH.entrySet()) {
                 Persistence eventIndice = entry.getValue();
                 if (eventIndice.getData(NAME).equals(eventName)) {
-                    fatherId = eventIndice.getData(ID);
+                    fatherId = (String) eventIndice.getData(ID);
                     break;
                 }
             }
         } else {
             SubEventController subEventController = new SubEventController();
-            Map<String, Persistence> eventH = subEventController.getHashMap();
-            for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
+            Map<UUID, Persistence> eventH = subEventController.getHashMap();
+            for (Map.Entry<UUID, Persistence> entry : eventH.entrySet()) {
                 Persistence eventIndice = entry.getValue();
                 if (eventIndice.getData(NAME).equals(eventName)) {
-                    fatherId = eventIndice.getData(ID);
+                    fatherId = (String) eventIndice.getData(ID);
                     break;
                 }
             }

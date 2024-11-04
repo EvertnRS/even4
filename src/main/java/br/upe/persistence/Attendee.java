@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class Attendee implements Persistence{
@@ -14,25 +15,25 @@ public class Attendee implements Persistence{
     private static final String WRITE_ERROR = "Erro na escrita do arquivo";
     private static final String SESSION_ID = "sessionId";
     private static final String USER_ID = "userId";
-    private String id;
-    private String userId;
+    private UUID id;
+    private UUID userId;
     private String name;
-    private String sessionId;
+    private UUID sessionId;
 
 
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -44,11 +45,11 @@ public class Attendee implements Persistence{
         this.name = name;
     }
 
-    public String getSessionId() {
+    public UUID getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(String sessionId) {
+    public void setSessionId(UUID sessionId) {
         this.sessionId = sessionId;
     }
 
@@ -59,10 +60,10 @@ public class Attendee implements Persistence{
             return;
         }
 
-        this.userId = (String) params[0];
+        this.userId = (UUID) params[0];
         this.name = (String) params[1];
-        this.sessionId = (String) params[2];
-        this.id = generateId();
+        this.sessionId = (UUID) params[2];
+        this.id = UUID.fromString(generateId());
         String line = id + ";" + userId + ";" + name + ";" + sessionId;
 
         try {
@@ -127,8 +128,8 @@ public class Attendee implements Persistence{
     }
 
     @Override
-    public String getData(String dataToGet) {
-        String data = "";
+    public Object getData(String dataToGet) {
+        Object data = new Object();
         try {
             switch (dataToGet) {
                 case "name" -> data = this.getName();
@@ -145,13 +146,13 @@ public class Attendee implements Persistence{
 
 
     @Override
-    public void setData(String dataToSet, String data) {
+    public void setData(String dataToSet, Object data) {
         try {
             switch (dataToSet) {
-                case "name" -> this.setName(data);
-                case SESSION_ID -> this.setSessionId(data);
-                case "id" -> this.setId(data);
-                case USER_ID -> this.setUserId(data);
+                case "name" -> this.setName((String) data);
+                case SESSION_ID -> this.setSessionId((UUID) data);
+                case "id" -> this.setId((UUID) data);
+                case USER_ID -> this.setUserId((UUID) data);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -168,8 +169,8 @@ public class Attendee implements Persistence{
     }
 
     @Override
-    public HashMap<String, Persistence> read() throws IOException {
-        HashMap<String, Persistence> list = new HashMap<>();
+    public HashMap<UUID, Persistence> read() throws IOException {
+        HashMap<UUID, Persistence> list = new HashMap<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ATTENDEE_PATH), StandardCharsets.UTF_8));
         try (reader) {
             String line;
@@ -184,9 +185,9 @@ public class Attendee implements Persistence{
 
                     Attendee attendee = new Attendee();
                     attendee.setName(parsedName);
-                    attendee.setSessionId(parsedSessionId);
-                    attendee.setId(parsedId);
-                    attendee.setUserId(parsedUserId);
+                    attendee.setSessionId(UUID.fromString(parsedSessionId));
+                    attendee.setId(UUID.fromString(parsedId));
+                    attendee.setUserId(UUID.fromString(parsedUserId));
                     list.put(attendee.getId(), attendee);
                 }
             }
@@ -203,7 +204,7 @@ public class Attendee implements Persistence{
     }
 
     @Override
-    public HashMap<String, Persistence> read(Object... params) {
+    public HashMap<UUID, Persistence> read(Object... params) {
         return new HashMap<>();
     }
 }

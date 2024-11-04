@@ -53,7 +53,7 @@ class UserControllerTest {
         for (Map.Entry<String, Persistence> entry : userHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("email").equals("newuser@example.com")) {
-                userReaded = persistence.getData("id");
+                userReaded = (String) persistence.getData("id");
             }
         }
 

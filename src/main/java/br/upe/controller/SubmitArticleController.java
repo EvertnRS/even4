@@ -6,17 +6,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class SubmitArticleController implements Controller {
-    private Map<String, Persistence> articleHashMap = new HashMap<>();
+    private Map<UUID, Persistence> articleHashMap = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(SubmitArticleController.class.getName());
 
-    public Map<String, Persistence> getHashMap() {
+    public Map<UUID, Persistence> getHashMap() {
         return articleHashMap;
     }
 
-    public void setArticleHashMap(Map<String, Persistence> articleHashMap) {
+    public void setArticleHashMap(Map<UUID, Persistence> articleHashMap) {
         this.articleHashMap = articleHashMap;
     }
 
@@ -26,7 +27,7 @@ public class SubmitArticleController implements Controller {
         try {
             Persistence article = this.articleHashMap.get(dataToGet);
             if (article != null) {
-                data = article.getData(dataToGet);
+                data = (String) article.getData(dataToGet);
             }
         } catch (Exception e) {
             LOGGER.warning("Informação não existe ou é restrita");
@@ -43,7 +44,7 @@ public class SubmitArticleController implements Controller {
 
         String eventName = (String) params[0];
         String filePath = (String) params[1];
-        String id = (String) params[2];
+        UUID id = (UUID) params[2];
         boolean eventFound = getFatherEventId(eventName);
         if (eventFound) {
             Persistence article = new SubmitArticle();
@@ -89,7 +90,8 @@ public class SubmitArticleController implements Controller {
         Persistence article = articleHashMap.get(articleName);
         if (article != null) {
             article.update(newEventName, oldEventName, articleName);
-            articleHashMap.put(articleName, article);
+            UUID articleId = (UUID) article.getData("id");
+            articleHashMap.put(articleId, article);
         } else {
             LOGGER.warning("Artigo não encontrado.");
         }
@@ -111,7 +113,7 @@ public class SubmitArticleController implements Controller {
         this.articleHashMap = articlePersistence.read(userId);
 
         if (!(this.articleHashMap.isEmpty())) {
-            this.articleHashMap.forEach((key, value) -> LOGGER.info(key));
+            this.articleHashMap.forEach((key, value) -> LOGGER.info(String.valueOf(key)));
         } else {
             LOGGER.warning("Nenhum artigo encontrado.");
         }
@@ -124,9 +126,9 @@ public class SubmitArticleController implements Controller {
 
     private boolean getFatherEventId(String eventName) throws IOException {
         EventController ec = new EventController();
-        Map<String, Persistence> list = ec.getHashMap();
+        Map<UUID, Persistence> list = ec.getHashMap();
         boolean found = false;
-        for (Map.Entry<String, Persistence> entry : list.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : list.entrySet()) {
             Persistence listindice = entry.getValue();
             if (listindice.getData("name").equals(eventName)) {
                 found = true;

@@ -12,6 +12,8 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import javafx.scene.text.Text;
 
 import static br.upe.ui.Validation.isValidDate;
@@ -128,7 +130,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         String subEventDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
         String selectedEventName = searchField.getText();
 
-        Map<String, Persistence> subEventMap = facade.getSubEventHashMap();
+        Map<UUID, Persistence> subEventMap = facade.getSubEventHashMap();
         if (!validateEventDate(subEventDate, selectedEventName)) {
             errorUpdtLabel.setText("Data do subEvento não pode ser anterior a data do evento.");
         } else if (!isValidDate(subEventDate) || subEventLocation.isEmpty() || subEventDescription.isEmpty() || isValidName(subEventName, subEventMap)) {
