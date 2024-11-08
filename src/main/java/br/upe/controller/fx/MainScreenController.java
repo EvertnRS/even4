@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class MainScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -33,7 +34,7 @@ public class MainScreenController extends BaseController implements FxController
     }
 
     private void initial() throws IOException {
-        userEmail.setText(facade.getUserData("email"));
+        userEmail.setText(facade.getUserData("name"));
         loadUserEvents();
     }
 
@@ -69,14 +70,14 @@ public class MainScreenController extends BaseController implements FxController
 
         eventVBox.setAlignment(Pos.CENTER);
 
-        for (Map.Entry<String, Persistence> entry : facade.getEventHashMap().entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : facade.getEventHashMap().entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("ownerId").equals(facade.getUserData("id"))) {
 
                 VBox eventContainer = new VBox();
                 eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-                Label eventLabel = new Label(persistence.getData("name"));
+                Label eventLabel = new Label((String) persistence.getData("name"));
                 eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
                 Button editButton = new Button("Editar");
@@ -89,11 +90,11 @@ public class MainScreenController extends BaseController implements FxController
                 detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
                 detailsButton.setOnAction(e ->
-                    handleDetailEvent(persistence.getData("id")));
+                    handleDetailEvent((UUID) persistence.getData("id")));
 
                 editButton.setOnAction(e -> {
                     try {
-                        handleEditEvent(persistence.getData("id"));
+                        handleEditEvent((String) persistence.getData("id"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -101,7 +102,7 @@ public class MainScreenController extends BaseController implements FxController
 
                 deleteButton.setOnAction(e -> {
                     try {
-                        handleDeleteEvent(persistence.getData("id"), facade.getUserData("id"));
+                        handleDeleteEvent((String) persistence.getData("id"), facade.getUserData("id"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -118,13 +119,13 @@ public class MainScreenController extends BaseController implements FxController
         }
     }
 
-    private void handleDetailEvent(String id) {
+    private void handleDetailEvent(UUID id) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Detalhes do Evento");
         alert.setHeaderText("Detalhes do Evento");
 
         Persistence event = facade.getEventHashMap().get(id);
-        Persistence owner = facade.getUserHashMap().get(event.getData("ownerId"));
+        Persistence owner = facade.getUserHashMap().get((UUID) event.getData("ownerId"));
 
         String content = "Nome: " + event.getData("name") + "\n" +
                 "Data: " + event.getData("date") + "\n" +

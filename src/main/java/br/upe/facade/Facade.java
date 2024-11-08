@@ -4,6 +4,7 @@ import br.upe.persistence.Persistence;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class Facade implements FacadeInterface {
     private final Controller eventController;
@@ -24,7 +25,7 @@ public class Facade implements FacadeInterface {
 
 
     // EventController methods
-    public Map<String, Persistence> getEventHashMap() {
+    public Map<UUID, Persistence> getEventHashMap() {
         return eventController.getHashMap();
     }
 
@@ -54,7 +55,7 @@ public class Facade implements FacadeInterface {
 
 
     // SessionController methods
-    public Map<String, Persistence> getSessionHashMap() {
+    public Map<UUID, Persistence> getSessionHashMap() {
         return sessionController.getHashMap();
     }
 
@@ -85,7 +86,7 @@ public class Facade implements FacadeInterface {
 
 
     // SubEventController methods
-    public Map<String, Persistence> getSubEventHashMap() {
+    public Map<UUID, Persistence> getSubEventHashMap() {
         return subEventController.getHashMap();
     }
 
@@ -110,7 +111,7 @@ public class Facade implements FacadeInterface {
     }
 
     // SubmitArticleController methods
-    public Map<String, Persistence> getArticleHashMap() {
+    public Map<UUID, Persistence> getArticleHashMap() {
         return submitArticleController.getHashMap();
     }
 
@@ -131,7 +132,7 @@ public class Facade implements FacadeInterface {
     }
 
     // UserController methods
-    public Map<String, Persistence> getUserHashMap() {
+    public Map<UUID, Persistence> getUserHashMap() {
         return userController.getHashMap();
     }
 
@@ -151,8 +152,12 @@ public class Facade implements FacadeInterface {
         userController.delete(params);
     }
 
-    public boolean loginValidate(String email, String cpf) {
-        return userController.loginValidate(email, cpf);
+    @Override
+    public boolean loginValidate(String email, String password) {
+        System.out.println("Facade: loginValidate");
+        System.out.println("email: " + email);
+        System.out.println("pass: " + password);
+        return userController.loginValidate(email, password);
     }
 
     public String getUserData(String dataToGet) {
@@ -160,7 +165,7 @@ public class Facade implements FacadeInterface {
     }
 
     // AttendeeController methods
-    public Map<String, Persistence> getAttendeeHashMap() {
+    public Map<UUID, Persistence> getAttendeeHashMap() {
         return attendeeController.getHashMap();
     }
 

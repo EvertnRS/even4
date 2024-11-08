@@ -14,10 +14,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class UpdateAttendeeScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -50,17 +52,17 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
     }
 
     private void loadUserEvents(){
-        Map<String, Persistence> sessionHashMap = facade.getSessionHashMap();
+        Map<UUID, Persistence> sessionHashMap = facade.getSessionHashMap();
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         List<String> filteredSessions = sessionHashMap.values().stream()
                 .filter(session -> {
-                    String sessionDateStr = session.getData("date");
+                    String sessionDateStr = (String) session.getData("date");
                     LocalDate sessionDate = LocalDate.parse(sessionDateStr, formatter);
                     return sessionDate.isAfter(today);
                 })
-                .map(session -> session.getData("name"))
+                .map(session -> session.getData("name").toString())
                 .toList();
 
         eventComboBox.getItems().addAll(filteredSessions);
@@ -99,15 +101,15 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
         String selectedSessionName = eventComboBox.getSelectionModel().getSelectedItem();
         String sessionId = "";
 
-        Map<String, Persistence> sessionHashMap = facade.getSessionHashMap();
-        for (Map.Entry<String, Persistence> entry : sessionHashMap.entrySet()) {
+        Map<UUID, Persistence> sessionHashMap = facade.getSessionHashMap();
+        for (Map.Entry<UUID, Persistence> entry : sessionHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("name").equals(selectedSessionName)) {
-                sessionId = persistence.getData("id");
+                sessionId = (String) persistence.getData("id");
             }
         }
 
-        Map<String, Persistence> attendeeMap = facade.getAttendeeHashMap();
+        Map<UUID, Persistence> attendeeMap = facade.getAttendeeHashMap();
         if (isValidName(attendeeName, attendeeMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {

@@ -3,9 +3,11 @@ package br.upe.persistence;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.sql.Date;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class SubEvent extends Event implements Persistence{
@@ -16,26 +18,26 @@ public class SubEvent extends Event implements Persistence{
     private static final String OWNER_ID = "ownerId";
     private static final String SUB_EVENTS_PATH = "./db/subEvents.csv";
     private static final String WRITE_ERROR = "Erro na escrita do arquivo";
-    private String eventId;
-    private String id;
+    private UUID eventId;
+    private UUID id;
     private String name;
-    private String date;
+    private Date date;
     private String description;
     private String location;
-    private String ownerId;
+    private UUID ownerId;
 
     @Override
-    public String getData(String dataToGet){
+    public Object getData(String dataToGet) {
         String data = "";
         try {
             switch (dataToGet) {
-                case "id" -> data = this.getId();
+                case "id" -> data = String.valueOf(this.getId());
                 case "name" -> data = this.getName();
-                case "date" -> data = this.getDate();
+                case "date" -> data = String.valueOf(this.getDate());
                 case CONST_DESCRIPTION -> data = this.getDescription();
                 case CONST_LOCATION -> data = this.getLocation();
-                case EVENT_ID -> data = this.getEventId();
-                case OWNER_ID -> data = this.getOwnerId();
+                case EVENT_ID -> data = String.valueOf(this.getEventId());
+                case OWNER_ID -> data = String.valueOf(this.getOwnerId());
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -45,16 +47,16 @@ public class SubEvent extends Event implements Persistence{
     }
 
     @Override
-    public void setData(String dataToSet, String data){
+    public void setData(String dataToSet, Object data){
         try {
             switch (dataToSet) {
-                case "id" -> this.setId(data);
-                case "name" -> this.setName(data);
-                case CONST_DESCRIPTION -> this.setDescription(data);
-                case "date" -> this.setDate(data);
-                case CONST_LOCATION -> this.setLocation(data);
-                case EVENT_ID -> this.setEventId(data);
-                case OWNER_ID -> this.setOwnerId(data);
+                case "id" -> this.setId((UUID) data);
+                case "name" -> this.setName((String) data);
+                case CONST_DESCRIPTION -> this.setDescription((String) data);
+                case "date" -> this.setDate((Date) data);
+                case CONST_LOCATION -> this.setLocation((String) data);
+                case EVENT_ID -> this.setEventId((UUID) data);
+                case OWNER_ID -> this.setOwnerId((UUID) data);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -71,12 +73,12 @@ public class SubEvent extends Event implements Persistence{
     }
 
     @Override
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
     @Override
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -101,12 +103,12 @@ public class SubEvent extends Event implements Persistence{
     }
 
     @Override
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
     @Override
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -120,19 +122,19 @@ public class SubEvent extends Event implements Persistence{
         this.location = location;
     }
 
-    public String getEventId() {
+    public UUID getEventId() {
         return eventId;
     }
 
-    public void setEventId(String eventId) {
+    public void setEventId(UUID eventId) {
         this.eventId = eventId;
     }
 
-    public String getOwnerId() {
+    public UUID getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(String ownerId) {
+    public void setOwnerId(UUID ownerId) {
         this.ownerId = ownerId;
     }
 
@@ -169,8 +171,8 @@ public class SubEvent extends Event implements Persistence{
         }
     }
     @Override
-    public HashMap<String, Persistence>  read() throws IOException {
-        HashMap<String, Persistence> list = new HashMap<>();
+    public HashMap<UUID, Persistence>  read() throws IOException {
+        HashMap<UUID, Persistence> list = new HashMap<>();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(SUB_EVENTS_PATH), StandardCharsets.UTF_8));
         try (reader) {
@@ -189,13 +191,13 @@ public class SubEvent extends Event implements Persistence{
                     String parsedOwnerId = parts[6].trim();
 
                     SubEvent subEvent = new SubEvent();
-                    subEvent.setId(parsedId);
+                    subEvent.setId(UUID.fromString(parsedId));
                     subEvent.setName(parsedName);
-                    subEvent.setDate(parsedDate);
+                    subEvent.setDate(Date.valueOf(parsedDate));
                     subEvent.setDescription(parsedDescription);
                     subEvent.setLocation(parsedLocation);
-                    subEvent.setEventId(parsedEventId);
-                    subEvent.setOwnerId(parsedOwnerId);
+                    subEvent.setEventId(UUID.fromString(parsedEventId));
+                    subEvent.setOwnerId(UUID.fromString(parsedOwnerId));
                     list.put(subEvent.getId(), subEvent);
                 }
             }
@@ -211,7 +213,7 @@ public class SubEvent extends Event implements Persistence{
     }
 
     @Override
-    public HashMap<String, Persistence> read(Object... params) {
+    public HashMap<UUID, Persistence> read(Object... params) {
         return new HashMap<>();
     }
 

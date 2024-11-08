@@ -2,10 +2,12 @@ package br.upe.persistence;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.sql.Date;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 
@@ -15,23 +17,23 @@ public class Event implements Persistence {
     private static final String CONST_LOCATION = "location";
     private static final String OWNER_ID = "ownerId";
     private static final String EVENT_PATH = "./db/events.csv";
-    private String id;
+    private UUID id;
     private String name;
-    private String date;
+    private Date date;
     private String description;
     private String location;
-    private String ownerId;
+    private UUID ownerId;
     private List<Persistence> sessionsList;
 
-    public String getIdOwner() {
+    public UUID getIdOwner() {
         return ownerId;
     }
 
-    public void setIdOwner(String ownerId) {
+    public void setIdOwner(UUID ownerId) {
         this.ownerId = ownerId;
     }
 
-    public String getId() {
+    public UUID getId() {
 
         return id;
     }
@@ -41,7 +43,7 @@ public class Event implements Persistence {
         return name;
     }
 
-    public String  getDate() {
+    public Date  getDate() {
 
         return date;
     }
@@ -56,7 +58,7 @@ public class Event implements Persistence {
         return location;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
 
         this.id = id;
     }
@@ -66,7 +68,7 @@ public class Event implements Persistence {
         this.name = name;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
 
         this.date = date;
     }
@@ -97,16 +99,16 @@ public class Event implements Persistence {
     }
 
     @Override
-    public String getData(String dataToGet) {
+    public Object getData(String dataToGet) {
         String data = "";
         try {
             switch (dataToGet) {
-                case "id" -> data = this.getId();
+                case "id" -> data = String.valueOf(this.getId());
                 case "name" -> data = this.getName();
-                case "date" -> data = this.getDate();
+                case "date" -> data = String.valueOf(this.getDate());
                 case CONST_DESCRIPTION -> data = this.getDescription();
                 case CONST_LOCATION -> data = this.getLocation();
-                case OWNER_ID -> data = this.getIdOwner();
+                case OWNER_ID -> data = String.valueOf(this.getIdOwner());
                 case "listSize" -> data = String.valueOf(this.getSessionListLSize());
                 default -> throw new IOException();
             }
@@ -117,15 +119,15 @@ public class Event implements Persistence {
     }
 
     @Override
-    public void setData(String dataToSet, String data){
+    public void setData(String dataToSet, Object data){
         try {
             switch (dataToSet) {
-                case "id" -> this.setId(data);
-                case "name" -> this.setName(data);
-                case CONST_DESCRIPTION -> this.setDescription(data);
-                case "date" -> this.setDate(data);
-                case CONST_LOCATION -> this.setLocation(data);
-                case OWNER_ID -> this.setIdOwner(data);
+                case "id" -> this.setId((UUID) data);
+                case "name" -> this.setName((String) data);
+                case CONST_DESCRIPTION -> this.setDescription((String) data);
+                case "date" -> this.setDate((Date) data);
+                case CONST_LOCATION -> this.setLocation((String) data);
+                case OWNER_ID -> this.setIdOwner((UUID) data);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -141,12 +143,12 @@ public class Event implements Persistence {
         }
 
         this.name = (String) params[0];
-        this.date = (String) params[1];
+        this.date = (Date) params[1];
         this.description = (String) params[2];
         this.location = (String) params[3];
-        this.ownerId = (String) params[4];
+        this.ownerId = (UUID) params[4];
 
-        this.id = generateId();
+        this.id = UUID.randomUUID();
         String line = id + ";" + name + ";" + date + ";" + description + ";" + location + ";" + ownerId + "\n";
 
         File f = new File(EVENT_PATH);
@@ -164,8 +166,8 @@ public class Event implements Persistence {
 
 
     @Override
-    public  HashMap<String, Persistence> read() throws IOException {
-        HashMap<String, Persistence> list = new HashMap<>();
+    public  HashMap<UUID, Persistence> read() throws IOException {
+        HashMap<UUID, Persistence> list = new HashMap<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(EVENT_PATH), StandardCharsets.UTF_8));
         try (reader) {
             String line;
@@ -173,12 +175,12 @@ public class Event implements Persistence {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(";");
                 if (parts.length == 6) {
-                    String parsedId = parts[0].trim();
+                    UUID parsedId = UUID.fromString(parts[0].trim());
                     String parsedName = parts[1].trim();
-                    String parsedDate = parts[2].trim();
+                    Date parsedDate = Date.valueOf(parts[2].trim());
                     String parsedDescription = parts[3].trim();
                     String parsedLocation = parts[4].trim();
-                    String parsedOwnerId = parts[5].trim();
+                    UUID parsedOwnerId = UUID.fromString(parts[5].trim());
 
                     Event event = new Event();
 
@@ -188,7 +190,8 @@ public class Event implements Persistence {
                     event.setDescription(parsedDescription);
                     event.setLocation(parsedLocation);
                     event.setIdOwner(parsedOwnerId);
-                    list.put(event.getId(), event);
+                    UUID eventId = parsedId;
+                    list.put(eventId, event);
                 }
             }
 
@@ -203,8 +206,13 @@ public class Event implements Persistence {
     }
 
     @Override
-    public HashMap<String, Persistence> read(Object... params) {
+    public HashMap<UUID, Persistence> read(Object... params) {
         return new HashMap<>();
+    }
+
+    @Override
+    public boolean loginValidate(String email, String password) {
+        return false;
     }
 
     @Override
@@ -213,10 +221,10 @@ public class Event implements Persistence {
             LOGGER.warning("Só pode ter 1 parametro");
         }
 
-        HashMap<String, Persistence> userHashMap = (HashMap<String, Persistence>) params[0];
+        HashMap<UUID, Persistence> userHashMap = (HashMap<UUID, Persistence>) params[0];
         BufferedWriter writer = new BufferedWriter(new FileWriter(EVENT_PATH));
         try (writer) {
-            for (Map.Entry<String, Persistence> entry : userHashMap.entrySet()) {
+            for (Map.Entry<UUID, Persistence> entry : userHashMap.entrySet()) {
                 Persistence event = entry.getValue();
                 String line = event.getData("id") + ";" + event.getData("name") + ";" + event.getData("date")
                         + ";" + event.getData(CONST_DESCRIPTION)
@@ -258,13 +266,6 @@ public class Event implements Persistence {
         }
     }
 
-    private String generateId() {
-        SecureRandom secureRandom = new SecureRandom();
-        long timestamp = Instant.now().toEpochMilli();
-        int lastThreeDigitsOfTimestamp = (int) (timestamp % 1000);
-        int randomValue = secureRandom.nextInt(900) + 100;
-        return String.format("%03d%03d", lastThreeDigitsOfTimestamp, randomValue);
-    }
 
 }
 

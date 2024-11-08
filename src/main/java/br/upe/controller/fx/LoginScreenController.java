@@ -17,13 +17,13 @@ public class LoginScreenController extends BaseController implements FxControlle
     private TextField emailTextField;
 
     @FXML
-    private TextField cpfTextField;
+    private TextField passTextField;
 
     @FXML
     private AnchorPane loginAnchorPane;
 
     @FXML
-    private Text cpfPlaceholder;
+    private Text passPlaceholder;
 
     @FXML
     private Text emailPlaceholder;
@@ -49,11 +49,11 @@ public class LoginScreenController extends BaseController implements FxControlle
 
         emailTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.DOWN) {
-                cpfTextField.requestFocus();
+                passTextField.requestFocus();
             }
         });
 
-        cpfTextField.setOnKeyPressed(event -> {
+        passTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.UP) {
                 emailTextField.requestFocus();
             }
@@ -64,16 +64,18 @@ public class LoginScreenController extends BaseController implements FxControlle
 
     private void setupPlaceholders() {
         PlaceholderUtils.setupPlaceholder(emailTextField, emailPlaceholder);
-        PlaceholderUtils.setupPlaceholder(cpfTextField, cpfPlaceholder);
+        PlaceholderUtils.setupPlaceholder(passTextField, passPlaceholder);
     }
 
     public void handleLogin() throws IOException {
         String email = emailTextField.getText();
-        String cpf = cpfTextField.getText();
+        String pass = passTextField.getText();
 
-        UserController userController = new UserController();
-        FacadeInterface facade = (FacadeInterface) new Facade(userController);
-        if (facade.loginValidate(email, cpf)) {
+        UserController userController = UserController.getInstance();
+        FacadeInterface facade = new Facade(userController);
+
+        if (userController.loginValidate(email, pass)) {
+            System.out.print("Login efetuado com sucesso!\n\n\n\n");
             genericButton("/fxml/mainScreen.fxml", loginAnchorPane, facade, null);
         } else {
             errorLabel.setText("Login falhou! Verifique suas credenciais.");

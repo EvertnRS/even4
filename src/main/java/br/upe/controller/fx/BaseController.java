@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class BaseController {
 
@@ -25,7 +26,7 @@ public abstract class BaseController {
             screenController.setFacade(facade);
 
             if (screenController instanceof UpdateEventScreenController) {
-                ((UpdateEventScreenController) screenController).setEventId(eventId);
+                ((UpdateEventScreenController) screenController).setEventId(UUID.fromString(eventId));
             }
             if (screenController instanceof UpdateSubEventScreenController) {
                 ((UpdateSubEventScreenController) screenController).setEventName(eventId);
@@ -50,8 +51,8 @@ public abstract class BaseController {
 
     }
 
-    public boolean isValidName(String name, Map<String, Persistence> eventHashMap) {
-        for (Map.Entry<String, Persistence> entry : eventHashMap.entrySet()) {
+    public boolean isValidName(String name, Map<UUID, Persistence> eventHashMap) {
+        for (Map.Entry<UUID, Persistence> entry : eventHashMap.entrySet()) {
             Persistence event = entry.getValue();
             if (event.getData("name").equals(name) || name.isEmpty()) {
                 return true;
@@ -65,15 +66,15 @@ public abstract class BaseController {
 
         EventController eventController = new EventController();
         SubEventController subEventController = new SubEventController();
-        Map<String, Persistence> parentMap = new HashMap<>(eventController.getHashMap());
+        Map<UUID, Persistence> parentMap = new HashMap<>(eventController.getHashMap());
         parentMap.putAll(subEventController.getHashMap());
 
 
         String parentDateString = "";
-        for (Map.Entry<String, Persistence> entry : parentMap.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : parentMap.entrySet()) {
             Persistence listIndex = entry.getValue();
             if (listIndex.getData("name").equals(searchId)) {
-                parentDateString = listIndex.getData("date");
+                parentDateString = (String) listIndex.getData("date");
                 break;
             }
         }

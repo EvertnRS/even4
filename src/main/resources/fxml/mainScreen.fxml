@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="mainPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/21.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.MainScreenController">
+<AnchorPane fx:id="mainPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.MainScreenController">
 
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
@@ -40,7 +40,7 @@
                <font>
                   <Font name="System Bold" size="68.0" />
                </font></Label>
-            <Button layoutX="28.0" layoutY="512.0" mnemonicParsing="false" onAction="#handleAddEvent" opacity="0.0" prefHeight="65.0" prefWidth="63.0" text="addEvent" style="-fx-cursor: hand"/>
+            <Button layoutX="28.0" layoutY="512.0" mnemonicParsing="false" onAction="#handleAddEvent" opacity="0.0" prefHeight="65.0" prefWidth="63.0" style="-fx-cursor: hand" text="addEvent" />
             <Label layoutX="51.0" layoutY="22.0" text="Eventos Criados" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="22.0" />
@@ -50,7 +50,7 @@
       </Pane>
       <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="134.0" style="-fx-text-fill: white;" text="Teste">
          <font>
-            <Font name="Inter Semi Bold" size="12.0" />
+            <Font name="Inter Semi Bold" size="18.0" />
          </font></Label>
       <Label layoutX="64.0" layoutY="512.0" text="Sair">
          <font>

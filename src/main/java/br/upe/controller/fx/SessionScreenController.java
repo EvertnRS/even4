@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class SessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -69,11 +70,11 @@ public class SessionScreenController extends BaseController implements FxControl
         scrollPane.setStyle("-fx-padding: 20px;");
         sessionVBox.setAlignment(Pos.CENTER);
 
-        Map<String, Persistence> parentMap = new HashMap<>(facade.getEventHashMap());
+        Map<UUID, Persistence> parentMap = new HashMap<>(facade.getEventHashMap());
         parentMap.putAll(facade.getSubEventHashMap());
 
         // Iterar sobre cada sessão
-        for (Map.Entry<String, Persistence> entry : facade.getSessionHashMap().entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : facade.getSessionHashMap().entrySet()) {
             Persistence persistence = entry.getValue();
 
             // Verifica se a sessão pertence ao usuário logado
@@ -83,18 +84,18 @@ public class SessionScreenController extends BaseController implements FxControl
                 sessionContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
                 // Exibe o nome da sessão
-                Label sessionLabel = new Label(persistence.getData("name"));
+                Label sessionLabel = new Label((String) persistence.getData("name"));
                 sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
                 // Label para exibir o nome do evento ou subevento
                 Label controller;
 
                 // Verifica se a sessão está associada a um evento ou subevento
-                String eventId = persistence.getData("eventId");
+                UUID eventId = (UUID) persistence.getData("eventId");
 
                 if (parentMap.containsKey(eventId)) {
                     // Se for um evento ou subevento, exibe o nome
-                    String name = parentMap.get(eventId).getData("name");
+                    String name = (String) parentMap.get(eventId).getData("name");
                     Label eventLabel = new Label(name);
                     controller = eventLabel;
                     eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
@@ -114,11 +115,11 @@ public class SessionScreenController extends BaseController implements FxControl
                 Button detailsButton = new Button("Detalhes");
                 detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                detailsButton.setOnAction(e -> handleDetailSession(parentMap, persistence.getData("id")));
+                detailsButton.setOnAction(e -> handleDetailSession(parentMap, (UUID) persistence.getData("id")));
 
                 editButton.setOnAction(e -> {
                     try {
-                        handleEditSession(persistence.getData("name"));
+                        handleEditSession((String) persistence.getData("name"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -126,7 +127,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
                 deleteButton.setOnAction(e -> {
                     try {
-                        handleDeleteSession(persistence.getData("id"), facade.getUserData("id"));
+                        handleDeleteSession((String) persistence.getData("id"), facade.getUserData("id"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -151,7 +152,7 @@ public class SessionScreenController extends BaseController implements FxControl
         genericButton("/fxml/updateSessionScreen.fxml", sessionPane, facade, eventName);
     }
 
-    private void handleDetailSession(Map<String, Persistence> parentMap, String id) {
+    private void handleDetailSession(Map<UUID, Persistence> parentMap, UUID id) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Detalhes do Evento");
         alert.setHeaderText("Detalhes do Evento");
@@ -159,8 +160,8 @@ public class SessionScreenController extends BaseController implements FxControl
         Persistence session = facade.getSessionHashMap().get(id);
         Persistence owner = facade.getUserHashMap().get(session.getData("ownerId"));
 
-        String parentName = parentMap.containsKey(session.getData("eventId"))
-                ? parentMap.get(session.getData("eventId")).getData("name")
+        String parentName = parentMap.containsKey((UUID) session.getData("eventId"))
+                ? (String) parentMap.get((UUID) session.getData("eventId")).getData("name")
                 : "Evento/Subevento não encontrado";
 
         String content = "Nome: " + session.getData("name") + "\n" +

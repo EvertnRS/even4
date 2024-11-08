@@ -3,11 +3,9 @@ package br.upe.persistence;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.sql.Time;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Session implements Persistence {
@@ -20,30 +18,30 @@ public class Session implements Persistence {
     private static final String OWNER_ID = "ownerId";
     private static final String SESSION_PATH = "./db/sessions.csv";
     private static final String WRITE_ERROR = "Erro na escrita do arquivo";
-    private String id;
+    private UUID id;
     private String name;
-    private String date;
+    private Date date;
     private String description;
     private String location;
-    private String startTime;
-    private String endTime;
-    private String eventId;
-    private String ownerId;
+    private Time startTime;
+    private Time endTime;
+    private UUID eventId;
+    private UUID ownerId;
 
     @Override
-    public String getData(String dataToGet) {
+    public Object getData(String dataToGet) {
         String data = "";
         try {
             switch (dataToGet) {
-                case "id" -> data = this.getId();
+                case "id" -> data = String.valueOf(this.getId());
                 case "name" -> data = this.getName();
-                case "date" -> data = this.getDate();
+                case "date" -> data = String.valueOf(this.getDate());
                 case CONST_DESCRIPTION -> data = this.getDescription();
                 case CONST_LOCATION -> data = this.getLocation();
-                case CONST_START_TIME -> data = this.getStartTime();
-                case CONST_END_TIME -> data = this.getEndTime();
-                case EVENT_ID -> data = this.getEventId();
-                case OWNER_ID -> data = this.getOwnerId();
+                case CONST_START_TIME -> data = String.valueOf(this.getStartTime());
+                case CONST_END_TIME -> data = String.valueOf(this.getEndTime());
+                case EVENT_ID -> data = String.valueOf(this.getEventId());
+                case OWNER_ID -> data = String.valueOf(this.getOwnerId());
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -53,18 +51,18 @@ public class Session implements Persistence {
     }
 
     @Override
-    public void setData(String dataToSet, String data) {
+    public void setData(String dataToSet, Object data) {
         try {
             switch (dataToSet) {
-                case "id" -> this.setId(data);
-                case "name" -> this.setName(data);
-                case CONST_DESCRIPTION -> this.setDescription(data);
-                case "date" -> this.setDate(data);
-                case CONST_LOCATION -> this.setLocation(data);
-                case CONST_START_TIME -> this.setStartTime(data);
-                case CONST_END_TIME -> this.setEndTime(data);
-                case EVENT_ID -> this.setEventId(data);
-                case OWNER_ID -> this.setOwnerId(data);
+                case "id" -> this.setId((UUID) data);
+                case "name" -> this.setName((String) data);
+                case CONST_DESCRIPTION -> this.setDescription((String) data);
+                case "date" -> this.setDate((Date) data);
+                case CONST_LOCATION -> this.setLocation((String) data);
+                case CONST_START_TIME -> this.setStartTime((Time) data);
+                case CONST_END_TIME -> this.setEndTime((Time) data);
+                case EVENT_ID -> this.setEventId((UUID) data);
+                case OWNER_ID -> this.setOwnerId((UUID) data);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -80,11 +78,11 @@ public class Session implements Persistence {
         return String.format("%03d%03d", lastThreeDigitsOfTimestamp, randomValue);
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -104,11 +102,11 @@ public class Session implements Persistence {
         this.description = description;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -120,35 +118,35 @@ public class Session implements Persistence {
         this.location = location;
     }
 
-    public String getStartTime() {
+    public Time getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Time startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
 
-    public String getEventId() {
+    public UUID getEventId() {
         return eventId;
     }
 
-    public void setEventId(String eventId) {
+    public void setEventId(UUID eventId) {
         this.eventId = eventId;
     }
 
-    public String getOwnerId() {
+    public UUID getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(String ownerId) {
+    public void setOwnerId(UUID ownerId) {
         this.ownerId = ownerId;
     }
 
@@ -158,16 +156,16 @@ public class Session implements Persistence {
             return; // Adicionando return para sair da função se o número de parâmetros estiver incorreto
         }
 
-        String parsedEventId = (String) params[0];
-        String parsedId = generateId();
+        UUID parsedEventId = (UUID) params[0];
+        UUID parsedId = UUID.randomUUID();
         String parsedName = (String) params[1];
-        String parsedDate = (String) params[2];
+        Date parsedDate = (Date) params[2];
         String parsedDescription = (String) params[3];
         String parsedLocation = (String) params[4];
-        String parsedStartTime = (String) params[5];
-        String parsedEndTime = (String) params[6];
-        String parsedOwnerId = (String) params[7];
-        HashMap<String, Persistence> eventH = (HashMap<String, Persistence>) params[8];
+        Time parsedStartTime = (Time) params[5];
+        Time parsedEndTime = (Time) params[6];
+        UUID parsedOwnerId = (UUID) params[7];
+        HashMap<UUID, Persistence> eventH = (HashMap<UUID, Persistence>) params[8];
         String line = parsedId + ";" + parsedName + ";" + parsedDate + ";" + parsedDescription + ";" + parsedLocation + ";" + parsedStartTime + ";" + parsedEndTime + ";" + parsedEventId + ";" + parsedOwnerId;
 
         try {
@@ -183,7 +181,7 @@ public class Session implements Persistence {
             }
 
             Event event = null;
-            for (Map.Entry<String, Persistence> entry : eventH.entrySet()) {
+            for (Map.Entry<UUID, Persistence> entry : eventH.entrySet()) {
                 Persistence eventPersistence = entry.getValue();
                 if (eventPersistence.getData("id").equals(eventId)) {
                     event = (Event) eventPersistence;
@@ -229,8 +227,8 @@ public class Session implements Persistence {
 
 
     @Override
-    public HashMap<String, Persistence> read() throws IOException {
-        HashMap<String, Persistence> list = new HashMap<>();
+    public HashMap<UUID, Persistence> read() throws IOException {
+        HashMap<UUID, Persistence> list = new HashMap<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(SESSION_PATH), StandardCharsets.UTF_8));
         try (reader) {
             String line;
@@ -249,16 +247,17 @@ public class Session implements Persistence {
                     String parsedOwnerId = parts[8].trim();
 
                     Session session = new Session();
-                    session.setId(parsedId);
+                    session.setId(UUID.fromString(parsedId));
                     session.setName(parsedName);
-                    session.setDate(parsedDate);
+                    session.setDate(java.sql.Date.valueOf(parsedDate));
                     session.setDescription(parsedDescription);
                     session.setLocation(parsedLocation);
-                    session.setStartTime(parsedStartTime);
-                    session.setEndTime(parsedEndTime);
-                    session.setEventId(parsedEventId);
-                    session.setOwnerId(parsedOwnerId);
-                    list.put(session.getId(), session);
+                    session.setStartTime(Time.valueOf(parsedStartTime));
+                    session.setEndTime(Time.valueOf(parsedEndTime));
+                    session.setEventId(UUID.fromString(parsedEventId));
+                    session.setOwnerId(UUID.fromString(parsedOwnerId));
+                    UUID sessionId = session.getId();
+                    list.put(sessionId, session);
                 }
             }
 
@@ -273,8 +272,13 @@ public class Session implements Persistence {
     }
 
     @Override
-    public HashMap<String, Persistence> read(Object... params) {
+    public HashMap<UUID, Persistence> read(Object... params) {
         return new HashMap<>();
+    }
+
+    @Override
+    public boolean loginValidate(String email, String password) {
+        return false;
     }
 
     public void update(Object... params) throws IOException {

@@ -19,6 +19,8 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import static br.upe.ui.Validation.*;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
@@ -109,16 +111,16 @@ public class CreateSessionScreenController extends BaseController implements FxC
 
     public String verifyType(String name) {
 
-        Map<String, Persistence> eventMap = facade.getEventHashMap();
-        Map<String, Persistence> subEventMap = facade.getSubEventHashMap();
-        for (Map.Entry<String, Persistence> entry : eventMap.entrySet()) {
+        Map<UUID, Persistence> eventMap = facade.getEventHashMap();
+        Map<UUID, Persistence> subEventMap = facade.getSubEventHashMap();
+        for (Map.Entry<UUID, Persistence> entry : eventMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("name").equals(name)) {
                 return "Event";
             }
         }
 
-        for (Map.Entry<String, Persistence> entry : subEventMap.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : subEventMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("name").equals(name)) {
                 return "SubEvent";
@@ -164,7 +166,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         String selectedEventName = searchField.getText();
         String type = verifyType(selectedEventName);
 
-        Map<String, Persistence> sessionMap = facade.getSessionHashMap();
+        Map<UUID, Persistence> sessionMap = facade.getSessionHashMap();
         if (!isValidDate(sessionDate))
         {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");

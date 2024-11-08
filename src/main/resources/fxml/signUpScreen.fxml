@@ -13,18 +13,22 @@
         </image>
     </ImageView>
 
-    <Pane id="loginDiv" layoutX="262.0" layoutY="234.0" prefHeight="306.0" prefWidth="435.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: ffffff;" stylesheets="@../stylesheets/loginScreen.css">
+    <Pane id="loginDiv" layoutX="262.0" layoutY="145.0" prefHeight="397.0" prefWidth="435.0" style="-fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: ffffff;" stylesheets="@../stylesheets/loginScreen.css">
         <children>
-            <TextField fx:id="cpfTextField" cache="true" layoutX="71.0" layoutY="134.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-            <TextField fx:id="emailTextField" cache="true" layoutX="71.0" layoutY="74.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-            <Text fx:id="cpfPlaceholder" fill="DARKGREY" layoutX="86.0" layoutY="162.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="CPF" />
-            <Text fx:id="emailPlaceholder" fill="DARKGRAY" layoutX="86.0" layoutY="102.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Email" />
+            <TextField fx:id="nameTextField" cache="true" layoutX="71.0" layoutY="64.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <TextField fx:id="cpfTextField" cache="true" layoutX="71.0" layoutY="118.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <TextField fx:id="emailTextField" cache="true" layoutX="71.0" layoutY="175.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <TextField fx:id="passTextField" cache="true" layoutX="71.0" layoutY="235.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <Text fx:id="namePlaceholder" fill="DARKGRAY" layoutX="80.0" layoutY="92.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Nome" />
+            <Text fx:id="cpfPlaceholder" fill="DARKGREY" layoutX="80.0" layoutY="146.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="CPF" />
+            <Text fx:id="emailPlaceholder" fill="DARKGRAY" layoutX="82.0" layoutY="203.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Email" />
+            <Text fx:id="passPlaceholder" fill="DARKGRAY" layoutX="80.0" layoutY="263.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Senha" />
             <Label layoutX="35.0" layoutY="14.0" prefHeight="26.0" prefWidth="74.0" text="Sign Up" textFill="#ff914d">
                 <font>
                     <Font name="System Bold" size="20.0" />
                 </font></Label>
             <Label fx:id="errorLabel" layoutX="100" layoutY="241.0" style="-fx-text-fill: red;" text="" />
-            <Button layoutX="180.0" layoutY="205.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="30.0" prefWidth="74.0" text="Register">
+            <Button layoutX="181.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="30.0" prefWidth="74.0" text="Register">
                 <style>
                     -fx-background-color: #ff914d;
                     -fx-text-fill: white;
@@ -37,8 +41,8 @@
                 </style>
             </Button>
 
-            <Label layoutX="130.0" layoutY="260.0" text="Já é cadastrado?" />
-            <Label layoutX="237.0" layoutY="260.0" text="Sign In" textFill="#ff914d" />
-            <Button layoutX="235.0" layoutY="256.0" mnemonicParsing="false" onAction="#returnToLogin" opacity="0.0" prefHeight="25.0" prefWidth="45.0" style="-fx-cursor: hand;" text=" " />
+            <Label layoutX="142.0" layoutY="343.0" text="Já é cadastrado?" />
+            <Label layoutX="236.0" layoutY="343.0" text="Sign In" textFill="#ff914d" />
+            <Button layoutX="247.0" layoutY="339.0" mnemonicParsing="false" onAction="#returnToLogin" opacity="0.0" prefHeight="25.0" prefWidth="45.0" style="-fx-cursor: hand;" text=" " />
         </children></Pane>
 </AnchorPane>

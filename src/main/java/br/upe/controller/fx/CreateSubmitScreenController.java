@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 public class CreateSubmitScreenController extends BaseController implements FxController {
 
@@ -63,12 +64,12 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     }
     private void loadArticles() throws IOException {
 
-        Map<String, Persistence> allEvents = facade.getEventHashMap();
+        Map<UUID, Persistence> allEvents = facade.getEventHashMap();
 
         eventComboBox.getItems().clear();
 
         for (Persistence event : allEvents.values()) {
-            eventComboBox.getItems().add(event.getData("name"));
+            eventComboBox.getItems().add((String) event.getData("name"));
         }
     }
 

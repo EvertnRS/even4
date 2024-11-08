@@ -16,10 +16,16 @@ import static br.upe.ui.Validation.isValidEmail;
 public class SignUpController extends BaseController implements FxController {
 
     @FXML
+    private TextField nameTextField;
+
+    @FXML
     private TextField emailTextField;
 
     @FXML
     private TextField cpfTextField;
+
+    @FXML
+    private TextField passTextField;
 
     @FXML
     private AnchorPane registerAnchorPane;
@@ -29,6 +35,12 @@ public class SignUpController extends BaseController implements FxController {
 
     @FXML
     private Text emailPlaceholder;
+
+    @FXML
+    private Text passPlaceholder;
+
+    @FXML
+    private Text namePlaceholder;
 
     @FXML
     private Label errorLabel;
@@ -66,16 +78,20 @@ public class SignUpController extends BaseController implements FxController {
     private void setupPlaceholders() {
         PlaceholderUtils.setupPlaceholder(emailTextField, emailPlaceholder);
         PlaceholderUtils.setupPlaceholder(cpfTextField, cpfPlaceholder);
+        PlaceholderUtils.setupPlaceholder(passTextField, passPlaceholder);
+        PlaceholderUtils.setupPlaceholder(nameTextField, namePlaceholder);
     }
 
     public void handleRegister() throws IOException {
         String email = emailTextField.getText().trim();
         String cpf = cpfTextField.getText().trim();
+        String name = nameTextField.getText().trim();
+        String password = passTextField.getText().trim();
 
         //trocar para facade
-        UserController userController = new UserController();
+        UserController userController = UserController.getInstance();
         if (isValidEmail(email) && isValidCPF(cpf)) {
-            userController.create(email.trim(), cpf.trim());
+            userController.create(name.trim(), cpf.trim(), email.trim(), password.trim());
             returnToLogin();
         } else {
             errorLabel.setText("Cadastro falhou! Insira informações válidas.");

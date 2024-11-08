@@ -4,10 +4,11 @@ import br.upe.persistence.Persistence;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface FacadeInterface {
     // EventController methods
-    Map<String, Persistence> getEventHashMap() ;
+    Map<UUID, Persistence> getEventHashMap() ;
     List<String> listEvents(Object... params) throws IOException;
     void createEvent(Object... params) throws IOException;
     void readEvent() throws IOException;
@@ -16,7 +17,7 @@ public interface FacadeInterface {
     String getEventData(String dataToGet);
 
     // SessionController methods
-    Map<String, Persistence> getSessionHashMap();
+    Map<UUID, Persistence> getSessionHashMap();
     List<String> listSessions(Object... params) throws IOException;
     void createSession(Object... params) throws IOException;
     void readSession() throws IOException;
@@ -25,7 +26,7 @@ public interface FacadeInterface {
     String getSessionData(String dataToGet);
 
     // SubEventController methods
-    Map<String, Persistence> getSubEventHashMap();
+    Map<UUID, Persistence> getSubEventHashMap();
     List<String> listSubEvents(Object... params) throws IOException;
     void updateSubEvent(Object... params) throws IOException;
     void deleteSubEvent(Object... params) throws IOException;
@@ -33,23 +34,23 @@ public interface FacadeInterface {
     void readSubEvent() throws IOException;
 
     // SubmitArticleController methods
-    Map<String, Persistence> getArticleHashMap();
+    Map<UUID, Persistence> getArticleHashMap();
     void createArticle(Object... params) throws IOException;
     void deleteArticle(Object... params) throws IOException;
     void updateArticle(Object... params) throws IOException;
     void readArticle(String id) throws IOException;
 
     // UserController methods
-    Map<String, Persistence> getUserHashMap();
+    Map<UUID, Persistence> getUserHashMap();
     void createUser(Object... params) throws IOException;
     void updateUser(Object... params) throws IOException;
     void deleteUser(Object... params) throws IOException;
     void readUser() throws IOException;
-    boolean loginValidate(String email, String cpf);
+    boolean loginValidate(String email, String password);
     String getUserData(String dataToGet);
 
     // AttendeeController methods
-    Map<String, Persistence> getAttendeeHashMap();
+    Map<UUID, Persistence> getAttendeeHashMap();
     void createAttendee(Object... params) throws IOException;
     void readAttendee() throws IOException;
     void updateAttendee(Object... params) throws IOException;

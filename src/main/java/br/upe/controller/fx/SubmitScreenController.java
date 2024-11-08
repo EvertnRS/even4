@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class SubmitScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -71,7 +72,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         // Chama o método read para obter os artigos do usuário
         facade.readArticle(facade.getUserData("id"));
 
-        Map<String, Persistence> articles = facade.getArticleHashMap();
+        Map<UUID, Persistence> articles = facade.getArticleHashMap();
         if (articles.isEmpty()) {
             Label noArticlesLabel = new Label("Nenhum artigo encontrado.");
             noArticlesLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #999999;");
@@ -85,7 +86,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         articleVBox.setAlignment(Pos.CENTER);
 
 
-        for (Map.Entry<String, Persistence> entry : articles.entrySet()) {
+        for (Map.Entry<UUID, Persistence> entry : articles.entrySet()) {
             Persistence article = entry.getValue();
 
 
@@ -96,16 +97,16 @@ public class SubmitScreenController extends BaseController implements FxControll
 
 
 
-    private void createArticleContainer(Persistence article, VBox articleVBox, Map<String, Persistence> articles) {
+    private void createArticleContainer(Persistence article, VBox articleVBox, Map<UUID, Persistence> articles) {
         VBox articleContainer = new VBox();
         articleContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
         // Nome do artigo (estilo e posição principais)
-        Label articleLabel = new Label(new File(article.getData("name")).getName());
+        Label articleLabel = new Label(new File((String) article.getData("name")).getName());
         articleLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
         // Nome do evento (estilo e posição secundários)
-        Label eventLabel = new Label(new File(article.getData("event")).getName());
+        Label eventLabel = new Label(new File((String) article.getData("event")).getName());
         eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
 
         // Botões de ação, alinhados à direita
@@ -116,12 +117,12 @@ public class SubmitScreenController extends BaseController implements FxControll
         articleVBox.getChildren().add(articleContainer);
     }
 
-    private HBox createActionButtons(Persistence article, Map<String, Persistence> articles) {
+    private HBox createActionButtons(Persistence article, Map<UUID, Persistence> articles) {
         Button editButton = new Button("Editar");
         editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
         editButton.setOnAction(e -> {
             try {
-                handleEditArticle(article.getData("name"), article.getData("event"));
+                handleEditArticle((String) article.getData("name"), (String) article.getData("event"));
             } catch (IOException ex) {
                 throw new IllegalArgumentException(ex);
             }
@@ -131,7 +132,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
         deleteButton.setOnAction(e -> {
             try {
-                handleDeleteArticle(article.getData("name"));
+                handleDeleteArticle((String) article.getData("name"));
             } catch (IOException ex) {
                 throw new IllegalArgumentException(ex);
             }
@@ -141,7 +142,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
         detailsButton.setOnAction(e ->
-                handleDetailArticle(articles, article.getData("id")));
+                handleDetailArticle(articles, (UUID) article.getData("id")));
 
         HBox actionButtons = new HBox(10);
         actionButtons.setAlignment(Pos.CENTER_RIGHT);
@@ -149,7 +150,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         return actionButtons;
     }
 
-    private void handleDetailArticle(Map<String, Persistence> articles, String id) {
+    private void handleDetailArticle(Map<UUID, Persistence> articles, UUID id) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         Persistence article = articles.get(id);
         alert.setTitle("Detalhes do Artigo");

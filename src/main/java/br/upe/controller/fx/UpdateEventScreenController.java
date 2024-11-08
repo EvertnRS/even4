@@ -15,12 +15,13 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.UUID;
 
 import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
-    private String eventId;
+    private UUID eventId;
 
     @FXML
     private AnchorPane editEventPane;
@@ -50,7 +51,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         initial();
     }
 
-    public void setEventId(String eventId) {
+    public void setEventId(UUID eventId) {
         this.eventId = eventId;
         loadEventDetails();
     }
@@ -93,15 +94,18 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     }
 
     private void loadEventDetails() {
-        Map<String, Persistence> eventMap = facade.getEventHashMap();
+        Map<UUID, Persistence> eventMap = facade.getEventHashMap();
         Persistence event = eventMap.get(eventId);
 
         if (event != null) {
-            editNameTextField.setText(event.getData("name"));
-            editLocationTextField.setText(event.getData("location"));
-            editDescriptionTextField.setText(event.getData("description"));
+            String eventName = (String) event.getData("name");
+            String eventLocation = (String) event.getData("location");
+            String eventDescription = (String) event.getData("description");
+            editNameTextField.setText(eventName);
+            editLocationTextField.setText(eventLocation);
+            editDescriptionTextField.setText(eventDescription);
 
-            String eventDate = event.getData("date");
+            String eventDate = (String) event.getData("date");
             if (eventDate != null && !eventDate.isEmpty()) {
                 editDatePicker.setValue(LocalDate.parse(eventDate));
             }
@@ -119,10 +123,10 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
-        Map<String, Persistence> eventMap = facade.getEventHashMap();
+        Map<UUID, Persistence> eventMap = facade.getEventHashMap();
         if (!isValidDate(newDate)) {
             errorUpdtLabel.setText("Data inválida.");
-        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(eventId, eventMap)){
+        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(String.valueOf(eventId), eventMap)){
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }
         else{

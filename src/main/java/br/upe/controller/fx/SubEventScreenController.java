@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class SubEventScreenController extends BaseController implements FxController{
     private FacadeInterface facade;
@@ -68,7 +69,7 @@ public class SubEventScreenController extends BaseController implements FxContro
         configureScrollPane();
         subEventVBox.setAlignment(Pos.CENTER);
 
-        Map<String, Persistence> eventHashMap = facade.getEventHashMap();
+        Map<UUID, Persistence> eventHashMap = facade.getEventHashMap();
 
         facade.getSubEventHashMap().entrySet().stream()
                 .filter(entry -> isUserOwner(entry.getValue()))
@@ -88,14 +89,17 @@ public class SubEventScreenController extends BaseController implements FxContro
         return persistence.getData("ownerId").equals(facade.getUserData("id"));
     }
 
-    private VBox createSubEventContainer(Persistence persistence, Map<String, Persistence> eventHashMap) {
+    private VBox createSubEventContainer(Persistence persistence, Map<UUID, Persistence> eventHashMap) {
         VBox subEventContainer = new VBox();
         subEventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-        Label subEventLabel = new Label(persistence.getData("name"));
+        String subEventName = (String) persistence.getData("name");
+        UUID eventId = (UUID) persistence.getData("eventId");
+
+        Label subEventLabel = new Label(subEventName);
         subEventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
-        Label eventLabel = createEventLabel(persistence.getData("eventId"), eventHashMap);
+        Label eventLabel = createEventLabel(eventId, eventHashMap);
 
         HBox actionButtons = createActionButtons(persistence, eventHashMap);
 
@@ -103,30 +107,32 @@ public class SubEventScreenController extends BaseController implements FxContro
         return subEventContainer;
     }
 
-    private Label createEventLabel(String eventId, Map<String, Persistence> eventHashMap) {
+    private Label createEventLabel(UUID eventId, Map<UUID, Persistence> eventHashMap) {
         Label eventLabel = new Label();
         String nameEvent = (eventHashMap != null && eventHashMap.containsKey(eventId))
-                ? eventHashMap.get(eventId).getData("name")
+                ? (String) eventHashMap.get(eventId).getData("name")
                 : "Evento não encontrado";
         eventLabel.setText(nameEvent);
         eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
         return eventLabel;
     }
 
-    private HBox createActionButtons(Persistence persistence, Map<String, Persistence> eventHashMap) {
+    private HBox createActionButtons(Persistence persistence, Map<UUID, Persistence> eventHashMap) {
         Button editButton = new Button("Editar");
         editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
-        editButton.setOnAction(e -> handleEditSubEventSafely(persistence.getData("name")));
+        String subEventName = (String) persistence.getData("name");
+        editButton.setOnAction(e -> handleEditSubEventSafely(subEventName));
 
         Button deleteButton = new Button("Excluir");
         deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
-        deleteButton.setOnAction(e -> handleDeleteSubEventSafely(persistence.getData("id")));
+        UUID subEventId = (UUID) persistence.getData("id");
+        deleteButton.setOnAction(e -> handleDeleteSubEventSafely(subEventId));
 
         Button detailsButton = new Button("Detalhes");
         detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
         detailsButton.setOnAction(e ->
-                handleDetailSubEvent(eventHashMap, persistence.getData("id")));
+                handleDetailSubEvent(eventHashMap, subEventId));
 
         HBox actionButtons = new HBox(10);
         actionButtons.setAlignment(Pos.CENTER_RIGHT);
@@ -134,19 +140,20 @@ public class SubEventScreenController extends BaseController implements FxContro
         return actionButtons;
     }
 
-    private void handleDetailSubEvent(Map<String, Persistence> eventHashMap, String id) {
+    private void handleDetailSubEvent(Map<UUID, Persistence> eventHashMap, UUID id) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Detalhes do SubEvento");
         alert.setHeaderText("Detalhes do SubEvento");
 
         Persistence subEvent = facade.getSubEventHashMap().get(id);
-        Persistence owner = facade.getUserHashMap().get(subEvent.getData("ownerId"));
+        UUID ownerId = (UUID) subEvent.getData("ownerId");
+        Persistence owner = facade.getUserHashMap().get(ownerId);
 
         String content = "Nome: " + subEvent.getData("name") + "\n" +
                 "Descrição: " + subEvent.getData("description") + "\n" +
                 "Data: " + subEvent.getData("date") + "\n" +
                 "Local: " + subEvent.getData("location") + "\n" +
-                "Evento: " + eventHashMap.get(subEvent.getData("eventId")).getData("name") + "\n" +
+                "Evento: " + eventHashMap.get((UUID) subEvent.getData("eventId")).getData("name") + "\n" +
                 "Administrador: " + owner.getData("email") + "\n";
 
         alert.setContentText(content);
@@ -161,7 +168,7 @@ public class SubEventScreenController extends BaseController implements FxContro
         }
     }
 
-    private void handleDeleteSubEventSafely(String subEventId) {
+    private void handleDeleteSubEventSafely(UUID subEventId) {
         try {
             handleDeleteSubEvent(subEventId, facade.getUserData("id"));
         } catch (IOException ex) {
@@ -174,7 +181,7 @@ public class SubEventScreenController extends BaseController implements FxContro
         genericButton("/fxml/updateSubEventScreen.fxml", subEventPane, facade, eventName);
     }
 
-    private void handleDeleteSubEvent(String eventId, String userId) throws IOException {
+    private void handleDeleteSubEvent(UUID eventId, String userId) throws IOException {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
         confirmationAlert.setHeaderText("Deseja realmente excluir este subEvento?");

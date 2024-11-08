@@ -2,27 +2,43 @@ package br.upe.controller;
 
 import br.upe.persistence.Persistence;
 import br.upe.persistence.User;
+import br.upe.persistence.UserRepository;
+import br.upe.utils.JPAUtils;
+import jakarta.persistence.EntityManager;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class UserController implements Controller {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
+    private static final EntityManager entityManager = JPAUtils.getEntityManagerFactory();
     private static final String EMAIL = "email";
-    private Map<String, Persistence> userHashMap;
+
+    private static UserController instance;
+
+    private Map<UUID, Persistence> userHashMap;
     private Persistence userLog;
 
-    public UserController() throws IOException {
-        this.read();
+    private UserController() {
     }
 
-    public Map<String, Persistence> getHashMap() {
+    public static UserController getInstance() {
+        if (instance == null) {
+            instance = new UserController();
+        }
+        return instance;
+    }
+
+    public Map<UUID, Persistence> getHashMap() {
         return userHashMap;
     }
 
-    public void setUserHashMap(Map<String, Persistence> userHashMap) {
+    public void setUserHashMap(Map<UUID, Persistence> userHashMap) {
         this.userHashMap = userHashMap;
     }
 
@@ -31,9 +47,11 @@ public class UserController implements Controller {
         String data = "";
         try {
             switch (dataToGet) {
-                case EMAIL -> data = this.userLog.getData(EMAIL);
-                case "cpf" -> data = this.userLog.getData("cpf");
-                case "id" -> data = this.userLog.getData("id");
+                case EMAIL -> data = (String) this.userLog.getData(EMAIL);
+                case "cpf" -> data = (String) this.userLog.getData("cpf");
+                case "id" -> data = this.userLog.getData("id").toString();
+                case "name" -> data = (String) this.userLog.getData("name");
+                case "password" -> data = (String) this.userLog.getData("password");
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -42,8 +60,8 @@ public class UserController implements Controller {
         return data;
     }
 
-    public void setUserLog(Persistence userLog) {
-        this.userLog = userLog;
+    public void setUserLog(UserRepository userRepository) {
+        this.userLog = userRepository.getUserLog();
     }
 
     @Override
@@ -52,23 +70,20 @@ public class UserController implements Controller {
             LOGGER.warning("Só pode ter 2 parametros");
         }
 
-        String email = (String) params[0];
-        String cpf = (String) params[1];
-        Persistence userPersistence = new User();
-        try {
-            for (Map.Entry<String, Persistence> entry : this.userHashMap.entrySet()) {
-                Persistence user = entry.getValue();
-                if (user.getData(EMAIL).equals(email)) {
-                    throw new IOException();
-                }
-            }
+        String name = (String) params[0];
+        Long cpf = Long.parseLong((String) params[1]);
+        String email = (String) params[2];
+        String password = (String) params[3];
 
-            userPersistence.create(email, cpf);
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        Persistence userRepository = UserRepository.getInstance();
 
-        } catch (IOException exception) {
-            LOGGER.warning("Email já cadastrado");
-        }
+        userRepository.create(name, cpf, email, hashedPassword);
+        this.userHashMap.put((UUID) userRepository.getData("id"), userRepository);
+
     }
+
+
 
     @Override
     public void update(Object... params) throws IOException {
@@ -93,18 +108,21 @@ public class UserController implements Controller {
 
         user.setData("email", email);
         user.setData("cpf", cpf);
+        UUID userID = (UUID) user.getData("id");
 
-        userHashMap.put(this.userLog.getData("id"), user);
+        userHashMap.put(userID, user);
 
-        Persistence userPersistence = new User();
-        userPersistence.update(userHashMap);
+        Persistence userRepository = UserRepository.getInstance();
+        userRepository.update(userHashMap);
     }
 
 
     @Override
     public void read() throws IOException {
-        Persistence userPersistence = new User();
-        this.userHashMap = userPersistence.read();
+        /*
+        Persistence userRepository = UserRepository.getInstance();
+        this.userHashMap = userRepository.read();
+        */
     }
 
     @Override
@@ -113,11 +131,11 @@ public class UserController implements Controller {
             String idToDelete = (String) params[0];
             System.out.println("ID para deletar: " + idToDelete);
 
-            Iterator<Map.Entry<String, Persistence>> iterator = userHashMap.entrySet().iterator();
+            Iterator<Map.Entry<UUID, Persistence>> iterator = userHashMap.entrySet().iterator();
             boolean found = false;
 
             while (iterator.hasNext()) {
-                Map.Entry<String, Persistence> entry = iterator.next();
+                Map.Entry<UUID, Persistence> entry = iterator.next();
                 Persistence user = entry.getValue();
                 String userId = (String) user.getData("id");
 
@@ -130,8 +148,8 @@ public class UserController implements Controller {
             }
 
             if (found) {
-                Persistence userPersistence = new User();
-                userPersistence.delete(userHashMap);
+                Persistence userRepository = UserRepository.getInstance();
+                userRepository.delete(userHashMap);
             } else {
                 System.out.println("Usuário com ID " + idToDelete + " não encontrado.");
             }
@@ -144,16 +162,14 @@ public class UserController implements Controller {
         return List.of();
     }
 
-    public boolean loginValidate(String email, String cpf) {
-        for (Map.Entry<String, Persistence> entry : this.userHashMap.entrySet()) {
-            Persistence user = entry.getValue();
-            if (user.getData(EMAIL).equals(email) && user.getData("cpf").equals(cpf)) {
-                setUserLog(user);
-                return true;
-            }
+    @Override
+    public boolean loginValidate(String email, String password) {
+        Persistence userRepository = UserRepository.getInstance();
+        if (userRepository.loginValidate(email, password)) {
+            this.userLog = userRepository;  // Atribui o repositório como userLog de tipo Persistence
+            return true;
         }
         return false;
     }
-
 
 }
