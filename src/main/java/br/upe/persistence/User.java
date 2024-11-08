@@ -20,7 +20,7 @@ public class User {
     @Column(unique = true)
     private String email;
     @NotNull
-    @Column(length = 30)
+    @Column(length = 60)
     private String password;
 
     public UUID getId() {
@@ -56,7 +56,7 @@ public class User {
     }
 
     public @NotNull String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(@NotNull String name) {

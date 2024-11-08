@@ -13,4 +13,5 @@ public interface  Persistence {
     void setData(String dataToSet, Object data);
     HashMap<UUID, Persistence> read() throws IOException;
     HashMap<UUID, Persistence> read(Object... params);
+    boolean loginValidate(String email, String password);
 }

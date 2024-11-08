@@ -276,6 +276,11 @@ public class Session implements Persistence {
         return new HashMap<>();
     }
 
+    @Override
+    public boolean loginValidate(String email, String password) {
+        return false;
+    }
+
     public void update(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");

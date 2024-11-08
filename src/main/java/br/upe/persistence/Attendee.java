@@ -207,4 +207,9 @@ public class Attendee implements Persistence{
     public HashMap<UUID, Persistence> read(Object... params) {
         return new HashMap<>();
     }
+
+    @Override
+    public boolean loginValidate(String email, String password) {
+        return false;
+    }
 }

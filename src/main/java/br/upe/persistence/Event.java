@@ -211,6 +211,11 @@ public class Event implements Persistence {
     }
 
     @Override
+    public boolean loginValidate(String email, String password) {
+        return false;
+    }
+
+    @Override
     public void update(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");

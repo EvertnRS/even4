@@ -100,6 +100,11 @@ public class SubmitArticle implements Persistence {
     }
 
     @Override
+    public boolean loginValidate(String email, String password) {
+        return false;
+    }
+
+    @Override
     public void create(Object... params) {
         if (params.length != 3) {
             LOGGER.warning("São necessários 2 parâmetros: nome do evento e caminho do arquivo.");

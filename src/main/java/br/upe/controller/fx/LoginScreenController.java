@@ -71,10 +71,11 @@ public class LoginScreenController extends BaseController implements FxControlle
         String email = emailTextField.getText();
         String pass = passTextField.getText();
 
-        UserController userController = new UserController();
+        UserController userController = UserController.getInstance();
         FacadeInterface facade = new Facade(userController);
 
-        if (facade.loginValidate(email, pass)) {
+        if (userController.loginValidate(email, pass)) {
+            System.out.print("Login efetuado com sucesso!\n\n\n\n");
             genericButton("/fxml/mainScreen.fxml", loginAnchorPane, facade, null);
         } else {
             errorLabel.setText("Login falhou! Verifique suas credenciais.");

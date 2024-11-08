@@ -34,7 +34,7 @@ public class MainScreenController extends BaseController implements FxController
     }
 
     private void initial() throws IOException {
-        userEmail.setText(facade.getUserData("email"));
+        userEmail.setText(facade.getUserData("name"));
         loadUserEvents();
     }
 

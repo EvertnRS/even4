@@ -89,7 +89,7 @@ public class SignUpController extends BaseController implements FxController {
         String password = passTextField.getText().trim();
 
         //trocar para facade
-        UserController userController = new UserController();
+        UserController userController = UserController.getInstance();
         if (isValidEmail(email) && isValidCPF(cpf)) {
             userController.create(name.trim(), cpf.trim(), email.trim(), password.trim());
             returnToLogin();

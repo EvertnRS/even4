@@ -152,8 +152,12 @@ public class Facade implements FacadeInterface {
         userController.delete(params);
     }
 
-    public boolean loginValidate(String email, String cpf) {
-        return userController.loginValidate(email, cpf);
+    @Override
+    public boolean loginValidate(String email, String password) {
+        System.out.println("Facade: loginValidate");
+        System.out.println("email: " + email);
+        System.out.println("pass: " + password);
+        return userController.loginValidate(email, password);
     }
 
     public String getUserData(String dataToGet) {
