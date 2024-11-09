@@ -14,6 +14,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import static br.upe.ui.Validation.isValidCPF;
+import static br.upe.ui.Validation.isValidEmail;
+
 public class UserController implements Controller {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
     private static final EntityManager entityManager = JPAUtils.getEntityManagerFactory();
@@ -48,7 +51,7 @@ public class UserController implements Controller {
         try {
             switch (dataToGet) {
                 case EMAIL -> data = (String) this.userLog.getData(EMAIL);
-                case "cpf" -> data = (String) this.userLog.getData("cpf");
+                case "cpf" -> data = this.userLog.getData("cpf").toString();
                 case "id" -> data = this.userLog.getData("id").toString();
                 case "name" -> data = (String) this.userLog.getData("name");
                 case "password" -> data = (String) this.userLog.getData("password");
@@ -87,35 +90,35 @@ public class UserController implements Controller {
 
     @Override
     public void update(Object... params) throws IOException {
-
-        if (params.length < 2) {
-            LOGGER.warning("Só pode ter 2 parâmetros");
+        if (params.length != 5) {
+            LOGGER.warning("Só pode ter 5 parâmetros");
             return;
         }
 
-        String email = (String) params[0];
-        String cpf = (String) params[1];
-        Persistence user = userHashMap.get(this.userLog.getData("id"));
+        String name = (String) params[0];
+        Long cpf = Long.parseLong((String) params[1]);
+        String email = (String) params[2];
+        String newPassword = (String) params[3];
+        String password = (String) params[4];
 
-        if (user == null) {
-            LOGGER.warning("Usuário não encontrado para atualização");
-            return;
+        if (isValidEmail(email) && isValidCPF(cpf.toString())) {
+            userLog.setData("email", email);
+            userLog.setData("cpf", cpf);
+            userLog.setData("name", name);
+
+            if (!newPassword.isEmpty()) {
+                newPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+                userLog.setData("password", newPassword);
+            } else {
+                newPassword = (String) userLog.getData("password");
+            }
+
+            UUID userID = (UUID) userLog.getData("id");
+            userLog.update(userID, name, cpf, email, newPassword, password);
+        } else {
+            LOGGER.warning("Email ou CPF inválido.");
         }
-
-        System.out.println("Atualizando usuário com ID: " + this.userLog.getData("id"));
-        System.out.println("Novo email: " + email);
-        System.out.println("CPF permanece como: " + cpf);
-
-        user.setData("email", email);
-        user.setData("cpf", cpf);
-        UUID userID = (UUID) user.getData("id");
-
-        userHashMap.put(userID, user);
-
-        Persistence userRepository = UserRepository.getInstance();
-        userRepository.update(userHashMap);
     }
-
 
     @Override
     public void read() throws IOException {
@@ -127,33 +130,15 @@ public class UserController implements Controller {
 
     @Override
     public void delete(Object... params) throws IOException {
-        if ((params[1]).equals("id")) {
-            String idToDelete = (String) params[0];
-            System.out.println("ID para deletar: " + idToDelete);
-
-            Iterator<Map.Entry<UUID, Persistence>> iterator = userHashMap.entrySet().iterator();
-            boolean found = false;
-
-            while (iterator.hasNext()) {
-                Map.Entry<UUID, Persistence> entry = iterator.next();
-                Persistence user = entry.getValue();
-                String userId = (String) user.getData("id");
-
-                if (userId.equals(idToDelete)) {
-                    iterator.remove();
-                    found = true;
-                    System.out.println("Usuário removido da memória.");
-                    break;
-                }
-            }
-
-            if (found) {
-                Persistence userRepository = UserRepository.getInstance();
-                userRepository.delete(userHashMap);
-            } else {
-                System.out.println("Usuário com ID " + idToDelete + " não encontrado.");
-            }
+        if (params.length != 1) {
+            LOGGER.warning("Só pode ter 1 parametro");
+            return;
         }
+
+        String password = (String) params[0];
+        UUID userID = (UUID) userLog.getData("id");
+
+        userLog.delete(userID, password);
     }
 
     @Override
@@ -166,7 +151,7 @@ public class UserController implements Controller {
     public boolean loginValidate(String email, String password) {
         Persistence userRepository = UserRepository.getInstance();
         if (userRepository.loginValidate(email, password)) {
-            this.userLog = userRepository;  // Atribui o repositório como userLog de tipo Persistence
+            this.userLog = userRepository;
             return true;
         }
         return false;

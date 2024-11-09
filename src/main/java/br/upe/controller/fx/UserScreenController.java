@@ -1,15 +1,19 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
+
 import br.upe.facade.FacadeInterface;
+
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.util.Optional;
+
+import static br.upe.ui.Validation.isValidCPF;
 import static br.upe.ui.Validation.isValidEmail;
 
 public class UserScreenController extends BaseController implements FxController {
@@ -18,7 +22,7 @@ public class UserScreenController extends BaseController implements FxController
     @FXML
     private AnchorPane userPane;
     @FXML
-    private Label userEmail;
+    private Label userName;
     @FXML
     private TextField emailTextField;
     @FXML
@@ -27,6 +31,14 @@ public class UserScreenController extends BaseController implements FxController
     private TextField cpfTextField;
     @FXML
     private Text cpfPlaceholder;
+    @FXML
+    private TextField nameTextField;
+    @FXML
+    private TextField passTextField;
+    @FXML
+    private Text namePlaceholder;
+    @FXML
+    private Text passPlaceholder;
     @FXML
     private Label errorUpdtLabel;
     @FXML
@@ -38,13 +50,15 @@ public class UserScreenController extends BaseController implements FxController
     }
 
     private void initial() {
-        userEmail.setText(facade.getUserData("email"));
-        setupPlaceholders();
+        userName.setText(facade.getUserData("name"));
+        loadUserDetails();
     }
 
     private void setupPlaceholders() {
         PlaceholderUtils.setupPlaceholder(emailTextField, emailPlaceholder);
         PlaceholderUtils.setupPlaceholder(cpfTextField, cpfPlaceholder);
+        PlaceholderUtils.setupPlaceholder(nameTextField, namePlaceholder);
+        PlaceholderUtils.setupPlaceholder(passTextField, passPlaceholder);
     }
 
     public void handleEvent() throws IOException {
@@ -67,41 +81,70 @@ public class UserScreenController extends BaseController implements FxController
         genericButton("/fxml/loginScreen.fxml", userPane, facade, null);
     }
 
-    public void updateUser() throws IOException {
+    public void updateUser() {
 
-        String email = emailTextField.getText();
+        String name = nameTextField.getText().trim();
+        String cpf = cpfTextField.getText().trim();
+        String email = emailTextField.getText().trim();
+        String newPassword = passTextField.getText().trim();
+        String password = showPasswordPrompt().trim();
 
-        if (isValidEmail(email)) {
-            facade.updateUser(email, facade.getUserData("cpf"));
-            logout();
+        if (isValidEmail(email) && isValidCPF(cpf)) {
+            try {
+                facade.updateUser(name, cpf, email, newPassword, password);
+                logout();
+            } catch (Exception e) {
+                errorUpdtLabel.setText("Senha incorreta. Tente novamente.");
+            }
         } else {
             errorUpdtLabel.setText("E-mail invalido!");
         }
     }
 
-    public void deleteUser() throws IOException {
-        String cpf = cpfTextField != null ? cpfTextField.getText() : "";
-
-        if (cpf == null || cpf.isEmpty()) {
-            errorDelLabel.setText("CPF não informado.");
-            return;
-        }
-
-        if (facade == null) {
-            System.out.println("facade está nulo");
-            return;
-        }
-
-        String cpfData = facade.getUserData("cpf");
-        String idData = facade.getUserData("id");
-
-        if (cpfData != null && cpf.equals(cpfData)) {
-            facade.deleteUser(idData, "id");
+    public void deleteUser() {
+        String password = showPasswordPrompt().trim();
+        try {
+            facade.deleteUser(password);
             logout();
-        } else {
-            errorDelLabel.setText("Erro ao ler cpf! Verifique suas credenciais.");
+        } catch (Exception e) {
+            errorDelLabel.setText("Senha incorreta. Tente novamente.");
         }
     }
 
+    private String showPasswordPrompt() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Validar Senha");
+        alert.setHeaderText("Digite sua senha para continuar:");
+
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Senha");
+
+        GridPane grid = new GridPane();
+        grid.add(new Label("Senha:"), 0, 0);
+        grid.add(passwordField, 1, 0);
+        GridPane.setHgrow(passwordField, Priority.ALWAYS);
+        alert.getDialogPane().setContent(grid);
+
+        alert.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            return passwordField.getText();
+        }
+        return "";
+    }
+
+    private void loadUserDetails() {
+
+        String email = facade.getUserData("email");
+        String cpf = facade.getUserData("cpf");
+        nameTextField.setText(userName.getText());
+        emailTextField.setText(email);
+        cpfTextField.setText(cpf);
+
+        setupPlaceholders();
+
+
+    }
 
 }
