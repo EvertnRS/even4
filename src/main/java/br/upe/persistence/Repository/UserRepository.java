@@ -1,5 +1,7 @@
-package br.upe.persistence;
+package br.upe.persistence.Repository;
 
+import br.upe.persistence.Persistence;
+import br.upe.persistence.User;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -60,6 +62,7 @@ public class UserRepository implements Persistence {
         return parseToUserRepository(userLog);
     }
 
+    @Override
     public void create(Object... params) {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametro contendo o email e o cpf do usuário que deseja criar");

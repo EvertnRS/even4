@@ -1,5 +1,5 @@
 package br.upe.controller;
-import br.upe.persistence.Event;
+import br.upe.persistence.Repository.EventRepository;
 import br.upe.persistence.Persistence;
 import java.io.IOException;
 import java.util.*;
@@ -126,7 +126,7 @@ public class EventController implements Controller {
             newEvent.setData(DESCRIPTION, newDescription);
             newEvent.setData(LOCATION, newLocation);
             eventHashMap.put(id, newEvent);
-            Persistence eventPersistence = new Event();
+            Persistence eventPersistence = new EventRepository();
             eventPersistence.update(eventHashMap);
         } else {
             LOGGER.warning("Evento não encontrado");
@@ -136,7 +136,7 @@ public class EventController implements Controller {
 
     @Override
     public void read() throws IOException {
-        Persistence eventPersistence = new Event();
+        Persistence eventPersistence = new EventRepository();
         this.eventHashMap = eventPersistence.read();
     }
 
@@ -186,7 +186,7 @@ public class EventController implements Controller {
             }
         }
 
-        Persistence event = new Event();
+        Persistence event = new EventRepository();
         event.create(name, date, description, location, idOwner);
 
     }
@@ -279,7 +279,7 @@ public class EventController implements Controller {
                     iterator.remove();
                 }
             }
-            Persistence eventPersistence = new Event();
+            Persistence eventPersistence = new EventRepository();
             eventPersistence.delete(eventHashMap);
         } else {
             LOGGER.warning("Você não pode deletar esse evento");

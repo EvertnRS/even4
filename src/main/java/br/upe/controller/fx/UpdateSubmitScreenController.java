@@ -1,7 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Event;
+import br.upe.persistence.Repository.EventRepository;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -44,9 +44,9 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     }
 
     private void loadArticles() throws IOException {
-        Event eventController = new Event();
+        EventRepository eventRepository = new EventRepository();
 
-        HashMap<UUID, Persistence> allEvents = eventController.read();
+        HashMap<UUID, Persistence> allEvents = eventRepository.read();
 
         eventComboBox.getItems().clear();
 

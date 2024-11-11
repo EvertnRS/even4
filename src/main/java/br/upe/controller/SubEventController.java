@@ -249,8 +249,8 @@ public class SubEventController implements Controller {
 
     @Override
     public void read() throws IOException {
-        Persistence subEventPersistence = new SubEvent();
-        this.subEventHashMap = subEventPersistence.read();
+        /*Persistence subEventPersistence = new SubEvent();
+        this.subEventHashMap = subEventPersistence.read();*/
     }
 
     @Override

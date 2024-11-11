@@ -246,11 +246,11 @@ public class SessionController implements Controller {
 
     @Override
     public void read() throws IOException {
-        Persistence persistence = new Session();
+        /*Persistence persistence = new Session();
         this.sessionHashMap = persistence.read();
         if (!sessionHashMap.isEmpty()) {
             this.sessionLog = sessionHashMap.values().iterator().next();
-        }
+        }*/
     }
 
     private String getFatherEventId(String eventName, String eventType) throws IOException {

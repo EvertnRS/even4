@@ -1,14 +1,10 @@
 package br.upe.controller;
 
 import br.upe.persistence.Persistence;
-import br.upe.persistence.User;
-import br.upe.persistence.UserRepository;
-import br.upe.utils.JPAUtils;
-import jakarta.persistence.EntityManager;
+import br.upe.persistence.Repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,7 +15,6 @@ import static br.upe.ui.Validation.isValidEmail;
 
 public class UserController implements Controller {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
-    private static final EntityManager entityManager = JPAUtils.getEntityManagerFactory();
     private static final String EMAIL = "email";
 
     private static UserController instance;
