@@ -1,5 +1,6 @@
 package br.upe.controller;
 
+import br.upe.persistence.Event;
 import br.upe.persistence.Session;
 import br.upe.persistence.Persistence;
 
@@ -31,6 +32,11 @@ public class SessionController implements Controller {
 
     public Map<UUID, Persistence> getHashMap() {
         return sessionHashMap;
+    }
+
+    @Override
+    public List<Event> getAll() {
+        return List.of();
     }
 
     public void setSessionHashMap(Map<UUID, Persistence> sessionHashMap) {

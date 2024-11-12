@@ -104,13 +104,13 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
         }
 
         Map<UUID, Persistence> attendeeMap = facade.getAttendeeHashMap();
-        if (isValidName(attendeeName, attendeeMap)) {
+        /*if (isValidName(attendeeName, attendeeMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
             facade.createAttendee(attendeeName,sessionId,facade.getUserData("id"));
             facade.readAttendee();
             handleInscription();
-        }
+        }*/
 
 
     }

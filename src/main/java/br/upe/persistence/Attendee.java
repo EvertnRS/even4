@@ -144,6 +144,11 @@ public class Attendee implements Persistence{
         return data;
     }
 
+    @Override
+    public Object getData(UUID eventId, String dataToGet) {
+        return null;
+    }
+
 
     @Override
     public void setData(String dataToSet, Object data) {

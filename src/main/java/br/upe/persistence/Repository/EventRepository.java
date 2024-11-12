@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 
 public class EventRepository implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(EventRepository.class.getName());
-    private EntityManager entityManager = JPAUtils.getEntityManagerFactory();
     private static EventRepository instance;
 
     public EventRepository() {}
@@ -34,6 +33,7 @@ public class EventRepository implements Persistence {
     }
 
     public List<Event> getAllEvents() {
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         TypedQuery<Event> query = entityManager.createQuery("SELECT e FROM Event e", Event.class);
         return query.getResultList();
     }
@@ -48,8 +48,9 @@ public class EventRepository implements Persistence {
         Date date = (Date) params[1];
         String description = (String) params[2];
         String location = (String) params[3];
-        UUID ownerId = (UUID) params[4];
+        UUID ownerId = UUID.fromString((String) params[4]);
 
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         User owner = entityManager.find(User.class, ownerId);
 
         Event event = new Event();
@@ -84,6 +85,7 @@ public class EventRepository implements Persistence {
     @Override
     public HashMap<UUID, Persistence> read(Object... params) {
         try {
+            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
             TypedQuery<Event> query = entityManager.createQuery(
                     "SELECT e FROM Event e", Event.class);
             return (HashMap<UUID, Persistence>) query.getResultList();
@@ -106,6 +108,7 @@ public class EventRepository implements Persistence {
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
 
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -135,6 +138,11 @@ public class EventRepository implements Persistence {
     }
 
     @Override
+    public Object getData(String dataToGet) {
+        return null;
+    }
+
+    @Override
     public void delete(Object... params) throws IOException{
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametros");
@@ -144,6 +152,7 @@ public class EventRepository implements Persistence {
         UUID id = (UUID) params[0];
         UUID ownerId = (UUID) params[1];
 
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -181,8 +190,21 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public Object getData(String dataToGet) {
-        return null;
+    public Object getData(UUID eventId, String dataToGet) {
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        Event event = entityManager.find(Event.class, eventId);
+        if (event == null) {
+            return null;
+        }
+        return switch (dataToGet) {
+            case "id" -> event.getId();
+            case "name" -> event.getName();
+            case "date" -> event.getDate();
+            case "description" -> event.getDescription();
+            case "location" -> event.getLocation();
+            case "ownerId" -> event.getIdOwner().getId();
+            default -> null;
+        };
     }
 
     @Override

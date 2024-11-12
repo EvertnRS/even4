@@ -1,5 +1,6 @@
 package br.upe.facade;
 import br.upe.controller.*;
+import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
 import java.io.IOException;
 import java.util.List;
@@ -25,11 +26,15 @@ public class Facade implements FacadeInterface {
 
 
     // EventController methods
+    public List<Event> getAllEvent() {
+        return eventController.getAll();
+    }
+
     public Map<UUID, Persistence> getEventHashMap() {
         return eventController.getHashMap();
     }
 
-    public List<String> listEvents(Object... params) throws IOException {
+    public List<Event> listEvents(Object... params) throws IOException {
         return eventController.list(params);
     }
 

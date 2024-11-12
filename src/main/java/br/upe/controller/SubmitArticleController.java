@@ -1,5 +1,6 @@
 package br.upe.controller;
 
+import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
 import br.upe.persistence.SubmitArticle;
 import java.io.IOException;
@@ -15,6 +16,11 @@ public class SubmitArticleController implements Controller {
 
     public Map<UUID, Persistence> getHashMap() {
         return articleHashMap;
+    }
+
+    @Override
+    public List<Event> getAll() {
+        return List.of();
     }
 
     public void setArticleHashMap(Map<UUID, Persistence> articleHashMap) {

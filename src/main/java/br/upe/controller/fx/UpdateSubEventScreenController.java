@@ -91,7 +91,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
     }
 
     public void updateSubEvent() throws IOException {
-        String newSubName = editNameTextField.getText();
+        /*String newSubName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue().toString();
@@ -102,7 +102,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         }else {
             facade.updateSubEvent(subEventName, newSubName, newDate, newDescription, newLocation, facade.getUserData("id"));
             handleSubEvent();
-        }
+        }*/
     }
 
 }

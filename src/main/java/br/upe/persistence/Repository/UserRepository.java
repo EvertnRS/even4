@@ -1,5 +1,6 @@
 package br.upe.persistence.Repository;
 
+import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
 import br.upe.persistence.User;
 import br.upe.utils.JPAUtils;
@@ -166,6 +167,22 @@ public class UserRepository implements Persistence {
                 LOGGER.warning("Informação não existe ou é restrita");
                 yield null;
             }
+        };
+    }
+
+    @Override
+    public Object getData(UUID userId, String dataToGet) {
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        User user = entityManager.find(User.class, userId);
+        if (user == null) {
+            return null;
+        }
+        return switch (dataToGet) {
+            case "id" -> user.getId();
+            case "name" -> user.getName();
+            case "email" -> user.getEmail();
+            case "password" -> user.getPassword();
+            default -> null;
         };
     }
 

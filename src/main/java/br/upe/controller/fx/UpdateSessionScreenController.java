@@ -104,7 +104,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     public void updateSession() throws IOException {
-        String newSubName = editNameTextField.getText();
+        /*String newSubName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
@@ -120,7 +120,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         }else {
             facade.updateSession(sessionName, newSubName, newDate, newDescription, newLocation,  facade.getUserData("id"), newStartTime, newEndTime);
             facade.readSession();
-            handleSession();}
+            handleSession();}*/
     }
 
 }

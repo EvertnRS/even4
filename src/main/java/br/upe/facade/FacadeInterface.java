@@ -1,5 +1,6 @@
 package br.upe.facade;
 
+import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
 import java.io.IOException;
 import java.util.List;
@@ -8,8 +9,9 @@ import java.util.UUID;
 
 public interface FacadeInterface {
     // EventController methods
+    List<Event> getAllEvent();
     Map<UUID, Persistence> getEventHashMap() ;
-    List<String> listEvents(Object... params) throws IOException;
+    List<Event> listEvents(Object... params) throws IOException;
     void createEvent(Object... params) throws IOException;
     void readEvent() throws IOException;
     void updateEvent(Object... params) throws IOException;

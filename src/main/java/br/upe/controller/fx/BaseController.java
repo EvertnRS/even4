@@ -3,6 +3,7 @@ package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,10 +53,9 @@ public abstract class BaseController {
 
     }
 
-    public boolean isValidName(String name, Map<UUID, Persistence> eventHashMap) {
-        for (Map.Entry<UUID, Persistence> entry : eventHashMap.entrySet()) {
-            Persistence event = entry.getValue();
-            if (event.getData("name").equals(name) || name.isEmpty()) {
+    public boolean isValidName(String name, List<Event> events) {
+        for (Event event : events) {
+            if (event.getName().equals(name) || name.isEmpty()) {
                 return true;
             }
         }

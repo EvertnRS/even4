@@ -25,6 +25,11 @@ public class SubmitArticle implements Persistence {
         };
     }
 
+    @Override
+    public Object getData(UUID eventId, String dataToGet) {
+        return null;
+    }
+
     public void setData(String key, Object value) {
         switch (key) {
             case "name":

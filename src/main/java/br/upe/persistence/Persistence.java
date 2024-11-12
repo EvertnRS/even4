@@ -10,6 +10,9 @@ public interface  Persistence {
     void update(Object... params) throws IOException;
 
     Object getData(String dataToGet);
+
+    Object getData(UUID eventId, String dataToGet);
+
     void setData(String dataToSet, Object data);
     HashMap<UUID, Persistence> read() throws IOException;
     HashMap<UUID, Persistence> read(Object... params);

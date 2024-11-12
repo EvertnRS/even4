@@ -1,6 +1,7 @@
 package br.upe.controller;
 
 import br.upe.persistence.Attendee;
+import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
 
 import java.io.FileNotFoundException;
@@ -22,6 +23,11 @@ public class AttendeeController implements Controller {
 
     public Map<UUID, Persistence> getHashMap() {
         return attendeeHashMap;
+    }
+
+    @Override
+    public List<Event> getAll() {
+        return List.of();
     }
 
     public void setAttendeeHashMap(Map<UUID, Persistence> attendeeHashMap) {

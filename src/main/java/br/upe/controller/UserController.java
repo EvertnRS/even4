@@ -1,5 +1,6 @@
 package br.upe.controller;
 
+import br.upe.persistence.Event;
 import br.upe.persistence.Persistence;
 import br.upe.persistence.Repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -34,6 +35,11 @@ public class UserController implements Controller {
 
     public Map<UUID, Persistence> getHashMap() {
         return userHashMap;
+    }
+
+    @Override
+    public List<Event> getAll() {
+        return List.of();
     }
 
     public void setUserHashMap(Map<UUID, Persistence> userHashMap) {

@@ -1,5 +1,6 @@
 package br.upe.controller;
 
+import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.Persistence;
 import java.io.*;
@@ -21,6 +22,11 @@ public class SubEventController implements Controller {
 
     public Map<UUID, Persistence> getHashMap() {
         return subEventHashMap;
+    }
+
+    @Override
+    public List<Event> getAll() {
+        return List.of();
     }
 
     public void setEventHashMap(Map<UUID, Persistence> subEventHashMap) {
