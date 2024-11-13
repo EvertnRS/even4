@@ -1,7 +1,7 @@
 package br.upe.facade;
 import br.upe.controller.*;
 import br.upe.persistence.Event;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.repository.Persistence;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;

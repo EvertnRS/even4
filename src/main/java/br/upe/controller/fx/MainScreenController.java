@@ -2,9 +2,8 @@ package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
-import br.upe.persistence.Persistence;
-import br.upe.persistence.Repository.EventRepository;
-import br.upe.persistence.Repository.UserRepository;
+import br.upe.persistence.repository.EventRepository;
+import br.upe.persistence.repository.UserRepository;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -12,11 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 

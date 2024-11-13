@@ -1,9 +1,6 @@
 package br.upe.controller.fx;
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
-import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
@@ -14,8 +11,6 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import static br.upe.ui.Validation.isValidDate;
 

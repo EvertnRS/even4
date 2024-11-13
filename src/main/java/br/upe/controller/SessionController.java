@@ -2,11 +2,10 @@ package br.upe.controller;
 
 import br.upe.persistence.Event;
 import br.upe.persistence.Session;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.repository.Persistence;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SessionController implements Controller {

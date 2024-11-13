@@ -2,7 +2,7 @@ package br.upe.controller;
 
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.repository.Persistence;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;

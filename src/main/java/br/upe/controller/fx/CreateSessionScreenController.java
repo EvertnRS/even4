@@ -1,14 +1,8 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.EventController;
-import br.upe.controller.SessionController;
-import br.upe.controller.SubEventController;
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
-import br.upe.persistence.Persistence;
-import br.upe.persistence.User;
+import br.upe.persistence.repository.Persistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -21,8 +15,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static br.upe.ui.Validation.*;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;

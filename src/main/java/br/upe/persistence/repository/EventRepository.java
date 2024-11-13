@@ -1,6 +1,5 @@
-package br.upe.persistence.Repository;
+package br.upe.persistence.repository;
 import br.upe.persistence.Event;
-import br.upe.persistence.Persistence;
 import br.upe.persistence.User;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
@@ -19,7 +18,8 @@ public class EventRepository implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(EventRepository.class.getName());
     private static EventRepository instance;
 
-    public EventRepository() {}
+    public EventRepository() {
+    }
 
     public static EventRepository getInstance() {
         if (instance == null) {
@@ -78,7 +78,7 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public HashMap<UUID, Persistence> read() throws IOException{
+    public HashMap<UUID, Persistence> read() throws IOException {
         return null;
     }
 
@@ -116,10 +116,10 @@ public class EventRepository implements Persistence {
             Event event = entityManager.find(Event.class, id);
 
             if (event != null) {
-                event.setName(newName);
-                event.setDate(newDate);
-                event.setDescription(newDescription);
-                event.setLocation(newLocation);
+                setData(id, "name", newName);
+                setData(id, "date", newDate);
+                setData(id, "description", newDescription);
+                setData(id, "location", newLocation);
                 transaction.commit();
                 LOGGER.info("Evento atualizado com sucesso.");
             } else {
@@ -138,12 +138,17 @@ public class EventRepository implements Persistence {
     }
 
     @Override
+    public void setData(String dataToSet, Object data) {
+
+    }
+
+    @Override
     public Object getData(String dataToGet) {
         return null;
     }
 
     @Override
-    public void delete(Object... params) throws IOException{
+    public void delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametros");
             return;
@@ -185,7 +190,7 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public boolean loginValidate(String email, String password){
+    public boolean loginValidate(String email, String password) {
         return false;
     }
 
@@ -208,8 +213,36 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public void setData(String dataToSet, Object data) {
+    public void setData(UUID eventId, String dataToSet, Object data) {
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Event event = entityManager.find(Event.class, eventId);
+            if (event != null) {
+                switch (dataToSet) {
+                    case "id" -> event.setId((UUID) data);
+                    case "name" -> event.setName((String) data);
+                    case "date" -> event.setDate((Date) data);
+                    case "description" -> event.setDescription((String) data);
+                    case "location" -> event.setLocation((String) data);
+                    default -> throw new IllegalArgumentException("Campo inválido: " + dataToSet);
+                }
+                entityManager.merge(event);
+                transaction.commit();
+            } else {
+                throw new IllegalArgumentException("Evento não encontrado com o ID fornecido.");
+            }
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
     }
-
 }
 
