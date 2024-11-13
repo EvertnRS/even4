@@ -4,7 +4,7 @@ import br.upe.controller.AttendeeController;
 import br.upe.controller.EventController;
 import br.upe.controller.SessionController;
 import br.upe.controller.UserController;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.Repository.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package br.upe.controller.fx;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.repository.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -13,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class CreateAttendeeScreenController extends BaseController implements FxController {
     private FacadeInterface facade;

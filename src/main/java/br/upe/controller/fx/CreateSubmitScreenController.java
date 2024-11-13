@@ -1,6 +1,6 @@
 package br.upe.controller.fx;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.repository.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;

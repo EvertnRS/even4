@@ -1,9 +1,7 @@
 package br.upe.controller.fx;
 
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
-import br.upe.persistence.Persistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -12,12 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import javafx.scene.text.Text;
-
-import static br.upe.ui.Validation.isValidDate;
 
 public class CreateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;

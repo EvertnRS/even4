@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "events")
-public class Event {
+public class Event implements Model {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "UUID")

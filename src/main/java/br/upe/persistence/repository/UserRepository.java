@@ -1,7 +1,5 @@
-package br.upe.persistence.Repository;
+package br.upe.persistence.repository;
 
-import br.upe.persistence.Event;
-import br.upe.persistence.Persistence;
 import br.upe.persistence.User;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
@@ -187,6 +185,10 @@ public class UserRepository implements Persistence {
     }
 
     @Override
+    public void setData(UUID eventId, String dataToSet, Object data) {
+
+    }
+
     public void setData(String dataToSet, Object data) {
         switch (dataToSet) {
             case "email" -> userLog.setEmail((String) data);

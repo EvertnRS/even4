@@ -1,8 +1,6 @@
 package br.upe.controller.fx;
 
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -10,10 +8,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
-
-import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;

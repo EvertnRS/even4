@@ -3,12 +3,21 @@ package br.upe.controller.fx;
 import br.upe.controller.EventController;
 import br.upe.controller.SubEventController;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Event;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.Model;
+import br.upe.persistence.repository.Persistence;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -53,14 +62,77 @@ public abstract class BaseController {
 
     }
 
-    public boolean isValidName(String name, List<Event> events) {
-        for (Event event : events) {
-            if (event.getName().equals(name) || name.isEmpty()) {
+    public <T> boolean isValidName(String name, List<T> items) {
+        for (T item : items) {
+            if (item instanceof Model && ((Model) item).getName().equals(name) || name.isEmpty()) {
                 return true;
             }
         }
         return false;
     }
+
+    // Método de criação do Pane de carregamento
+    public Pane createLoadPane(String text) {
+        Label label = new Label(text);
+        label.setStyle("-fx-font-size: 14pt; -fx-text-fill: white;");
+        label.setAlignment(Pos.CENTER);
+
+        StackPane loadStack = new StackPane();
+        loadStack.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setStyle("-fx-progress-color: white;");
+
+        VBox vbox = new VBox(20, label, progressIndicator);
+        vbox.setAlignment(Pos.CENTER);
+
+        loadStack.getChildren().add(vbox);
+
+        return loadStack;
+    }
+
+    public void loadScreen(String text, Runnable taskBackend, Pane root) {
+        Pane loadPane = createLoadPane(text);
+
+        loadPane.prefWidthProperty().bind(root.widthProperty());
+        loadPane.prefHeightProperty().bind(root.heightProperty());
+
+        Platform.runLater(() -> root.getChildren().add(loadPane));
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                taskBackend.run();
+
+                for (int i = 1; i <= 100; i++) {
+                    updateProgress(i, 100);
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                Platform.runLater(() -> root.getChildren().remove(loadPane));
+            }
+
+            @Override
+            protected void failed() {
+                Platform.runLater(() -> root.getChildren().remove(loadPane));
+            }
+        };
+
+        ((ProgressIndicator)((VBox)(loadPane).getChildren().get(0)).getChildren().get(1))
+                .progressProperty().bind(task.progressProperty());
+
+        new Thread(task).start();
+    }
+
+
 
     public boolean validateEventDate(String date, String searchId) throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

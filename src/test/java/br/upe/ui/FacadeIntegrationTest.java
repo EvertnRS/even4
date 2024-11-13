@@ -2,7 +2,7 @@ package br.upe.ui;
 /*
 import br.upe.controller.*;
 import br.upe.facade.Facade;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.Repository.Persistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

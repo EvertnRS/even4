@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
 import br.upe.facade.FacadeInterface;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -88,14 +89,22 @@ public class SignUpController extends BaseController implements FxController {
         String name = nameTextField.getText().trim();
         String password = passTextField.getText().trim();
 
-        //trocar para facade
         UserController userController = UserController.getInstance();
-        if (isValidEmail(email) && isValidCPF(cpf)) {
-            userController.create(name.trim(), cpf.trim(), email.trim(), password.trim());
-            returnToLogin();
-        } else {
-            errorLabel.setText("Cadastro falhou! Insira informações válidas.");
-        }
+
+        loadScreen("Carregando", () -> {
+            if (isValidEmail(email) && isValidCPF(cpf)) {
+                userController.create(name, cpf, email, password);
+                Platform.runLater(() -> {
+                    try {
+                        returnToLogin();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            } else {
+                Platform.runLater(() -> errorLabel.setText("Cadastro falhou! Insira informações válidas."));
+            }
+        }, registerAnchorPane);
     }
 
     public void returnToLogin() throws IOException {
