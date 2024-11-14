@@ -16,6 +16,8 @@ public class FxInterface extends Application {
         stage.setTitle("Even4");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.getIcons().clear();
+        stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
 
         stage.show();
     }

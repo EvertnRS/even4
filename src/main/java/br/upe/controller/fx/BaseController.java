@@ -56,6 +56,8 @@ public abstract class BaseController {
 
         Scene scene = new Scene(screen);
         Stage stage = (Stage) pane.getScene().getWindow();
+        stage.getIcons().clear();
+        stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
 
         stage.setScene(scene);
         stage.setTitle("Even4");
@@ -71,7 +73,6 @@ public abstract class BaseController {
         return false;
     }
 
-    // Método de criação do Pane de carregamento
     public Pane createLoadPane(String text) {
         Label label = new Label(text);
         label.setStyle("-fx-font-size: 14pt; -fx-text-fill: white;");
@@ -81,6 +82,7 @@ public abstract class BaseController {
         loadStack.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
 
         ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setProgress(-1); // Indeterminate state for spinner
         progressIndicator.setStyle("-fx-progress-color: white;");
 
         VBox vbox = new VBox(20, label, progressIndicator);
@@ -103,15 +105,6 @@ public abstract class BaseController {
             @Override
             protected Void call() {
                 taskBackend.run();
-
-                for (int i = 1; i <= 100; i++) {
-                    updateProgress(i, 100);
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
                 return null;
             }
 
@@ -126,13 +119,8 @@ public abstract class BaseController {
             }
         };
 
-        ((ProgressIndicator)((VBox)(loadPane).getChildren().get(0)).getChildren().get(1))
-                .progressProperty().bind(task.progressProperty());
-
         new Thread(task).start();
     }
-
-
 
     public boolean validateEventDate(String date, String searchId) throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

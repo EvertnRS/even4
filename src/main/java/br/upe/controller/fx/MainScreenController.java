@@ -4,6 +4,7 @@ import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.UserRepository;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -11,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
@@ -122,21 +124,34 @@ public class MainScreenController extends BaseController implements FxController
     }
 
     private void handleDetailEvent(UUID id) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detalhes do Evento");
-        alert.setHeaderText("Detalhes do Evento");
+        loadScreen("Carregando", () -> {
+            EventRepository eventRepository = EventRepository.getInstance();
+            UserRepository userRepository = UserRepository.getInstance();
 
-        EventRepository eventRepository = EventRepository.getInstance();
-        UserRepository userRepository = UserRepository.getInstance();
+            String content = "Nome: " + eventRepository.getData(id, "name") + "\n" +
+                    "Data: " + eventRepository.getData(id,"date") + "\n" +
+                    "Descrição: " + eventRepository.getData(id,"description") + "\n" +
+                    "Local: " + eventRepository.getData(id,"location") + "\n" +
+                    "Administrador: " + userRepository.getData((UUID) eventRepository.getData(id,"ownerId"), "email") + "\n";
 
-        String content = "Nome: " + eventRepository.getData(id, "name") + "\n" +
-                "Data: " + eventRepository.getData(id,"date") + "\n" +
-                "Descrição: " + eventRepository.getData(id,"description") + "\n" +
-                "Local: " + eventRepository.getData(id,"location") + "\n" +
-                "Administrador: " + (String) userRepository.getData((UUID) eventRepository.getData(id,"ownerId"), "email") + "\n";
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Detalhes do Evento");
+                alert.setTitle(" ");
 
-        alert.setContentText(content);
-        alert.showAndWait();
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().clear();
+                stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
+
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.setStyle("-fx-background-color: #f0f0f0; -fx-font-size: 14px; -fx-text-fill: #333333;");
+                dialogPane.lookup(".header-panel").setStyle("-fx-background-color: #ff914d; -fx-text-fill: #ffffff; -fx-font-weight: bold;");
+                dialogPane.lookup(".content").setStyle("-fx-font-size: 14px; -fx-text-fill: rgb(51,51,51);");
+
+                alert.setContentText(content);
+                alert.showAndWait();
+            });
+        }, mainPane);
     }
 
     private void handleDeleteEvent(UUID eventId, String userId) throws IOException {

@@ -37,8 +37,11 @@ public class LogoController {
                 Scene loginScene = new Scene(loginScreen);
                 Stage stage = (Stage) anchorPane.getScene().getWindow();
 
+
                 stage.setScene(loginScene);
                 stage.setTitle("Even4");
+                stage.getIcons().clear();
+                stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
 
                 FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), loginScreen);
                 fadeIn.setFromValue(0.0);
