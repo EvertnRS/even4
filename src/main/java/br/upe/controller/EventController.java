@@ -1,6 +1,7 @@
 package br.upe.controller;
 import br.upe.persistence.Event;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.repository.EventRepository;
+import br.upe.persistence.repository.Persistence;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -20,6 +21,11 @@ public class EventController implements Controller {
         this.read();
     }
 
+    public List<Event> getAll() {
+        EventRepository eventRepository = EventRepository.getInstance();
+        return eventRepository.getAllEvents();
+    }
+
     public Map<UUID, Persistence> getHashMap() {
         System.out.println(eventHashMap);
         return eventHashMap;
@@ -30,113 +36,56 @@ public class EventController implements Controller {
     }
 
     @Override
-    public List<String> list(Object... params) throws IOException {
-            this.read();
-            List<String> userEvents = new ArrayList<>();
+    public <T> List<T> list(Object... params) throws IOException {
+        UUID userId = UUID.fromString((String) params[0]);
+        EventRepository eventRepository = EventRepository.getInstance();
+        List<Event> allEvents = eventRepository.getAllEvents();
+        List<Event> userEvents = new ArrayList<>();
 
-            try {
-                for (Map.Entry<UUID, Persistence> entry : eventHashMap.entrySet()) {
-                    Persistence persistence = entry.getValue();
-                    if (persistence.getData(OWNER_ID).equals(params[0])) {
-                        String eventName = (String) persistence.getData("name");
-                        userEvents.add(eventName);
-                    }
-                }
-                if (userEvents.isEmpty()) {
-                    LOGGER.warning("Seu usuário atual é organizador de nenhum evento");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        for (Event event : allEvents) {
+            if (event.getIdOwner().getId().equals(userId)) {
+                userEvents.add(event);
             }
-            return userEvents;
         }
+
+        if (userEvents.isEmpty()) {
+            LOGGER.warning("Seu usuário atual é organizador de nenhum evento");
+        }
+
+        return (List<T>) userEvents;
+    }
 
     public void update(Object... params) throws IOException {
         if (!isValidParamsLength(params)) {
-            LOGGER.warning("Só pode ter 6 parametros");
+            LOGGER.warning("Só pode ter 5 parametros");
             return;
         }
 
         UUID eventId = (UUID) params[0];
         String newName = (String) params[1];
-        String newDate = (String) params[2];
+        Date newDate = (Date) params[2];
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
-        //por que não ta usando?
-        String userId = (String) params[5];
-
-        UUID eventValid = getEventById(eventId);
-
-        if (eventValid == null) {
-            LOGGER.warning("Você não pode alterar este Evento");
-            return;
-        }
-
-        if (isNameInUseOrEmpty(newName)) {
-            LOGGER.warning("Nome em uso ou vazio");
-            return;
-        }
 
         updateEvent(eventId, newName, newDate, newDescription, newLocation);
     }
 
     private boolean isValidParamsLength(Object... params) {
-        return params.length == 6;
+        return params.length == 5;
     }
 
-    private String getOwnerEventId(String oldName, String userId) {
-        for (Map.Entry<UUID, Persistence> entry : eventHashMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            String name = (String) persistence.getData("name");
-            String ownerId = (String) persistence.getData(OWNER_ID);
-
-            if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
-                return (String) persistence.getData("id");
-            }
-        }
-        return null;
-    }
-
-    private UUID getEventById(UUID id) {
-        for (Map.Entry<UUID, Persistence> entry : eventHashMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData("id").equals(id)) {
-                return (UUID) persistence.getData("name");
-            }
-        }
-        return null;
-    }
-
-    private boolean isNameInUseOrEmpty(String newName) {
-        for (Map.Entry<UUID, Persistence> entry : eventHashMap.entrySet()) {
-            Persistence event = entry.getValue();
-            String name = (String) event.getData("name");
-            if (name.isEmpty() || name.equals(newName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void updateEvent(UUID id, String newName, String newDate, String newDescription, String newLocation) throws IOException {
-        Persistence newEvent = eventHashMap.get(id);
-        if (newEvent != null) {
-            newEvent.setData("name", newName);
-            newEvent.setData("date", newDate);
-            newEvent.setData(DESCRIPTION, newDescription);
-            newEvent.setData(LOCATION, newLocation);
-            eventHashMap.put(id, newEvent);
-            Persistence eventPersistence = new Event();
-            eventPersistence.update(eventHashMap);
+    private void updateEvent(UUID id, String newName, Date newDate, String newDescription, String newLocation) throws IOException {
+        if (id != null) {
+            EventRepository eventRepository = EventRepository.getInstance();
+            eventRepository.update(id, newName, newDate, newDescription, newLocation);
         } else {
             LOGGER.warning("Evento não encontrado");
         }
     }
 
-
     @Override
     public void read() throws IOException {
-        Persistence eventPersistence = new Event();
+        Persistence eventPersistence = new EventRepository();
         this.eventHashMap = eventPersistence.read();
     }
 
@@ -173,20 +122,13 @@ public class EventController implements Controller {
         }
 
         String name = (String) params[0];
-        String date = (String) params[1];
+        Date date = (Date) params[1];
+
         String description = (String) params[2];
         String location = (String) params[3];
         String idOwner = (String) params[4];
 
-        for (Map.Entry<UUID, Persistence> entry : this.eventHashMap.entrySet()) {
-            Persistence event = entry.getValue();
-            if (event.getData("name").equals(name) || name.isEmpty()) {
-                LOGGER.warning("Nome em uso ou vazio");
-                return;
-            }
-        }
-
-        Persistence event = new Event();
+        Persistence event = new EventRepository();
         event.create(name, date, description, location, idOwner);
 
     }
@@ -262,27 +204,16 @@ public class EventController implements Controller {
 
     @Override
     public void delete(Object... params) throws IOException {
-        String ownerId = "";
-        for (Map.Entry<UUID, Persistence> entry : eventHashMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData("id").equals(params[0])){
-                ownerId = (String) persistence.getData(OWNER_ID);
-            }
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parametro");
+            return;
         }
 
-        if ((params[1]).equals(ownerId)) {
-            Iterator<Map.Entry<UUID, Persistence>> iterator = eventHashMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<UUID, Persistence> entry = iterator.next();
-                Persistence eventindice = entry.getValue();
-                if (eventindice.getData("id").equals(params[0])) {
-                    iterator.remove();
-                }
-            }
-            Persistence eventPersistence = new Event();
-            eventPersistence.delete(eventHashMap);
-        } else {
-            LOGGER.warning("Você não pode deletar esse evento");
-        }
+        EventRepository eventRepository = EventRepository.getInstance();
+
+        UUID id = (UUID) params[0];
+        UUID ownerId = UUID.fromString((String) params[1]);
+
+        eventRepository.delete(id, ownerId);
     }
 }

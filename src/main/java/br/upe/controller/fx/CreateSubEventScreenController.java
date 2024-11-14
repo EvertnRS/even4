@@ -1,8 +1,7 @@
 package br.upe.controller.fx;
 
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.Event;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -11,12 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import javafx.scene.text.Text;
-
-import static br.upe.ui.Validation.isValidDate;
 
 public class CreateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -99,8 +94,8 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     }
 
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
-        eventList.setAll(userEvents);
+        List<Event> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
+        eventList.setAll(String.valueOf(userEvents));
 
         FilteredList<String> filteredItems = new FilteredList<>(eventList, p -> true);
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -124,7 +119,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
 
 
     public void createSubEvent() throws IOException {
-        String subEventName = nameTextField.getText();
+        /*String subEventName = nameTextField.getText();
         String subEventLocation = locationTextField.getText();
         String subEventDescription = descriptionTextField.getText();
         String subEventDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
@@ -139,6 +134,6 @@ public class CreateSubEventScreenController extends BaseController implements Fx
             facade.createSubEvent(selectedEventName, subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
             facade.readSubEvent();
             handleSubEvent();
-        }
+        }*/
     }
 }

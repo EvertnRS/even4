@@ -2,11 +2,13 @@ package br.upe.controller.fx;
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -74,12 +76,19 @@ public class LoginScreenController extends BaseController implements FxControlle
         UserController userController = UserController.getInstance();
         FacadeInterface facade = new Facade(userController);
 
-        if (userController.loginValidate(email, pass)) {
-            System.out.print("Login efetuado com sucesso!\n\n\n\n");
-            genericButton("/fxml/mainScreen.fxml", loginAnchorPane, facade, null);
-        } else {
-            errorLabel.setText("Login falhou! Verifique suas credenciais.");
-        }
+        loadScreen("Carregando", () -> {
+            if (userController.loginValidate(email, pass)) {
+                Platform.runLater(() -> {
+                    try {
+                        genericButton("/fxml/mainScreen.fxml", loginAnchorPane, facade, null);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            } else {
+                Platform.runLater(() -> errorLabel.setText("Login falhou! Verifique suas credenciais."));
+            }
+        }, loginAnchorPane);
     }
 
     public void moveToSignUp() throws IOException {

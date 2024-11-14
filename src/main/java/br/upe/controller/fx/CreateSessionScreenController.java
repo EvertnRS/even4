@@ -1,13 +1,8 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.EventController;
-import br.upe.controller.SessionController;
-import br.upe.controller.SubEventController;
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Persistence;
-import br.upe.persistence.User;
+import br.upe.persistence.Event;
+import br.upe.persistence.repository.Persistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -20,8 +15,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static br.upe.ui.Validation.*;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -130,9 +123,9 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     private void loadUserEvents() throws IOException {
-        List<String> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
+        List<Event> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
         List<String> userSubEvents = facade.listSubEvents(facade.getUserData("id"), "fx");
-        eventList.addAll(userEvents);
+        eventList.addAll(String.valueOf(userEvents));
         eventList.addAll(userSubEvents);
 
         FilteredList<String> filteredItems = new FilteredList<>(eventList, p -> true);
@@ -157,7 +150,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
 
 
     public void createSession() throws IOException {
-        String sessionName = nameTextField.getText();
+        /*String sessionName = nameTextField.getText();
         String sessionLocation = locationTextField.getText();
         String sessionDescription = descriptionTextField.getText();
         String sessionDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
@@ -181,7 +174,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
             facade.createSession(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, facade.getUserData("id"), type);
             facade.readSession();
             handleSession();
-        }
+        }*/
     }
 
 }

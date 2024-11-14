@@ -23,8 +23,9 @@
       </ImageView>
       <Pane layoutX="222.0" prefHeight="582.0" prefWidth="878.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <children>
-            <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutY="62.0" prefHeight="502.0" prefWidth="878.0" vvalue="1.0">
-               <VBox fx:id="eventVBox" layoutX="161.0" layoutY="90.0" prefHeight="65.0" prefWidth="528.0" spacing="10" style="-fx-background-radius: 10; -fx-border-radius: 10;">
+            <ScrollPane fx:id="scrollPane" layoutY="62.0" prefHeight="502.0" prefWidth="878.0" vvalue="1.0" focusTraversable="false" mouseTransparent="false">
+               <VBox fx:id="eventVBox" layoutX="161.0" layoutY="90.0" prefHeight="65.0" prefWidth="528.0" spacing="10"
+                     focusTraversable="true" style="-fx-background-radius: 10; -fx-border-radius: 10;">
                   <!-- Aqui será a lista de eventos -->
                </VBox>
             </ScrollPane>

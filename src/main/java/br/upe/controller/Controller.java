@@ -1,6 +1,7 @@
 package br.upe.controller;
 
-import br.upe.persistence.Persistence;
+import br.upe.persistence.Event;
+import br.upe.persistence.repository.Persistence;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,8 +13,9 @@ public interface Controller {
     void update(Object... params) throws IOException;
     void read() throws IOException;
     void delete(Object... params) throws IOException;
-    List<String> list(Object... params) throws IOException;
+    <T> List <T> list(Object... params) throws IOException;
     boolean loginValidate(String email, String cpf);
     String getData(String dataToGet);
     Map<UUID, Persistence> getHashMap();
+    List<Event> getAll();
 }

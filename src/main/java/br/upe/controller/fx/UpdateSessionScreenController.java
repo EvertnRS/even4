@@ -1,10 +1,6 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.SessionController;
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -13,11 +9,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
-
-import static br.upe.ui.Validation.areValidTimes;
-import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -104,7 +95,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     public void updateSession() throws IOException {
-        String newSubName = editNameTextField.getText();
+        /*String newSubName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
@@ -120,7 +111,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         }else {
             facade.updateSession(sessionName, newSubName, newDate, newDescription, newLocation,  facade.getUserData("id"), newStartTime, newEndTime);
             facade.readSession();
-            handleSession();}
+            handleSession();}*/
     }
 
 }

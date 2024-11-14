@@ -1,14 +1,11 @@
 package br.upe.controller;
 
-import br.upe.persistence.Persistence;
-import br.upe.persistence.User;
-import br.upe.persistence.UserRepository;
-import br.upe.utils.JPAUtils;
-import jakarta.persistence.EntityManager;
+import br.upe.persistence.Event;
+import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,7 +16,6 @@ import static br.upe.ui.Validation.isValidEmail;
 
 public class UserController implements Controller {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
-    private static final EntityManager entityManager = JPAUtils.getEntityManagerFactory();
     private static final String EMAIL = "email";
 
     private static UserController instance;
@@ -39,6 +35,11 @@ public class UserController implements Controller {
 
     public Map<UUID, Persistence> getHashMap() {
         return userHashMap;
+    }
+
+    @Override
+    public List<Event> getAll() {
+        return List.of();
     }
 
     public void setUserHashMap(Map<UUID, Persistence> userHashMap) {
@@ -82,8 +83,6 @@ public class UserController implements Controller {
         Persistence userRepository = UserRepository.getInstance();
 
         userRepository.create(name, cpf, email, hashedPassword);
-        this.userHashMap.put((UUID) userRepository.getData("id"), userRepository);
-
     }
 
 

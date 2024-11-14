@@ -1,5 +1,8 @@
 package br.upe.persistence;
 
+import br.upe.persistence.repository.EventRepository;
+import br.upe.persistence.repository.Persistence;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -48,6 +51,16 @@ public class Session implements Persistence {
             LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
+    }
+
+    @Override
+    public Object getData(UUID eventId, String dataToGet) {
+        return null;
+    }
+
+    @Override
+    public void setData(UUID eventId, String dataToSet, Object data) {
+
     }
 
     @Override
@@ -180,27 +193,27 @@ public class Session implements Persistence {
                 writer.newLine();
             }
 
-            Event event = null;
+            EventRepository eventRepository = null;
             for (Map.Entry<UUID, Persistence> entry : eventH.entrySet()) {
                 Persistence eventPersistence = entry.getValue();
                 if (eventPersistence.getData("id").equals(eventId)) {
-                    event = (Event) eventPersistence;
+                    eventRepository = (EventRepository) eventPersistence;
                     break;
                 }
             }
 
-            if (event == null) {
+            if (eventRepository == null) {
                 LOGGER.warning("Evento não encontrado.");
                 return;
             }
 
-            List<Persistence> sessionList = event.getSessionsList();
+            /*List<Persistence> sessionList = eventRepository.getSessionsList();
             if (sessionList == null) {
                 sessionList = new ArrayList<>(); // Inicialize a lista se estiver nula
-            }
+            }*/
 
             Session session = new Session();
-            LOGGER.warning("IdEvent " + event.getId());
+            /*LOGGER.warning("IdEvent " + eventRepository.getId());*/
             session.setId(parsedId);
             session.setName(parsedName);
             session.setDate(parsedDate);
@@ -209,15 +222,15 @@ public class Session implements Persistence {
             session.setStartTime(parsedStartTime);
             session.setEndTime(parsedEndTime);
             session.setOwnerId(parsedOwnerId);
-            sessionList.add(session);
+           /* sessionList.add(session);*/
             LOGGER.warning("Sessão Criada: " + session.getId());
 
             // Se necessário, atualizar o evento com a nova lista de sessões
-            event.setSessionsList(sessionList);
+            /*eventRepository.setSessionsList(sessionList);
 
-            eventH.put(eventId, event);
+            eventH.put(eventId, eventRepository);
 
-            LOGGER.warning("Sessões atuais: " + sessionList.size());
+            LOGGER.warning("Sessões atuais: " + sessionList.size());*/
 
         } catch (IOException writerEx) {
             LOGGER.warning(WRITE_ERROR);

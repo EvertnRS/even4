@@ -1,7 +1,10 @@
 package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.Event;
+import br.upe.persistence.repository.EventRepository;
+import br.upe.persistence.repository.UserRepository;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -9,9 +12,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -61,7 +65,8 @@ public class MainScreenController extends BaseController implements FxController
     private void loadUserEvents() throws IOException {
         eventVBox.getChildren().clear();
 
-        facade.listEvents(facade.getUserData("id"), "");
+        List<Event> userEvents = facade.listEvents(facade.getUserData("id"));
+        EventRepository eventRepository = EventRepository.getInstance();
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
@@ -70,14 +75,13 @@ public class MainScreenController extends BaseController implements FxController
 
         eventVBox.setAlignment(Pos.CENTER);
 
-        for (Map.Entry<UUID, Persistence> entry : facade.getEventHashMap().entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData("ownerId").equals(facade.getUserData("id"))) {
+        for (Event event : userEvents) {
+            if (event.getIdOwner().getId().equals(UUID.fromString(facade.getUserData("id")))) {
 
                 VBox eventContainer = new VBox();
                 eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
-                Label eventLabel = new Label((String) persistence.getData("name"));
+                Label eventLabel = new Label((String) eventRepository.getData(event.getId(),"name"));
                 eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
                 Button editButton = new Button("Editar");
@@ -90,11 +94,11 @@ public class MainScreenController extends BaseController implements FxController
                 detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
                 detailsButton.setOnAction(e ->
-                    handleDetailEvent((UUID) persistence.getData("id")));
+                    handleDetailEvent((UUID) eventRepository.getData(event.getId(),"id")));
 
                 editButton.setOnAction(e -> {
                     try {
-                        handleEditEvent((String) persistence.getData("id"));
+                        handleEditEvent((UUID) eventRepository.getData(event.getId(),"id"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -102,7 +106,7 @@ public class MainScreenController extends BaseController implements FxController
 
                 deleteButton.setOnAction(e -> {
                     try {
-                        handleDeleteEvent((String) persistence.getData("id"), facade.getUserData("id"));
+                        handleDeleteEvent((UUID) eventRepository.getData(event.getId(),"id"), facade.getUserData("id"));
                     } catch (IOException ex) {
                         throw new IllegalArgumentException(ex);
                     }
@@ -120,24 +124,37 @@ public class MainScreenController extends BaseController implements FxController
     }
 
     private void handleDetailEvent(UUID id) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detalhes do Evento");
-        alert.setHeaderText("Detalhes do Evento");
+        loadScreen("Carregando", () -> {
+            EventRepository eventRepository = EventRepository.getInstance();
+            UserRepository userRepository = UserRepository.getInstance();
 
-        Persistence event = facade.getEventHashMap().get(id);
-        Persistence owner = facade.getUserHashMap().get((UUID) event.getData("ownerId"));
+            String content = "Nome: " + eventRepository.getData(id, "name") + "\n" +
+                    "Data: " + eventRepository.getData(id,"date") + "\n" +
+                    "Descrição: " + eventRepository.getData(id,"description") + "\n" +
+                    "Local: " + eventRepository.getData(id,"location") + "\n" +
+                    "Administrador: " + userRepository.getData((UUID) eventRepository.getData(id,"ownerId"), "email") + "\n";
 
-        String content = "Nome: " + event.getData("name") + "\n" +
-                "Data: " + event.getData("date") + "\n" +
-                "Descrição: " + event.getData("description") + "\n" +
-                "Local: " + event.getData("location") + "\n" +
-                "Administrador: " + owner.getData("email") + "\n";
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Detalhes do Evento");
+                alert.setTitle(" ");
 
-        alert.setContentText(content);
-        alert.showAndWait();
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().clear();
+                stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
+
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.setStyle("-fx-background-color: #f0f0f0; -fx-font-size: 14px; -fx-text-fill: #333333;");
+                dialogPane.lookup(".header-panel").setStyle("-fx-background-color: #ff914d; -fx-text-fill: #ffffff; -fx-font-weight: bold;");
+                dialogPane.lookup(".content").setStyle("-fx-font-size: 14px; -fx-text-fill: rgb(51,51,51);");
+
+                alert.setContentText(content);
+                alert.showAndWait();
+            });
+        }, mainPane);
     }
 
-    private void handleDeleteEvent(String eventId, String userId) throws IOException {
+    private void handleDeleteEvent(UUID eventId, String userId) throws IOException {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
         confirmationAlert.setHeaderText("Deseja realmente excluir este evento?");
@@ -156,8 +173,8 @@ public class MainScreenController extends BaseController implements FxController
         }
     }
 
-    private void handleEditEvent(String eventId) throws IOException {
-        genericButton("/fxml/updateEventScreen.fxml", mainPane, facade, eventId);
+    private void handleEditEvent(UUID eventId) throws IOException {
+        genericButton("/fxml/updateEventScreen.fxml", mainPane, facade, String.valueOf(eventId));
     }
 
     public void handleAddEvent() throws IOException {

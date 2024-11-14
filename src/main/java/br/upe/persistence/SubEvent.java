@@ -1,5 +1,7 @@
 package br.upe.persistence;
 
+import br.upe.persistence.repository.Persistence;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -10,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class SubEvent extends Event implements Persistence{
+public class SubEvent implements Persistence{
     private static final Logger LOGGER = Logger.getLogger(SubEvent.class.getName());
     private static final String CONST_DESCRIPTION = "description";
     private static final String CONST_LOCATION = "location";
@@ -47,6 +49,16 @@ public class SubEvent extends Event implements Persistence{
     }
 
     @Override
+    public Object getData(UUID eventId, String dataToGet) {
+        return null;
+    }
+
+    @Override
+    public void setData(UUID eventId, String dataToSet, Object data) {
+
+    }
+
+    @Override
     public void setData(String dataToSet, Object data){
         try {
             switch (dataToSet) {
@@ -72,52 +84,42 @@ public class SubEvent extends Event implements Persistence{
         return String.format("%03d%03d", lastThreeDigitsOfTimestamp, randomValue);
     }
 
-    @Override
     public UUID getId() {
         return id;
     }
 
-    @Override
     public void setId(UUID id) {
         this.id = id;
     }
 
-    @Override
     public String getName() {
         return name;
     }
 
-    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-    @Override
     public String getDescription() {
         return description;
     }
 
-    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @Override
     public Date getDate() {
         return date;
     }
 
-    @Override
     public void setDate(Date date) {
         this.date = date;
     }
 
-    @Override
     public String getLocation() {
         return location;
     }
 
-    @Override
     public void setLocation(String location) {
         this.location = location;
     }
@@ -215,6 +217,11 @@ public class SubEvent extends Event implements Persistence{
     @Override
     public HashMap<UUID, Persistence> read(Object... params) {
         return new HashMap<>();
+    }
+
+    @Override
+    public boolean loginValidate(String email, String password) {
+        return false;
     }
 
     @Override

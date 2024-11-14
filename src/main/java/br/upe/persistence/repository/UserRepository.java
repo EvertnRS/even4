@@ -1,5 +1,6 @@
-package br.upe.persistence;
+package br.upe.persistence.repository;
 
+import br.upe.persistence.User;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -60,6 +61,7 @@ public class UserRepository implements Persistence {
         return parseToUserRepository(userLog);
     }
 
+    @Override
     public void create(Object... params) {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametro contendo o email e o cpf do usuário que deseja criar");
@@ -167,6 +169,26 @@ public class UserRepository implements Persistence {
     }
 
     @Override
+    public Object getData(UUID userId, String dataToGet) {
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        User user = entityManager.find(User.class, userId);
+        if (user == null) {
+            return null;
+        }
+        return switch (dataToGet) {
+            case "id" -> user.getId();
+            case "name" -> user.getName();
+            case "email" -> user.getEmail();
+            case "password" -> user.getPassword();
+            default -> null;
+        };
+    }
+
+    @Override
+    public void setData(UUID eventId, String dataToSet, Object data) {
+
+    }
+
     public void setData(String dataToSet, Object data) {
         switch (dataToSet) {
             case "email" -> userLog.setEmail((String) data);

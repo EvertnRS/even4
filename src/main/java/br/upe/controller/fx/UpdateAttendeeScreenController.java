@@ -1,11 +1,7 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.AttendeeController;
-import br.upe.controller.SessionController;
-import br.upe.controller.UserController;
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.repository.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -14,7 +10,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -110,13 +105,13 @@ public class UpdateAttendeeScreenController extends BaseController implements Fx
         }
 
         Map<UUID, Persistence> attendeeMap = facade.getAttendeeHashMap();
-        if (isValidName(attendeeName, attendeeMap)) {
+        /*if (isValidName(attendeeName, attendeeMap)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
         }else {
             facade.updateAttendee(attendeeName,sessionId);
             facade.readAttendee();
             handleInscription();
-        }
+        }*/
 
 
     }

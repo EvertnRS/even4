@@ -1,5 +1,7 @@
 package br.upe.persistence;
 
+import br.upe.persistence.repository.Persistence;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
@@ -142,6 +144,16 @@ public class Attendee implements Persistence{
             LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
+    }
+
+    @Override
+    public Object getData(UUID eventId, String dataToGet) {
+        return null;
+    }
+
+    @Override
+    public void setData(UUID eventId, String dataToSet, Object data) {
+
     }
 
 

@@ -1,8 +1,6 @@
 package br.upe.controller.fx;
 
-import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -10,10 +8,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
-
-import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -91,7 +85,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
     }
 
     public void updateSubEvent() throws IOException {
-        String newSubName = editNameTextField.getText();
+        /*String newSubName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue().toString();
@@ -102,7 +96,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         }else {
             facade.updateSubEvent(subEventName, newSubName, newDate, newDescription, newLocation, facade.getUserData("id"));
             handleSubEvent();
-        }
+        }*/
     }
 
 }

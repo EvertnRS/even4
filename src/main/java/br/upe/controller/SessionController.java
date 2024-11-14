@@ -1,11 +1,11 @@
 package br.upe.controller;
 
+import br.upe.persistence.Event;
 import br.upe.persistence.Session;
-import br.upe.persistence.Persistence;
+import br.upe.persistence.repository.Persistence;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SessionController implements Controller {
@@ -31,6 +31,11 @@ public class SessionController implements Controller {
 
     public Map<UUID, Persistence> getHashMap() {
         return sessionHashMap;
+    }
+
+    @Override
+    public List<Event> getAll() {
+        return List.of();
     }
 
     public void setSessionHashMap(Map<UUID, Persistence> sessionHashMap) {
@@ -246,11 +251,11 @@ public class SessionController implements Controller {
 
     @Override
     public void read() throws IOException {
-        Persistence persistence = new Session();
+        /*Persistence persistence = new Session();
         this.sessionHashMap = persistence.read();
         if (!sessionHashMap.isEmpty()) {
             this.sessionLog = sessionHashMap.values().iterator().next();
-        }
+        }*/
     }
 
     private String getFatherEventId(String eventName, String eventType) throws IOException {

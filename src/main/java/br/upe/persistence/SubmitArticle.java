@@ -1,5 +1,7 @@
 package br.upe.persistence;
 
+import br.upe.persistence.repository.Persistence;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +25,16 @@ public class SubmitArticle implements Persistence {
             case "id" -> this.id;
             default -> "";
         };
+    }
+
+    @Override
+    public Object getData(UUID eventId, String dataToGet) {
+        return null;
+    }
+
+    @Override
+    public void setData(UUID eventId, String dataToSet, Object data) {
+
     }
 
     public void setData(String key, Object value) {
