@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class UserRepository implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(UserRepository.class.getName());
-    private User userLog;
+    private UUID userId;
 
     private static UserRepository instance;
 
@@ -51,14 +51,6 @@ public class UserRepository implements Persistence {
                 entityManager.close();
             }
         }
-    }
-
-    public void setUserLog(User userLog) {
-        this.userLog = userLog;
-    }
-
-    public UserRepository getUserLog() {
-        return parseToUserRepository(userLog);
     }
 
     @Override
@@ -154,22 +146,12 @@ public class UserRepository implements Persistence {
 
 
     @Override
-    public Object getData(String dataToGet) {
-        return switch (dataToGet) {
-            case "id" -> userLog.getId();
-            case "email" -> userLog.getEmail();
-            case "cpf" -> userLog.getCpf();
-            case "name" -> userLog.getName();
-            case "password" -> userLog.getPassword();
-            default -> {
-                LOGGER.warning("Informação não existe ou é restrita");
-                yield null;
-            }
-        };
+    public Object getData(UUID id, String dataToGet) {
+       return null;
     }
 
     @Override
-    public Object getData(UUID userId, String dataToGet) {
+    public Object getData(String dataToGet) {
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         User user = entityManager.find(User.class, userId);
         if (user == null) {
@@ -180,6 +162,7 @@ public class UserRepository implements Persistence {
             case "name" -> user.getName();
             case "email" -> user.getEmail();
             case "password" -> user.getPassword();
+            case "cpf" -> user.getCpf();
             default -> null;
         };
     }
@@ -190,13 +173,14 @@ public class UserRepository implements Persistence {
     }
 
     public void setData(String dataToSet, Object data) {
+        /*
         switch (dataToSet) {
             case "email" -> userLog.setEmail((String) data);
             case "cpf" -> userLog.setCpf((Long) data);
             case "name" -> userLog.setName((String) data);
             case "password" -> userLog.setPassword((String) data);
             default -> LOGGER.warning("Informação não existe ou é restrita");
-        }
+        }*/
     }
 
     @Override
@@ -261,7 +245,6 @@ public class UserRepository implements Persistence {
                     user.setEmail(parsedEmail);
 
                     UserRepository userRepository = new UserRepository();
-                    userRepository.setUserLog(user);
                     list.put(user.getId(), userRepository);
                 }
             }
@@ -299,7 +282,8 @@ public class UserRepository implements Persistence {
             User user = query.getSingleResult();
 
             if (isPasswordEqual(password, user.getPassword())) {
-                this.userLog = user;
+                this.userId = user.getId();
+
                 return true;
             }
         } catch (NoResultException e) {

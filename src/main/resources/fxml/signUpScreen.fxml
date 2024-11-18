@@ -27,8 +27,8 @@
                 <font>
                     <Font name="System Bold" size="20.0" />
                 </font></Label>
-            <Label fx:id="errorLabel" layoutX="100" layoutY="241.0" style="-fx-text-fill: red;" text="" />
-            <Button layoutX="181.0" layoutY="292.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="30.0" prefWidth="74.0" text="Register">
+            <Label fx:id="errorLabel" layoutX="71.0" layoutY="291.0" prefHeight="17.0" prefWidth="293.0" style="-fx-text-fill: red;" text="" />
+            <Button layoutX="181.0" layoutY="317.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="30.0" prefWidth="74.0" text="Register">
                 <style>
                     -fx-background-color: #ff914d;
                     -fx-text-fill: white;
@@ -41,8 +41,8 @@
                 </style>
             </Button>
 
-            <Label layoutX="142.0" layoutY="343.0" text="Já é cadastrado?" />
-            <Label layoutX="236.0" layoutY="343.0" text="Sign In" textFill="#ff914d" />
-            <Button layoutX="247.0" layoutY="339.0" mnemonicParsing="false" onAction="#returnToLogin" opacity="0.0" prefHeight="25.0" prefWidth="45.0" style="-fx-cursor: hand;" text=" " />
+            <Label layoutX="143.0" layoutY="363.0" text="Já é cadastrado?" />
+            <Label layoutX="237.0" layoutY="363.0" text="Sign In" textFill="#ff914d" />
+            <Button layoutX="248.0" layoutY="359.0" mnemonicParsing="false" onAction="#returnToLogin" opacity="0.0" prefHeight="25.0" prefWidth="45.0" style="-fx-cursor: hand;" text=" " />
         </children></Pane>
 </AnchorPane>

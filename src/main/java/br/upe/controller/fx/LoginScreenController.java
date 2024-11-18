@@ -4,6 +4,7 @@ import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -87,6 +88,7 @@ public class LoginScreenController extends BaseController implements FxControlle
                 });
             } else {
                 Platform.runLater(() -> errorLabel.setText("Login falhou! Verifique suas credenciais."));
+                errorLabel.setAlignment(Pos.CENTER);
             }
         }, loginAnchorPane);
     }

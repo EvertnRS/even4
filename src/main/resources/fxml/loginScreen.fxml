@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="loginAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.LoginScreenController">
+<AnchorPane fx:id="loginAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.LoginScreenController">
 
     <ImageView fx:id="imageView" fitHeight="378.0" fitWidth="368.0" layoutX="296.0" layoutY="-87.0" preserveRatio="true">
         <image>
@@ -23,8 +23,8 @@
             <font>
                <Font name="System Bold" size="20.0" />
             </font></Label>
-          <Label fx:id="errorLabel" layoutX="100" layoutY="241.0" style="-fx-text-fill: red;" text="" />
-          <Button layoutX="186.0" layoutY="205.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="30.0" prefWidth="64.0" styleClass="loginButton" text="Login">
+          <Label fx:id="errorLabel" layoutX="71.0" layoutY="191.0" prefHeight="17.0" prefWidth="293.0" style="-fx-text-fill: red;" text="" />
+          <Button layoutX="186.0" layoutY="219.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="30.0" prefWidth="64.0" styleClass="loginButton" text="Login">
               <style>
                   -fx-background-color: #ff914d;
                   -fx-text-fill: white;
