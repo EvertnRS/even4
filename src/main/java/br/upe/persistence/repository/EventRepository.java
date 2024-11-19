@@ -195,9 +195,9 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public Object getData(UUID eventId, String dataToGet) {
+    public Object getData(UUID id, String dataToGet) {
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-        Event event = entityManager.find(Event.class, eventId);
+        Event event = entityManager.find(Event.class, id);
         if (event == null) {
             return null;
         }

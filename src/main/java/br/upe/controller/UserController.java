@@ -22,8 +22,13 @@ public class UserController implements Controller {
 
     private Map<UUID, Persistence> userHashMap;
     private Persistence userLog;
+    private UUID userId;
 
     private UserController() {
+    }
+
+    public UUID getUserId() {
+        return userId;
     }
 
     public static UserController getInstance() {
@@ -62,10 +67,6 @@ public class UserController implements Controller {
             LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
-    }
-
-    public void setUserLog(UserRepository userRepository) {
-        this.userLog = userRepository.getUserLog();
     }
 
     @Override

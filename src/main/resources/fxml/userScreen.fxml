@@ -17,7 +17,7 @@
         </ImageView>
         <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <children>
-             <Label fx:id="errorUpdtLabel" layoutX="83.0" layoutY="180.0" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
+             <Label fx:id="errorUpdtLabel" layoutX="240" layoutY="410" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
          </children>
             <Label fx:id="errorDelLabel" layoutX="78.0" layoutY="476.0" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
            <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="551.0" layoutY="155.0" preserveRatio="true">

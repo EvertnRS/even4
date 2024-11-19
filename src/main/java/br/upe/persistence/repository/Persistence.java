@@ -12,7 +12,7 @@ public interface  Persistence {
     void setData(String dataToSet, Object data);
     Object getData(String dataToGet);
 
-    Object getData(UUID eventId, String dataToGet);
+    Object getData(UUID id, String dataToGet);
 
     void setData(UUID eventId, String dataToSet, Object data);
     HashMap<UUID, Persistence> read() throws IOException;

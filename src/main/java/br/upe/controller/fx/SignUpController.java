@@ -4,6 +4,7 @@ import br.upe.controller.UserController;
 import br.upe.facade.FacadeInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -103,6 +104,7 @@ public class SignUpController extends BaseController implements FxController {
                 });
             } else {
                 Platform.runLater(() -> errorLabel.setText("Cadastro falhou! Insira informações válidas."));
+                errorLabel.setAlignment(Pos.CENTER);
             }
         }, registerAnchorPane);
     }
