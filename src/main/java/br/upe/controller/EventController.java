@@ -1,5 +1,8 @@
 package br.upe.controller;
+
 import br.upe.persistence.Event;
+import br.upe.persistence.Model;
+import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
 import java.io.IOException;
@@ -16,14 +19,14 @@ public class EventController implements Controller {
     private Map<UUID, Persistence> eventHashMap;
     private Persistence eventLog;
 
-
     public EventController() throws IOException {
         this.read();
     }
 
-    public List<Event> getAll() {
+@Override
+    public <T> List <T> getAll() {
         EventRepository eventRepository = EventRepository.getInstance();
-        return eventRepository.getAllEvents();
+        return (List<T>) eventRepository.getAllEvents();
     }
 
     public Map<UUID, Persistence> getHashMap() {

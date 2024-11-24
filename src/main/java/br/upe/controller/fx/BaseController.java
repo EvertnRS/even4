@@ -40,7 +40,7 @@ public abstract class BaseController {
                 ((UpdateEventScreenController) screenController).setEventId(UUID.fromString(eventId));
             }
             if (screenController instanceof UpdateSubEventScreenController) {
-                ((UpdateSubEventScreenController) screenController).setEventName(eventId);
+                ((UpdateSubEventScreenController) screenController).setEventName(UUID.fromString(eventId));
             }
             if (screenController instanceof UpdateSessionScreenController) {
                 ((UpdateSessionScreenController) screenController).setEventName(eventId);

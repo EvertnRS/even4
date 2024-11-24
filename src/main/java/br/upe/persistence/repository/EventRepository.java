@@ -40,8 +40,8 @@ public class EventRepository implements Persistence {
 
     @Override
     public void create(Object... params) {
-        if (params.length != 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
+        if (params.length != 5) {
+            LOGGER.warning("Só pode ter 5 parametros");
         }
 
         String name = (String) params[0];

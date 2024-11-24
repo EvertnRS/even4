@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
+import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -124,9 +125,9 @@ public class CreateSessionScreenController extends BaseController implements FxC
 
     private void loadUserEvents() throws IOException {
         List<Event> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
-        List<String> userSubEvents = facade.listSubEvents(facade.getUserData("id"), "fx");
+        List<SubEvent> userSubEvents = facade.listSubEvents(facade.getUserData("id"), "fx");
         eventList.addAll(String.valueOf(userEvents));
-        eventList.addAll(userSubEvents);
+        eventList.addAll(String.valueOf(userSubEvents));
 
         FilteredList<String> filteredItems = new FilteredList<>(eventList, p -> true);
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {

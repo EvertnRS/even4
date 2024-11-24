@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
+import br.upe.persistence.Model;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
@@ -87,7 +88,7 @@ public class CreateEventScreenController extends BaseController implements FxCon
         String eventDescription = descriptionTextField.getText();
         Date eventDate = Date.valueOf(datePicker.getValue() != null ? datePicker.getValue().toString() : "");
 
-        List<Event> eventList = facade.getAllEvent();
+        List<Model> eventList = facade.getAllEvent();
         if (!isValidDate(String.valueOf(eventDate)) || eventLocation.isEmpty() || eventDescription.isEmpty() || isValidName(eventName, eventList)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
             errorUpdtLabel.setAlignment(Pos.CENTER);

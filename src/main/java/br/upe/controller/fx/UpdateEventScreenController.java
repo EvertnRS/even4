@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
+import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -135,7 +136,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         Date newDate = Date.valueOf(editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "");
-        List<Event> eventList = facade.getAllEvent();
+        List<Model> eventList = facade.getAllEvent();
         if (!isValidDate(String.valueOf(newDate))) {
             errorUpdtLabel.setText("Data inválida.");
             errorUpdtLabel.setAlignment(Pos.CENTER);

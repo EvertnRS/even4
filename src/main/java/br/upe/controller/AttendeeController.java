@@ -1,7 +1,8 @@
 package br.upe.controller;
 
 import br.upe.persistence.Attendee;
-import br.upe.persistence.Event;
+import br.upe.persistence.Model;
+import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
 
 import java.io.FileNotFoundException;
@@ -26,7 +27,7 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public List<Event> getAll() {
+    public List<Model> getAll() {
         return List.of();
     }
 

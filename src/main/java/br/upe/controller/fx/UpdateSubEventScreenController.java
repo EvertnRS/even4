@@ -1,17 +1,28 @@
 package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.Model;
+import br.upe.persistence.repository.EventRepository;
+import br.upe.persistence.repository.SubEventRepository;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
-    private String subEventName;
+    private UUID subEventName;
 
     @FXML
     private AnchorPane editSubEventPane;
@@ -43,7 +54,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         initial();
     }
 
-    public void setEventName(String eventName) {
+    public void setEventName(UUID eventName) {
         this.subEventName = eventName;
     }
 
@@ -84,19 +95,57 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         genericButton("/fxml/userScreen.fxml", editSubEventPane, facade, null);
     }
 
-    public void updateSubEvent() throws IOException {
-        /*String newSubName = editNameTextField.getText();
-        String newLocation = editLocationTextField.getText();
-        String newDescription = editDescriptionTextField.getText();
-        String newDate = editDatePicker.getValue().toString();
+    private void loadSubEventDetails() {
+        SubEventRepository subeventRepository = SubEventRepository.getInstance();
+        if (subeventRepository != null) {
+            String eventName = (String) subeventRepository.getData(subEventName,"name");
+            String eventLocation = (String) subeventRepository.getData(subEventName,"location");
+            String eventDescription = (String) subeventRepository.getData(subEventName,"description");
+            editNameTextField.setText(eventName);
+            editLocationTextField.setText(eventLocation);
+            editDescriptionTextField.setText(eventDescription);
 
-        Map<UUID, Persistence> subEventMap = facade.getSubEventHashMap();
-        if (!isValidDate(newDate) || newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newSubName, subEventMap)) {
-            errorUpdtLabel.setText("Erro no preenchimento das informações.");
-        }else {
-            facade.updateSubEvent(subEventName, newSubName, newDate, newDescription, newLocation, facade.getUserData("id"));
-            handleSubEvent();
-        }*/
+            Object dateObject = subeventRepository.getData(subEventName, "date");
+            java.sql.Date sqlDate;
+
+            if (dateObject instanceof java.sql.Timestamp) {
+                sqlDate = new java.sql.Date(((java.sql.Timestamp) dateObject).getTime());
+            } else if (dateObject instanceof java.sql.Date) {
+                sqlDate = (java.sql.Date) dateObject;
+            } else {
+                throw new IllegalArgumentException("Tipo inesperado: " + dateObject.getClass().getName());
+            }
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String subeventDate = formatter.format(sqlDate);
+            if (!subeventDate.isEmpty()) {
+                editDatePicker.setValue(LocalDate.parse(subeventDate));
+            }
+
+            setupPlaceholders();
+        } else {
+            errorUpdtLabel.setText("SubEvento não encontrado.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+        }
     }
 
+
+    public void updateSubEvent() throws IOException {
+        String newName = editNameTextField.getText();
+        String newLocation = editLocationTextField.getText();
+        String newDescription = editDescriptionTextField.getText();
+        Date newDate = Date.valueOf(editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "");
+        List<Model> subeventList = facade.getAllSubEvent();
+        if (!isValidDate(String.valueOf(newDate))) {
+            errorUpdtLabel.setText("Data inválida.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(String.valueOf(subEventName), subeventList)){
+            errorUpdtLabel.setText("Erro no preenchimento das informações.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+        }
+        else{
+            facade.updateSubEvent(subEventName, newName, newDate, newDescription, newLocation);
+            handleEvent();
+        }
+    }
 }
