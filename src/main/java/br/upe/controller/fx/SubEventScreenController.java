@@ -1,14 +1,23 @@
 package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.Event;
+import br.upe.persistence.SubEvent;
+import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.repository.SubEventRepository;
+import br.upe.persistence.repository.UserRepository;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,121 +72,112 @@ public class SubEventScreenController extends BaseController implements FxContro
     private void loadUserSubEvents() throws IOException {
         subEventVBox.getChildren().clear();
 
-        facade.listSubEvents(facade.getUserData("id"), "");
+        List<SubEvent> userSubEvents = facade.listSubEvents(facade.getUserData("id"));
+        SubEventRepository subeventRepository = SubEventRepository.getInstance();
 
-        configureScrollPane();
-        subEventVBox.setAlignment(Pos.CENTER);
-
-        Map<UUID, Persistence> eventHashMap = facade.getEventHashMap();
-
-        facade.getSubEventHashMap().entrySet().stream()
-                .filter(entry -> isUserOwner(entry.getValue()))
-                .forEach(entry -> {
-                    VBox subEventContainer = createSubEventContainer(entry.getValue(), eventHashMap);
-                    subEventVBox.getChildren().add(subEventContainer);
-                });
-    }
-
-    private void configureScrollPane() {
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
+
         scrollPane.setStyle("-fx-padding: 20px;");
+
+        subEventVBox.setAlignment(Pos.CENTER);
+
+        for (SubEvent subevent : userSubEvents) {
+            if (subevent.getOwnerId().getId().equals(UUID.fromString(facade.getUserData("id")))) {
+
+                VBox eventContainer = new VBox();
+                eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+
+                Label subEventLabel = new Label((String) subeventRepository.getData(subevent.getId(),"name"));
+                subEventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
+
+                Button editButton = new Button("Editar");
+                editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
+                Button deleteButton = new Button("Excluir");
+                deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
+                Button detailsButton = new Button("Detalhes");
+                detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
+                detailsButton.setOnAction(e ->
+                        handleDetailSubEvent((UUID) subeventRepository.getData(subevent.getId(),"id")));
+
+                editButton.setOnAction(e -> {
+                    try {
+                        handleEditSubEvent((UUID) subeventRepository.getData(subevent.getId(),"id"));
+                    } catch (IOException ex) {
+                        throw new IllegalArgumentException(ex);
+                    }
+                });
+
+                deleteButton.setOnAction(e -> {
+                    try {
+                        handleDeleteSubEvent((UUID) subeventRepository.getData(subevent.getId(),"id"), facade.getUserData("id"));
+                    } catch (IOException ex) {
+                        throw new IllegalArgumentException(ex);
+                    }
+                });
+
+                HBox actionButtons = new HBox(10);
+                actionButtons.setAlignment(Pos.CENTER_RIGHT);
+                actionButtons.getChildren().addAll(detailsButton,editButton, deleteButton);
+                Label eventLabel = createEventLabel((UUID) subeventRepository.getData(subevent.getId(), "eventId"));
+                eventContainer.getChildren().addAll(subEventLabel, actionButtons, eventLabel);
+
+                subEventVBox.getChildren().add(eventContainer);
+            }
+        }
     }
 
-    private boolean isUserOwner(Persistence persistence) {
-        return persistence.getData("ownerId").equals(facade.getUserData("id"));
-    }
 
-    private VBox createSubEventContainer(Persistence persistence, Map<UUID, Persistence> eventHashMap) {
-        VBox subEventContainer = new VBox();
-        subEventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
-
-        String subEventName = (String) persistence.getData("name");
-        UUID eventId = (UUID) persistence.getData("eventId");
-
-        Label subEventLabel = new Label(subEventName);
-        subEventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
-
-        Label eventLabel = createEventLabel(eventId, eventHashMap);
-
-        HBox actionButtons = createActionButtons(persistence, eventHashMap);
-
-        subEventContainer.getChildren().addAll(subEventLabel, actionButtons, eventLabel);
-        return subEventContainer;
-    }
-
-    private Label createEventLabel(UUID eventId, Map<UUID, Persistence> eventHashMap) {
+    private Label createEventLabel(UUID eventId) {
         Label eventLabel = new Label();
-        String nameEvent = (eventHashMap != null && eventHashMap.containsKey(eventId))
-                ? (String) eventHashMap.get(eventId).getData("name")
-                : "Evento não encontrado";
+        EventRepository eventRepository = EventRepository.getInstance();
+        String nameEvent = (String) eventRepository.getData(eventId, "name");
         eventLabel.setText(nameEvent);
         eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
         return eventLabel;
     }
 
-    private HBox createActionButtons(Persistence persistence, Map<UUID, Persistence> eventHashMap) {
-        Button editButton = new Button("Editar");
-        editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
-        String subEventName = (String) persistence.getData("name");
-        editButton.setOnAction(e -> handleEditSubEventSafely(subEventName));
 
-        Button deleteButton = new Button("Excluir");
-        deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
-        UUID subEventId = (UUID) persistence.getData("id");
-        deleteButton.setOnAction(e -> handleDeleteSubEventSafely(subEventId));
+    private void handleDetailSubEvent(UUID id) {
+        loadScreen("Carregando", () -> {
+            EventRepository eventRepository = EventRepository.getInstance();
+            SubEventRepository subeventRepository = SubEventRepository.getInstance();
+            UserRepository userRepository = UserRepository.getInstance();
 
-        Button detailsButton = new Button("Detalhes");
-        detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+            String content = "Nome: " + subeventRepository.getData(id, "name") + "\n" +
+                    "Data: " + subeventRepository.getData(id, "date") + "\n" +
+                    "Descrição: " + subeventRepository.getData(id, "description") + "\n" +
+                    "Local: " + subeventRepository.getData(id, "location") + "\n" +
+                    "Evento: " + eventRepository.getData((UUID) subeventRepository.getData(id, "eventId"), "name") + "\n" +
+                    "Administrador: " + userRepository.getData((UUID) subeventRepository.getData(id, "ownerId"), "email") + "\n";
 
-        detailsButton.setOnAction(e ->
-                handleDetailSubEvent(eventHashMap, subEventId));
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Detalhes do Evento");
+                alert.setTitle(" ");
 
-        HBox actionButtons = new HBox(10);
-        actionButtons.setAlignment(Pos.CENTER_RIGHT);
-        actionButtons.getChildren().addAll(detailsButton, editButton, deleteButton);
-        return actionButtons;
-    }
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().clear();
+                stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
 
-    private void handleDetailSubEvent(Map<UUID, Persistence> eventHashMap, UUID id) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detalhes do SubEvento");
-        alert.setHeaderText("Detalhes do SubEvento");
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.setStyle("-fx-background-color: #f0f0f0; -fx-font-size: 14px; -fx-text-fill: #333333;");
+                dialogPane.lookup(".header-panel").setStyle("-fx-background-color: #ff914d; -fx-text-fill: #ffffff; -fx-font-weight: bold;");
+                dialogPane.lookup(".content").setStyle("-fx-font-size: 14px; -fx-text-fill: rgb(51,51,51);");
 
-        Persistence subEvent = facade.getSubEventHashMap().get(id);
-        UUID ownerId = (UUID) subEvent.getData("ownerId");
-        Persistence owner = facade.getUserHashMap().get(ownerId);
-
-        String content = "Nome: " + subEvent.getData("name") + "\n" +
-                "Descrição: " + subEvent.getData("description") + "\n" +
-                "Data: " + subEvent.getData("date") + "\n" +
-                "Local: " + subEvent.getData("location") + "\n" +
-                "Evento: " + eventHashMap.get((UUID) subEvent.getData("eventId")).getData("name") + "\n" +
-                "Administrador: " + owner.getData("email") + "\n";
-
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    private void handleEditSubEventSafely(String subEventName) {
-        try {
-            handleEditSubEvent(subEventName);
-        } catch (IOException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-    }
-
-    private void handleDeleteSubEventSafely(UUID subEventId) {
-        try {
-            handleDeleteSubEvent(subEventId, facade.getUserData("id"));
-        } catch (IOException ex) {
-            throw new IllegalArgumentException(ex);
-        }
+                alert.setContentText(content);
+                alert.showAndWait();
+            });
+        }, subEventPane);
     }
 
 
-    private void handleEditSubEvent(String eventName) throws IOException {
-        genericButton("/fxml/updateSubEventScreen.fxml", subEventPane, facade, eventName);
+    private void handleEditSubEvent(UUID eventName) throws IOException {
+        SubEventRepository subeventRepository = SubEventRepository.getInstance();
+        genericButton("/fxml/updateSubEventScreen.fxml", subEventPane, facade, String.valueOf(subeventRepository.getData(eventName, "id")));
     }
 
     private void handleDeleteSubEvent(UUID eventId, String userId) throws IOException {

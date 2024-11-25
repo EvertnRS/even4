@@ -2,16 +2,21 @@ package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
+import br.upe.persistence.Model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 import javafx.scene.text.Text;
+
+import static br.upe.ui.Validation.isValidDate;
 
 public class CreateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -94,8 +99,11 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     }
 
     private void loadUserEvents() throws IOException {
-        List<Event> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
-        eventList.setAll(String.valueOf(userEvents));
+        List<Event> userEvents = facade.listEvents(facade.getUserData("id"));
+        eventList.clear();
+        for (Event event : userEvents) {
+            eventList.add(event.getName());
+        }
 
         FilteredList<String> filteredItems = new FilteredList<>(eventList, p -> true);
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -117,23 +125,20 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         });
     }
 
-
     public void createSubEvent() throws IOException {
-        /*String subEventName = nameTextField.getText();
-        String subEventLocation = locationTextField.getText();
-        String subEventDescription = descriptionTextField.getText();
-        String subEventDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
+        String subeventName = nameTextField.getText();
+        String subeventLocation = locationTextField.getText();
+        String subeventDescription = descriptionTextField.getText();
+        Date subeventDate = Date.valueOf(datePicker.getValue() != null ? datePicker.getValue().toString() : "");
         String selectedEventName = searchField.getText();
 
-        Map<UUID, Persistence> subEventMap = facade.getSubEventHashMap();
-        if (!validateEventDate(subEventDate, selectedEventName)) {
-            errorUpdtLabel.setText("Data do subEvento não pode ser anterior a data do evento.");
-        } else if (!isValidDate(subEventDate) || subEventLocation.isEmpty() || subEventDescription.isEmpty() || isValidName(subEventName, subEventMap)) {
+        List<Model> subeventList = facade.getAllSubEvent();
+        if (!isValidDate(String.valueOf(subeventDate)) || subeventLocation.isEmpty() || subeventDescription.isEmpty() || isValidName(subeventName, subeventList)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
         }else {
-            facade.createSubEvent(selectedEventName, subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
-            facade.readSubEvent();
+            facade.createSubEvent(selectedEventName,subeventName, subeventDate, subeventDescription, subeventLocation, facade.getUserData("id"));
             handleSubEvent();
-        }*/
+        }
     }
 }

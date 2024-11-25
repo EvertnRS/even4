@@ -2,7 +2,6 @@ package br.upe.persistence;
 
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Date;
 import java.util.UUID;
 
