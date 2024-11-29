@@ -2,6 +2,7 @@ package br.upe.controller;
 
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
+import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.utils.JPAUtils;
@@ -179,33 +180,22 @@ public class SubEventController implements Controller {
     @Override
     public void update(Object... params) throws IOException {
         if (!isValidParamsLength(params)) {
-            LOGGER.warning("Só pode ter 6 parametros");
+            LOGGER.warning("Só pode ter 5 parametros");
             return;
         }
 
-        String oldName = (String) params[0];
+        UUID id = (UUID) params[0];
         String newName = (String) params[1];
-        String newDate = (String) params[2];
+        Date newDate = (Date) params[2];
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
-        String userId = (String) params[5];
 
-        String id = getOwnerSubEventId(oldName, userId);
-        if (id == null) {
-            LOGGER.warning("Você não pode alterar este SubEvento");
-            return;
-        }
 
-        if (isNameInUseOrEmpty(newName)) {
-            LOGGER.warning("Nome em uso ou vazio");
-            return;
-        }
-
-        updateSubEvent(id, newName, newDate, newDescription, newLocation);
+        updateSubEvent( id, newName, newDate, newDescription, newLocation);
     }
 
     private boolean isValidParamsLength(Object... params) {
-        return params.length == 6;
+        return params.length == 5;
     }
 
     private String getOwnerSubEventId(String oldName, String userId) {
@@ -222,30 +212,12 @@ public class SubEventController implements Controller {
         return null;
     }
 
-    private boolean isNameInUseOrEmpty(String newName) {
-        for (Map.Entry<UUID, Persistence> entry : subEventHashMap.entrySet()) {
-            Persistence subEvent = entry.getValue();
-            String name = (String) subEvent.getData("name");
-            if (name.isEmpty() || name.equals(newName)) {
-                return true;
-            }
-        }
-        return newName.isEmpty();
-    }
-
-    private void updateSubEvent(String id, String newName, String newDate, String newDescription, String newLocation) throws IOException {
-        Persistence newSubEvent = subEventHashMap.get(id);
-        if (newSubEvent != null) {
-            newSubEvent.setData("name", newName);
-            newSubEvent.setData("date", newDate);
-            newSubEvent.setData(DESCRIPTION, newDescription);
-            newSubEvent.setData(LOCATION, newLocation); // Using the constant LOCATION
-            subEventHashMap.put(UUID.fromString(id), newSubEvent);
-
-            Persistence subEventPersistence = new SubEventRepository();
-            subEventPersistence.update(subEventHashMap);
+    private void updateSubEvent(UUID id, String newName, Date newDate, String newDescription, String newLocation) throws IOException {
+        if (id != null) {
+            SubEventRepository subeventRepository = SubEventRepository.getInstance();
+            subeventRepository.update(id, newName, newDate, newDescription, newLocation);
         } else {
-            LOGGER.warning("SubEvento não encontrado");
+            LOGGER.warning("Evento não encontrado");
         }
     }
 

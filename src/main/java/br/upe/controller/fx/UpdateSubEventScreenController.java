@@ -139,13 +139,12 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         if (!isValidDate(String.valueOf(newDate))) {
             errorUpdtLabel.setText("Data inválida.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
-        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(String.valueOf(subEventName), subeventList)){
+        } else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(String.valueOf(subEventName), subeventList)) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
-        }
-        else{
+        } else {
             facade.updateSubEvent(subEventName, newName, newDate, newDescription, newLocation);
-            handleEvent();
+            handleSubEvent();
         }
     }
 }
