@@ -1,43 +1,57 @@
-name: Test with Database
+name: Database Tests
 
 on:
   push:
     branches:
-      - main
+      - homologation
   pull_request:
+    branches:
+      - homologation
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres:latest
+      db:
+        image: postgres:latest  # Substitua por sua imagem de banco de dados, se for diferente
         ports:
           - 5432:5432
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: testdb
         options: >-
-          --health-cmd="pg_isready -U testuser"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
+          --health-cmd="pg_isready -U testuser" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js (se for um projeto Node.js, adapte para sua stack)
-        uses: actions/setup-node@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
-          node-version: "16"
+          java-version: '17' # Ou a versão que você está usando
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Install dependencies
-        run: npm install
+        run: mvn install -DskipTests=true
 
       - name: Run Tests
         env:
-          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
-        run: npm test
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: testdb
+        run: mvn test
