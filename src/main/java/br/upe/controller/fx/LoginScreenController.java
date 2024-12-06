@@ -61,7 +61,7 @@ public class LoginScreenController extends BaseController implements FxControlle
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
                         try {
-                            handleLogin();
+                            accessMediator.notify("handleLogin");
                         } catch (IOException e) {
                             throw new IllegalArgumentException(e);
                         }

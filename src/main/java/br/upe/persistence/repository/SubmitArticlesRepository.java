@@ -1,5 +1,6 @@
 package br.upe.persistence.repository;
 
+import br.upe.persistence.Model;
 import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.User;
 import br.upe.persistence.Event;
@@ -256,7 +257,10 @@ public class SubmitArticlesRepository implements Persistence {
             TypedQuery<SubmitArticle> query = entityManager.createQuery("SELECT a FROM SubmitArticle a", SubmitArticle.class);
             List<SubmitArticle> articles = query.getResultList();
             for (SubmitArticle article : articles) {
-                articlesMap.put(article.getId(), (Persistence) article);
+                Persistence articleRepository = new SubmitArticlesRepository();
+                articleRepository.setData(article.getId(), "name", article.getName());
+                articleRepository.setData(article.getId(), "article", article.getArticle());
+                articlesMap.put(article.getId(), articleRepository);
             }
             return articlesMap;
         } catch (Exception e) {

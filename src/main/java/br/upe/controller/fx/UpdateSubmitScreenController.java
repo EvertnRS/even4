@@ -2,6 +2,7 @@ package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
+import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -49,12 +50,12 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     }
 
     private void loadArticles() throws IOException {
-        List<Event> allEvents = facade.getAllEvent();
+        List<Model> allEvents = facade.getAllEvent();
         eventComboBox.getItems().clear();
 
         EventRepository eventRepository = EventRepository.getInstance();
 
-        for (Event event : allEvents) {
+        for (Model event : allEvents) {
             String eventName = (String) eventRepository.getData(event.getId(), "name");
 
             if (eventName != null) {
@@ -95,11 +96,11 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     public void updateArticle() throws IOException {
         String novoEventName = eventComboBox.getSelectionModel().getSelectedItem();
 
-        List<Event> allEvents = facade.getAllEvent();
+        List<Model> allEvents = facade.getAllEvent();
 
         UUID eventId = null;
 
-        for (Event event : allEvents) {
+        for (Model event : allEvents) {
             if (event.getName().equals(novoEventName)) {
                 eventId = event.getId();
                 break;

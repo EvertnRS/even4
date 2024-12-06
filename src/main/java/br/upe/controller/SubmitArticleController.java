@@ -134,7 +134,7 @@ public class SubmitArticleController implements Controller {
 
     @Override
     public void read() {
-        articleHashMap.clear();
+        /*articleHashMap.clear();
 
         HashMap<UUID, Persistence> articles = submitArticlesRepository.read();
         if (!articles.isEmpty()) {
@@ -142,7 +142,8 @@ public class SubmitArticleController implements Controller {
             articles.forEach((key, value) -> LOGGER.info("Artigo encontrado: " + key));
         } else {
             LOGGER.warning("Nenhum artigo encontrado.");
-        }
+            Thread.dumpStack();
+        }*/
     }
 
 

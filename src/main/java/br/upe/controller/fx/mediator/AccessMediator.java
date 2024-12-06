@@ -35,6 +35,7 @@ public class AccessMediator extends Mediator {
 
     @Override
     public Object notify(String event) throws IOException {
+        System.out.println(event);
         if (userSignUpController != null || userLoginController != null) {
             switch (event) {
                 case "handleRegister":
@@ -52,6 +53,8 @@ public class AccessMediator extends Mediator {
                     String pass = userLoginController.getPassTextField().getText();
                     String loginInEmail = userLoginController.getEmailTextField().getText();
                     Label logInErrorLabel = userLoginController.getErrorLabel();
+                    System.out.println(pass);
+                    System.out.println(loginInEmail);
                     if (facade.loginValidate(loginInEmail, pass)) {
                         try {
                             userLoginController.handleLogin();

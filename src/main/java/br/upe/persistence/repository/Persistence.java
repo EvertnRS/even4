@@ -1,5 +1,7 @@
 package br.upe.persistence.repository;
 
+import br.upe.persistence.Model;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;

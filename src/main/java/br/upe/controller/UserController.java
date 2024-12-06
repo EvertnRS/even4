@@ -152,6 +152,7 @@ public class UserController implements Controller {
     public boolean loginValidate(String email, String password) {
         Persistence userRepository = UserRepository.getInstance();
         if (userRepository.loginValidate(email, password)) {
+
             this.userLog = userRepository;
             return true;
         }

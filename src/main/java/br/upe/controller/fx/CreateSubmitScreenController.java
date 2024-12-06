@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
+import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -65,12 +66,12 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
         genericButton("/fxml/userScreen.fxml", submitPane, facade, null);
     }
     private void loadArticles() throws IOException {
-        List<Event> allEvents = facade.getAllEvent();
+        List<Model> allEvents = facade.getAllEvent();
         eventComboBox.getItems().clear();
 
         EventRepository eventRepository = EventRepository.getInstance();
 
-        for (Event event : allEvents) {
+        for (Model event : allEvents) {
             String eventName = (String) eventRepository.getData(event.getId(), "name");
 
             if (eventName != null) {
