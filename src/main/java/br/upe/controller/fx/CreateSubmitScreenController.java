@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.Event;
+import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -12,8 +13,8 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
+import java.util.List;
+
 
 public class CreateSubmitScreenController extends BaseController implements FxController {
 
@@ -64,15 +65,21 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
         genericButton("/fxml/userScreen.fxml", submitPane, facade, null);
     }
     private void loadArticles() throws IOException {
-
-        Map<UUID, Persistence> allEvents = facade.getEventHashMap();
-
+        List<Event> allEvents = facade.getAllEvent();
         eventComboBox.getItems().clear();
 
-        for (Persistence event : allEvents.values()) {
-            eventComboBox.getItems().add((String) event.getData("name"));
+        EventRepository eventRepository = EventRepository.getInstance();
+
+        for (Event event : allEvents) {
+            String eventName = (String) eventRepository.getData(event.getId(), "name");
+
+            if (eventName != null) {
+                eventComboBox.getItems().add(eventName);
+            }
         }
     }
+
+
 
 
     @FXML
@@ -91,8 +98,7 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
 
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"),
-                new FileChooser.ExtensionFilter("Text Files", "*.txt")
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
         );
 
 
