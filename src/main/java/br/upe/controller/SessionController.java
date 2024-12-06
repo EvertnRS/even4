@@ -1,7 +1,8 @@
 package br.upe.controller;
 
-import br.upe.persistence.Event;
+import br.upe.persistence.Model;
 import br.upe.persistence.Session;
+import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public List<Event> getAll() {
+    public List<Model> getAll() {
         return List.of();
     }
 

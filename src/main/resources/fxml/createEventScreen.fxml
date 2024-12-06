@@ -34,7 +34,7 @@
             </Label>
              <TextField fx:id="nameTextField" cache="true" layoutX="300.0" layoutY="197.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
              <Text fx:id="namePlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="225.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Nome do Evento" />
-             <Button layoutX="403.0" layoutY="496.0" mnemonicParsing="false" onAction="#createEvent" prefHeight="42.0" prefWidth="93.0" text="Criar">
+             <Button layoutX="403.0" layoutY="496.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="93.0" text="Criar" fx:id="createButton">
                  <style>
                      -fx-background-color: #ff914d;
                      -fx-text-fill: white;
@@ -57,7 +57,7 @@
                <font>
                   <Font name="System Bold" size="24.0" />
                </font></Label>
-            <Button layoutX="779.0" layoutY="68.0" mnemonicParsing="false" onAction="#handleEvent" opacity="0.0" prefHeight="29.0" prefWidth="29.0" style="-fx-cursor: hand;" text="back" />
+            <Button layoutX="779.0" layoutY="68.0" mnemonicParsing="false" opacity="0.0" prefHeight="29.0" prefWidth="29.0" style="-fx-cursor: hand;" text="back" fx:id="handleEventButton"/>
          </children>
         </Pane>
         <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="135.0" style="-fx-text-fill: white;" text="Teste">
@@ -69,7 +69,7 @@
                 <Font size="14.0" />
             </font>
         </Label>
-        <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" onAction="#logout" opacity="0.0" prefHeight="35.0" prefWidth="72.0" style="-fx-cursor: hand;" text="logout" />
+        <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="72.0" style="-fx-cursor: hand;" text="logout" fx:id="logoutButton"/>
         <Pane layoutX="1.0" layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
             <effect>
                 <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
@@ -84,7 +84,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button mnemonicParsing="false" onAction="#handleEvent" opacity="0.0" prefHeight="58.0" prefWidth="214.0" style="-fx-cursor: hand;" text="back" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="214.0" style="-fx-cursor: hand;" text="back" fx:id="handleBackButton"/>
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="215.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -101,7 +101,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button mnemonicParsing="false" onAction="#handleSubEvent" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Subevent" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Subevent" fx:id="handleSubEventButton"/>
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -118,7 +118,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button layoutY="-5.0" mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="68.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Session" />
+            <Button layoutY="-5.0" mnemonicParsing="false" opacity="0.0" prefHeight="68.0" prefWidth="222.0" style="-fx-cursor: hand;" text="Session" fx:id="handleSessionButton"/>
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -135,7 +135,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button layoutX="-2.0" layoutY="-9.0" mnemonicParsing="false" onAction="#handleSubmitEvent" opacity="0.0" prefHeight="68.0" prefWidth="222.0" style="-fx-cursor: hand;" text="submit" />
+            <Button layoutX="-2.0" layoutY="-9.0" mnemonicParsing="false" opacity="0.0" prefHeight="68.0" prefWidth="222.0" style="-fx-cursor: hand;" text="submit" fx:id="handleSubmitButton"/>
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -152,7 +152,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-                <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" onAction="#handleUser" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="user" />
+                <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="user" fx:id="handleUserButton"/>
             </children>
         </Pane>
     </children>

@@ -1,6 +1,8 @@
 package br.upe.controller.fx;
 
 
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
+import br.upe.controller.fx.mediator.UserMediator;
 import br.upe.facade.FacadeInterface;
 
 import javafx.fxml.FXML;
@@ -44,12 +46,34 @@ public class UserScreenController extends BaseController implements FxController
     @FXML
     private Label errorDelLabel;
 
+    public TextField getEmailTextField() {
+        return emailTextField;
+    }
+
+    public TextField getCpfTextField() {
+        return cpfTextField;
+    }
+
+    public TextField getPassTextField() {
+        return passTextField;
+    }
+
+    public Label getErrorUpdtLabel() {
+        return errorUpdtLabel;
+    }
+
+    public Label getErrorDelLabel() {
+        return errorDelLabel;
+    }
+
     public void setFacade(FacadeInterface facade) {
         this.facade = facade;
         initial();
     }
 
     private void initial() {
+        UserMediator userMediator = new UserMediator(this, facade, userPane, errorUpdtLabel);
+        userMediator.registerComponents();
         userName.setText(facade.getUserData("name"));
         loadUserDetails();
     }
@@ -81,7 +105,7 @@ public class UserScreenController extends BaseController implements FxController
         genericButton("/fxml/loginScreen.fxml", userPane, facade, null);
     }
 
-    public void updateUser() {
+    public void updateUser() throws IOException {
 
         String name = nameTextField.getText().trim();
         String cpf = cpfTextField.getText().trim();
@@ -89,16 +113,8 @@ public class UserScreenController extends BaseController implements FxController
         String newPassword = passTextField.getText().trim();
         String password = showPasswordPrompt().trim();
 
-        if (isValidEmail(email) && isValidCPF(cpf)) {
-            try {
-                facade.updateUser(name, cpf, email, newPassword, password);
-                logout();
-            } catch (Exception e) {
-                errorUpdtLabel.setText("Senha incorreta. Tente novamente.");
-            }
-        } else {
-            errorUpdtLabel.setText("E-mail invalido!");
-        }
+
+        facade.updateUser(name, cpf, email, newPassword, password);
     }
 
     public void deleteUser() {
@@ -145,6 +161,26 @@ public class UserScreenController extends BaseController implements FxController
         setupPlaceholders();
 
 
+    }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
     }
 
 }

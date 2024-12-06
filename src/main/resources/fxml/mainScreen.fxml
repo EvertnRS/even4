@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="mainPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.MainScreenController">
+<AnchorPane fx:id="mainPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.EventScreenController">
 
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
@@ -41,7 +41,7 @@
                <font>
                   <Font name="System Bold" size="68.0" />
                </font></Label>
-            <Button layoutX="28.0" layoutY="512.0" mnemonicParsing="false" onAction="#handleAddEvent" opacity="0.0" prefHeight="65.0" prefWidth="63.0" style="-fx-cursor: hand" text="addEvent" />
+            <Button layoutX="28.0" layoutY="512.0" mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="63.0" style="-fx-cursor: hand" text="addEvent" fx:id="handleAddButton"/>
             <Label layoutX="51.0" layoutY="22.0" text="Eventos Criados" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="22.0" />
@@ -58,7 +58,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" onAction="#logout" opacity="0.0" prefHeight="35.0" prefWidth="72.0" style="-fx-cursor: hand;" text="logout" />
+      <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="72.0" style="-fx-cursor: hand;" text="logout" fx:id="logoutButton"/>
       <Pane layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <effect>
             <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
@@ -89,7 +89,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button layoutY="-7.0" mnemonicParsing="false" onAction="#handleSubEvent" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="subEvent" />
+            <Button layoutY="-7.0" mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="subEvent" fx:id="handleSubEventButton"/>
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -106,7 +106,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="session" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="session" fx:id="handleSessionButton"/>
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -123,7 +123,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" onAction="#handleSubmit" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="submit" />
+            <Button mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="submit" fx:id="handleSubmitButton"/>
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -140,7 +140,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" onAction="#handleUser" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="user" />
+            <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="user" fx:id="handleUserButton"/>
          </children>
       </Pane>
    </children>

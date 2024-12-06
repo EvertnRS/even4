@@ -5,7 +5,9 @@ import br.upe.persistence.Event;
 import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.util.List;
@@ -110,5 +112,25 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
         }
     }
 
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
 
 }

@@ -3,6 +3,7 @@ package br.upe.controller.fx;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.repository.Persistence;
 import javafx.fxml.FXML;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -186,4 +187,25 @@ public class CertificateScreenController extends BaseController implements FxCon
             errorUpdtLabel.setText("Nenhuma pasta selecionada.");
         }
     }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
+
 }

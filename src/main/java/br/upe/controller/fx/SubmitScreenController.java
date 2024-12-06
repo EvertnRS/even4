@@ -210,4 +210,25 @@ public class SubmitScreenController extends BaseController implements FxControll
             loadUserArticles();
         }
     }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
+
 }

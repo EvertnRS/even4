@@ -1,5 +1,8 @@
 package br.upe.controller;
 
+import br.upe.persistence.Model;
+import br.upe.persistence.SubEvent;
+import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.Event;
 import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.repository.SubmitArticlesRepository;
@@ -30,7 +33,7 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public List<Event> getAll() {
+    public List<Model> getAll() {
         return List.of();
     }
 

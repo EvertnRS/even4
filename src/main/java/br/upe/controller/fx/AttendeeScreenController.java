@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EnterSessionScreenController extends BaseController implements FxController{
+public class AttendeeScreenController extends BaseController implements FxController{
     private FacadeInterface facade;
 
     @FXML
@@ -200,4 +200,25 @@ public class EnterSessionScreenController extends BaseController implements FxCo
     public void handleAddAttendee() throws IOException {
         genericButton("/fxml/createAttendeeScreen.fxml", attendeePane, facade, null);
     }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
+
 }
