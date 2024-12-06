@@ -1,6 +1,7 @@
 package br.upe.facade;
 import br.upe.controller.*;
 import br.upe.persistence.Event;
+import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.Model;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
@@ -140,6 +141,10 @@ public class Facade implements FacadeInterface {
 
     public void readArticle(String id) throws IOException {
         submitArticleController.read();
+    }
+
+    public List<SubmitArticle> listSubmitArticles(Object... params) throws IOException {
+        return submitArticleController.list(params);
     }
 
     // UserController methods

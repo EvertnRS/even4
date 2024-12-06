@@ -3,17 +3,30 @@ package br.upe.controller;
 import br.upe.persistence.Model;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.Event;
 import br.upe.persistence.SubmitArticle;
+import br.upe.persistence.repository.SubmitArticlesRepository;
+import br.upe.persistence.repository.Persistence;
+
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class SubmitArticleController implements Controller {
     private Map<UUID, Persistence> articleHashMap = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(SubmitArticleController.class.getName());
+
+    private SubmitArticlesRepository submitArticlesRepository;
+
+    public SubmitArticleController() {
+        this.submitArticlesRepository = SubmitArticlesRepository.getInstance();
+        this.read();
+
+
+    }
 
     public Map<UUID, Persistence> getHashMap() {
         return articleHashMap;
@@ -45,22 +58,25 @@ public class SubmitArticleController implements Controller {
     @Override
     public void create(Object... params) throws IOException {
         if (params.length != 3) {
-            LOGGER.warning("São necessários 3 parâmetros: nome do evento, caminho do arquivo e id.");
+            LOGGER.warning("São necessários 3 parâmetros: nome do evento, o conteúdo do arquivo (byte[]) e id do proprietário.");
             return;
         }
 
         String eventName = (String) params[0];
         String filePath = (String) params[1];
-        UUID id = (UUID) params[2];
-        boolean eventFound = getFatherEventId(eventName);
-        if (eventFound) {
-            Persistence article = new SubmitArticle();
-            article.create(eventName, filePath, id);
-            articleHashMap.put(id, article);
-        } else {
-            LOGGER.warning("Evento não encontrado.");
-        }
+        String ownerId = (String) params[2];
+
+
+
+        Path path = Paths.get(filePath);
+        String articleName = path.getFileName().toString();
+
+
+        byte[] articleContent = Files.readAllBytes(path);
+
+        submitArticlesRepository.create(eventName, articleContent, ownerId, articleName);
     }
+
 
     @Override
     public void delete(Object... params) throws IOException {
@@ -68,37 +84,49 @@ public class SubmitArticleController implements Controller {
             LOGGER.warning("É necessário 1 parâmetro: id do artigo.");
             return;
         }
+        UUID articleId = (UUID) params [0];
 
-        String id = (String) params[0];
-        Persistence article = articleHashMap.get(id);
-        if (article != null) {
-            article.delete(id);
-            articleHashMap.remove(id);
-        } else {
-            LOGGER.warning("Artigo não encontrado.");
-        }
+        submitArticlesRepository.delete(articleId);
+
     }
 
     @Override
-    public List<String> list(Object... params) throws IOException {
-        return List.of();
+    public <T> List<T> list(Object... params) throws IOException {
+        if (params.length != 1) {
+            LOGGER.warning("É necessário 1 parâmetro: userId.");
+            return List.of();
+        }
+
+        UUID userId = UUID.fromString((String) params[0]);
+        List<SubmitArticle> allArticles = submitArticlesRepository.getAllArticles();
+        List<SubmitArticle> userArticles = new ArrayList<>();
+        for (SubmitArticle article : allArticles) {
+            if (article.getOwnerId().getId().equals(userId)) {
+                userArticles.add(article);
+            }
+        }
+
+        if (userArticles.isEmpty()) {
+            LOGGER.warning("Nenhum artigo encontrado para o usuário especificado.");
+        }
+
+        return (List<T>) userArticles;
     }
+
 
     @Override
     public void update(Object... params) throws IOException {
-        if (params.length != 3) {
-            LOGGER.warning("São necessários 3 parâmetros: nome do novo evento, nome do artigo e nome do evento antigo.");
+        if (params.length != 2) {
+            LOGGER.warning("São necessários 2 parâmetros");
             return;
         }
-        String newEventName = (String) params[0];
-        String oldEventName = (String) params[1];
-        String articleName = (String) params[2];
 
-        Persistence article = articleHashMap.get(articleName);
-        if (article != null) {
-            article.update(newEventName, oldEventName, articleName);
-            UUID articleId = (UUID) article.getData("id");
-            articleHashMap.put(articleId, article);
+        UUID eventId = (UUID) params [0];
+        UUID articleId = (UUID) params [1];
+
+        if (articleId != null) {
+            // Atualizando o artigo
+            submitArticlesRepository.update(eventId, articleId);
         } else {
             LOGGER.warning("Artigo não encontrado.");
         }
@@ -106,42 +134,24 @@ public class SubmitArticleController implements Controller {
 
     @Override
     public void read() {
-        // Método não implementado (Polimorfismo)
-    }
+        articleHashMap.clear();
 
-    public void read(Object... params) {
-        if (params.length != 1) {
-            LOGGER.warning("É necessário 1 parâmetro: userId.");
-            return;
-        }
-
-        String userId = (String) params[0];
-        Persistence articlePersistence = new SubmitArticle();
-        this.articleHashMap = articlePersistence.read(userId);
-
-        if (!(this.articleHashMap.isEmpty())) {
-            this.articleHashMap.forEach((key, value) -> LOGGER.info(String.valueOf(key)));
+        HashMap<UUID, Persistence> articles = submitArticlesRepository.read();
+        if (!articles.isEmpty()) {
+            this.articleHashMap.putAll(articles);
+            articles.forEach((key, value) -> LOGGER.info("Artigo encontrado: " + key));
         } else {
             LOGGER.warning("Nenhum artigo encontrado.");
         }
     }
 
+
+    public void read(Object... params) {
+
+    }
+
     @Override
     public boolean loginValidate(String email, String cpf) {
         return false;
-    }
-
-    private boolean getFatherEventId(String eventName) throws IOException {
-        EventController ec = new EventController();
-        Map<UUID, Persistence> list = ec.getHashMap();
-        boolean found = false;
-        for (Map.Entry<UUID, Persistence> entry : list.entrySet()) {
-            Persistence listindice = entry.getValue();
-            if (listindice.getData("name").equals(eventName)) {
-                found = true;
-                break;
-            }
-        }
-        return found;
     }
 }

@@ -1,6 +1,7 @@
 package br.upe.facade;
 
 import br.upe.persistence.Event;
+import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.Model;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
@@ -44,6 +45,7 @@ public interface FacadeInterface {
     void deleteArticle(Object... params) throws IOException;
     void updateArticle(Object... params) throws IOException;
     void readArticle(String id) throws IOException;
+    List<SubmitArticle> listSubmitArticles(Object... params) throws IOException;
 
     // UserController methods
     Map<UUID, Persistence> getUserHashMap();
