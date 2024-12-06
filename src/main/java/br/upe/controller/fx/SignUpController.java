@@ -1,10 +1,12 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.facade.FacadeInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -116,6 +118,26 @@ public class SignUpController extends BaseController implements FxController {
     @Override
     public void setFacade(FacadeInterface facade) {
         // Método não implementado
+    }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
     }
 
 }

@@ -1,22 +1,20 @@
 package br.upe.controller.fx;
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
+import br.upe.controller.fx.mediator.CreateEventMediator;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Event;
-import br.upe.persistence.Model;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.List;
-
-import static br.upe.ui.Validation.isValidDate;
 
 public class CreateEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
+    private CreateEventMediator mediator;
 
     @FXML
     private AnchorPane newEventPane;
@@ -46,11 +44,6 @@ public class CreateEventScreenController extends BaseController implements FxCon
         initial();
     }
 
-    private void initial() {
-        userEmail.setText(facade.getUserData("email"));
-        setupPlaceholders();
-    }
-
     private void setupPlaceholders() {
         PlaceholderUtils.setupPlaceholder(nameTextField, namePlaceholder);
         PlaceholderUtils.setupPlaceholder(datePicker, datePlaceholder);
@@ -58,28 +51,22 @@ public class CreateEventScreenController extends BaseController implements FxCon
         PlaceholderUtils.setupPlaceholder(descriptionTextField, descriptionPlaceholder);
     }
 
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newEventPane, facade, null);
-    }
+    private void initial() {
+        userEmail.setText(facade.getUserData("email"));
+        setupPlaceholders();
 
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", newEventPane, facade, null);
-    }
+        this.mediator = new CreateEventMediator(this, facade, newEventPane, errorUpdtLabel);
+        mediator.registerComponents();
 
-    public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newEventPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", newEventPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", newEventPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", newEventPane, facade, null);
+        newEventPane.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                try {
+                    mediator.notify("handleCreate");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void createEvent() throws IOException {
@@ -88,17 +75,29 @@ public class CreateEventScreenController extends BaseController implements FxCon
         String eventDescription = descriptionTextField.getText();
         Date eventDate = Date.valueOf(datePicker.getValue() != null ? datePicker.getValue().toString() : "");
 
-        List<Model> eventList = facade.getAllEvent();
-        if (!isValidDate(String.valueOf(eventDate)) || eventLocation.isEmpty() || eventDescription.isEmpty() || isValidName(eventName, eventList)) {
-            errorUpdtLabel.setText("Erro no preenchimento das informações.");
-            errorUpdtLabel.setAlignment(Pos.CENTER);
-        }else {
-            facade.createEvent(eventName, eventDate, eventDescription, eventLocation, facade.getUserData("id"));
-            facade.readEvent();
-            handleEvent();
-        }
+        facade.createEvent(eventName, eventDate, eventDescription, eventLocation, facade.getUserData("id"));
+        mediator.notify("handleEvent");
     }
 
+    @Override
+    public TextField getNameTextField() {
+        return nameTextField;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return locationTextField;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return descriptionTextField;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return datePicker;
+    }
 }
 
 

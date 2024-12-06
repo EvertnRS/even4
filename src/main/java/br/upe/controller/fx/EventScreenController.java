@@ -1,5 +1,6 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.mediator.EventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.repository.EventRepository;
@@ -19,8 +20,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class MainScreenController extends BaseController implements FxController {
+public class EventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
+    private EventMediator mediator;
 
     @FXML
     private VBox eventVBox;
@@ -38,28 +40,11 @@ public class MainScreenController extends BaseController implements FxController
     }
 
     private void initial() throws IOException {
-        userEmail.setText(facade.getUserData("name"));
+        userEmail.setText(facade.getUserData("email"));
         loadUserEvents();
-    }
 
-    public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", mainPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", mainPane, facade, null);
-    }
-
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", mainPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", mainPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", mainPane, facade, null);
+        this.mediator = new EventMediator(this, facade, mainPane, null);
+        mediator.registerComponents();
     }
 
     private void loadUserEvents() throws IOException {
@@ -155,30 +140,38 @@ public class MainScreenController extends BaseController implements FxController
     }
 
     private void handleDeleteEvent(UUID eventId, String userId) throws IOException {
-        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("Confirmação de Exclusão");
-        confirmationAlert.setHeaderText("Deseja realmente excluir este evento?");
-        confirmationAlert.setContentText("Esta ação não pode ser desfeita.");
+        mediator.setEventId(String.valueOf(eventId));
+        Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteEvent");
 
-        ButtonType buttonSim = new ButtonType("Sim");
-        ButtonType buttonNao = new ButtonType("Não", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        confirmationAlert.getButtonTypes().setAll(buttonSim, buttonNao);
-
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
-
-        if (result.isPresent() && result.get() == buttonSim) {
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             facade.deleteEvent(eventId, userId);
             loadUserEvents();
         }
     }
 
     private void handleEditEvent(UUID eventId) throws IOException {
-        genericButton("/fxml/updateEventScreen.fxml", mainPane, facade, String.valueOf(eventId));
+        mediator.setEventId(String.valueOf(eventId));
+        mediator.notify("handleUpdateEvent");
     }
 
-    public void handleAddEvent() throws IOException {
-        genericButton("/fxml/createEventScreen.fxml", mainPane, facade, null);
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
     }
 
 }

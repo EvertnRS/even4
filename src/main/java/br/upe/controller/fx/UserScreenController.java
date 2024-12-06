@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.facade.FacadeInterface;
 
 import javafx.fxml.FXML;
@@ -145,6 +146,26 @@ public class UserScreenController extends BaseController implements FxController
         setupPlaceholders();
 
 
+    }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
     }
 
 }

@@ -3,6 +3,7 @@ import br.upe.facade.FacadeInterface;
 import br.upe.persistence.repository.Persistence;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -103,6 +104,26 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
         } else {
             errorUpdtLabel.setText("Nenhum arquivo selecionado.");
         }
+    }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
     }
 
 }

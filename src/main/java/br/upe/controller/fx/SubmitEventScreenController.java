@@ -3,7 +3,9 @@ import br.upe.controller.UserController;
 import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import javafx.fxml.FXML;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 
@@ -43,4 +45,25 @@ public class SubmitEventScreenController extends BaseController implements FxCon
     public void logout() throws IOException {
         genericButton("/fxml/loginScreen.fxml", submitPane, facade, null);
     }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
+    
 }

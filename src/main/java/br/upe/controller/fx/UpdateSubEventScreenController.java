@@ -1,8 +1,8 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
-import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SubEventRepository;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -147,4 +147,25 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
             handleSubEvent();
         }
     }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
+
 }
