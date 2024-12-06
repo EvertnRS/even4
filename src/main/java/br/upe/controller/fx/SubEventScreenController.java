@@ -1,5 +1,6 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.mediator.SubEventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 public class SubEventScreenController extends BaseController implements FxController{
     private FacadeInterface facade;
+    private SubEventMediator mediator;
 
     @FXML
     private Label userEmail;
@@ -39,34 +41,12 @@ public class SubEventScreenController extends BaseController implements FxContro
         initial();
     }
 
-
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadUserSubEvents();
-    }
 
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", subEventPane, facade, null);
-    }
-
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", subEventPane, facade, null);
-    }
-
-    public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", subEventPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", subEventPane, facade, null);
-    }
-
-    public void handleAddSubEvent() throws IOException {
-        genericButton("/fxml/createSubEventScreen.fxml", subEventPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", subEventPane, facade, null);
+        mediator = new SubEventMediator(this, facade, subEventPane, null);
+        mediator.registerComponents();
     }
 
     private void loadUserSubEvents() throws IOException {
@@ -175,26 +155,17 @@ public class SubEventScreenController extends BaseController implements FxContro
     }
 
 
-    private void handleEditSubEvent(UUID eventName) throws IOException {
-        SubEventRepository subeventRepository = SubEventRepository.getInstance();
-        genericButton("/fxml/updateSubEventScreen.fxml", subEventPane, facade, String.valueOf(subeventRepository.getData(eventName, "id")));
+    private void handleEditSubEvent(UUID subEventId) throws IOException {
+        mediator.setSubEventId(String.valueOf(subEventId));
+        mediator.notify("handleUpdateSubEvent");
     }
 
     private void handleDeleteSubEvent(UUID eventId, String userId) throws IOException {
-        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("Confirmação de Exclusão");
-        confirmationAlert.setHeaderText("Deseja realmente excluir este subEvento?");
-        confirmationAlert.setContentText("Esta ação não pode ser desfeita.");
+        mediator.setSubEventId(String.valueOf(eventId));
+        Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteSubEvent");
 
-        ButtonType buttonSim = new ButtonType("Sim");
-        ButtonType buttonNao = new ButtonType("Não", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        confirmationAlert.getButtonTypes().setAll(buttonSim, buttonNao);
-
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
-
-        if (result.isPresent() && result.get() == buttonSim) {
-            facade.deleteSubEvent(eventId, userId);
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+            facade.deleteEvent(eventId, userId);
             loadUserSubEvents();
         }
     }

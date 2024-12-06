@@ -18,7 +18,7 @@ public class CreateEventMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#createButton", "handleCreate");
+            setupButtonAction("#createButton", "handleEventCreate");
             setupButtonAction("#handleEventButton", "handleEvent");
             setupButtonAction("#handleSubEventButton", "handleSubEvent");
             setupButtonAction("#handleSessionButton", "handleSession");
@@ -33,7 +33,7 @@ public class CreateEventMediator extends Mediator {
     public Object notify(String event) throws IOException {
         if (createEventController != null) {
             switch (event) {
-                case "handleCreate":
+                case "handleEventCreate":
                     if(validateInputs()){
                         createEventController.createEvent();
                     }

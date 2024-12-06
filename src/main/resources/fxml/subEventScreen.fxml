@@ -38,7 +38,7 @@
                <font>
                   <Font name="System Bold" size="68.0" />
                </font></Label>
-            <Button layoutX="28.0" layoutY="512.0" mnemonicParsing="false" onAction="#handleAddSubEvent" opacity="0.0" prefHeight="65.0" prefWidth="63.0" style="-fx-cursor: hand" text="addSubEvent" />
+            <Button layoutX="28.0" layoutY="512.0" mnemonicParsing="false" fx:id = "#handleAddButton" opacity="0.0" prefHeight="65.0" prefWidth="63.0" style="-fx-cursor: hand" text="addSubEvent" />
             <Label layoutX="51.0" layoutY="22.0" text="SubEventos Criados" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="22.0" />
@@ -55,7 +55,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" onAction="#logout" opacity="0.0" prefHeight="35.0" prefWidth="72.0" style="-fx-cursor: hand;" text="logout" />
+      <Button layoutX="20.0" layoutY="505.0" mnemonicParsing="false" fx:id = "#logoutButton" opacity="0.0" prefHeight="35.0" prefWidth="72.0" style="-fx-cursor: hand;" text="logout" />
       <Pane layoutX="-1.0" layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
          <effect>
             <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
@@ -70,7 +70,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button layoutY="-3.0" mnemonicParsing="false" onAction="#handleEvent" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="event" />
+            <Button layoutY="-3.0" mnemonicParsing="false" fx:id = "#handleEventButton" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="event" />
          </children>
       </Pane>
       <Pane layoutY="215.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
@@ -103,7 +103,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" onAction="#handleSession" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="session" />
+            <Button mnemonicParsing="false" fx:id = "#handleSessionButton" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="session" />
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -120,7 +120,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" onAction="#handleSubmit" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="submit" />
+            <Button mnemonicParsing="false" fx:id = "#handleSubmitButton" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="submit" />
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -137,7 +137,7 @@
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
-            <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" onAction="#handleUser" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="user" />
+            <Button layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" fx:id ="#handleUserButton" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="user" />
          </children>
       </Pane>
    </children>

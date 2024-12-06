@@ -18,7 +18,7 @@ public class UpdateEventMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#updateButton", "handleUpdate");
+            setupButtonAction("#updateButton", "handleEventUpdate");
             setupButtonAction("#handleEventButton", "handleEvent");
             setupButtonAction("#handleSubEventButton", "handleSubEvent");
             setupButtonAction("#handleSessionButton", "handleSession");

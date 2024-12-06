@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.fx.fxutils.PlaceholderUtils;
+import br.upe.controller.fx.mediator.CreateSubEventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.Model;
@@ -22,7 +23,7 @@ import static br.upe.ui.Validation.isValidDate;
 public class CreateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private final ObservableList<String> eventList = FXCollections.observableArrayList();
-
+    private CreateSubEventMediator mediator;
 
     @FXML
     private AnchorPane newSubEventPane;
@@ -64,6 +65,10 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadUserEvents();
+
+        mediator = new CreateSubEventMediator(this, facade, newSubEventPane, errorUpdtLabel);
+        mediator.registerComponents();
+
         setupPlaceholders();
     }
 
@@ -73,30 +78,6 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         PlaceholderUtils.setupPlaceholder(datePicker, datePlaceholder);
         PlaceholderUtils.setupPlaceholder(locationTextField, locationPlaceholder);
         PlaceholderUtils.setupPlaceholder(descriptionTextField, descriptionPlaceholder);
-    }
-
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newSubEventPane, facade, null);
-    }
-
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", newSubEventPane, facade, null);
-    }
-
-    public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newSubEventPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", newSubEventPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", newSubEventPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", newSubEventPane, facade, null);
     }
 
     private void loadUserEvents() throws IOException {
@@ -127,40 +108,34 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     }
 
     public void createSubEvent() throws IOException {
-        String subeventName = nameTextField.getText();
-        String subeventLocation = locationTextField.getText();
-        String subeventDescription = descriptionTextField.getText();
-        Date subeventDate = Date.valueOf(datePicker.getValue() != null ? datePicker.getValue().toString() : "");
+        String subEventName = nameTextField.getText();
+        String subEventLocation = locationTextField.getText();
+        String subEventDescription = descriptionTextField.getText();
+        Date subEventDate = Date.valueOf(datePicker.getValue() != null ? datePicker.getValue().toString() : "");
         String selectedEventName = searchField.getText();
 
-        List<Model> subeventList = facade.getAllSubEvent();
-        if (!isValidDate(String.valueOf(subeventDate)) || subeventLocation.isEmpty() || subeventDescription.isEmpty() || isValidName(subeventName, subeventList)) {
-            errorUpdtLabel.setText("Erro no preenchimento das informações.");
-            errorUpdtLabel.setAlignment(Pos.CENTER);
-        }else {
-            facade.createSubEvent(selectedEventName,subeventName, subeventDate, subeventDescription, subeventLocation, facade.getUserData("id"));
-            handleSubEvent();
-        }
+        facade.createSubEvent(selectedEventName,subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
+        mediator.notify("handleSubEvent");
     }
 
     @Override
     public TextField getNameTextField() {
-        return null;
+        return nameTextField;
     }
 
     @Override
     public TextField getLocationTextField() {
-        return null;
+        return locationTextField;
     }
 
     @Override
     public TextField getDescriptionTextField() {
-        return null;
+        return descriptionTextField;
     }
 
     @Override
     public DatePicker getDatePicker() {
-        return null;
+        return datePicker;
     }
-
 }
+

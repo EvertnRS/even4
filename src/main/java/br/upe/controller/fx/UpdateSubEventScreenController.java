@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.fx.fxutils.PlaceholderUtils;
+import br.upe.controller.fx.mediator.UpdateSubEventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
 import br.upe.persistence.repository.SubEventRepository;
@@ -22,7 +23,8 @@ import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
-    private UUID subEventName;
+    private UUID subEventId;
+    private UpdateSubEventMediator mediator;
 
     @FXML
     private AnchorPane editSubEventPane;
@@ -46,22 +48,23 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
     private Text descriptionPlaceholder;
     @FXML
     private Label errorUpdtLabel;
-    @FXML
-    private Label errorDelLabel;
 
     public void setFacade(FacadeInterface facade) {
         this.facade = facade;
         initial();
     }
 
-    public void setEventName(UUID eventName) {
-        this.subEventName = eventName;
+    public void setEventId(UUID eventId) {
+        this.subEventId = eventId;
+        loadSubEventDetails();
     }
-
 
     private void initial() {
         userEmail.setText(facade.getUserData("email"));
         setupPlaceholders();
+
+        mediator = new UpdateSubEventMediator(this, facade, editSubEventPane, errorUpdtLabel);
+        mediator.registerComponents();
     }
 
     private void setupPlaceholders() {
@@ -71,41 +74,18 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         PlaceholderUtils.setupPlaceholder(editDescriptionTextField, descriptionPlaceholder);
     }
 
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", editSubEventPane, facade, null);
-    }
-
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", editSubEventPane, facade, null);
-    }
-
-    public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", editSubEventPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", editSubEventPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", editSubEventPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", editSubEventPane, facade, null);
-    }
 
     private void loadSubEventDetails() {
         SubEventRepository subeventRepository = SubEventRepository.getInstance();
         if (subeventRepository != null) {
-            String eventName = (String) subeventRepository.getData(subEventName,"name");
-            String eventLocation = (String) subeventRepository.getData(subEventName,"location");
-            String eventDescription = (String) subeventRepository.getData(subEventName,"description");
+            String eventName = (String) subeventRepository.getData(subEventId,"name");
+            String eventLocation = (String) subeventRepository.getData(subEventId,"location");
+            String eventDescription = (String) subeventRepository.getData(subEventId,"description");
             editNameTextField.setText(eventName);
             editLocationTextField.setText(eventLocation);
             editDescriptionTextField.setText(eventDescription);
 
-            Object dateObject = subeventRepository.getData(subEventName, "date");
+            Object dateObject = subeventRepository.getData(subEventId, "date");
             java.sql.Date sqlDate;
 
             if (dateObject instanceof java.sql.Timestamp) {
@@ -135,37 +115,28 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         Date newDate = Date.valueOf(editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "");
-        List<Model> subeventList = facade.getAllSubEvent();
-        if (!isValidDate(String.valueOf(newDate))) {
-            errorUpdtLabel.setText("Data inválida.");
-            errorUpdtLabel.setAlignment(Pos.CENTER);
-        } else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(String.valueOf(subEventName), subeventList)) {
-            errorUpdtLabel.setText("Erro no preenchimento das informações.");
-            errorUpdtLabel.setAlignment(Pos.CENTER);
-        } else {
-            facade.updateSubEvent(subEventName, newName, newDate, newDescription, newLocation);
-            handleSubEvent();
-        }
+
+        facade.updateSubEvent(subEventId, newName, newDate, newDescription, newLocation);
+        mediator.notify("handleSubEvent");
     }
 
     @Override
     public TextField getNameTextField() {
-        return null;
+        return editNameTextField;
     }
 
     @Override
     public TextField getLocationTextField() {
-        return null;
+        return editLocationTextField;
     }
 
     @Override
     public TextField getDescriptionTextField() {
-        return null;
+        return editDescriptionTextField;
     }
 
     @Override
     public DatePicker getDatePicker() {
-        return null;
+        return editDatePicker;
     }
-
 }
