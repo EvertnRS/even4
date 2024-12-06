@@ -2,6 +2,8 @@ package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
 import br.upe.controller.fx.fxutils.PlaceholderUtils;
+import br.upe.controller.fx.mediator.AccessMediator;
+import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -17,7 +19,7 @@ import java.io.IOException;
 import static br.upe.ui.Validation.isValidCPF;
 import static br.upe.ui.Validation.isValidEmail;
 
-public class SignUpController extends BaseController implements FxController {
+public class SignUpScreenController extends BaseController implements FxController {
 
     @FXML
     private TextField nameTextField;
@@ -49,8 +51,36 @@ public class SignUpController extends BaseController implements FxController {
     @FXML
     private Label errorLabel;
 
+    private AccessMediator accessMediator;
+
+    public void setNameTextField(TextField nameTextField) {
+        this.nameTextField = nameTextField;
+    }
+
+    public TextField getEmailTextField() {
+        return emailTextField;
+    }
+
+    public Label getErrorLabel() {
+        return errorLabel;
+    }
+
+    public void setEmailTextField(TextField emailTextField) {
+        this.emailTextField = emailTextField;
+    }
+
+    public TextField getCpfTextField() {
+        return cpfTextField;
+    }
+
+    public void setCpfTextField(TextField cpfTextField) {
+        this.cpfTextField = cpfTextField;
+    }
+
     @FXML
     public void initialize() {
+        this.accessMediator = new AccessMediator(this, null, registerAnchorPane, errorLabel, null);
+        accessMediator.registerComponents();
         registerAnchorPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
@@ -91,28 +121,25 @@ public class SignUpController extends BaseController implements FxController {
         String cpf = cpfTextField.getText().trim();
         String name = nameTextField.getText().trim();
         String password = passTextField.getText().trim();
-
         UserController userController = UserController.getInstance();
+        FacadeInterface facade = new Facade(userController);
 
         loadScreen("Carregando", () -> {
-            if (isValidEmail(email) && isValidCPF(cpf)) {
-                userController.create(name, cpf, email, password);
-                Platform.runLater(() -> {
-                    try {
-                        returnToLogin();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            } else {
-                Platform.runLater(() -> errorLabel.setText("Cadastro falhou! Insira informações válidas."));
-                errorLabel.setAlignment(Pos.CENTER);
+            try {
+                facade.createUser(name, cpf, email, password);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+            Platform.runLater(() -> {
+                try {
+                    accessMediator.notify("returnToLogin");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }, registerAnchorPane);
-    }
 
-    public void returnToLogin() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", registerAnchorPane, null, null);
+
     }
 
     @Override
