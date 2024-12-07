@@ -56,12 +56,12 @@ public class Attendee implements Persistence{
     }
 
     @Override
-    public void create(Object... params) {
+    public boolean create(Object... params) {
         if (params.length < 2) {
             LOGGER.warning("Erro: Parâmetros insuficientes.");
-            return;
+            return false;
         }
-
+        boolean isCreated = false;
         this.userId = (UUID) params[0];
         this.name = (String) params[1];
         this.sessionId = (UUID) params[2];
@@ -75,19 +75,21 @@ public class Attendee implements Persistence{
             }
 
             LOGGER.warning("Cadastro Realizado");
+            isCreated = true;
         } catch (IOException writerEx) {
             LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
         }
+        return isCreated;
     }
 
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
-
+        boolean isDeleted = false;
         HashMap<String, Persistence> attendeeHashMap = (HashMap<String, Persistence>) params[0];
         BufferedWriter writer = new BufferedWriter(new FileWriter(ATTENDEE_PATH));
 
@@ -98,20 +100,22 @@ public class Attendee implements Persistence{
                 writer.write(line);
             }
             LOGGER.warning("Inscrição Removida");
+            isDeleted = true;
         } catch (IOException writerEx) {
             LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
         } finally {
             writer.close();
         }
+        return isDeleted;
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
-
+        boolean isUpdated = false;
         HashMap<String, Persistence> attendeeHashMap = (HashMap<String, Persistence>) params[0];
         BufferedWriter writer = new BufferedWriter(new FileWriter(ATTENDEE_PATH));
         try (writer) {
@@ -121,12 +125,14 @@ public class Attendee implements Persistence{
                 writer.write(line);
             }
             LOGGER.warning("Nome Atualizado");
+            isUpdated = true;
         } catch (IOException writerEx) {
             LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
         } finally {
             writer.close();
         }
+        return isUpdated;
     }
 
     @Override

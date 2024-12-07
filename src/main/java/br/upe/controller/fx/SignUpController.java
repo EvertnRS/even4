@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.UserController;
+import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -91,10 +92,15 @@ public class SignUpController extends BaseController implements FxController {
         String password = passTextField.getText().trim();
 
         UserController userController = UserController.getInstance();
+        FacadeInterface facadeInterface = new Facade(userController);
 
         loadScreen("Carregando", () -> {
             if (isValidEmail(email) && isValidCPF(cpf)) {
-                userController.create(name, cpf, email, password);
+                try {
+                    facadeInterface.createUser(name, cpf, email, password);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 Platform.runLater(() -> {
                     try {
                         returnToLogin();

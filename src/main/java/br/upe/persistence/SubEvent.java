@@ -141,7 +141,7 @@ public class SubEvent implements Persistence{
     }
 
     @Override
-    public void create(Object... params) {
+    public boolean create(Object... params) {
         if (params.length < 6) {
             LOGGER.warning("Só pode ter 6 parametros");
         }
@@ -154,6 +154,7 @@ public class SubEvent implements Persistence{
         String parsedLocation = (String) params[4];
         String parsedOwnerId = (String) params[5];
         String line = parsedId + ";" + parsedName + ";" + parsedDate + ";" + parsedDescription + ";" + parsedLocation + ";" + parsedEventId + ";" + parsedOwnerId + "\n";
+        boolean isCreated = false;
 
         try {
             File file = new File(SUB_EVENTS_PATH);
@@ -167,11 +168,14 @@ public class SubEvent implements Persistence{
             }
 
             LOGGER.warning("SubEvento Criado");
+            isCreated = true;
         } catch (IOException writerEx) {
             LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
         }
+        return isCreated;
     }
+
     @Override
     public HashMap<UUID, Persistence>  read() throws IOException {
         HashMap<UUID, Persistence> list = new HashMap<>();
@@ -225,7 +229,7 @@ public class SubEvent implements Persistence{
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
@@ -233,6 +237,7 @@ public class SubEvent implements Persistence{
         HashMap<String, Persistence> subEventHashMap = (HashMap<String, Persistence>) params[0];
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(SUB_EVENTS_PATH));
+        boolean isUpdated = false;
         try (writer) {
             for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
                 Persistence subEvent = entry.getValue();
@@ -241,16 +246,18 @@ public class SubEvent implements Persistence{
             }
 
             LOGGER.warning("SubEvento Atualizado");
+            isUpdated = true;
         } catch (IOException writerEx) {
             LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
         } finally {
             writer.close();
         }
+        return isUpdated;
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length > 1) {
             LOGGER.warning("Só pode ter 1 parametro");
         }
@@ -258,6 +265,7 @@ public class SubEvent implements Persistence{
         HashMap<String, Persistence> subEventHashMap = (HashMap<String, Persistence>) params[0];
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(SUB_EVENTS_PATH));
+        boolean isDeleted = false;
         try (writer) {
             for (Map.Entry<String, Persistence> entry : subEventHashMap.entrySet()) {
                 Persistence subEvent = entry.getValue();
@@ -266,11 +274,13 @@ public class SubEvent implements Persistence{
             }
 
             LOGGER.warning("SubEvento Removido");
+            isDeleted = true;
         } catch (IOException writerEx) {
             LOGGER.warning(WRITE_ERROR);
             writerEx.printStackTrace();
         } finally {
             writer.close();
         }
+        return isDeleted;
     }
 }

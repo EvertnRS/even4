@@ -39,7 +39,7 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public void create(Object... params) {
+    public boolean create(Object... params) {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametros");
         }
@@ -59,12 +59,13 @@ public class EventRepository implements Persistence {
         event.setDescription(description);
         event.setLocation(location);
         event.setOwnerId(owner);
-
+        boolean isCreated = false;
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
             entityManager.persist(event);
             transaction.commit();
+            isCreated = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -75,6 +76,7 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isCreated;
     }
 
     @Override
@@ -96,10 +98,10 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parâmetros");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
@@ -107,7 +109,7 @@ public class EventRepository implements Persistence {
         Date newDate = (Date) params[2];
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
-
+        boolean isUpdated = false;
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -122,6 +124,7 @@ public class EventRepository implements Persistence {
                 setData(id, "location", newLocation);
                 transaction.commit();
                 LOGGER.info("Evento atualizado com sucesso.");
+                isUpdated = true;
             } else {
                 LOGGER.warning("Evento não encontrado com o ID fornecido.");
             }
@@ -135,6 +138,7 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isUpdated;
     }
 
     @Override
@@ -148,15 +152,15 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametros");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
         UUID ownerId = (UUID) params[1];
-
+        boolean isDeleted = false;
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -167,13 +171,14 @@ public class EventRepository implements Persistence {
 
             if ((owner) == null) {
                 LOGGER.warning("Criador inválido.");
-                return;
+                return false;
             }
 
             if (idEvent != null) {
                 entityManager.remove(idEvent);
                 transaction.commit();
                 LOGGER.info("Evento deletado com sucesso.");
+                isDeleted = true;
             } else {
                 LOGGER.warning("Evento não encontrado com o ID fornecido.");
             }
@@ -187,6 +192,7 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isDeleted;
     }
 
     @Override

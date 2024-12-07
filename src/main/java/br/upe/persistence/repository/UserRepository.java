@@ -54,8 +54,8 @@ public class UserRepository implements Persistence {
     }
 
     @Override
-    public void create(Object... params) {
-        if (params.length != 2) {
+    public boolean create(Object... params) {
+        if (params.length != 4) {
             LOGGER.warning("Só pode ter 2 parametro contendo o email e o cpf do usuário que deseja criar");
         }
 
@@ -68,7 +68,7 @@ public class UserRepository implements Persistence {
 
         if (userExists(email, cpf)) {
             LOGGER.warning("Usuário com este email ou CPF já existe");
-            return;
+            return false;
         }
 
         User user = new User();
@@ -77,12 +77,15 @@ public class UserRepository implements Persistence {
         user.setName(name);
         user.setPassword(hashedPassword);
 
+        boolean isCreated = false;
+
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
             entityManager.persist(user);
             transaction.commit();
+            isCreated = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -93,14 +96,15 @@ public class UserRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isCreated;
     }
 
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 6) {
             LOGGER.warning("Só pode ter 6 parâmetros");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
@@ -109,6 +113,8 @@ public class UserRepository implements Persistence {
         String newEmail = (String) params[3];
         String newPassword = (String) params[4];
         String password = (String) params[5];
+
+        boolean isUpdated = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -119,7 +125,7 @@ public class UserRepository implements Persistence {
 
             if (!isPasswordEqual(password, user.getPassword())) {
                 LOGGER.warning("Senha inválida");
-                return;
+                return false;
             }
 
             if (user != null) {
@@ -129,6 +135,7 @@ public class UserRepository implements Persistence {
                 user.setPassword(newPassword);
                 transaction.commit();
                 LOGGER.info("Usuário atualizado com sucesso.");
+                isUpdated = true;
             } else {
                 LOGGER.warning("Usuário não encontrado com o ID fornecido.");
             }
@@ -142,6 +149,7 @@ public class UserRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isUpdated;
     }
 
 
@@ -184,14 +192,16 @@ public class UserRepository implements Persistence {
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametro");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
         String password = (String) params[1];
+
+        boolean isDeleted = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -202,13 +212,14 @@ public class UserRepository implements Persistence {
 
             if (!isPasswordEqual(password, user.getPassword())) {
                 LOGGER.warning("Senha inválida");
-                return;
+                return false;
             }
 
             if (user != null) {
                 entityManager.remove(user);
                 transaction.commit();
                 LOGGER.info("Usuário deletado com sucesso.");
+                isDeleted = true;
             } else {
                 LOGGER.warning("Usuário não encontrado com o ID fornecido.");
             }
@@ -222,6 +233,7 @@ public class UserRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isDeleted;
     }
 
     @Override

@@ -42,40 +42,44 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public void create(Object... params) throws IOException {
+    public boolean create(Object... params) throws IOException {
         if (params.length != 3) {
             LOGGER.warning("São necessários 3 parâmetros: nome do evento, caminho do arquivo e id.");
-            return;
+            return false;
         }
 
         String eventName = (String) params[0];
         String filePath = (String) params[1];
         UUID id = (UUID) params[2];
         boolean eventFound = getFatherEventId(eventName);
+        boolean isCreated = false;
         if (eventFound) {
             Persistence article = new SubmitArticle();
-            article.create(eventName, filePath, id);
+            isCreated = article.create(eventName, filePath, id);
             articleHashMap.put(id, article);
         } else {
             LOGGER.warning("Evento não encontrado.");
         }
+        return isCreated;
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 1) {
             LOGGER.warning("É necessário 1 parâmetro: id do artigo.");
-            return;
+            return false;
         }
 
         String id = (String) params[0];
         Persistence article = articleHashMap.get(id);
+        boolean isDeleted = false;
         if (article != null) {
-            article.delete(id);
+            isDeleted = article.delete(id);
             articleHashMap.remove(id);
         } else {
             LOGGER.warning("Artigo não encontrado.");
         }
+        return isDeleted;
     }
 
     @Override
@@ -84,23 +88,25 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 3) {
             LOGGER.warning("São necessários 3 parâmetros: nome do novo evento, nome do artigo e nome do evento antigo.");
-            return;
+            return false;
         }
         String newEventName = (String) params[0];
         String oldEventName = (String) params[1];
         String articleName = (String) params[2];
 
         Persistence article = articleHashMap.get(articleName);
+        boolean isUpdated = false;
         if (article != null) {
-            article.update(newEventName, oldEventName, articleName);
+            isUpdated = article.update(newEventName, oldEventName, articleName);
             UUID articleId = (UUID) article.getData("id");
             articleHashMap.put(articleId, article);
         } else {
             LOGGER.warning("Artigo não encontrado.");
         }
+        return isUpdated;
     }
 
     @Override

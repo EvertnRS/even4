@@ -117,10 +117,10 @@ public class SubmitArticle implements Persistence {
     }
 
     @Override
-    public void create(Object... params) {
+    public boolean create(Object... params) {
         if (params.length != 3) {
             LOGGER.warning("São necessários 2 parâmetros: nome do evento e caminho do arquivo.");
-            return;
+            return false;
         }
 
         String eventName = (String) params[0];
@@ -139,30 +139,34 @@ public class SubmitArticle implements Persistence {
                 LOGGER.warning("Pasta do evento criada com sucesso: %s".formatted(eventFolderPath));
             } else {
                 LOGGER.warning("Erro ao criar a pasta do evento: %s".formatted(eventFolderPath));
-                return;
+                return false;
             }
         }
         if (!fileToMove.exists()) {
             LOGGER.warning("Arquivo a ser movido não existe: %s".formatted(filePath));
-            return;
+            return false;
         }
+
+        boolean isCreated = false;
 
         try {
             if (fileToMove.renameTo(destinationFile)) {
                 LOGGER.warning("Arquivo movido com sucesso para: " + destinationFile.getAbsolutePath());
+                isCreated = true;
             } else {
                 LOGGER.warning("Erro ao mover o arquivo.");
             }
         } catch (Exception e) {
             LOGGER.warning("Erro ao mover o arquivo: " + e.getMessage());
         }
+        return isCreated;
     }
 
     @Override
-    public void update(Object... params) {
+    public boolean update(Object... params) {
         if (params.length != 3) {
             LOGGER.warning("São necessários 3 parâmetros: nome do novo evento, nome do evento antigo e nome do artigo.");
-            return;
+            return false;
         }
 
         String newEventName = (String) params[0];  // Nome do novo evento
@@ -178,14 +182,14 @@ public class SubmitArticle implements Persistence {
 
         if (!oldEventFolder.exists()) {
             LOGGER.warning("Evento antigo não encontrado: %s".formatted(oldEventName));
-            return;
+            return false;
         }
 
 
         File oldFile = new File(oldEventFolder, articleName);
         if (!oldFile.exists()) {
             LOGGER.warning("Artigo não encontrado no evento antigo: %s".formatted(articleName));
-            return;
+            return false;
         }
 
 
@@ -194,29 +198,32 @@ public class SubmitArticle implements Persistence {
                 LOGGER.warning("Pasta do novo evento criada: %s".formatted(newEventFolder.getAbsolutePath()));
             } else {
                 LOGGER.warning("Erro ao criar a pasta do novo evento: %s".formatted(newEventFolder.getAbsolutePath()));
-                return;
+                return false;
             }
         }
 
 
         File destinationFile = new File(newEventFolder, articleName);
+        boolean isUpdated = false;
         try {
             if (oldFile.renameTo(destinationFile)) {
                 LOGGER.warning("Artigo movido com sucesso para: %s".formatted(destinationFile.getAbsolutePath()));
+                isUpdated = true;
             } else {
                 LOGGER.warning("Erro ao mover o artigo.");
             }
         } catch (Exception e) {
             LOGGER.warning("Erro ao mover o artigo: " + e.getMessage());
         }
+        return isUpdated;
     }
 
 
     @Override
-    public void delete(Object... params) {
+    public boolean delete(Object... params) {
         if (params.length != 1) {
             LOGGER.warning("São necessários 1 parâmetro: nome do arquivo.");
-            return;
+            return false;
         }
 
         String fileName = (String) params[0];
@@ -224,6 +231,7 @@ public class SubmitArticle implements Persistence {
         File directory = new File(userHome + "\\even4\\db\\Articles");
 
         File[] eventFolders = directory.listFiles(File::isDirectory);
+        boolean isDeleted = false;
         if (eventFolders != null) {
             for (File eventFolder : eventFolders) {
                 File fileToDelete = new File(eventFolder, fileName);
@@ -232,14 +240,16 @@ public class SubmitArticle implements Persistence {
                     try {
                         Files.delete(filePath);
                         LOGGER.warning("Arquivo deletado com sucesso.");
+                        isDeleted = true;
                     } catch (IOException e) {
                         LOGGER.warning("Erro ao deletar o arquivo: %s".formatted(e.getMessage()));
                     }
-                    return;
+                    return false;
                 }
             }
         }
 
         LOGGER.warning("Arquivo não encontrado.");
+        return isDeleted;
     }
 }

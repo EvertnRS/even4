@@ -54,10 +54,10 @@ public class SubEventController implements Controller {
     }
 
     @Override
-    public void create(Object... params) throws IOException {
+    public boolean create(Object... params) throws IOException {
         if (params.length != 6) {
             LOGGER.warning("Só pode ter 6 parâmetros");
-            return;
+            return false;
         }
 
         String eventId = getFatherEventId((String) params[0]);
@@ -68,7 +68,7 @@ public class SubEventController implements Controller {
         String userId = (String) params[5];
 
         Persistence subEvent = new SubEvent();
-        subEvent.create(eventId, name, date, description, location, userId);
+        return subEvent.create(eventId, name, date, description, location, userId);
     }
 
     private void cascadeDelete(String id) throws IOException {
@@ -131,9 +131,10 @@ public class SubEventController implements Controller {
 
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         String ownerId = "";
         cascadeDelete((String) params[0]);
+        boolean isDeleted = false;
         for (Map.Entry<UUID, Persistence> entry : subEventHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData("id").equals(params[0])){
@@ -151,10 +152,11 @@ public class SubEventController implements Controller {
                 }
             }
             Persistence subEventPersistence = new SubEvent();
-            subEventPersistence.delete(subEventHashMap);
+            isDeleted = subEventPersistence.delete(subEventHashMap);
         } else {
             LOGGER.warning("Você não pode deletar esse SubEvento");
         }
+        return isDeleted;
     }
 
     @Override
@@ -180,10 +182,10 @@ public class SubEventController implements Controller {
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (!isValidParamsLength(params)) {
             LOGGER.warning("Só pode ter 6 parametros");
-            return;
+            return false;
         }
 
         String oldName = (String) params[0];
@@ -196,15 +198,15 @@ public class SubEventController implements Controller {
         String id = getOwnerSubEventId(oldName, userId);
         if (id == null) {
             LOGGER.warning("Você não pode alterar este SubEvento");
-            return;
+            return false;
         }
 
         if (isNameInUseOrEmpty(newName)) {
             LOGGER.warning("Nome em uso ou vazio");
-            return;
+            return false;
         }
 
-        updateSubEvent(id, newName, newDate, newDescription, newLocation);
+        return updateSubEvent(id, newName, newDate, newDescription, newLocation);
     }
 
     private boolean isValidParamsLength(Object... params) {
@@ -236,7 +238,8 @@ public class SubEventController implements Controller {
         return newName.isEmpty();
     }
 
-    private void updateSubEvent(String id, String newName, String newDate, String newDescription, String newLocation) throws IOException {
+    private boolean updateSubEvent(String id, String newName, String newDate, String newDescription, String newLocation) throws IOException {
+        boolean isUpdated = false;
         Persistence newSubEvent = subEventHashMap.get(id);
         if (newSubEvent != null) {
             newSubEvent.setData("name", newName);
@@ -246,10 +249,11 @@ public class SubEventController implements Controller {
             subEventHashMap.put(UUID.fromString(id), newSubEvent);
 
             Persistence subEventPersistence = new SubEvent();
-            subEventPersistence.update(subEventHashMap);
+            isUpdated = subEventPersistence.update(subEventHashMap);
         } else {
             LOGGER.warning("SubEvento não encontrado");
         }
+        return isUpdated;
     }
 
 

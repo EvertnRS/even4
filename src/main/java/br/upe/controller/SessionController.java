@@ -72,10 +72,10 @@ public class SessionController implements Controller {
         return data;
     }
 
-    public void create(Object... params) throws IOException {
+    public boolean create(Object... params) throws IOException {
         if (params.length != 9) {
             LOGGER.warning("Número incorreto de parâmetros. Esperado: 9");
-            return;
+            return false;
         }
 
         String eventId = getFatherEventId((String) params[0], (String) params[8]);
@@ -88,6 +88,7 @@ public class SessionController implements Controller {
         String userId = (String) params[7];
 
         Map<UUID, Persistence> eventH;
+        boolean isCreated = false;
         if (params[8].equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
             eventH = eventController.getHashMap();
@@ -97,11 +98,12 @@ public class SessionController implements Controller {
         }
 
         Persistence session = new Session();
-        session.create(eventId, name, date, description, location, startTime, endTime, userId, eventH);
+        isCreated = session.create(eventId, name, date, description, location, startTime, endTime, userId, eventH);
         UUID sessionId = (UUID) session.getData(ID);
         sessionHashMap.put(sessionId, session);
 
         this.sessionLog = session;
+        return isCreated;
     }
     /*
     private void cascadeDelete(String id) throws IOException {
@@ -144,8 +146,9 @@ public class SessionController implements Controller {
     }*/
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         String ownerId = "";
+        boolean isDeleted = false;
         for (Map.Entry<UUID, Persistence> entry : sessionHashMap.entrySet()) {
             Persistence persistence = entry.getValue();
             if (persistence.getData(ID).equals(params[0])) {
@@ -163,10 +166,11 @@ public class SessionController implements Controller {
                 }
             }
             Persistence sessionPersistence = new Session();
-            sessionPersistence.delete(sessionHashMap);
+            isDeleted = sessionPersistence.delete(sessionHashMap);
         } else {
             LOGGER.warning("Você não pode deletar essa Sessão");
         }
+        return isDeleted;
     }
 
     @Override
@@ -197,10 +201,10 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 8) {
             LOGGER.warning("Só pode ter 6 parâmetros");
-            return;
+            return false;
         }
 
         String oldName = (String) params[0];
@@ -211,18 +215,18 @@ public class SessionController implements Controller {
         String userId = (String) params[5];
         String newStartTime = (String) params[6];
         String newEndTime = (String) params[7];
+        boolean isUpdated = false;
 
         if (newName == null || newName.trim().isEmpty()) {
             LOGGER.warning("Nome não pode ser vazio");
-            return;
+            return false;
         }
 
-        boolean nameExists = sessionHashMap.values().stream()
-                .anyMatch(session -> session.getData(NAME).equals(newName) && !session.getData(NAME).equals(oldName));
+        boolean nameExists = sessionHashMap.values().stream().anyMatch(session -> session.getData(NAME).equals(newName) && !session.getData(NAME).equals(oldName));
 
         if (nameExists) {
             LOGGER.warning("Nome em uso");
-            return;
+            return false;
         }
 
         boolean isOwner = false;
@@ -238,7 +242,7 @@ public class SessionController implements Controller {
                 session.setData(ENDTIME, newEndTime);
 
                 Persistence sessionPersistence = new Session();
-                sessionPersistence.update(sessionHashMap);
+                isUpdated = sessionPersistence.update(sessionHashMap);
                 isOwner = true;
                 break;
             }
@@ -247,6 +251,7 @@ public class SessionController implements Controller {
         if (!isOwner) {
             LOGGER.warning("Nome não pertence ao seu usuário atual");
         }
+        return isUpdated;
     }
 
     @Override

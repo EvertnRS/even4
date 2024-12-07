@@ -1,4 +1,45 @@
 package br.upe.ui;
+
+import br.upe.controller.UserController;
+import br.upe.facade.Facade;
+import br.upe.facade.FacadeInterface;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class FacadeIntegrationTest {
+
+    FacadeInterface facade = new Facade(UserController.getInstance());
+
+
+    FacadeIntegrationTest() throws IOException {
+    }
+
+    @BeforeEach
+    void setUp() throws IOException {
+        boolean validated = facade.loginValidate("email@email.com", "1234");
+
+        if (!validated) {
+            facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        }
+    }
+
+    @Test
+    void testCreateUser() throws IOException {
+        if (facade.loginValidate("email@email.com", "1234")) {
+            facade.deleteUser("1234", facade.getUserData("id"));
+        }
+
+        boolean isCreated = facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        assertTrue(isCreated);
+    }
+
+
+}
+
 /*
 import br.upe.controller.*;
 import br.upe.facade.Facade;

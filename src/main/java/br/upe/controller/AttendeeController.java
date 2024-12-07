@@ -43,7 +43,7 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public void create(Object... params) throws FileNotFoundException {
+    public boolean create(Object... params) throws FileNotFoundException {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
         }
@@ -52,12 +52,13 @@ public class AttendeeController implements Controller {
         String sessionId = (String) params[1];
         String userId = (String) params[2];
         Persistence attendeePersistence = new Attendee();
+        boolean isCreated = false;
 
         try {
 
             if (!validateSessionId(sessionId)) {
                 LOGGER.warning("Id Incorreto ou Sessão não Existe");
-                return;
+                return false;
             }
 
             for (Map.Entry<UUID, Persistence> entry : this.attendeeHashMap.entrySet()) {
@@ -67,24 +68,27 @@ public class AttendeeController implements Controller {
                 }
             }
 
-            attendeePersistence.create(userId, name, sessionId);
+            isCreated = attendeePersistence.create(userId, name, sessionId);
             Persistence attendee = new Attendee();
             attendee.setData("name", name);
             attendee.setData(SESSION_ID, sessionId);
             attendee.setData(USER_ID, userId);
             this.setAttendeeLog(attendee);
 
+
         } catch (IOException exception) {
             LOGGER.warning("Usuário já cadastrado");
         }
+        return isCreated;
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
-            return;
+            return false;
         }
+
         this.read();
         Persistence attendeePersistence = new Attendee();
         String newName = (String) params[0];
@@ -92,7 +96,7 @@ public class AttendeeController implements Controller {
 
         if (!validateSessionId(sessionId)) {
             LOGGER.warning("Id Incorreto ou Sessão não Existe");
-            return;
+            return false;
         }
 
         boolean nameExists = false;
@@ -107,7 +111,7 @@ public class AttendeeController implements Controller {
 
         if (nameExists || newName.isEmpty()) {
             LOGGER.warning("Nome em uso ou vazio");
-            return;
+            return false;
         }
 
         boolean found = false;
@@ -126,7 +130,7 @@ public class AttendeeController implements Controller {
             LOGGER.warning(String.format("Nenhum attendee encontrado para a sessão %s", sessionId));
         }
 
-        attendeePersistence.update(this.attendeeHashMap);
+        return attendeePersistence.update(this.attendeeHashMap);
     }
 
 
@@ -137,7 +141,8 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
+        boolean isDeleted = false;
         if ((params[1]).equals("id")) {
             Iterator<Map.Entry<UUID, Persistence>> iterator = attendeeHashMap.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -151,7 +156,9 @@ public class AttendeeController implements Controller {
             }
             Persistence attendeePersistence = new Attendee();
             attendeePersistence.delete(attendeeHashMap);
+            isDeleted = true;
         }
+        return isDeleted;
     }
 
 
