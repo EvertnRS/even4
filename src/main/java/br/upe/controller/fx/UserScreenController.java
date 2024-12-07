@@ -73,11 +73,14 @@ public class UserScreenController extends BaseController implements FxController
     }
 
     private void initial() {
+        userName.setText(facade.getUserData("name"));
+        loadUserDetails();
+
         this.userMediator = new UserMediator(this, facade, userPane, errorUpdtLabel);
         userMediator.registerComponents();
 
-        userName.setText(facade.getUserData("name"));
-        loadUserDetails();
+        userMediator.setComponents(nameTextField, cpfTextField, emailTextField, passTextField);
+
     }
 
     private void setupPlaceholders() {
@@ -85,26 +88,6 @@ public class UserScreenController extends BaseController implements FxController
         PlaceholderUtils.setupPlaceholder(cpfTextField, cpfPlaceholder);
         PlaceholderUtils.setupPlaceholder(nameTextField, namePlaceholder);
         PlaceholderUtils.setupPlaceholder(passTextField, passPlaceholder);
-    }
-
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", userPane, facade, null);
-    }
-
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", userPane, facade, null);
-    }
-
-    public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", userPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", userPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", userPane, facade, null);
     }
 
     public void updateUser() throws IOException {
@@ -124,7 +107,7 @@ public class UserScreenController extends BaseController implements FxController
         String password = showPasswordPrompt().trim();
         try {
             facade.deleteUser(password);
-            logout();
+            userMediator.notify("logout");
         } catch (Exception e) {
             errorDelLabel.setText("Senha incorreta. Tente novamente.");
         }
@@ -162,8 +145,6 @@ public class UserScreenController extends BaseController implements FxController
         cpfTextField.setText(cpf);
 
         setupPlaceholders();
-
-
     }
 
     @Override

@@ -71,15 +71,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         this.mediator = new UpdateEventMediator(this, facade, editEventPane, errorUpdtLabel);
         mediator.registerComponents();
 
-        editEventPane.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                try {
-                    mediator.notify("handleUpdate");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        mediator.setComponents(editNameTextField, editDatePicker, editLocationTextField, editDescriptionTextField);
     }
 
     private void loadEventDetails() {

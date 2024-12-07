@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import java.io.IOException;
@@ -58,15 +57,8 @@ public class CreateEventScreenController extends BaseController implements FxCon
         this.mediator = new CreateEventMediator(this, facade, newEventPane, errorUpdtLabel);
         mediator.registerComponents();
 
-        newEventPane.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                try {
-                    mediator.notify("handleCreate");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        mediator.setComponents(nameTextField, datePicker, locationTextField, descriptionTextField);
+
     }
 
     public void createEvent() throws IOException {

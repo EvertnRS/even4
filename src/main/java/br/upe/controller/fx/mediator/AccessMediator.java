@@ -6,6 +6,8 @@ import br.upe.facade.FacadeInterface;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -17,10 +19,28 @@ public class AccessMediator extends Mediator {
     private final SignUpScreenController userSignUpController;
     private final LoginScreenController userLoginController;
 
+    private TextField nameTextField;
+    private TextField cpfTextField;
+    private TextField emailTextField;
+    private TextField passTextField;
+
     public AccessMediator(SignUpScreenController userSignUpController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel, LoginScreenController userLoginController) {
         super(facade, screenPane, errorUpdtLabel, userSignUpController);
         this.userSignUpController = userSignUpController;
         this.userLoginController = userLoginController;
+    }
+
+    public void setComponents(TextField nameTextField, TextField cpfTextField, TextField emailTextField, TextField passTextField) {
+        this.nameTextField = nameTextField;
+        this.cpfTextField = cpfTextField;
+        this.emailTextField = emailTextField;
+        this.passTextField = passTextField;
+
+        if (userSignUpController != null) {
+            setupRegisterListeners();
+        } else if(userLoginController != null) {
+            setupLoginListeners();
+        }
     }
 
     @Override
@@ -107,6 +127,103 @@ public class AccessMediator extends Mediator {
                 });
             }
         }, screenPane);
+    }
+
+    private void setupLoginListeners() {
+        screenPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if (event.getCode() == KeyCode.ENTER) {
+                        try {
+                            notify("handleLogin");
+                        } catch (IOException e) {
+                            throw new IllegalArgumentException(e);
+                        }
+                    }
+                });
+            }
+        });
+
+        emailTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB) {
+                passTextField.requestFocus();
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.UP || (event.getCode() == KeyCode.TAB && event.isShiftDown())) {
+                event.consume();
+            }
+        });
+
+        passTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.UP || (event.getCode() == KeyCode.TAB && event.isShiftDown())) {
+                emailTextField.requestFocus();
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB) {
+                event.consume();
+            }
+        });
+    }
+
+    private void setupRegisterListeners() {
+        screenPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if (event.getCode() == KeyCode.ENTER) {
+                        try {
+                            notify("handleRegister");
+                        } catch (IOException e) {
+                            throw new IllegalArgumentException(e);
+                        }
+                    }
+                });
+            }
+        });
+
+        nameTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB) {
+                cpfTextField.requestFocus();
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.UP || (event.getCode() == KeyCode.TAB && event.isShiftDown())) {
+                passTextField.requestFocus();
+                event.consume();
+            }
+        });
+
+        cpfTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB) {
+                emailTextField.requestFocus();
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.UP || (event.getCode() == KeyCode.TAB && event.isShiftDown())) {
+                nameTextField.requestFocus();
+                event.consume();
+            }
+        });
+
+        emailTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB) {
+                passTextField.requestFocus();
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.UP || (event.getCode() == KeyCode.TAB && event.isShiftDown())) {
+                cpfTextField.requestFocus();
+                event.consume();
+            }
+        });
+
+        passTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB) {
+                nameTextField.requestFocus();
+                event.consume();
+            }
+            if (event.getCode() == KeyCode.UP || (event.getCode() == KeyCode.TAB && event.isShiftDown())) {
+                emailTextField.requestFocus();
+                event.consume();
+            }
+        });
+
     }
 
 }

@@ -20,6 +20,7 @@ import static br.upe.ui.Validation.isValidCPF;
 import static br.upe.ui.Validation.isValidEmail;
 
 public class SignUpScreenController extends BaseController implements FxController {
+    private AccessMediator accessMediator;
 
     @FXML
     private TextField nameTextField;
@@ -51,8 +52,6 @@ public class SignUpScreenController extends BaseController implements FxControll
     @FXML
     private Label errorLabel;
 
-    private AccessMediator accessMediator;
-
     public void setNameTextField(TextField nameTextField) {
         this.nameTextField = nameTextField;
     }
@@ -81,32 +80,12 @@ public class SignUpScreenController extends BaseController implements FxControll
     public void initialize() {
         this.accessMediator = new AccessMediator(this, null, registerAnchorPane, errorLabel, null);
         accessMediator.registerComponents();
-        registerAnchorPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.setOnKeyPressed(event -> {
-                    if (event.getCode() == KeyCode.ENTER) {
-                        try {
-                            handleRegister();
-                        } catch (IOException e) {
-                            throw new IllegalArgumentException(e);
-                        }
-                    }
-                });
-            }
-        });
 
-        emailTextField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.DOWN) {
-                cpfTextField.requestFocus();
-            }
-        });
-
-        cpfTextField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.UP) {
-                emailTextField.requestFocus();
-            }
-        });
         setupPlaceholders();
+
+        accessMediator.setComponents(nameTextField, cpfTextField, emailTextField, passTextField);
+
+        Platform.runLater(() -> registerAnchorPane.requestFocus());
     }
 
     private void setupPlaceholders() {

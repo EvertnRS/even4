@@ -2,7 +2,11 @@ package br.upe.controller.fx.mediator;
 
 import br.upe.controller.fx.UserScreenController;
 import br.upe.facade.FacadeInterface;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -12,10 +16,25 @@ import static br.upe.ui.Validation.isValidEmail;
 
 public class UserMediator extends Mediator {
     private final UserScreenController userScreenController;
+    private TextField nameTextField;
+    private TextField cpfTextField;
+    private TextField emailTextField;
+    private TextField passTextField;
 
     public UserMediator(UserScreenController userScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
         super(facade, screenPane, errorUpdtLabel, userScreenController);
         this.userScreenController = userScreenController;
+    }
+
+    public void setComponents(TextField nameTextField, TextField cpfTextField, TextField emailTextField, TextField passTextField) {
+        this.nameTextField = nameTextField;
+        this.cpfTextField = cpfTextField;
+        this.emailTextField = emailTextField;
+        this.passTextField = passTextField;
+
+        if (userScreenController != null) {
+            setupListeners();
+        }
     }
 
     @Override
@@ -55,7 +74,8 @@ public class UserMediator extends Mediator {
                     return deleteButtonAlert();
 
                 case "logout":
-                    userScreenController.genericButton("/fxml/loginScreen.fxml", screenPane, facade, null);
+                    facade = null;
+                    userScreenController.genericButton("/fxml/loginScreen.fxml", screenPane, null, null);
                     break;
 
                 default:
@@ -76,7 +96,7 @@ public class UserMediator extends Mediator {
         }
     }
 
-    private void loadScreenForEvent(String event) throws IOException {
+    private void loadScreenForEvent(String event) {
         String fxmlFile = getFxmlPathForEvent(event);
 
         loadScreenWithTask(() -> {
@@ -108,5 +128,29 @@ public class UserMediator extends Mediator {
                 e.printStackTrace();
             }
         }, screenPane);
+    }
+
+    private void setupListeners() {
+
+        configureNavigation(nameTextField, passTextField, cpfTextField);
+        configureNavigation(cpfTextField, nameTextField, emailTextField);
+        configureNavigation(emailTextField, cpfTextField, passTextField);
+        configureNavigation(passTextField, emailTextField, nameTextField);
+
+    }
+
+    private void configureNavigation(Node currentField, Node previousField, Node nextField) {
+        currentField.setOnKeyPressed(event -> handleKeyNavigation(event, previousField, nextField));
+    }
+
+    private void handleKeyNavigation(KeyEvent event, Node previousField, Node nextField) {
+        if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB) {
+            nextField.requestFocus();
+            event.consume();
+        }
+        if (event.getCode() == KeyCode.UP || (event.getCode() == KeyCode.TAB && event.isShiftDown())) {
+            previousField.requestFocus();
+            event.consume();
+        }
     }
 }

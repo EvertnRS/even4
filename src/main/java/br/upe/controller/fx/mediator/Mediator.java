@@ -43,7 +43,14 @@ public abstract class Mediator implements MediatorInterface {
         String newName = fxController.getNameTextField().getText();
         String newLocation = fxController.getLocationTextField().getText();
         String newDescription = fxController.getDescriptionTextField().getText();
-        Date newDate = Date.valueOf(fxController.getDatePicker().getValue() != null ? fxController.getDatePicker().getValue().toString() : "");
+
+        if (fxController.getDatePicker().getValue() == null) {
+            errorUpdtLabel.setText("Data inválida.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+            return false;
+        }
+
+        Date newDate = Date.valueOf(fxController.getDatePicker().getValue());
 
         List<Model> eventList = facade.getAllEvent();
 

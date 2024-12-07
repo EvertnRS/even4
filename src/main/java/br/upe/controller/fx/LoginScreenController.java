@@ -56,33 +56,10 @@ public class LoginScreenController extends BaseController implements FxControlle
 
         this.accessMediator = new AccessMediator(null, facade, loginAnchorPane, errorLabel, this);
         accessMediator.registerComponents();
-        loginAnchorPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.setOnKeyPressed(event -> {
-                    if (event.getCode() == KeyCode.ENTER) {
-                        try {
-                            accessMediator.notify("handleLogin");
-                        } catch (IOException e) {
-                            throw new IllegalArgumentException(e);
-                        }
-                    }
-                });
-            }
-        });
-
-        emailTextField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.DOWN) {
-                passTextField.requestFocus();
-            }
-        });
-
-        passTextField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.UP) {
-                emailTextField.requestFocus();
-            }
-        });
 
         setupPlaceholders();
+
+        accessMediator.setComponents(null, null, emailTextField, passTextField);
 
         Platform.runLater(() -> loginAnchorPane.requestFocus());
     }

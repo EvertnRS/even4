@@ -65,6 +65,8 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
 
         mediator = new UpdateSubEventMediator(this, facade, editSubEventPane, errorUpdtLabel);
         mediator.registerComponents();
+
+        mediator.setComponents(editNameTextField, editDatePicker,editLocationTextField, editDescriptionTextField);
     }
 
     private void setupPlaceholders() {

@@ -70,6 +70,8 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         mediator.registerComponents();
 
         setupPlaceholders();
+
+        mediator.setComponents(nameTextField, datePicker, locationTextField, descriptionTextField);
     }
 
     private void setupPlaceholders() {

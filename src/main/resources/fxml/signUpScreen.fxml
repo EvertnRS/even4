@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="registerAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.SignUpScreenController">
+<AnchorPane fx:id="registerAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.SignUpScreenController">
 
     <ImageView fx:id="imageView" fitHeight="378.0" fitWidth="368.0" layoutX="296.0" layoutY="-87.0" preserveRatio="true">
         <image>
@@ -28,7 +28,7 @@
                     <Font name="System Bold" size="20.0" />
                 </font></Label>
             <Label fx:id="errorLabel" layoutX="71.0" layoutY="291.0" prefHeight="17.0" prefWidth="293.0" style="-fx-text-fill: red;" text="" />
-            <Button fx:id="handleRegisterButton" layoutX="181.0" layoutY="317.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="74.0" text="Register">
+            <Button fx:id="handleRegisterButton" layoutX="181.0" layoutY="319.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="74.0" text="Register">
                 <style>
                     -fx-background-color: #ff914d;
                     -fx-text-fill: white;
