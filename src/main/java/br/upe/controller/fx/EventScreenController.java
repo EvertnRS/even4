@@ -44,7 +44,6 @@ public class EventScreenController extends BaseController implements FxControlle
         loadUserEvents();
 
         this.mediator = new EventMediator(this, facade, mainPane, null);
-        System.out.println("teste");
         mediator.registerComponents();
     }
 

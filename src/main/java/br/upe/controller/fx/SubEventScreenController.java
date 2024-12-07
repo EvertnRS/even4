@@ -165,7 +165,7 @@ public class SubEventScreenController extends BaseController implements FxContro
         Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteSubEvent");
 
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-            facade.deleteEvent(eventId, userId);
+            facade.deleteSubEvent(eventId, userId);
             loadUserSubEvents();
         }
     }

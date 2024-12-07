@@ -1,6 +1,5 @@
 package br.upe.controller.fx.mediator;
 
-import br.upe.controller.fx.EventScreenController;
 import br.upe.controller.fx.UserScreenController;
 import br.upe.facade.FacadeInterface;
 import javafx.scene.control.Label;
@@ -13,15 +12,10 @@ import static br.upe.ui.Validation.isValidEmail;
 
 public class UserMediator extends Mediator {
     private final UserScreenController userScreenController;
-    private String eventId;
 
     public UserMediator(UserScreenController userScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
         super(facade, screenPane, errorUpdtLabel, userScreenController);
         this.userScreenController = userScreenController;
-    }
-
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
     }
 
     @Override
@@ -42,45 +36,77 @@ public class UserMediator extends Mediator {
         if (userScreenController != null) {
             switch (event) {
                 case "handleUpdateUser":
-                    String cpf = userScreenController.getCpfTextField().getText();
-                    String email = userScreenController.getEmailTextField().getText();
-
-                    if (isValidEmail(email) && isValidCPF(cpf)) {
-                        userScreenController.updateUser();
-                    } else {
-                        errorUpdtLabel.setText("E-mail invalido!");
-                    }
+                    handleUpdateUser();
                     break;
+
                 case "handleDeleteUser":
                     userScreenController.deleteUser();
                     break;
-                case "handleUpdateEvent":
-                    userScreenController.genericButton("/fxml/updateEventScreen.fxml", screenPane, facade, eventId);
+
+                case "handleUser"
+                , "handleEvent"
+                , "handleSession"
+                , "handleSubEvent"
+                , "handleSubmit":
+                    loadScreenForEvent(event);
                     break;
+
                 case "handleDeleteEvent":
                     return deleteButtonAlert();
-                case "handleUser":
-                    userScreenController.genericButton("/fxml/userScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleEvent":
-                    userScreenController.genericButton("/fxml/mainScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleSession":
-                    userScreenController.genericButton("/fxml/sessionScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleSubEvent":
-                    userScreenController.genericButton("/fxml/subEventScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleSubmit":
-                    userScreenController.genericButton("/fxml/submitScreen.fxml", screenPane, facade, null);
-                    break;
+
                 case "logout":
                     userScreenController.genericButton("/fxml/loginScreen.fxml", screenPane, facade, null);
                     break;
+
                 default:
-                    break;
+                    throw new IllegalArgumentException("Ação não reconhecida: " + event);
             }
         }
         return null;
+    }
+
+    private void handleUpdateUser() throws IOException {
+        String cpf = userScreenController.getCpfTextField().getText();
+        String email = userScreenController.getEmailTextField().getText();
+
+        if (isValidEmail(email) && isValidCPF(cpf)) {
+            userScreenController.updateUser();
+        } else {
+            errorUpdtLabel.setText("E-mail inválido!");
+        }
+    }
+
+    private void loadScreenForEvent(String event) throws IOException {
+        String fxmlFile = getFxmlPathForEvent(event);
+
+        loadScreenWithTask(() -> {
+            try {
+                userScreenController.genericButton(fxmlFile, screenPane, facade, null);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private String getFxmlPathForEvent(String event) {
+        return switch (event) {
+            case "handleUser" -> "/fxml/userScreen.fxml";
+            case "handleEvent" -> "/fxml/mainScreen.fxml";
+            case "handleSession" -> "/fxml/sessionScreen.fxml";
+            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
+            case "handleSubmit" -> "/fxml/submitScreen.fxml";
+            default -> throw new IllegalArgumentException("Unknown event: " + event);
+        };
+    }
+
+    private void loadScreenWithTask(Runnable task) {
+        assert screenPane != null;
+        userScreenController.loadScreen("Carregando", () -> {
+            try {
+                task.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, screenPane);
     }
 }

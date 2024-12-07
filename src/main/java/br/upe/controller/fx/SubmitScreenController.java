@@ -1,8 +1,10 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.mediator.SubmitMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.repository.SubmitArticlesRepository;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -20,6 +22,7 @@ import java.util.*;
 
 public class SubmitScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
+    private SubmitMediator mediator;
 
 
     @FXML
@@ -38,34 +41,12 @@ public class SubmitScreenController extends BaseController implements FxControll
 
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
+
+        mediator = new SubmitMediator(this, facade, submitPane, null);
+        mediator.registerComponents();
+
         loadUserArticles();
     }
-
-
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", submitPane, facade, null);
-    }
-
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", submitPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", submitPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", submitPane, facade, null);
-    }
-
-    public void handleAddArticle() throws IOException {
-        genericButton("/fxml/createSubmitScreen.fxml", submitPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", submitPane, facade, null);
-    }
-
 
     private void loadUserArticles() throws IOException {
         articleVBox.getChildren().clear();
@@ -85,7 +66,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         }
     }
 
-    private void createArticleContainer(UUID articleId, SubmitArticlesRepository submitArticlesRepository) throws IOException {
+    private void createArticleContainer(UUID articleId, SubmitArticlesRepository submitArticlesRepository) {
         VBox articleContainer = new VBox();
         articleContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
@@ -131,7 +112,7 @@ public class SubmitScreenController extends BaseController implements FxControll
 
         HBox actionButtons = new HBox(10);
         actionButtons.setAlignment(Pos.CENTER_RIGHT);
-        actionButtons.getChildren().addAll(detailsButton, downloadButton, editButton, deleteButton);
+        actionButtons.getChildren().addAll(downloadButton, detailsButton, editButton, deleteButton);
         return actionButtons;
     }
 
@@ -142,16 +123,20 @@ public class SubmitScreenController extends BaseController implements FxControll
     }
 
     private void handleDetailArticle(UUID articleId) {
+        loadScreen("Carregando", () -> {
         SubmitArticlesRepository submitArticlesRepository = SubmitArticlesRepository.getInstance();
 
         String content = "Nome: " + submitArticlesRepository.getData(articleId, "name") + "\n" +
                 "Evento: " + submitArticlesRepository.getData(articleId, "event") + "\n";
 
+        Platform.runLater(() -> {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Detalhes do Artigo");
         alert.setHeaderText("Detalhes do Artigo");
         alert.setContentText(content);
         alert.showAndWait();
+            });
+        }, submitPane);
     }
 
     private void handleDownloadArticle(UUID articleId) throws IOException {
@@ -164,48 +149,37 @@ public class SubmitScreenController extends BaseController implements FxControll
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
         File file = fileChooser.showSaveDialog(submitPane.getScene().getWindow());
 
-        if (file != null) {
-            try (OutputStream os = new FileOutputStream(file)) {
-                os.write(pdfBytes);  // Grava os bytes do PDF no arquivo escolhido
-                os.flush();
-                Alert  alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Download Completo");
-                alert.setHeaderText(null);
-                alert.setContentText("Arquivo PDF salvo com sucesso em " + file.getAbsolutePath());
-                alert.showAndWait();
-            } catch (IOException e) {
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Erro no Download");
-                errorAlert.setHeaderText("Não foi possível salvar o arquivo");
-                errorAlert.setContentText("Erro: " + e.getMessage());
-                errorAlert.showAndWait();
+            if (file != null) {
+                try (OutputStream os = new FileOutputStream(file)) {
+                    os.write(pdfBytes);  // Grava os bytes do PDF no arquivo escolhido
+                    os.flush();
+                    Alert  alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Download Completo");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Arquivo PDF salvo com sucesso em " + file.getAbsolutePath());
+                    alert.showAndWait();
+                } catch (IOException e) {
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("Erro no Download");
+                    errorAlert.setHeaderText("Não foi possível salvar o arquivo");
+                    errorAlert.setContentText("Erro: " + e.getMessage());
+                    errorAlert.showAndWait();
+                }
             }
-        }
     }
 
 
     private void handleEditArticle(UUID articleId) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/updateSubmitScreen.fxml"));
-        AnchorPane pane = loader.load();
-        UpdateSubmitScreenController controller = loader.getController();
-        controller.setFacade(facade);
-        controller.setArticleId(articleId);
-        submitPane.getChildren().setAll(pane);
+        mediator.setArticleId(articleId);
+        mediator.notify("handleUpdateArticle");
     }
 
     private void handleDeleteArticle(UUID articleId) throws IOException {
-        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("Confirmação de Exclusão");
-        confirmationAlert.setHeaderText("Deseja realmente excluir este artigo?");
-        confirmationAlert.setContentText("Esta ação não pode ser desfeita.");
+        mediator.setArticleId(articleId);
 
-        ButtonType buttonSim = new ButtonType("Sim");
-        ButtonType buttonNao = new ButtonType("Não", ButtonBar.ButtonData.CANCEL_CLOSE);
-        confirmationAlert.getButtonTypes().setAll(buttonSim, buttonNao);
+        Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteEvent");
 
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
-
-        if (result.isPresent() && result.get() == buttonSim) {
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             facade.deleteArticle(articleId);
             loadUserArticles();
         }

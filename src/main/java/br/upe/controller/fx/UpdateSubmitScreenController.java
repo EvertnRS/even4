@@ -1,7 +1,9 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.mediator.UpdateSubmitMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
+import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -18,6 +20,7 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     private String eventName;
     private String nameArticle;
     private UUID ArticleId;
+    private UpdateSubmitMediator mediator;
 
     @FXML
     private AnchorPane submitPane;
@@ -25,13 +28,6 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     private Label userEmail;
     @FXML
     private ComboBox<String> eventComboBox;
-    @FXML
-
-
-    public void setFacade(FacadeInterface facade) throws IOException {
-        this.facade = facade;
-        initial();
-    }
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
@@ -39,22 +35,28 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     public void setNameArticle(String nameArticle) {
         this.nameArticle = nameArticle;
     }
-
     public void setArticleId(UUID articleId) {this.ArticleId = articleId;}
 
+    public void setFacade(FacadeInterface facade) throws IOException {
+        this.facade = facade;
+        initial();
+    }
 
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadArticles();
+
+        this.mediator = new UpdateSubmitMediator(this, facade, submitPane, null);
+        mediator.registerComponents();
     }
 
     private void loadArticles() throws IOException {
-        List<Event> allEvents = facade.getAllEvent();
+        List<Model> allEvents = facade.getAllEvent();
         eventComboBox.getItems().clear();
 
         EventRepository eventRepository = EventRepository.getInstance();
 
-        for (Event event : allEvents) {
+        for (Model event : allEvents) {
             String eventName = (String) eventRepository.getData(event.getId(), "name");
 
             if (eventName != null) {
@@ -63,43 +65,14 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
         }
     }
 
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", submitPane, facade, null);
-    }
-
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", submitPane, facade, null);
-    }
-
-    public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", submitPane, facade, null);
-    }
-
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", submitPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", submitPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", submitPane, facade, null);
-    }
-
-    public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", submitPane, facade, null);
-    }
-
     public void updateArticle() throws IOException {
         String novoEventName = eventComboBox.getSelectionModel().getSelectedItem();
 
-        List<Event> allEvents = facade.getAllEvent();
+        List<Model> allEvents = facade.getAllEvent();
 
         UUID eventId = null;
 
-        for (Event event : allEvents) {
+        for (Model event : allEvents) {
             if (event.getName().equals(novoEventName)) {
                 eventId = event.getId();
                 break;
@@ -108,7 +81,7 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
 
         if (eventId != null) {
             facade.updateArticle(eventId, ArticleId);
-            handleSubmit();
+            mediator.notify("handleBack");
         }
     }
 

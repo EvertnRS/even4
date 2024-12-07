@@ -19,13 +19,10 @@ public class SubmitArticleController implements Controller {
     private Map<UUID, Persistence> articleHashMap = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(SubmitArticleController.class.getName());
 
-    private SubmitArticlesRepository submitArticlesRepository;
+    private final SubmitArticlesRepository submitArticlesRepository;
 
     public SubmitArticleController() {
         this.submitArticlesRepository = SubmitArticlesRepository.getInstance();
-        this.read();
-
-
     }
 
     public Map<UUID, Persistence> getHashMap() {

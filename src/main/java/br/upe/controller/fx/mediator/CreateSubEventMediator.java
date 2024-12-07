@@ -8,11 +8,11 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 
 public class CreateSubEventMediator extends Mediator{
-    private final CreateSubEventScreenController createSubEventController;
+    private final CreateSubEventScreenController createSubEventScreenController;
 
-    public CreateSubEventMediator(CreateSubEventScreenController createSubEventController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
-        super(facade, screenPane, errorUpdtLabel, createSubEventController);
-        this.createSubEventController = createSubEventController;
+    public CreateSubEventMediator(CreateSubEventScreenController createSubEventScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
+        super(facade, screenPane, errorUpdtLabel, createSubEventScreenController);
+        this.createSubEventScreenController = createSubEventScreenController;
     }
 
     @Override
@@ -31,35 +31,74 @@ public class CreateSubEventMediator extends Mediator{
 
     @Override
     public Object notify(String event) throws IOException {
-        if (createSubEventController != null) {
+        if (createSubEventScreenController != null) {
             switch (event) {
                 case "handleSubEventCreate":
-                    if(validateInputs()){
-                        createSubEventController.createSubEvent();
-                    }
+                    handleSubEventCreate();
                     break;
-                case "handleUser":
-                    createSubEventController.genericButton("/fxml/userScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleSubEvent", "handleBack":
-                    createSubEventController.genericButton("/fxml/subEventScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleSession":
-                    createSubEventController.genericButton("/fxml/sessionScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleEvent":
-                    createSubEventController.genericButton("/fxml/mainScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleSubmit":
-                    createSubEventController.genericButton("/fxml/submitScreen.fxml", screenPane, facade, null);
+                case "handleUser"
+                , "handleSubEvent"
+                , "handleBack"
+                , "handleSession"
+                , "handleEvent"
+                , "handleSubmit":
+                    loadScreenForEvent(event);
                     break;
                 case "logout":
-                    createSubEventController.genericButton("/fxml/loginScreen.fxml", screenPane, facade, null);
+                    logout();
                     break;
                 default:
-                    break;
+                    throw new IllegalArgumentException("Ação não reconhecida: " + event);
             }
         }
         return null;
     }
+
+    private void handleSubEventCreate() throws IOException {
+        if (validateInputs()) {
+            createSubEventScreenController.createSubEvent();
+        }
+    }
+
+    private void loadScreenForEvent(String event) {
+        String fxmlFile = getFxmlPathForEvent(event);
+
+        loadScreenWithTask(() -> {
+            try {
+                createSubEventScreenController.genericButton(fxmlFile, screenPane, facade, null);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private String getFxmlPathForEvent(String event) {
+        return switch (event) {
+            case "handleSubEventCreate" -> "/fxml/createSubEventScreen.fxml";
+            case "handleUser" -> "/fxml/userScreen.fxml";
+            case "handleSubEvent", "handleBack" -> "/fxml/subEventScreen.fxml";
+            case "handleSession" -> "/fxml/sessionScreen.fxml";
+            case "handleEvent" -> "/fxml/mainScreen.fxml";
+            case "handleSubmit" -> "/fxml/submitScreen.fxml";
+            case "loginScreen" -> "/fxml/loginScreen.fxml";
+            default -> throw new IllegalArgumentException("Unknown event: " + event);
+        };
+    }
+
+    private void logout() {
+        facade = null;
+        loadScreenForEvent("loginScreen");
+    }
+
+    private void loadScreenWithTask(Runnable task) {
+        assert screenPane != null;
+        createSubEventScreenController.loadScreen("Carregando", () -> {
+            try {
+                task.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, screenPane);
+    }
+
 }

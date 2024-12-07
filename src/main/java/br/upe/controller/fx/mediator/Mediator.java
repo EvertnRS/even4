@@ -15,7 +15,7 @@ import static br.upe.ui.Validation.isValidDate;
 
 public abstract class Mediator implements MediatorInterface {
     private final FxController fxController;
-    protected final FacadeInterface facade;
+    protected FacadeInterface facade;
     protected final AnchorPane screenPane;
     protected final Label errorUpdtLabel;
 

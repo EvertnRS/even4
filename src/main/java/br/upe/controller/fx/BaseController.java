@@ -32,7 +32,7 @@ public abstract class BaseController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         AnchorPane screen = loader.load();
 
-        if (facade != null){
+        if (facade != null) {
             FxController screenController = loader.getController();
             screenController.setFacade(facade);
 
@@ -53,16 +53,21 @@ public abstract class BaseController {
             }
         }
 
+        Platform.runLater(() -> {
+            Scene scene = new Scene(screen);
+            Stage stage = (Stage) pane.getScene().getWindow();
 
-        Scene scene = new Scene(screen);
-        Stage stage = (Stage) pane.getScene().getWindow();
-        stage.getIcons().clear();
-        stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
+            stage.getIcons().clear();
+            stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
+            stage.setScene(scene);
+            stage.setTitle("Even4");
+            stage.setResizable(false);
+            stage.centerOnScreen();
+            stage.show();
 
-        stage.setScene(scene);
-        stage.setTitle("Even4");
-
+        });
     }
+
 
     public <T> boolean isValidName(String name, List<T> items) {
         for (T item : items) {

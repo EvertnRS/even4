@@ -8,11 +8,11 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 
 public class CreateEventMediator extends Mediator {
-    private final CreateEventScreenController createEventController;
+    private final CreateEventScreenController createEventScreenController;
 
     public CreateEventMediator(CreateEventScreenController createEventController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
         super(facade, screenPane, errorUpdtLabel, createEventController);
-        this.createEventController = createEventController;
+        this.createEventScreenController = createEventController;
     }
 
     @Override
@@ -31,35 +31,74 @@ public class CreateEventMediator extends Mediator {
 
     @Override
     public Object notify(String event) throws IOException {
-        if (createEventController != null) {
+        if (createEventScreenController != null) {
             switch (event) {
                 case "handleEventCreate":
-                    if(validateInputs()){
-                        createEventController.createEvent();
-                    }
+                    handleEventCreate();
                     break;
-                case "handleUser":
-                    createEventController.genericButton("/fxml/userScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleEvent", "handleBack":
-                    createEventController.genericButton("/fxml/mainScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleSession":
-                    createEventController.genericButton("/fxml/sessionScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleSubEvent":
-                    createEventController.genericButton("/fxml/subEventScreen.fxml", screenPane, facade, null);
-                    break;
-                case "handleSubmit":
-                    createEventController.genericButton("/fxml/submitScreen.fxml", screenPane, facade, null);
+                case "handleUser"
+                , "handleEvent"
+                , "handleBack"
+                , "handleSession"
+                , "handleSubEvent"
+                , "handleSubmit":
+                    loadScreenForEvent(event);
                     break;
                 case "logout":
-                    createEventController.genericButton("/fxml/loginScreen.fxml", screenPane, facade, null);
+                    logout();
                     break;
                 default:
-                    break;
+                    throw new IllegalArgumentException("Ação não reconhecida: " + event);
             }
         }
         return null;
     }
+
+    private void handleEventCreate() throws IOException {
+        if (validateInputs()) {
+            createEventScreenController.createEvent();
+        }
+    }
+
+    private void loadScreenForEvent(String event){
+        String fxmlFile = getFxmlPathForEvent(event);
+
+        loadScreenWithTask(() -> {
+            try {
+                createEventScreenController.genericButton(fxmlFile, screenPane, facade, null);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private String getFxmlPathForEvent(String event) {
+        return switch (event) {
+            case "handleEventCreate" -> "/fxml/createEventScreen.fxml";
+            case "handleUser" -> "/fxml/userScreen.fxml";
+            case "handleEvent", "handleBack" -> "/fxml/mainScreen.fxml";
+            case "handleSession" -> "/fxml/sessionScreen.fxml";
+            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
+            case "handleSubmit" -> "/fxml/submitScreen.fxml";
+            case "loginScreen" -> "/fxml/loginScreen.fxml";
+            default -> throw new IllegalArgumentException("Unknown event: " + event);
+        };
+    }
+
+    private void logout() {
+        facade = null;
+        loadScreenForEvent("loginScreen");
+    }
+
+    private void loadScreenWithTask(Runnable task) {
+        assert screenPane != null;
+        createEventScreenController.loadScreen("Carregando", () -> {
+            try {
+                task.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, screenPane);
+    }
+
 }

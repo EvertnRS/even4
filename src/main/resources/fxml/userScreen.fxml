@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="userPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.UserScreenController">
+<AnchorPane fx:id="userPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.UserScreenController">
 
     <children>
         <ImageView fx:id="exitView" fitHeight="34.0" fitWidth="29.0" layoutX="23.0" layoutY="508.0" preserveRatio="true">
@@ -20,7 +20,7 @@
              <Label fx:id="errorUpdtLabel" layoutX="240" layoutY="410" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
          </children>
             <Label fx:id="errorDelLabel" layoutX="78.0" layoutY="476.0" prefHeight="17.0" prefWidth="263.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
-           <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="551.0" layoutY="155.0" preserveRatio="true">
+           <ImageView fx:id="userImageView" fitHeight="272.0" fitWidth="356.0" layoutX="552.0" layoutY="110.0" preserveRatio="true">
                <image>
                    <Image url="@/images/userIcon.png" />
                </image>
@@ -33,7 +33,7 @@
             <Text fx:id="namePlaceholder" fill="DARKGREY" layoutX="155.0" layoutY="206.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Nome" />
             <Text fx:id="cpfPlaceholder" fill="DARKGREY" layoutX="155.0" layoutY="266.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="CPF" />
             <Text fx:id="emailPlaceholder" fill="DARKGREY" layoutX="155.0" layoutY="326.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Email" />
-           <Label fx:id="userName" layoutX="509.0" layoutY="416.0" prefHeight="44.0" prefWidth="357.0" style="-fx-text-fill: black; -fx-alignment: center" text="teste">
+           <Label fx:id="userName" layoutX="510.0" layoutY="360.0" prefHeight="44.0" prefWidth="357.0" style="-fx-text-fill: black; -fx-alignment: center" text="teste">
                <font>
                    <Font name="Inter Semi Bold" size="27.0" />
                </font>
@@ -55,7 +55,7 @@
                     -fx-cursor: hand;
                 </style>
             </Button>
-            <Button fx:id="handleDeleteButton" layoutX="641.0" layoutY="485.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="93.0" styleClass="loginButton" text="Deletar">
+            <Button fx:id="handleDeleteButton" layoutX="642.0" layoutY="438.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="93.0" styleClass="loginButton" text="Deletar">
                 <style>
                     -fx-background-color: #ff914d;
                     -fx-text-fill: white;
@@ -88,7 +88,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button fx:id="handleEventButton" layoutX="5.0" layoutY="-4.0" mnemonicParsing="false"  opacity="0.0" prefHeight="68.0" prefWidth="216.0" style="-fx-cursor: hand;" text="Event" />
+            <Button fx:id="handleEventButton" layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" opacity="0.0" prefHeight="68.0" prefWidth="216.0" style="-fx-cursor: hand;" text="Event" />
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="215.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">

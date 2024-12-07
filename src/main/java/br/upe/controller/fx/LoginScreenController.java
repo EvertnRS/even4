@@ -6,7 +6,6 @@ import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -54,6 +53,7 @@ public class LoginScreenController extends BaseController implements FxControlle
     public void initialize() throws IOException {
         UserController userController = UserController.getInstance();
         FacadeInterface facade = new Facade(userController);
+
         this.accessMediator = new AccessMediator(null, facade, loginAnchorPane, errorLabel, this);
         accessMediator.registerComponents();
         loginAnchorPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
@@ -61,7 +61,7 @@ public class LoginScreenController extends BaseController implements FxControlle
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
                         try {
-                            handleLogin();
+                            accessMediator.notify("handleLogin");
                         } catch (IOException e) {
                             throw new IllegalArgumentException(e);
                         }
@@ -83,6 +83,8 @@ public class LoginScreenController extends BaseController implements FxControlle
         });
 
         setupPlaceholders();
+
+        Platform.runLater(() -> loginAnchorPane.requestFocus());
     }
 
     private void setupPlaceholders() {
@@ -90,21 +92,12 @@ public class LoginScreenController extends BaseController implements FxControlle
         PlaceholderUtils.setupPlaceholder(passTextField, passPlaceholder);
     }
 
-    public void handleLogin() throws IOException {
-        String email = emailTextField.getText();
-        String pass = passTextField.getText();
-
-
-
-        loadScreen("Carregando", () -> {
-            Platform.runLater(() -> {
-                try {
-                    accessMediator.notify("handleAccessButton");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }, loginAnchorPane);
+    public void handleLogin() {
+        try {
+            accessMediator.notify("handleAccessButton");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

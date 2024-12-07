@@ -20,6 +20,7 @@ import static br.upe.ui.Validation.isValidEmail;
 
 public class UserScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
+    private UserMediator userMediator;
 
     @FXML
     private AnchorPane userPane;
@@ -72,8 +73,9 @@ public class UserScreenController extends BaseController implements FxController
     }
 
     private void initial() {
-        UserMediator userMediator = new UserMediator(this, facade, userPane, errorUpdtLabel);
+        this.userMediator = new UserMediator(this, facade, userPane, errorUpdtLabel);
         userMediator.registerComponents();
+
         userName.setText(facade.getUserData("name"));
         loadUserDetails();
     }
@@ -115,6 +117,7 @@ public class UserScreenController extends BaseController implements FxController
 
 
         facade.updateUser(name, cpf, email, newPassword, password);
+        userMediator.notify("handleUser");
     }
 
     public void deleteUser() {
