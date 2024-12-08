@@ -27,6 +27,11 @@
         </ImageView>
         <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <children>
+            <ImageView fx:id="logoView1" fitHeight="65.0" fitWidth="63.0" layoutX="93.0" layoutY="54.0" preserveRatio="true">
+               <image>
+                  <Image url="@/images/icons/buttons/arrowBack.png" />
+               </image>
+            </ImageView>
             <Label layoutX="375.0" layoutY="71.0" text="Criar Evento" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="23.0" />
@@ -54,11 +59,6 @@
             <TextField fx:id="locationTextField" layoutX="300.0" layoutY="396.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
              <Text fx:id="locationPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="424.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Local do Evento" wrappingWidth="129.12890625" />
             <Button fx:id="handleEventButton" layoutX="88.0" layoutY="56.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="72.0" style="-fx-cursor: hand;" text="back" />
-            <ImageView fx:id="logoView1" fitHeight="65.0" fitWidth="63.0" layoutX="93.0" layoutY="54.0" preserveRatio="true">
-               <image>
-                  <Image url="@/images/icons/buttons/arrowBack.png" />
-               </image>
-            </ImageView>
          </children>
         </Pane>
         <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="135.0" style="-fx-text-fill: white;" text="Teste">

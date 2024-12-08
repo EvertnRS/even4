@@ -22,6 +22,11 @@
         </ImageView>
         <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
             <children>
+                <ImageView fx:id="logoView1" fitHeight="65.0" fitWidth="63.0" layoutX="93.0" layoutY="54.0" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/icons/buttons/arrowBack.png" />
+                    </image>
+                </ImageView>
                 <Label layoutX="350.0" layoutY="68.0" text="Editar SubEvento" textFill="#ff914d">
                     <font>
                         <Font name="Inter Semi Bold" size="23.0" />
@@ -48,12 +53,7 @@
                 <Text fx:id="descriptionPlaceholder" fill="DARKGRAY" layoutX="315.0" layoutY="333.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite a Nova Descrição do SubEvento" />
                 <TextField fx:id="editLocationTextField" layoutX="300.0" layoutY="359.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
                 <Text fx:id="locationPlaceholder" fill="DARKGRAY" layoutX="315.0" layoutY="387.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Novo Local" />
-                <Button fx:id="handleBackButton" layoutX="93.0" layoutY="63.0" mnemonicParsing="false" opacity="0.0" prefHeight="47.0" prefWidth="63.0" style="-fx-cursor: hand;" text="back" />
-                <ImageView fx:id="logoView1" fitHeight="65.0" fitWidth="63.0" layoutX="93.0" layoutY="54.0" preserveRatio="true">
-                    <image>
-                        <Image url="@/images/icons/buttons/arrowBack.png" />
-                    </image>
-                </ImageView>
+                <Button fx:id="handleBackButton" layoutX="85.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="68.0" prefWidth="80.0" style="-fx-cursor: hand;" text="back" />
             </children>
         </Pane>
         <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="135.0" style="-fx-text-fill: white;" text="Teste">

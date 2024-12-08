@@ -70,7 +70,7 @@
                         <Image url="@/images/icons/buttons/arrowBack.png" />
                     </image>
                 </ImageView>
-              <Button fx:id="handleBackButton" layoutX="93.0" layoutY="59.0" mnemonicParsing="false" opacity="0.0" prefHeight="47.0" prefWidth="56.0" style="-fx-cursor: hand;" text="back" />
+              <Button fx:id="handleBackButton" layoutX="93.0" layoutY="59.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="63.0" style="-fx-cursor: hand;" text="back" />
             </children>
         </Pane>
         <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="135.0" style="-fx-text-fill: white;" text="Teste">
