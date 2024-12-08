@@ -13,12 +13,12 @@
     <children>
         <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
             <image>
-                <Image url="@/images/userIcon.png" />
+                <Image url="@/images/icons/userIcon.png" />
             </image>
         </ImageView>
         <ImageView fx:id="exitView" fitHeight="34.0" fitWidth="29.0" layoutX="23.0" layoutY="508.0" preserveRatio="true">
             <image>
-                <Image url="@/images/exit.png" />
+                <Image url="@/images/icons/buttons/exit.png" />
             </image>
         </ImageView>
         <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="134.0" style="-fx-text-fill: white;" text="Teste">

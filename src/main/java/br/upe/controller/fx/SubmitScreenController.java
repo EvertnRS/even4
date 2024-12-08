@@ -3,15 +3,20 @@ package br.upe.controller.fx;
 import br.upe.controller.fx.mediator.SubmitMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.SubmitArticle;
+import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SubmitArticlesRepository;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -33,6 +38,12 @@ public class SubmitScreenController extends BaseController implements FxControll
     private ScrollPane scrollPane;
     @FXML
     private AnchorPane submitPane;
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private Text searchPlaceholder;
+    @FXML
+    private ImageView logoView6;
 
     public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
@@ -41,6 +52,15 @@ public class SubmitScreenController extends BaseController implements FxControll
 
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            setupPlaceholders();
+            try {
+                loadUserArticles();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         mediator = new SubmitMediator(this, facade, submitPane, null);
         mediator.registerComponents();
@@ -56,7 +76,7 @@ public class SubmitScreenController extends BaseController implements FxControll
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
-        scrollPane.setStyle("-fx-padding: 20px;");
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-top: 2px; -border-color: #cccccc");
         articleVBox.setAlignment(Pos.CENTER);
 
         for (SubmitArticle article : userArticles) {
@@ -68,19 +88,36 @@ public class SubmitScreenController extends BaseController implements FxControll
 
     private void createArticleContainer(UUID articleId, SubmitArticlesRepository submitArticlesRepository) {
         VBox articleContainer = new VBox();
-        articleContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+        articleContainer.setStyle("-fx-background-color: #d3d3d3; " +
+                "-fx-padding: 10px 20px 10px 20px; " +
+                "-fx-margin: 0 40px 0 40px; " +
+                "-fx-spacing: 5px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-background-radius: 10px;");
 
-        Label articleLabel = new Label((String) submitArticlesRepository.getData(articleId, "name"));
-        articleLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
+        VBox.setMargin(articleContainer, new Insets(5, 20, 5, 20));
 
-        HBox actionButtons = createActionButtons(articleId);
+        Label articleLabel;
+        if (searchTextField.getText().isEmpty() || String.valueOf(submitArticlesRepository.getData(articleId,"name")).contains(searchTextField.getText())){
+            articleLabel = new Label((String) submitArticlesRepository.getData(articleId, "name"));
+            articleLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
-        articleContainer.getChildren().addAll(articleLabel, actionButtons);
-        articleVBox.getChildren().add(articleContainer);
+            HBox actionButtons = createActionButtons(articleId);
+
+            Label eventLabel = new Label(String.valueOf(submitArticlesRepository.getData(articleId, "event")));
+            eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
+            articleContainer.getChildren().addAll(articleLabel, actionButtons, eventLabel);
+            articleVBox.getChildren().add(articleContainer);
+            }
     }
 
     private HBox createActionButtons(UUID articleId) {
-        Button editButton = createStyledButton("Editar", "#6fa3ef");
+        Button editButton = new Button("Editar");
+        ImageView editIcon = new ImageView(new Image("images/icons/buttons/editIcon.png"));
+        editIcon.setFitWidth(16);
+        editIcon.setFitHeight(16);
+        editButton.setGraphic(editIcon);
+        editButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
         editButton.setOnAction(e -> {
             try {
                 handleEditArticle(articleId);
@@ -89,7 +126,13 @@ public class SubmitScreenController extends BaseController implements FxControll
             }
         });
 
-        Button deleteButton = createStyledButton("Excluir", "#ff6b6b");
+        Button deleteButton = new Button("Excluir");
+        ImageView deleteIcon = new ImageView(new Image("images/icons/buttons/deleteIcon.png"));
+        deleteIcon.setFitWidth(16);
+        deleteIcon.setFitHeight(16);
+        deleteButton.setGraphic(deleteIcon);
+        deleteButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
         deleteButton.setOnAction(e -> {
             try {
                 handleDeleteArticle(articleId);
@@ -98,10 +141,22 @@ public class SubmitScreenController extends BaseController implements FxControll
             }
         });
 
-        Button detailsButton = createStyledButton("Detalhes", "#ff914d");
+        Button detailsButton = new Button("Detalhes");
+        ImageView detailsIcon = new ImageView(new Image("images/icons/buttons/detailsIcon.png"));
+        detailsIcon.setFitWidth(16);
+        detailsIcon.setFitHeight(16);
+        detailsButton.setGraphic(detailsIcon);
+        detailsButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
         detailsButton.setOnAction(e -> handleDetailArticle(articleId));
 
-        Button downloadButton = createStyledButton("Download", "#4CAF50");
+        Button downloadButton = new Button("Download");
+        ImageView downloadIcon = new ImageView(new Image("images/icons/buttons/downloadIcon.png"));
+        downloadIcon.setFitWidth(16);
+        downloadIcon.setFitHeight(16);
+        downloadButton.setGraphic(downloadIcon);
+        downloadIcon.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
         downloadButton.setOnAction(e -> {
             try {
                 handleDownloadArticle(articleId);
@@ -114,12 +169,6 @@ public class SubmitScreenController extends BaseController implements FxControll
         actionButtons.setAlignment(Pos.CENTER_RIGHT);
         actionButtons.getChildren().addAll(downloadButton, detailsButton, editButton, deleteButton);
         return actionButtons;
-    }
-
-    private Button createStyledButton(String text, String color) {
-        Button button = new Button(text);
-        button.setStyle(String.format("-fx-background-color: %s; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);", color));
-        return button;
     }
 
     private void handleDetailArticle(UUID articleId) {
@@ -182,6 +231,16 @@ public class SubmitScreenController extends BaseController implements FxControll
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             facade.deleteArticle(articleId);
             loadUserArticles();
+        }
+    }
+
+    public void setupPlaceholders() {
+        if (!searchTextField.getText().isEmpty()) {
+            searchPlaceholder.setVisible(false);
+            logoView6.setVisible(false);
+        } else {
+            searchPlaceholder.setVisible(true);
+            logoView6.setVisible(true);
         }
     }
 

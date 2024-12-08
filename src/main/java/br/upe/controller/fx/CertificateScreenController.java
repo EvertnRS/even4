@@ -51,7 +51,7 @@ public class CertificateScreenController extends BaseController implements FxCon
 
     private void initial() {
         userEmail.setText(facade.getEventData("email"));
-        Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/DefaultCertificate.png")).toExternalForm());
+        Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/certificate/DefaultCertificate.png")).toExternalForm());
         exampleCertificate.setImage(image);
 
     }
@@ -93,7 +93,7 @@ public class CertificateScreenController extends BaseController implements FxCon
 
     private void drawCertificate(String certificateAddres) {
         try {
-            BufferedImage certificate = ImageIO.read(new File(getClass().getResource("/images/EmptyCertificate.png").toURI()));
+            BufferedImage certificate = ImageIO.read(new File(getClass().getResource("/images/certificate/EmptyCertificate.png").toURI()));
 
             BufferedImage newCertificate = new BufferedImage(
                     certificate.getWidth(),

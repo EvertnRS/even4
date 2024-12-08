@@ -11,12 +11,12 @@
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
          <image>
-            <Image url="@/images/userIcon.png" />
+            <Image url="@/images/icons/userIcon.png" />
          </image>
       </ImageView>
       <ImageView fx:id="exitView" fitHeight="34.0" fitWidth="29.0" layoutX="23.0" layoutY="508.0" preserveRatio="true">
          <image>
-            <Image url="@/images/exit.png" />
+            <Image url="@/images/icons/buttons/exit.png" />
          </image>
       </ImageView>
       <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="134.0" style="-fx-text-fill: white;" text="Teste">
@@ -135,7 +135,7 @@
             <Button layoutX="595.0" layoutY="351.0" mnemonicParsing="false" onAction="#openDirectoryChooser" prefHeight="42.0" prefWidth="47.0" style="-fx-background-color: #ff914d;       -fx-text-fill: white;       -fx-font-weight: bold;       -fx-border-radius: 15;       -fx-background-radius: 5;       -fx-padding: 5 10 5 10;       -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 1);       -fx-cursor: hand;" text="..." />
             <ImageView fx:id="exampleCertificate" fitHeight="207.0" fitWidth="380.0" layoutX="279.0" layoutY="126.0" preserveRatio="true">
                <image>
-                  <Image url="@/images/DefaultCertificate.png" />
+                  <Image url="@/images/certificate/DefaultCertificate.png" />
                </image>
             </ImageView>
          </children>
