@@ -7,12 +7,16 @@ import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.UserRepository;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -32,6 +36,12 @@ public class EventScreenController extends BaseController implements FxControlle
     private Label userEmail;
     @FXML
     private AnchorPane mainPane;
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private Text searchPlaceholder;
+    @FXML
+    private ImageView logoView6;
 
     @Override
     public void setFacade(FacadeInterface facade) throws IOException {
@@ -42,6 +52,15 @@ public class EventScreenController extends BaseController implements FxControlle
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadUserEvents();
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            setupPlaceholders();
+            try {
+                loadUserEvents();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         this.mediator = new EventMediator(this, facade, mainPane, null);
         mediator.registerComponents();
@@ -56,7 +75,7 @@ public class EventScreenController extends BaseController implements FxControlle
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
 
-        scrollPane.setStyle("-fx-padding: 20px;");
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-top: 2px; -border-color: #cccccc");
 
         eventVBox.setAlignment(Pos.CENTER);
 
@@ -64,46 +83,68 @@ public class EventScreenController extends BaseController implements FxControlle
             if (event.getIdOwner().getId().equals(UUID.fromString(facade.getUserData("id")))) {
 
                 VBox eventContainer = new VBox();
-                eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                eventContainer.setStyle("-fx-background-color: #d3d3d3; " +
+                        "-fx-padding: 10px 20px 10px 20px; " +
+                        "-fx-margin: 0 40px 0 40px; " +
+                        "-fx-spacing: 5px; " +
+                        "-fx-border-radius: 10px; " +
+                        "-fx-background-radius: 10px;");
 
-                Label eventLabel = new Label((String) eventRepository.getData(event.getId(),"name"));
-                eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
+                VBox.setMargin(eventContainer, new Insets(5, 20, 5, 20));
+                Label eventLabel;
 
-                Button editButton = new Button("Editar");
-                editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                if (searchTextField.getText().isEmpty() || String.valueOf(eventRepository.getData(event.getId(),"name")).contains(searchTextField.getText())) {
+                    eventLabel = new Label((String) eventRepository.getData(event.getId(), "name"));
+                    eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
-                Button deleteButton = new Button("Excluir");
-                deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                    Button editButton = new Button("Editar");
+                    ImageView editIcon = new ImageView(new Image("images/icons/buttons/editIcon.png"));
+                    editIcon.setFitWidth(16);
+                    editIcon.setFitHeight(16);
+                    editButton.setGraphic(editIcon);
+                    editButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                Button detailsButton = new Button("Detalhes");
-                detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                    Button deleteButton = new Button("Excluir");
+                    ImageView deleteIcon = new ImageView(new Image("images/icons/buttons/deleteIcon.png"));
+                    deleteIcon.setFitWidth(16);
+                    deleteIcon.setFitHeight(16);
+                    deleteButton.setGraphic(deleteIcon);
+                    deleteButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                detailsButton.setOnAction(e ->
-                    handleDetailEvent((UUID) eventRepository.getData(event.getId(),"id")));
+                    Button detailsButton = new Button("Detalhes");
+                    ImageView detailsIcon = new ImageView(new Image("images/icons/buttons/detailsIcon.png"));
+                    detailsIcon.setFitWidth(16);
+                    detailsIcon.setFitHeight(16);
+                    detailsButton.setGraphic(detailsIcon);
+                    detailsButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                editButton.setOnAction(e -> {
-                    try {
-                        handleEditEvent((UUID) eventRepository.getData(event.getId(),"id"));
-                    } catch (IOException ex) {
-                        throw new IllegalArgumentException(ex);
-                    }
-                });
+                    detailsButton.setOnAction(e ->
+                            handleDetailEvent((UUID) eventRepository.getData(event.getId(), "id")));
 
-                deleteButton.setOnAction(e -> {
-                    try {
-                        handleDeleteEvent((UUID) eventRepository.getData(event.getId(),"id"), facade.getUserData("id"));
-                    } catch (IOException ex) {
-                        throw new IllegalArgumentException(ex);
-                    }
-                });
+                    editButton.setOnAction(e -> {
+                        try {
+                            handleEditEvent((UUID) eventRepository.getData(event.getId(), "id"));
+                        } catch (IOException ex) {
+                            throw new IllegalArgumentException(ex);
+                        }
+                    });
 
-                HBox actionButtons = new HBox(10);
-                actionButtons.setAlignment(Pos.CENTER_RIGHT);
-                actionButtons.getChildren().addAll(detailsButton,editButton, deleteButton);
+                    deleteButton.setOnAction(e -> {
+                        try {
+                            handleDeleteEvent((UUID) eventRepository.getData(event.getId(), "id"), facade.getUserData("id"));
+                        } catch (IOException ex) {
+                            throw new IllegalArgumentException(ex);
+                        }
+                    });
 
-                eventContainer.getChildren().addAll(eventLabel, actionButtons);
+                    HBox actionButtons = new HBox(10);
+                    actionButtons.setAlignment(Pos.CENTER_RIGHT);
+                    actionButtons.getChildren().addAll(detailsButton, editButton, deleteButton);
 
-                eventVBox.getChildren().add(eventContainer);
+                    eventContainer.getChildren().addAll(eventLabel, actionButtons);
+
+                    eventVBox.getChildren().add(eventContainer);
+                }
             }
         }
     }
@@ -126,7 +167,7 @@ public class EventScreenController extends BaseController implements FxControlle
 
                 Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
                 stage.getIcons().clear();
-                stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
+                stage.getIcons().add(new javafx.scene.image.Image("/images/logo/Logo.png"));
 
                 DialogPane dialogPane = alert.getDialogPane();
                 dialogPane.setStyle("-fx-background-color: #f0f0f0; -fx-font-size: 14px; -fx-text-fill: #333333;");
@@ -152,6 +193,16 @@ public class EventScreenController extends BaseController implements FxControlle
     private void handleEditEvent(UUID eventId) throws IOException {
         mediator.setEventId(String.valueOf(eventId));
         mediator.notify("handleUpdateEvent");
+    }
+
+    public void setupPlaceholders() {
+        if (!searchTextField.getText().isEmpty()) {
+            searchPlaceholder.setVisible(false);
+            logoView6.setVisible(false);
+        } else {
+            searchPlaceholder.setVisible(true);
+            logoView6.setVisible(true);
+        }
     }
 
     @Override

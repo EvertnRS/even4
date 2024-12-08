@@ -13,17 +13,17 @@
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
          <image>
-            <Image url="@/images/userIcon.png" />
+            <Image url="@/images/icons/userIcon.png" />
          </image>
       </ImageView>
       <ImageView fx:id="exitView" fitHeight="34.0" fitWidth="29.0" layoutX="23.0" layoutY="508.0" preserveRatio="true">
          <image>
-            <Image url="@/images/exit.png" />
+            <Image url="@/images/icons/buttons/exit.png" />
          </image>
       </ImageView>
-      <Pane layoutX="222.0" prefHeight="582.0" prefWidth="878.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
+      <Pane layoutX="222.0" prefHeight="582.0" prefWidth="878.0" style="-fx-background-color: #F2F2F2; -fx-background-radius: 10 0 0 0;">
          <children>
-            <ScrollPane fx:id="scrollPane" focusTraversable="false" layoutY="62.0" mouseTransparent="false" prefHeight="502.0" prefWidth="878.0" vvalue="1.0">
+            <ScrollPane fx:id="scrollPane" focusTraversable="false" layoutY="115.0" mouseTransparent="false" prefHeight="468.0" prefWidth="879.0" style="-fx-background-color: #cccccc;" vvalue="0.0">
                <VBox fx:id="eventVBox" focusTraversable="true" layoutX="161.0" layoutY="90.0" prefHeight="65.0" prefWidth="528.0" spacing="10" style="-fx-background-radius: 10; -fx-border-radius: 10;">
                   <!-- Aqui será a lista de eventos -->
                </VBox>
@@ -46,6 +46,13 @@
                   <Font name="Inter Semi Bold" size="22.0" />
                </font>
             </Label>
+            <TextField fx:id="searchTextField" cache="true" layoutX="176.0" layoutY="73.0" prefHeight="25.0" prefWidth="527.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <Text fx:id="searchPlaceholder" mouseTransparent="true" fill="DARKGREY" layoutX="243.0" layoutY="90.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Nome do Evento" />
+            <ImageView fx:id="logoView6" mouseTransparent="true" fitHeight="20.0" fitWidth="23.0" layoutX="196.0" layoutY="76.0" preserveRatio="true">
+               <image>
+                  <Image url="@/images/icons/buttons/searchIcon.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="134.0" style="-fx-text-fill: white;" text="Teste">
@@ -58,7 +65,7 @@
          </font>
       </Label>
       <Button fx:id="logoutButton" layoutX="20.0" layoutY="505.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="72.0" style="-fx-cursor: hand;" text="logout" />
-      <Pane layoutY="146.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
+      <Pane layoutY="146.0" prefHeight="58.0" prefWidth="223.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">
          <effect>
             <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
                <color>
@@ -67,11 +74,16 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="Eventos" textFill="#ff914d">
+            <Label layoutX="69.0" layoutY="19.0" text="Eventos" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
+            <ImageView fx:id="logoView1" fitHeight="29.0" fitWidth="29.0" layoutX="28.0" layoutY="15.0" preserveRatio="true">
+               <image>
+                  <Image url="@/images/icons/orange/oEventIcon.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="215.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -83,12 +95,17 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="SubEventos" textFill="WHITE">
+            <Label layoutX="69.0" layoutY="19.0" text="SubEventos" textFill="WHITE">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
             <Button fx:id="handleSubEventButton" layoutY="-7.0" mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="subEvent" />
+            <ImageView fx:id="logoView2" fitHeight="28.0" fitWidth="28.0" layoutX="28.0" layoutY="15.0" preserveRatio="true">
+               <image>
+                  <Image url="@/images/icons/white/wSubEventIcon.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="284.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -100,12 +117,17 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="Sessões" textFill="WHITE">
+            <Label layoutX="69.0" layoutY="19.0" text="Sessões" textFill="WHITE">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
             <Button fx:id="handleSessionButton" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="session" />
+            <ImageView fx:id="logoView3" fitHeight="33.0" fitWidth="33.0" layoutX="28.0" layoutY="7.0" preserveRatio="true">
+               <image>
+                  <Image url="@/images/icons/white/wSessionIcon.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="353.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -117,12 +139,17 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="Submeter Artigo" textFill="WHITE">
+            <Label layoutX="69.0" layoutY="19.0" text="Submeter Artigo" textFill="WHITE">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
             <Button fx:id="handleSubmitButton" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="submit" />
+            <ImageView fx:id="logoView4" fitHeight="29.0" fitWidth="29.0" layoutX="28.0" layoutY="15.0" preserveRatio="true">
+               <image>
+                  <Image url="@/images/icons/white/wSubmitIcon.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
       <Pane layoutX="-1.0" layoutY="422.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
@@ -134,12 +161,17 @@
             </DropShadow>
          </effect>
          <children>
-            <Label layoutX="35.0" layoutY="19.0" text="Perfil" textFill="WHITE">
+            <Label layoutX="69.0" layoutY="19.0" text="Perfil" textFill="WHITE">
                <font>
                   <Font name="Inter Semi Bold" size="16.0" />
                </font>
             </Label>
             <Button fx:id="handleUserButton" layoutX="5.0" layoutY="-4.0" mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="222.0" style="-fx-cursor: hand;" text="user" />
+            <ImageView fx:id="logoView5" fitHeight="29.0" fitWidth="29.0" layoutX="28.0" layoutY="15.0" preserveRatio="true">
+               <image>
+                  <Image url="@/images/icons/white/wSetingsIcon.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
    </children>

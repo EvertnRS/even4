@@ -76,6 +76,7 @@ public class UserScreenController extends BaseController implements FxController
         userName.setText(facade.getUserData("name"));
         loadUserDetails();
 
+
         this.userMediator = new UserMediator(this, facade, userPane, errorUpdtLabel);
         userMediator.registerComponents();
 
