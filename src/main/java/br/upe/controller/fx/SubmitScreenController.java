@@ -155,7 +155,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         downloadIcon.setFitWidth(16);
         downloadIcon.setFitHeight(16);
         downloadButton.setGraphic(downloadIcon);
-        downloadIcon.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+        downloadButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
         downloadButton.setOnAction(e -> {
             try {

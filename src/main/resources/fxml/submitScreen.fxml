@@ -148,7 +148,7 @@
                   <VBox fx:id="articleVBox" alignment="CENTER" layoutX="161.0" layoutY="90.0" prefHeight="65.0" prefWidth="528.0" spacing="10" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 10px;" />
                </content>
             </ScrollPane>
-            <Circle fill="#ff914d" layoutX="60.0" layoutY="544.0" radius="32.0" stroke="#ff914d" strokeType="INSIDE">
+            <Circle fill="#ff914d" layoutX="52.0" layoutY="552.0" radius="24.0" stroke="#ff914d" strokeType="INSIDE">
                <effect>
                   <DropShadow offsetX="5.0" offsetY="4.0">
                      <color>
@@ -157,12 +157,12 @@
                   </DropShadow>
                </effect>
             </Circle>
-            <Label layoutX="36.0" layoutY="490.0" text="+" textFill="WHITE">
+            <Label layoutX="32.0" layoutY="506.0" prefHeight="48.0" prefWidth="23.0" text="+" textFill="WHITE">
                <font>
-                  <Font name="System Bold" size="68.0" />
+                  <Font name="System Bold" size="58.0" />
                </font>
             </Label>
-            <Button fx:id="handleAddButton" layoutX="28.0" layoutY="512.0" mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="63.0" style="-fx-cursor: hand" text="addArtigos" />
+            <Button fx:id="handleAddButton" layoutX="28.0" layoutY="519.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="54.0" style="-fx-cursor: hand" text="addArtigos" />
             <Label layoutX="51.0" layoutY="22.0" text="Artigos Enviados" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="22.0" />

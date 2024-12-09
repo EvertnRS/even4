@@ -28,7 +28,7 @@
                   <!-- Aqui será a lista de eventos -->
                </VBox>
             </ScrollPane>
-            <Circle fill="#ff914d" layoutX="60.0" layoutY="544.0" radius="32.0" stroke="#ff914d" strokeType="INSIDE">
+            <Circle fill="#ff914d" layoutX="52.0" layoutY="552.0" radius="24.0" stroke="#ff914d" strokeType="INSIDE">
                <effect>
                   <DropShadow offsetX="5.0" offsetY="4.0">
                      <color>
@@ -36,19 +36,19 @@
                      </color>
                   </DropShadow>
                </effect></Circle>
-            <Label layoutX="36.0" layoutY="490.0" text="+" textFill="WHITE">
+            <Label layoutX="31.0" layoutY="506.0" prefHeight="48.0" prefWidth="23.0" text="+" textFill="WHITE">
                <font>
-                  <Font name="System Bold" size="68.0" />
+                  <Font name="System Bold" size="58.0" />
                </font></Label>
-            <Button fx:id="handleAddButton" layoutX="28.0" layoutY="512.0" mnemonicParsing="false" opacity="0.0" prefHeight="65.0" prefWidth="63.0" style="-fx-cursor: hand" text="addEvent" />
+            <Button fx:id="handleAddButton" layoutX="28.0" layoutY="529.0" mnemonicParsing="false" opacity="0.0" prefHeight="48.0" prefWidth="48.0" style="-fx-cursor: hand" text="addEvent" />
             <Label layoutX="51.0" layoutY="22.0" text="Eventos Criados" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="22.0" />
                </font>
             </Label>
             <TextField fx:id="searchTextField" cache="true" layoutX="176.0" layoutY="73.0" prefHeight="25.0" prefWidth="527.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-            <Text fx:id="searchPlaceholder" mouseTransparent="true" fill="DARKGREY" layoutX="243.0" layoutY="90.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Nome do Evento" />
-            <ImageView fx:id="logoView6" mouseTransparent="true" fitHeight="20.0" fitWidth="23.0" layoutX="196.0" layoutY="76.0" preserveRatio="true">
+            <Text fx:id="searchPlaceholder" fill="DARKGREY" layoutX="243.0" layoutY="90.0" mouseTransparent="true" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Nome do Evento" />
+            <ImageView fx:id="logoView6" fitHeight="20.0" fitWidth="23.0" layoutX="196.0" layoutY="76.0" mouseTransparent="true" preserveRatio="true">
                <image>
                   <Image url="@/images/icons/buttons/searchIcon.png" />
                </image>
