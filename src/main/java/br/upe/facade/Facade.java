@@ -2,6 +2,7 @@ package br.upe.facade;
 import br.upe.controller.*;
 import br.upe.persistence.Event;
 import br.upe.persistence.Model;
+import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class Facade implements FacadeInterface {
     }
 
 
-    public List<String> listSessions(Object... params) throws IOException {
+    public List<Session> listSessions(Object... params) throws IOException {
         return sessionController.list(params);
     }
 

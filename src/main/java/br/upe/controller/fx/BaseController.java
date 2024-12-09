@@ -1,10 +1,17 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.EventController;
+import br.upe.controller.SessionController;
 import br.upe.controller.SubEventController;
+import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.Event;
 import br.upe.persistence.Model;
+import br.upe.persistence.Session;
+import br.upe.persistence.SubEvent;
+import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.repository.SubEventRepository;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
@@ -122,28 +129,25 @@ public abstract class BaseController {
         new Thread(task).start();
     }
 
-    public boolean validateEventDate(String date, String searchId) throws IOException {
+    public boolean validateEventDate(String date, String[] searchId) throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        EventController eventController = new EventController();
-        SubEventController subEventController = new SubEventController();
-        Map<UUID, Persistence> parentMap = new HashMap<>(eventController.getHashMap());
-        parentMap.putAll(subEventController.getHashMap());
-
-
+        EventRepository eventRepository = new EventRepository();
+        SubEventRepository subEventRepository = new SubEventRepository();
         String parentDateString = "";
-        for (Map.Entry<UUID, Persistence> entry : parentMap.entrySet()) {
-            Persistence listIndex = entry.getValue();
-            if (listIndex.getData("name").equals(searchId)) {
-                parentDateString = (String) listIndex.getData("date");
-                break;
-            }
+
+        if(searchId[1].equals("evento")){
+            parentDateString = String.valueOf(eventRepository.getData(UUID.fromString(searchId[0]),"date"));
+        } else if(searchId[1].equals("subEvento")) {
+            parentDateString = String.valueOf( subEventRepository.getData(UUID.fromString(searchId[0]),"date"));
+
         }
+
             LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
             LocalDate inputDate = LocalDate.parse(date, formatter);
 
             return !inputDate.isBefore(eventDate);
     }
+
 
     public abstract void setFacade(FacadeInterface facade) throws IOException;
 }

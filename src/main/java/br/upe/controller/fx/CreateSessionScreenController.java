@@ -4,18 +4,24 @@ import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
+import br.upe.utils.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.sql.Date;
+import java.util.*;
+
+import static br.upe.ui.Validation.areValidTimes;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -26,33 +32,11 @@ public class CreateSessionScreenController extends BaseController implements FxC
     @FXML
     private Label userEmail;
     @FXML
-    private TextField nameTextField;
-    @FXML
-    private Text namePlaceholder;
+    private TextField nameTextField, locationTextField, descriptionTextField, startTimeTextField, endTimeTextField, searchField;
     @FXML
     private DatePicker datePicker;
     @FXML
-    private Text datePlaceholder;
-    @FXML
-    private TextField locationTextField;
-    @FXML
-    private Text locationPlaceholder;
-    @FXML
-    private TextField descriptionTextField;
-    @FXML
-    private Text descriptionPlaceholder;
-    @FXML
-    private TextField startTimeTextField;
-    @FXML
-    private Text startTimePlaceholder;
-    @FXML
-    private TextField endTimeTextField;
-    @FXML
-    private Text endTimePlaceholder;
-    @FXML
-    private TextField searchField;
-    @FXML
-    private Text searchFieldPlaceholder;
+    private Text namePlaceholder, datePlaceholder, locationPlaceholder, descriptionPlaceholder, startTimePlaceholder, endTimePlaceholder, searchFieldPlaceholder;
     @FXML
     private ListView<String> suggestionsListView;
     @FXML
@@ -103,38 +87,60 @@ public class CreateSessionScreenController extends BaseController implements FxC
         genericButton("/fxml/userScreen.fxml", newSessionPane, facade, null);
     }
 
-    public String verifyType(String name) {
+    private String[] verifyType(String name) {
+        String[] type = new String[2]; // Define um array com dois elementos
+        EntityManager entityManager = null;
 
-        Map<UUID, Persistence> eventMap = facade.getEventHashMap();
-        Map<UUID, Persistence> subEventMap = facade.getSubEventHashMap();
-        for (Map.Entry<UUID, Persistence> entry : eventMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData("name").equals(name)) {
-                return "Event";
+        try {
+            // Obtém o EntityManager a partir do JPAUtils
+            entityManager = JPAUtils.getEntityManagerFactory();
+
+            // Cria uma consulta para buscar o ID pelo nome
+            TypedQuery<UUID> query = entityManager.createQuery(
+                    "SELECT e.id FROM Event e WHERE e.name = :name", UUID.class);
+            query.setParameter("name", name);
+
+            // Atribui os valores ao array
+            type[0] = query.getSingleResult().toString(); // ID
+            type[1] = "evento"; // Tipo
+
+            return type; // Retorna o array preenchido
+        } catch (NoResultException e) {
+            // Obtém o EntityManager a partir do JPAUtils
+            entityManager = JPAUtils.getEntityManagerFactory();
+
+            // Cria uma consulta para buscar o ID pelo nome
+            TypedQuery<UUID> query = entityManager.createQuery(
+                    "SELECT e.id FROM SubEvent e WHERE e.name = :name", UUID.class);
+            query.setParameter("name", name);
+
+            // Atribui os valores ao array
+            type[0] = query.getSingleResult().toString(); // ID
+            type[1] = "subEvento"; // Tipo
+
+            return type;
+        } finally {
+            if (entityManager != null && entityManager.isOpen()) {
+                entityManager.close();
             }
         }
-
-        for (Map.Entry<UUID, Persistence> entry : subEventMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            if (persistence.getData("name").equals(name)) {
-                return "SubEvent";
-            }
-        }
-        return "";
     }
 
+
+
+
     private void loadUserEvents() throws IOException {
-        List<Event> userEvents = facade.listEvents(facade.getUserData("id"), "fx");
-        List<SubEvent> userSubEvents = facade.listSubEvents(facade.getUserData("id"), "fx");
-        eventList.addAll(String.valueOf(userEvents));
-        eventList.addAll(String.valueOf(userSubEvents));
+        List<Event> userEvents = facade.listEvents(facade.getUserData("id"));
+        List<SubEvent> userSubEvents = facade.listSubEvents(facade.getUserData("id"));
+
+        eventList.clear();
+        userEvents.forEach(event -> eventList.add(event.getName()));
+        userSubEvents.forEach(subEvent -> eventList.add(subEvent.getName()));
 
         FilteredList<String> filteredItems = new FilteredList<>(eventList, p -> true);
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredItems.setPredicate(event -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
+                if (newValue == null || newValue.isEmpty()) return false;
                 String lowerCaseFilter = newValue.toLowerCase();
                 return event.toLowerCase().contains(lowerCaseFilter);
             });
@@ -149,33 +155,31 @@ public class CreateSessionScreenController extends BaseController implements FxC
         });
     }
 
-
     public void createSession() throws IOException {
-        /*String sessionName = nameTextField.getText();
+        String sessionName = nameTextField.getText();
         String sessionLocation = locationTextField.getText();
         String sessionDescription = descriptionTextField.getText();
-        String sessionDate = datePicker.getValue() != null ? datePicker.getValue().toString() : "";
+        java.sql.Date sessionDate = Date.valueOf( datePicker.getValue() != null ? datePicker.getValue().toString() : "");
         String startTime = startTimeTextField.getText();
         String endTime = endTimeTextField.getText();
         String selectedEventName = searchField.getText();
-        String type = verifyType(selectedEventName);
+        String[] type = verifyType(selectedEventName);
 
-        Map<UUID, Persistence> sessionMap = facade.getSessionHashMap();
-        if (!isValidDate(sessionDate))
-        {
-            errorUpdtLabel.setText("Erro no preenchimento das informações.");
+
+
+        if (selectedEventName == null || selectedEventName.isEmpty()) {
+            errorUpdtLabel.setText("Por favor, selecione um evento ou subevento válido.");
+            return;
         }
-        else if (!validateEventDate(sessionDate, selectedEventName)) {
-            errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
-        } else if (!areValidTimes(startTime, endTime)) {
-            errorUpdtLabel.setText("Horário inválido.");
-        }else if (sessionLocation.isEmpty() || sessionDescription.isEmpty() || isValidName(sessionName, sessionMap)){
-            errorUpdtLabel.setText("Erro no preenchimento das informações.");
-        }else {
-            facade.createSession(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, facade.getUserData("id"), type);
-            facade.readSession();
-            handleSession();
-        }*/
-    }
 
+        if (sessionDate == null || !areValidTimes(startTime, endTime) || sessionLocation.isEmpty() || sessionDescription.isEmpty()) {
+            errorUpdtLabel.setText("Erro no preenchimento das informações.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+        } else if (!validateEventDate(sessionDate.toString(), verifyType(selectedEventName))) {
+            errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
+        } else {
+            facade.createSession(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, facade.getUserData("id"), type);
+            handleSession();
+        }
+    }
 }

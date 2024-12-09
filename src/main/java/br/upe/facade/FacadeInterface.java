@@ -2,6 +2,7 @@ package br.upe.facade;
 
 import br.upe.persistence.Event;
 import br.upe.persistence.Model;
+import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public interface FacadeInterface {
 
     // SessionController methods
     Map<UUID, Persistence> getSessionHashMap();
-    List<String> listSessions(Object... params) throws IOException;
+    List<Session> listSessions(Object... params) throws IOException;
     void createSession(Object... params) throws IOException;
     void readSession() throws IOException;
     void updateSession(Object... params) throws IOException;

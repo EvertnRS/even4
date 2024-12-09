@@ -1,9 +1,10 @@
 package br.upe.controller;
 
-import br.upe.persistence.Model;
+import br.upe.persistence.Event;
 import br.upe.persistence.Session;
-import br.upe.persistence.SubEvent;
+import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.repository.SessionRepository;
 
 import java.io.IOException;
 import java.util.*;
@@ -35,7 +36,7 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public List<Model> getAll() {
+    public List<Event> getAll() {
         return List.of();
     }
 
@@ -79,26 +80,27 @@ public class SessionController implements Controller {
             return;
         }
 
-        String eventId = getFatherEventId((String) params[0], (String) params[8]);
+
         String name = (String) params[1];
-        String date = (String) params[2];
+        Date date = (Date) params[2];
         String description = (String) params[3];
         String location = (String) params[4];
         String startTime = (String) params[5];
         String endTime = (String) params[6];
         String userId = (String) params[7];
+        String[] type = (String[]) params[8];
 
-        Map<UUID, Persistence> eventH;
-        if (params[8].equals(EVENT_TYPE)) {
-            EventController eventController = new EventController();
-            eventH = eventController.getHashMap();
-        } else {
-            SubEventController subEventController = new SubEventController();
-            eventH = subEventController.getHashMap();
+        UUID eventId = null;
+        UUID subEventId = null;
+        if (type[1].equals("evento")){
+            eventId = UUID.fromString(type[0]);
+        } else if(type[1].equals("subEvento")) {
+            subEventId = UUID.fromString(type[0]);
+
         }
 
-        Persistence session = new Session();
-        session.create(eventId, name, date, description, location, startTime, endTime, userId, eventH);
+        Persistence session = new SessionRepository();
+        session.create(eventId, name, date, description, location, startTime, endTime, userId, subEventId);
         UUID sessionId = (UUID) session.getData(ID);
         sessionHashMap.put(sessionId, session);
 
@@ -163,7 +165,7 @@ public class SessionController implements Controller {
                     iterator.remove();
                 }
             }
-            Persistence sessionPersistence = new Session();
+            Persistence sessionPersistence = new SessionRepository();
             sessionPersistence.delete(sessionHashMap);
         } else {
             LOGGER.warning("Você não pode deletar essa Sessão");
@@ -171,27 +173,24 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public List<String> list(Object... params) throws IOException {
-            this.read();
-            List<String> userEvents = new ArrayList<>();
+    public <T> List<T> list(Object... params) throws IOException {
+        UUID userId = UUID.fromString((String) params[0]);
+        SessionRepository sessionRepository = SessionRepository.getInstance();
+        List<Session> allSessions = sessionRepository.getAllSessions();
+        List<Session> userSessions = new ArrayList<>();
 
-            try {
-                for (Map.Entry<UUID, Persistence> entry : sessionHashMap.entrySet()) {
-                    Persistence persistence = entry.getValue();
-                    if (persistence.getData(OWNER_ID).equals(params[0])) {
-                        String eventName = (String) persistence.getData("name");
-                        userEvents.add(eventName);
-                    }
-                }
-                if (userEvents.isEmpty()) {
-                    LOGGER.warning("Seu usuário atual é organizador de nenhuma sessão");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        for (Session session: allSessions) {
+            if (session.getOwnerId().getId().equals(userId)) {
+                userSessions.add(session);
             }
-            return userEvents;
         }
 
+        if (userSessions.isEmpty()) {
+            LOGGER.warning("Seu usuário atual é organizador de nenhuma sessão");
+        }
+
+        return (List<T>) userSessions;
+    }
     @Override
     public boolean loginValidate(String email, String cpf) {
         return false;
@@ -238,7 +237,7 @@ public class SessionController implements Controller {
                 session.setData(STARTTIME, newStartTime);
                 session.setData(ENDTIME, newEndTime);
 
-                Persistence sessionPersistence = new Session();
+                Persistence sessionPersistence = new SessionRepository();
                 sessionPersistence.update(sessionHashMap);
                 isOwner = true;
                 break;
@@ -261,9 +260,21 @@ public class SessionController implements Controller {
 
     private String getFatherEventId(String eventName, String eventType) throws IOException {
         String fatherId = "";
+
+        // Inicializa o mapa de eventos
+        Map<UUID, Persistence> eventH = new HashMap<>();
+
+        // Garante que o mapa de eventos (eventH) seja preenchido corretamente com base no tipo de evento
         if (eventType.equals(EVENT_TYPE)) {
             EventController eventController = new EventController();
-            Map<UUID, Persistence> eventH = eventController.getHashMap();
+            eventH = eventController.getHashMap();
+        } else {
+            SubEventController subEventController = new SubEventController();
+            eventH = subEventController.getHashMap();
+        }
+
+        // Verifica se o mapa de eventos não é nulo e está preenchido
+        if (eventH != null && !eventH.isEmpty()) {
             for (Map.Entry<UUID, Persistence> entry : eventH.entrySet()) {
                 Persistence eventIndice = entry.getValue();
                 if (eventIndice.getData(NAME).equals(eventName)) {
@@ -272,16 +283,12 @@ public class SessionController implements Controller {
                 }
             }
         } else {
-            SubEventController subEventController = new SubEventController();
-            Map<UUID, Persistence> eventH = subEventController.getHashMap();
-            for (Map.Entry<UUID, Persistence> entry : eventH.entrySet()) {
-                Persistence eventIndice = entry.getValue();
-                if (eventIndice.getData(NAME).equals(eventName)) {
-                    fatherId = (String) eventIndice.getData(ID);
-                    break;
-                }
-            }
+            // Caso o mapa de eventos esteja vazio ou nulo, exibe um aviso
+            LOGGER.warning("Nenhum evento encontrado para o tipo especificado: " + eventType);
         }
+
         return fatherId;
     }
+
+
 }
