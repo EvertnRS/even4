@@ -96,7 +96,7 @@ public class CreateEventMediator extends Mediator {
         return switch (event) {
             case "handleEventCreate" -> "/fxml/createEventScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleEvent", "handleBack" -> "/fxml/mainScreen.fxml";
+            case "handleEvent", "handleBack" -> "/fxml/eventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";

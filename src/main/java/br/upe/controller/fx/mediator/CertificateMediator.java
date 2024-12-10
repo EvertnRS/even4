@@ -1,44 +1,32 @@
 package br.upe.controller.fx.mediator;
 
-import br.upe.controller.fx.CreateSubEventScreenController;
+import br.upe.controller.fx.CertificateScreenController;
 import br.upe.facade.FacadeInterface;
-import javafx.scene.Node;
-import javafx.scene.control.DatePicker;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class CreateSubEventMediator extends Mediator{
-    private final CreateSubEventScreenController createSubEventScreenController;
-    private TextField nameTextField;
-    private DatePicker datePicker;
-    private TextField locationTextField;
-    private TextField descriptionTextField;
+public class CertificateMediator extends Mediator{
+    private final CertificateScreenController certificateScreenController;
+    private TextField addresTextField;
 
-    public CreateSubEventMediator(CreateSubEventScreenController createSubEventScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
-        super(facade, screenPane, errorUpdtLabel, createSubEventScreenController);
-        this.createSubEventScreenController = createSubEventScreenController;
-    }
-
-    public void setComponents(TextField nameTextField, DatePicker datePicker, TextField locationTextField, TextField descriptionTextField) {
-        this.nameTextField = nameTextField;
-        this.datePicker = datePicker;
-        this.locationTextField = locationTextField;
-        this.descriptionTextField = descriptionTextField;
-
-        if (createSubEventScreenController != null) {
-            setupListeners();
-        }
+    public CertificateMediator(CertificateScreenController certificateScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
+        super(facade, screenPane, errorUpdtLabel, certificateScreenController);
+        this.certificateScreenController = certificateScreenController;
     }
 
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#createButton", "handleSubEventCreate");
+            setupButtonAction("#openDirectoryChooser", "fileChooser");
+            setupButtonAction("#createButton", "handleCertificateCreate");
             setupButtonAction("#handleEventButton", "handleEvent");
             setupButtonAction("#handleSubEventButton", "handleSubEvent");
             setupButtonAction("#handleSessionButton", "handleSession");
@@ -47,14 +35,20 @@ public class CreateSubEventMediator extends Mediator{
             setupButtonAction("#handleBackButton", "handleBack");
             setupButtonAction("#logoutButton", "logout");
         }
+        setupListeners();
     }
 
     @Override
     public Object notify(String event) throws IOException {
-        if (createSubEventScreenController != null) {
+        if (certificateScreenController != null) {
             switch (event) {
-                case "handleSubEventCreate":
-                    handleSubEventCreate();
+                case "handleCertificateCreate":
+                    if (validateAddress()){
+                        certificateScreenController.createCertificate();
+                    }
+                    break;
+                case "openDirectoryChooser":
+                    certificateScreenController.openDirectoryChooser();
                     break;
                 case "handleUser"
                 , "handleSubEvent"
@@ -74,18 +68,12 @@ public class CreateSubEventMediator extends Mediator{
         return null;
     }
 
-    private void handleSubEventCreate() throws IOException {
-        if (validateInputs()) {
-            createSubEventScreenController.createSubEvent();
-        }
-    }
-
     private void loadScreenForEvent(String event) {
         String fxmlFile = getFxmlPathForEvent(event);
 
         loadScreenWithTask(() -> {
             try {
-                createSubEventScreenController.genericButton(fxmlFile, screenPane, facade, null);
+                certificateScreenController.genericButton(fxmlFile, screenPane, facade, null);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -95,7 +83,8 @@ public class CreateSubEventMediator extends Mediator{
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleSubEvent", "handleBack" -> "/fxml/subEventScreen.fxml";
+            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
+            case "handleBack" -> "/fxml/attendeeScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
@@ -111,7 +100,7 @@ public class CreateSubEventMediator extends Mediator{
 
     private void loadScreenWithTask(Runnable task) {
         assert screenPane != null;
-        createSubEventScreenController.loadScreen("Carregando", () -> {
+        certificateScreenController.loadScreen("Carregando", () -> {
             try {
                 task.run();
             } catch (Exception e) {
@@ -124,33 +113,30 @@ public class CreateSubEventMediator extends Mediator{
         screenPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    notify("handleSubEventCreate");
+                    notify("handleCertificateCreate");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-
-        configureNavigation(nameTextField, locationTextField, datePicker);
-        configureNavigation(descriptionTextField, datePicker, locationTextField);
-        configureNavigation(locationTextField, descriptionTextField, nameTextField);
-
-        datePicker.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKeyNavigation(event, nameTextField, descriptionTextField));
     }
 
-    private void configureNavigation(Node currentField, Node previousField, Node nextField) {
-        currentField.setOnKeyPressed(event -> handleKeyNavigation(event, previousField, nextField));
-    }
+    public boolean validateAddress() {
+        Path path = Paths.get(addresTextField.getText());
 
-    private void handleKeyNavigation(KeyEvent event, Node previousField, Node nextField) {
-        if (event.getCode() == KeyCode.DOWN || event.getCode() == KeyCode.TAB) {
-            nextField.requestFocus();
-            event.consume();
+        if (Files.exists(path)) {
+            if (Files.isDirectory(path)) {
+                return true;
+            } else {
+                errorUpdtLabel.setText("Nenhuma pasta selecionada.");
+                errorUpdtLabel.setAlignment(Pos.CENTER);
+            }
+            return false;
         }
-        if (event.getCode() == KeyCode.UP || (event.getCode() == KeyCode.TAB && event.isShiftDown())) {
-            previousField.requestFocus();
-            event.consume();
-        }
+        return false;
     }
 
+    public void setAddressTextField(TextField addresTextField) {
+        this.addresTextField = addresTextField;
+    }
 }

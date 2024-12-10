@@ -58,6 +58,25 @@ public class EventController implements Controller {
         return (List<T>) userEvents;
     }
 
+    @Override
+    public void create(Object... params) {
+        if (params.length != 5) {
+            LOGGER.warning("Só pode ter 5 parâmetros");
+            return;
+        }
+
+        String name = (String) params[0];
+        Date date = (Date) params[1];
+
+        String description = (String) params[2];
+        String location = (String) params[3];
+        String idOwner = (String) params[4];
+
+        Persistence event = new EventRepository();
+        event.create(name, date, description, location, idOwner);
+
+    }
+
     public void update(Object... params) throws IOException {
         if (!isValidParamsLength(params)) {
             LOGGER.warning("Só pode ter 5 parametros");
@@ -71,10 +90,6 @@ public class EventController implements Controller {
         String newLocation = (String) params[4];
 
         updateEvent(eventId, newName, newDate, newDescription, newLocation);
-    }
-
-    private boolean isValidParamsLength(Object... params) {
-        return params.length == 5;
     }
 
     private void updateEvent(UUID id, String newName, Date newDate, String newDescription, String newLocation) throws IOException {
@@ -92,11 +107,19 @@ public class EventController implements Controller {
         this.eventHashMap = eventPersistence.read();
     }
 
-
     @Override
-    public boolean loginValidate(String email, String cpf) {
-        //Método não implementado
-        return false;
+    public void delete(Object... params) throws IOException {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parametro");
+            return;
+        }
+
+        EventRepository eventRepository = EventRepository.getInstance();
+
+        UUID id = (UUID) params[0];
+        UUID ownerId = UUID.fromString((String) params[1]);
+
+        eventRepository.delete(id, ownerId);
     }
 
     @Override
@@ -117,24 +140,6 @@ public class EventController implements Controller {
         return data;
     }
 
-    @Override
-    public void create(Object... params) {
-        if (params.length != 5) {
-            LOGGER.warning("Só pode ter 5 parâmetros");
-            return;
-        }
-
-        String name = (String) params[0];
-        Date date = (Date) params[1];
-
-        String description = (String) params[2];
-        String location = (String) params[3];
-        String idOwner = (String) params[4];
-
-        Persistence event = new EventRepository();
-        event.create(name, date, description, location, idOwner);
-
-    }
      /*
     private void cascadeDelete(UUID id) throws IOException {
         // Deletar todas as sessões relacionadas ao evento
@@ -204,19 +209,13 @@ public class EventController implements Controller {
         );
     }*/
 
+    private boolean isValidParamsLength(Object... params) {
+        return params.length == 5;
+    }
 
     @Override
-    public void delete(Object... params) throws IOException {
-        if (params.length != 2) {
-            LOGGER.warning("Só pode ter 2 parametro");
-            return;
-        }
-
-        EventRepository eventRepository = EventRepository.getInstance();
-
-        UUID id = (UUID) params[0];
-        UUID ownerId = UUID.fromString((String) params[1]);
-
-        eventRepository.delete(id, ownerId);
+    public boolean loginValidate(String email, String cpf) {
+        //Método não implementado
+        return false;
     }
 }

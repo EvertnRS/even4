@@ -97,12 +97,12 @@ public class SessionController implements Controller {
             eventH = subEventController.getHashMap();
         }
 
-        Persistence session = new Session();
+        /*Persistence session = new Session();
         session.create(eventId, name, date, description, location, startTime, endTime, userId, eventH);
         UUID sessionId = (UUID) session.getData(ID);
         sessionHashMap.put(sessionId, session);
 
-        this.sessionLog = session;
+        this.sessionLog = session;*/
     }
     /*
     private void cascadeDelete(String id) throws IOException {
@@ -163,8 +163,8 @@ public class SessionController implements Controller {
                     iterator.remove();
                 }
             }
-            Persistence sessionPersistence = new Session();
-            sessionPersistence.delete(sessionHashMap);
+            /*Persistence sessionPersistence = new Session();
+            sessionPersistence.delete(sessionHashMap);*/
         } else {
             LOGGER.warning("Você não pode deletar essa Sessão");
         }
@@ -238,10 +238,10 @@ public class SessionController implements Controller {
                 session.setData(STARTTIME, newStartTime);
                 session.setData(ENDTIME, newEndTime);
 
-                Persistence sessionPersistence = new Session();
+                /*Persistence sessionPersistence = new Session();
                 sessionPersistence.update(sessionHashMap);
                 isOwner = true;
-                break;
+                break;*/
             }
         }
 

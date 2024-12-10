@@ -68,7 +68,6 @@ public abstract class BaseController {
         });
     }
 
-
     public <T> boolean isValidName(String name, List<T> items) {
         for (T item : items) {
             if (item instanceof Model && ((Model) item).getName().equals(name) || name.isEmpty()) {

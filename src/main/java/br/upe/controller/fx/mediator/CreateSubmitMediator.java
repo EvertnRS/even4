@@ -34,7 +34,7 @@ public class CreateSubmitMediator extends Mediator{
     public Object notify(String event) throws IOException {
         if (createSubmitScreenController != null) {
             switch (event) {
-                case "handleEventCreate":
+                case "handleArticleCreate":
                     handleSubmitCreate();
                     break;
                 case "openFileChooser":
@@ -82,7 +82,7 @@ public class CreateSubmitMediator extends Mediator{
         return switch (event) {
             case "handleArticleCreate" -> "/fxml/createSubmitScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleEvent" -> "/fxml/mainScreen.fxml";
+            case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleSubmit", "handleBack" -> "/fxml/submitScreen.fxml";
