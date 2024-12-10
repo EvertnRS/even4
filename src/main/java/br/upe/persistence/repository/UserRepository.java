@@ -1,6 +1,7 @@
 package br.upe.persistence.repository;
 
 import br.upe.persistence.User;
+import br.upe.persistence.builder.UserBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -32,8 +33,6 @@ public class UserRepository implements Persistence {
         return instance;
     }
 
-
-
     public boolean userExists(String email, Long cpf) {
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         TypedQuery<User> query = entityManager.createQuery(
@@ -55,8 +54,8 @@ public class UserRepository implements Persistence {
 
     @Override
     public void create(Object... params) {
-        if (params.length != 2) {
-            LOGGER.warning("Só pode ter 2 parametro contendo o email e o cpf do usuário que deseja criar");
+        if (params.length != 4) {
+            LOGGER.warning("Só pode ter 4 parametro contendo o email e o cpf do usuário que deseja criar");
         }
 
         String name = (String) params[0];
@@ -71,11 +70,13 @@ public class UserRepository implements Persistence {
             return;
         }
 
-        User user = new User();
-        user.setEmail(email);
-        user.setCpf(cpf);
-        user.setName(name);
-        user.setPassword(hashedPassword);
+        User user = UserBuilder.builder()
+                .withEmail(email)
+                .withCpf(cpf)
+                .withName(name)
+                .withPassword(hashedPassword)
+                .build();
+
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -298,7 +299,7 @@ public class UserRepository implements Persistence {
         return false;
     }
 
-    private UserRepository parseToUserRepository(User user) {
+    /*private UserRepository parseToUserRepository(User user) {
         UserRepository userRepository = new UserRepository();
         userRepository.setData("id", user.getId());
         userRepository.setData("email", user.getEmail());
@@ -306,7 +307,7 @@ public class UserRepository implements Persistence {
         userRepository.setData("name", user.getName());
         userRepository.setData("password", user.getPassword());
         return userRepository;
-    }
+    }*/
 
 
 }
