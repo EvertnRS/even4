@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FacadeIntegrationTest {
 
     FacadeInterface facade = new Facade(UserController.getInstance());
+    String email = "email@email.com";
+    String password = "1234";
 
 
     FacadeIntegrationTest() throws IOException {
@@ -29,12 +31,64 @@ class FacadeIntegrationTest {
 
     @Test
     void testCreateUser() throws IOException {
-        if (facade.loginValidate("email@email.com", "1234")) {
+        if (facade.loginValidate(email, password)) {
+            System.out.println("User already exists\n\n\n\n\n");
             facade.deleteUser("1234", facade.getUserData("id"));
         }
 
         boolean isCreated = facade.createUser("Name", "56756756756", "email@email.com", "1234");
-        assertTrue(isCreated);
+        if (isCreated) {
+            boolean isLoggedIn = facade.loginValidate(email, password);
+            if (isLoggedIn) {
+                String userId = facade.getUserData("id");
+                System.out.println("User ID after login: " + userId);
+                facade.deleteUser("1234", userId);
+            }
+        }
+    }
+    
+    @Test
+    void testUpdateUserName() throws IOException {
+        if (!facade.loginValidate(email, password)) {
+            facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        }
+
+        boolean isUpdated = facade.updateUser("Name Updated", "56756756756", "email@email.com", "1234", "1234");
+        assertTrue(isUpdated);
+        facade.deleteUser("1234", facade.getUserData("id"));
+    }
+
+    @Test
+    void testUpdateUserCpf() throws IOException {
+        if (!facade.loginValidate(email, password)) {
+            facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        }
+
+        boolean isUpdated = facade.updateUser("Name", "67867867867", "email@email.com", "1234", "1234");
+        assertTrue(isUpdated);
+        facade.deleteUser("1234", facade.getUserData("id"));
+    }
+
+    @Test
+    void testUpdateUserEmail() throws IOException {
+        if (!facade.loginValidate(email, password)) {
+            facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        }
+        boolean isUpdated = facade.updateUser("Name", "12345678901", "new_unique_email@test.com", "1234", "1234");
+        assertTrue(isUpdated);
+        facade.deleteUser("1234", facade.getUserData("id"));
+    }
+
+
+    @Test
+    void testUpdateUserPass() throws IOException {
+        if (!facade.loginValidate(email, password)) {
+            facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        }
+
+        boolean isUpdated = facade.updateUser("Name", "56756756756", "email@email.com", "4321", "1234");
+        assertTrue(isUpdated);
+        facade.deleteUser("4321", facade.getUserData("id"));
     }
 
 
