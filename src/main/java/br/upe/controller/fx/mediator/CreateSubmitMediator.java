@@ -2,10 +2,14 @@ package br.upe.controller.fx.mediator;
 
 import br.upe.controller.fx.CreateSubmitScreenController;
 import br.upe.facade.FacadeInterface;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class CreateSubmitMediator extends Mediator{
     private final CreateSubmitScreenController createSubmitScreenController;
@@ -34,8 +38,10 @@ public class CreateSubmitMediator extends Mediator{
     public Object notify(String event) throws IOException {
         if (createSubmitScreenController != null) {
             switch (event) {
-                case "handleEventCreate":
-                    handleSubmitCreate();
+                case "handleArticleCreate":
+                    if (validateAddress()) {
+                        handleSubmitCreate();
+                    }
                     break;
                 case "openFileChooser":
                     handleFileChooser();
@@ -82,7 +88,7 @@ public class CreateSubmitMediator extends Mediator{
         return switch (event) {
             case "handleArticleCreate" -> "/fxml/createSubmitScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleEvent" -> "/fxml/mainScreen.fxml";
+            case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleSubmit", "handleBack" -> "/fxml/submitScreen.fxml";
@@ -105,6 +111,25 @@ public class CreateSubmitMediator extends Mediator{
                 e.printStackTrace();
             }
         }, screenPane);
+    }
+
+    public boolean validateAddress() {
+        Path path = Paths.get(createSubmitScreenController.getNamesTextField().getText());
+
+        if (Files.exists(path)) {
+            if (Files.isRegularFile(path)) {
+                return true;
+            } else {
+                errorUpdtLabel.setText("Nenhum arquivo.");
+                errorUpdtLabel.setAlignment(Pos.CENTER);
+            }
+            errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+            return false;
+        }
+        errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+        errorUpdtLabel.setAlignment(Pos.CENTER);
+        return false;
     }
 
 }

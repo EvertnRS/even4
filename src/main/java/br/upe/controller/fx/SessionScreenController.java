@@ -49,14 +49,14 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/eventScreen.fxml", sessionPane, facade, null);
     }
 
     public void handleAddSession() throws IOException {
         genericButton("/fxml/createSessionScreen.fxml", sessionPane, facade, null);
     }
     public void handleInscriptionSession() throws IOException {
-        genericButton("/fxml/enterSessionScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/attendeeScreen.fxml", sessionPane, facade, null);
     }
 
     private void loadUserSessions() throws IOException {

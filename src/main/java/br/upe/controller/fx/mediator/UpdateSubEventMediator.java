@@ -98,7 +98,7 @@ public class UpdateSubEventMediator extends Mediator{
             case "handleUser" -> "/fxml/userScreen.fxml";
             case "handleSubEvent", "handleBack" -> "/fxml/subEventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
-            case "handleEvent" -> "/fxml/mainScreen.fxml";
+            case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);

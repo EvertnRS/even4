@@ -64,7 +64,7 @@ public class SubmitMediator extends Mediator {
     private void loadScreenForEvent(String event){
         String fxmlFile = getFxmlPathForEvent(event);
 
-        if (!event.equals("handleUpdateEvent")) {
+        if (!event.equals("handleUpdateArticle")) {
             this.articleId = null;
         }
 
@@ -84,7 +84,7 @@ public class SubmitMediator extends Mediator {
             case "handleUser" -> "/fxml/userScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
-            case "handleEvent" -> "/fxml/mainScreen.fxml";
+            case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };

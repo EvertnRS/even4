@@ -72,7 +72,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", editSessionPane, facade, null);
+        genericButton("/fxml/eventScreen.fxml", editSessionPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {

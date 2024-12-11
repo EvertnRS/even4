@@ -111,7 +111,7 @@ public class UserMediator extends Mediator {
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleEvent" -> "/fxml/mainScreen.fxml";
+            case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
