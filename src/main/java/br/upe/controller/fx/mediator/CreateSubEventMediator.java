@@ -94,11 +94,10 @@ public class CreateSubEventMediator extends Mediator{
 
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
-            case "handleSubEventCreate" -> "/fxml/createSubEventScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
             case "handleSubEvent", "handleBack" -> "/fxml/subEventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
-            case "handleEvent" -> "/fxml/mainScreen.fxml";
+            case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);

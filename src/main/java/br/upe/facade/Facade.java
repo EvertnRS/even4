@@ -1,9 +1,6 @@
 package br.upe.facade;
 import br.upe.controller.*;
-import br.upe.persistence.Event;
-import br.upe.persistence.SubmitArticle;
-import br.upe.persistence.Model;
-import br.upe.persistence.SubEvent;
+import br.upe.persistence.*;
 import br.upe.persistence.repository.Persistence;
 import java.io.IOException;
 import java.util.List;
@@ -63,8 +60,17 @@ public class Facade implements FacadeInterface {
 
 
     // SessionController methods
+    @Override
+    public List<Model> getAllSession() {
+        return sessionController.getAll();
+    }
+
     public Map<UUID, Persistence> getSessionHashMap() {
         return sessionController.getHashMap();
+    }
+
+    public List<Model> getAllSessions() {
+        return eventController.getAll();
     }
 
 
@@ -194,7 +200,7 @@ public class Facade implements FacadeInterface {
         attendeeController.update(params);
     }
 
-    public List<String> listAttendees(Object... params) throws IOException {
+    public List<Attendee> listAttendees(Object... params) throws IOException {
         return attendeeController.list(params);
     }
 

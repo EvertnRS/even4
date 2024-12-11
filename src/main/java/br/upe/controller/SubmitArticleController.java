@@ -118,12 +118,16 @@ public class SubmitArticleController implements Controller {
             return;
         }
 
-        UUID eventId = (UUID) params [0];
+        String filePath = (String) params [0];
         UUID articleId = (UUID) params [1];
 
+        Path path = Paths.get(filePath);
+        String articleName = path.getFileName().toString();
+
+        byte[] articleContent = Files.readAllBytes(path);
+
         if (articleId != null) {
-            // Atualizando o artigo
-            submitArticlesRepository.update(eventId, articleId);
+            submitArticlesRepository.update(articleName, articleContent, articleId);
         } else {
             LOGGER.warning("Artigo não encontrado.");
         }

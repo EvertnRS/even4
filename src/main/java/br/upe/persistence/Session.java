@@ -2,6 +2,7 @@ package br.upe.persistence;
 
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
+import jakarta.persistence.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -11,7 +12,14 @@ import java.time.Instant;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class Session implements Persistence {
+@Entity
+@Table(name = "sessions")
+public class Session implements Model {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "UUID")
+    private UUID id;
+
     private static final Logger LOGGER = Logger.getLogger(Session.class.getName());
     private static final String CONST_DESCRIPTION = "description";
     private static final String CONST_LOCATION = "location";
@@ -21,7 +29,6 @@ public class Session implements Persistence {
     private static final String OWNER_ID = "ownerId";
     private static final String SESSION_PATH = "./db/sessions.csv";
     private static final String WRITE_ERROR = "Erro na escrita do arquivo";
-    private UUID id;
     private String name;
     private Date date;
     private String description;
@@ -31,7 +38,7 @@ public class Session implements Persistence {
     private UUID eventId;
     private UUID ownerId;
 
-    @Override
+    /*@Override
     public Object getData(String dataToGet) {
         String data = "";
         try {
@@ -51,9 +58,9 @@ public class Session implements Persistence {
             LOGGER.warning("Informação não existe ou é restrita");
         }
         return data;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public Object getData(UUID eventId, String dataToGet) {
         return null;
     }
@@ -81,7 +88,7 @@ public class Session implements Persistence {
         } catch (IOException e) {
             LOGGER.warning("Informação não existe ou é restrita");
         }
-    }
+    }*/
 
     private String generateId() {
         SecureRandom secureRandom = new SecureRandom();
@@ -163,7 +170,7 @@ public class Session implements Persistence {
         this.ownerId = ownerId;
     }
 
-    public void create(Object... params) {
+    /*public void create(Object... params) {
         if (params.length < 9) {
             LOGGER.warning("Só pode ter 9 parâmetros");
             return; // Adicionando return para sair da função se o número de parâmetros estiver incorreto
@@ -207,13 +214,13 @@ public class Session implements Persistence {
                 return;
             }
 
-            /*List<Persistence> sessionList = eventRepository.getSessionsList();
+            *//*List<Persistence> sessionList = eventRepository.getSessionsList();
             if (sessionList == null) {
                 sessionList = new ArrayList<>(); // Inicialize a lista se estiver nula
-            }*/
+            }*//*
 
             Session session = new Session();
-            /*LOGGER.warning("IdEvent " + eventRepository.getId());*/
+            *//*LOGGER.warning("IdEvent " + eventRepository.getId());*//*
             session.setId(parsedId);
             session.setName(parsedName);
             session.setDate(parsedDate);
@@ -222,15 +229,15 @@ public class Session implements Persistence {
             session.setStartTime(parsedStartTime);
             session.setEndTime(parsedEndTime);
             session.setOwnerId(parsedOwnerId);
-           /* sessionList.add(session);*/
+           *//* sessionList.add(session);*//*
             LOGGER.warning("Sessão Criada: " + session.getId());
 
             // Se necessário, atualizar o evento com a nova lista de sessões
-            /*eventRepository.setSessionsList(sessionList);
+            *//*eventRepository.setSessionsList(sessionList);
 
             eventH.put(eventId, eventRepository);
 
-            LOGGER.warning("Sessões atuais: " + sessionList.size());*/
+            LOGGER.warning("Sessões atuais: " + sessionList.size());*//*
 
         } catch (IOException writerEx) {
             LOGGER.warning(WRITE_ERROR);
@@ -340,5 +347,5 @@ public class Session implements Persistence {
         } finally {
             writer.close();
         }
-    }
+    }*/
 }

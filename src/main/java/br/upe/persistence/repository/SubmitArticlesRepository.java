@@ -99,26 +99,19 @@ public class SubmitArticlesRepository implements Persistence {
 
     @Override
     public void update(Object... params) {
-        if (params.length != 2) {
-            LOGGER.warning("São necessários 2 parâmetros: ID do evento (UUID) e o ID do artigo (UUID).");
+        if (params.length != 3) {
+            LOGGER.warning("São necessários 3 parâmetros.");
             return;
         }
 
-        UUID eventId = (UUID) params[0];
-        UUID articleId = (UUID) params[1];
+        String articleName = (String) params[0];
+        byte[] articleContent = (byte[]) params[1];
+        UUID articleId = (UUID) params[2];
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
-
-            Event event = entityManager.find(Event.class, eventId);
-            if (event == null) {
-                LOGGER.warning("Evento não encontrado.");
-                return;
-            }
-
-
             SubmitArticle article = entityManager.find(SubmitArticle.class, articleId);
             if (article == null) {
                 LOGGER.warning("Artigo não encontrado.");
@@ -127,7 +120,8 @@ public class SubmitArticlesRepository implements Persistence {
 
 
             transaction.begin();
-            article.setEventId(event);
+            article.setName(articleName);
+            article.setArticle(articleContent);
             entityManager.merge(article);
             transaction.commit();
 

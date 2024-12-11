@@ -1,8 +1,15 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.mediator.CertificateMediator;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.Attendee;
+import br.upe.persistence.Session;
+import br.upe.persistence.Event;
+import br.upe.utils.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,14 +27,13 @@ import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.Duration;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
 public class CertificateScreenController extends BaseController implements FxController {
-    private static final String SESSION_ID = "sessionId";
     private FacadeInterface facade;
     private String attendeeId;
+    private CertificateMediator mediator;
 
     @FXML
     private AnchorPane certificationPane;
@@ -54,41 +60,15 @@ public class CertificateScreenController extends BaseController implements FxCon
         Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/certificate/DefaultCertificate.png")).toExternalForm());
         exampleCertificate.setImage(image);
 
+        mediator = new CertificateMediator(this, facade, certificationPane, errorUpdtLabel);
+        mediator.registerComponents();
     }
 
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", certificationPane, facade, null);
-    }
+    public void createCertificate() throws IOException {
+        String certificateAddress = addresTextField.getText();
 
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", certificationPane, facade, null);
-    }
-
-    public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", certificationPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", certificationPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", certificationPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", certificationPane, facade, null);
-    }
-
-    public void handleInscriptionSession() throws IOException {
-        genericButton("/fxml/enterSessionScreen.fxml", certificationPane, facade, null);
-    }
-
-    @FXML
-    private void createArticle()throws IOException {
-        String certificateAddres = addresTextField.getText();
-        drawCertificate(certificateAddres);
-        handleInscriptionSession();
+            drawCertificate(certificateAddress);
+            mediator.notify("handleBack");
     }
 
     private void drawCertificate(String certificateAddres) {
@@ -110,17 +90,30 @@ public class CertificateScreenController extends BaseController implements FxCon
             g2dName.setFont(new Font("Arial", Font.BOLD, 60));
             g2dName.setColor(Color.BLACK);
 
-            Map<UUID, Persistence> attendeeMap = facade.getAttendeeHashMap();
-            Map<UUID, Persistence> sessionMap = facade.getSessionHashMap();
-            String attendeeName = (String) attendeeMap.get(attendeeId).getData("name");
+            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
 
-            String eventName = (String) sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("name");
+            Attendee attendee = entityManager.find(Attendee.class, attendeeId);
+            if (attendee == null) {
+                throw new EntityNotFoundException("Attendee não encontrado");
+            }
 
-            String startTime = (String) sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("startTime");
-            String endTime = (String) sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("endTime");
+            UUID sessionId = attendee.getSessionIds().iterator().next();
+            Session session = entityManager.find(Session.class, sessionId);
+            if (session == null) {
+                throw new EntityNotFoundException("Sessão não encontrada");
+            }
+
+            Event event = entityManager.find(Event.class, session.getEventId());
+            if (event == null) {
+                throw new EntityNotFoundException("Evento não encontrado");
+            }
+
+            String attendeeName = attendee.getName();
+            String eventName = event.getName();
+            String startTime = String.valueOf(session.getStartTime());
+            String endTime = String.valueOf(session.getEndTime());
             String workload = timeDifference(startTime, endTime);
-
-            String eventDate = (String) sessionMap.get(attendeeMap.get(attendeeId).getData(SESSION_ID)).getData("date");
+            String eventDate = String.valueOf(session.getDate());
 
             int xName = 130;
             int yName = 400;
@@ -172,9 +165,7 @@ public class CertificateScreenController extends BaseController implements FxCon
         return String.format("%d hora(s)", hours);
     }
 
-
-    @FXML
-    private void openDirectoryChooser() {
+    public void openDirectoryChooser() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Selecione uma Pasta");
 
@@ -185,7 +176,12 @@ public class CertificateScreenController extends BaseController implements FxCon
             addresTextField.setText(selectedDirectory.getAbsolutePath());
         } else {
             errorUpdtLabel.setText("Nenhuma pasta selecionada.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
         }
+    }
+
+    public TextField getAddresTextField() {
+        return addresTextField;
     }
 
     @Override
