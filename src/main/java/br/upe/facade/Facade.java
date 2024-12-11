@@ -153,6 +153,10 @@ public class Facade implements FacadeInterface {
         return submitArticleController.list(params);
     }
 
+    public <T> List <T> getEventArticles(UUID eventId){
+        return (List<T>) submitArticleController.getEventArticles(eventId);
+    }
+
     // UserController methods
     public Map<UUID, Persistence> getUserHashMap() {
         return userController.getHashMap();
@@ -194,10 +198,6 @@ public class Facade implements FacadeInterface {
 
     public void readAttendee() throws IOException {
         attendeeController.read();
-    }
-
-    public void updateAttendee(Object... params) throws IOException {
-        attendeeController.update(params);
     }
 
     public List<Attendee> listAttendees(Object... params) throws IOException {

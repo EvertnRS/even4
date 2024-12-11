@@ -118,8 +118,24 @@ public class EventScreenController extends BaseController implements FxControlle
                     detailsButton.setGraphic(detailsIcon);
                     detailsButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
+                    Button articleButton = new Button("Artigos");
+                    ImageView articleIcon = new ImageView(new Image("images/icons/buttons/articleIcon.png"));
+                    articleIcon.setFitWidth(16);
+                    articleIcon.setFitHeight(16);
+                    articleButton.setGraphic(articleIcon);
+                    articleButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
                     detailsButton.setOnAction(e ->
                             handleDetailEvent((UUID) eventRepository.getData(event.getId(), "id")));
+
+                    articleButton.setOnAction(e ->
+                    {
+                        try {
+                            handleEventArticles((UUID) eventRepository.getData(event.getId(), "id"));
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    });
 
                     editButton.setOnAction(e -> {
                         try {
@@ -139,7 +155,7 @@ public class EventScreenController extends BaseController implements FxControlle
 
                     HBox actionButtons = new HBox(10);
                     actionButtons.setAlignment(Pos.CENTER_RIGHT);
-                    actionButtons.getChildren().addAll(detailsButton, editButton, deleteButton);
+                    actionButtons.getChildren().addAll(articleButton, detailsButton, editButton, deleteButton);
 
                     eventContainer.getChildren().addAll(eventLabel, actionButtons);
 
@@ -147,6 +163,11 @@ public class EventScreenController extends BaseController implements FxControlle
                 }
             }
         }
+    }
+
+    private void handleEventArticles(UUID id) throws IOException {
+        mediator.setEventId(String.valueOf(id));
+        mediator.notify("handleEventArticles");
     }
 
     private void handleDetailEvent(UUID id) {

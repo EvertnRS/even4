@@ -1,56 +1,55 @@
 package br.upe.controller.fx.mediator;
 
-import br.upe.controller.fx.EventScreenController;
+import br.upe.controller.fx.EventArticleScreenController;
 import br.upe.facade.FacadeInterface;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.util.UUID;
 
-public class EventMediator extends Mediator {
-    private final EventScreenController eventScreenController;
-    private String eventId;
+public class EventArticleMediator extends Mediator {
+    private final EventArticleScreenController eventArticleScreenController;
+    private UUID articleId;
 
-    public EventMediator(EventScreenController eventController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
-        super(facade, screenPane, errorUpdtLabel, eventController);
-        this.eventScreenController = eventController;
+    public EventArticleMediator(EventArticleScreenController eventArticleScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
+        super(facade, screenPane, errorUpdtLabel, eventArticleScreenController);
+        this.eventArticleScreenController = eventArticleScreenController;
     }
 
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
+    public void setArticleId(UUID eventId) {
+        this.articleId = eventId;
     }
 
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#handleAddButton", "handleCreateEvent");
+            setupButtonAction("#handleSubEventButton", "handleSubEvent");
+            setupButtonAction("#handleSubmitButton", "handleSubmit");
+            setupButtonAction("#handleSessionButton", "handleSession");
             setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#handleEventButton", "handleEvent");
-            setupButtonAction("#handleSubEventButton", "handleSubEvent");
-            setupButtonAction("#handleSessionButton", "handleSession");
-            setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleUserButton", "handleUser");
+            setupButtonAction("#handleBackButton", "handleBack");
             setupButtonAction("#logoutButton", "logout");
         }
     }
 
     @Override
     public Object notify(String event) throws IOException {
-        if (eventScreenController != null) {
+        if (eventArticleScreenController != null) {
             switch (event) {
-                case "handleCreateEvent"
-                , "handleUpdateEvent"
-                , "handleEvent"
-                , "handleEventArticles"
-                , "handleUser"
+                case "handleUser"
+                , "handleSubmit"
+                , "handleBack"
                 , "handleSession"
                 , "handleInscription"
                 , "handleSubEvent"
-                , "handleSubmit":
+                , "handleEvent":
                     loadScreenForEvent(event);
                     break;
 
-                case "handleDeleteEvent":
+                case "handleDeleteArticle":
                     return deleteButtonAlert();
 
                 case "logout":
@@ -68,13 +67,13 @@ public class EventMediator extends Mediator {
     private void loadScreenForEvent(String event){
         String fxmlFile = getFxmlPathForEvent(event);
 
-        if (!event.equals("handleUpdateEvent") && !event.equals("handleEventArticles")) {
-            this.eventId = null;
+        if (!event.equals("handleUpdateArticle")) {
+            this.articleId = null;
         }
 
         loadScreenWithTask(() -> {
             try {
-                eventScreenController.genericButton(fxmlFile, screenPane, facade, eventId);
+                eventArticleScreenController.genericButton(fxmlFile, screenPane, facade, String.valueOf(articleId));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -83,24 +82,20 @@ public class EventMediator extends Mediator {
 
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
-            case "handleCreateEvent" -> "/fxml/createEventScreen.fxml";
-            case "handleUpdateEvent" -> "/fxml/updateEventScreen.fxml";
-            case "handleEventArticles" -> "/fxml/eventArticleScreen.fxml";
-            case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleInscription" -> "/fxml/attendeeScreen.fxml";
-            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
+            case "handleSession" -> "/fxml/sessionScreen.fxml";
+            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
+            case "handleEvent", "handleBack" -> "/fxml/eventScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };
     }
 
-
     private void loadScreenWithTask(Runnable task) {
         assert screenPane != null;
-        eventScreenController.loadScreen("Carregando", () -> {
+        eventArticleScreenController.loadScreen("Carregando", () -> {
             try {
                 task.run();
             } catch (Exception e) {
@@ -110,3 +105,4 @@ public class EventMediator extends Mediator {
     }
 
 }
+

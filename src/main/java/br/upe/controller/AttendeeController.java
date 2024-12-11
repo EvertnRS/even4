@@ -37,6 +37,11 @@ public class AttendeeController implements Controller {
     }
 
     @Override
+    public <T> List<T> getEventArticles(UUID eventId) {
+        return List.of();
+    }
+
+    @Override
     public <T> List<T> list(Object... params) throws IOException {
         UUID userId = UUID.fromString((String) params[0]);
         AttendeeRepository eventRepository = AttendeeRepository.getInstance();

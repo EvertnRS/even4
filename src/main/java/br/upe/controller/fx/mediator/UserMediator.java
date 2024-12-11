@@ -46,6 +46,7 @@ public class UserMediator extends Mediator {
             setupButtonAction("#handleSessionButton", "handleSession");
             setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleEventButton", "handleEvent");
+            setupButtonAction("#handleUserButton", "handleUser");
             setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#logoutButton", "logout");
         }

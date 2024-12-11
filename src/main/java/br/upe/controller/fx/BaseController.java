@@ -51,6 +51,9 @@ public abstract class BaseController {
             if (screenController instanceof CertificateScreenController) {
                 ((CertificateScreenController) screenController).setEventName(eventId);
             }
+            if (screenController instanceof EventArticleScreenController) {
+                ((EventArticleScreenController) screenController).setEventId(UUID.fromString(eventId));
+            }
         }
 
         Platform.runLater(() -> {

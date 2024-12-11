@@ -30,8 +30,8 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public List<Model> getAll() {
-        return List.of();
+    public <T> List <T> getAll() {
+        return (List<T>) submitArticlesRepository.getAllArticles();
     }
 
     public void setArticleHashMap(Map<UUID, Persistence> articleHashMap) {
@@ -110,6 +110,9 @@ public class SubmitArticleController implements Controller {
         return (List<T>) userArticles;
     }
 
+    public <T> List <T> getEventArticles(UUID eventId) {
+        return (List<T>) submitArticlesRepository.getAllEventArticles(eventId);
+    }
 
     @Override
     public void update(Object... params) throws IOException {

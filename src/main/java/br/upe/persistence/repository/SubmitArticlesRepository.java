@@ -38,6 +38,12 @@ public class SubmitArticlesRepository implements Persistence {
         return query.getResultList();
     }
 
+    public List<SubmitArticle> getAllEventArticles(UUID eventId) {
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        TypedQuery<SubmitArticle> query = entityManager.createQuery("SELECT a FROM SubmitArticle a WHERE a.eventId.id = :eventId", SubmitArticle.class);
+        query.setParameter("eventId", eventId);
+        return query.getResultList();
+    }
 
 
     @Override
