@@ -3,6 +3,7 @@ package br.upe.persistence.repository;
 import br.upe.persistence.Attendee;
 import br.upe.persistence.Session;
 import br.upe.persistence.User;
+import br.upe.persistence.builder.AttendeeBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -68,9 +69,10 @@ public class AttendeeRepository implements Persistence{
                     .orElse(null);
 
             if (attendee == null) {
-                attendee = new Attendee();
-                attendee.setId(UUID.randomUUID());
-                attendee.setUserId(parsedUser);
+                attendee = AttendeeBuilder.builder()
+                        .withId(UUID.randomUUID())
+                        .withUser(parsedUser)
+                        .build();
             }
 
             attendee.addSession(session);
