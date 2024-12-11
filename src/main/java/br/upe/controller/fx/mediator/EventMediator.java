@@ -24,6 +24,8 @@ public class EventMediator extends Mediator {
     public void registerComponents() {
         if (screenPane != null) {
             setupButtonAction("#handleAddButton", "handleCreateEvent");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
+            setupButtonAction("#handleEventButton", "handleEvent");
             setupButtonAction("#handleSubEventButton", "handleSubEvent");
             setupButtonAction("#handleSessionButton", "handleSession");
             setupButtonAction("#handleSubmitButton", "handleSubmit");
@@ -38,8 +40,11 @@ public class EventMediator extends Mediator {
             switch (event) {
                 case "handleCreateEvent"
                 , "handleUpdateEvent"
+                , "handleEvent"
+                , "handleEventArticles"
                 , "handleUser"
                 , "handleSession"
+                , "handleInscription"
                 , "handleSubEvent"
                 , "handleSubmit":
                     loadScreenForEvent(event);
@@ -63,7 +68,7 @@ public class EventMediator extends Mediator {
     private void loadScreenForEvent(String event){
         String fxmlFile = getFxmlPathForEvent(event);
 
-        if (!event.equals("handleUpdateEvent")) {
+        if (!event.equals("handleUpdateEvent") && !event.equals("handleEventArticles")) {
             this.eventId = null;
         }
 
@@ -80,8 +85,11 @@ public class EventMediator extends Mediator {
         return switch (event) {
             case "handleCreateEvent" -> "/fxml/createEventScreen.fxml";
             case "handleUpdateEvent" -> "/fxml/updateEventScreen.fxml";
+            case "handleEventArticles" -> "/fxml/eventArticleScreen.fxml";
+            case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";

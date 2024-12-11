@@ -12,12 +12,12 @@
     <children>
         <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
             <image>
-                <Image url="@/images/userIcon.png" />
+                <Image url="@/images/icons/userIcon.png" />
             </image>
         </ImageView>
         <ImageView fx:id="exitView" fitHeight="34.0" fitWidth="29.0" layoutX="23.0" layoutY="508.0" preserveRatio="true">
             <image>
-                <Image url="@/images/exit.png" />
+                <Image url="@/images/icons/buttons/exit.png" />
             </image>
         </ImageView>
         <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10 0 0 10;">

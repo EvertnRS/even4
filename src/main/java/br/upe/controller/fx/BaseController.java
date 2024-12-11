@@ -51,6 +51,9 @@ public abstract class BaseController {
             if (screenController instanceof CertificateScreenController) {
                 ((CertificateScreenController) screenController).setEventName(eventId);
             }
+            if (screenController instanceof EventArticleScreenController) {
+                ((EventArticleScreenController) screenController).setEventId(UUID.fromString(eventId));
+            }
         }
 
         Platform.runLater(() -> {
@@ -58,7 +61,7 @@ public abstract class BaseController {
             Stage stage = (Stage) pane.getScene().getWindow();
 
             stage.getIcons().clear();
-            stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
+            stage.getIcons().add(new javafx.scene.image.Image("/images/logo/Logo.png"));
             stage.setScene(scene);
             stage.setTitle("Even4");
             stage.setResizable(false);

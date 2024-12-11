@@ -29,6 +29,11 @@ public class EventController implements Controller {
         return (List<T>) eventRepository.getAllEvents();
     }
 
+    @Override
+    public <T> List<T> getEventArticles(UUID eventId) {
+        return List.of();
+    }
+
     public Map<UUID, Persistence> getHashMap() {
         System.out.println(eventHashMap);
         return eventHashMap;

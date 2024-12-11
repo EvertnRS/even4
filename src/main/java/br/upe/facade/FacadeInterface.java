@@ -44,6 +44,7 @@ public interface FacadeInterface {
     void updateArticle(Object... params) throws IOException;
     void readArticle(String id) throws IOException;
     List<SubmitArticle> listSubmitArticles(Object... params) throws IOException;
+    <T> List <T> getEventArticles(UUID eventId);
 
     // UserController methods
     Map<UUID, Persistence> getUserHashMap();
@@ -58,7 +59,6 @@ public interface FacadeInterface {
     Map<UUID, Persistence> getAttendeeHashMap();
     void createAttendee(Object... params) throws IOException;
     void readAttendee() throws IOException;
-    void updateAttendee(Object... params) throws IOException;
     List<Attendee> listAttendees(Object... params) throws IOException;
     void deleteAttendee(Object... params) throws IOException;
 }

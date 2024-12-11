@@ -60,13 +60,21 @@ public abstract class Mediator implements MediatorInterface {
             return false;
         }
 
-        if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newName, eventList)) {
+        if (newLocation.isEmpty() || newDescription.isEmpty()) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
             return false;
         }
+
+        if(isValidName(newName, eventList)){
+            errorUpdtLabel.setText("Nome inválido.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+            return false;
+        }
+
         return true;
     }
+
 
     protected <T> boolean isValidName(String name, List<T> items) {
         for (T item : items) {

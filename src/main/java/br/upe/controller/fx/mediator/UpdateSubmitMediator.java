@@ -30,6 +30,7 @@ public class UpdateSubmitMediator extends Mediator{
             setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleUserButton", "handleUser");
             setupButtonAction("#handleBackButton", "handleBack");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -49,6 +50,7 @@ public class UpdateSubmitMediator extends Mediator{
                 case "handleUser"
                 , "handleEvent"
                 , "handleBack"
+                , "handleInscription"
                 , "handleSession"
                 , "handleSubEvent"
                 , "handleSubmit":
@@ -83,6 +85,7 @@ public class UpdateSubmitMediator extends Mediator{
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case "handleUser" -> "/fxml/userScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";

@@ -32,6 +32,7 @@ public class CertificateMediator extends Mediator{
             setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleUserButton", "handleUser");
             setupButtonAction("#handleBackButton", "handleBack");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#logoutButton", "logout");
         }
         setupListeners();
@@ -51,6 +52,7 @@ public class CertificateMediator extends Mediator{
                     break;
                 case "handleUser"
                 , "handleSubEvent"
+                , "handleInscription"
                 , "handleBack"
                 , "handleSession"
                 , "handleEvent"
@@ -86,6 +88,7 @@ public class CertificateMediator extends Mediator{
             case "handleBack" -> "/fxml/attendeeScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleEvent" -> "/fxml/eventScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);

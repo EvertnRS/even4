@@ -45,6 +45,7 @@ public class UpdateSubEventMediator extends Mediator{
             setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleUserButton", "handleUser");
             setupButtonAction("#handleBackButton", "handleBack");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -60,6 +61,7 @@ public class UpdateSubEventMediator extends Mediator{
                 , "handleSubEvent"
                 , "handleBack"
                 , "handleSession"
+                , "handleInscription"
                 , "handleEvent"
                 , "handleSubmit":
                     loadScreenForEvent(event);
@@ -95,11 +97,13 @@ public class UpdateSubEventMediator extends Mediator{
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case "handleSubEventUpdate" -> "/fxml/updateSubEventScreen.fxml";
+
             case "handleUser" -> "/fxml/userScreen.fxml";
             case "handleSubEvent", "handleBack" -> "/fxml/subEventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };

@@ -68,7 +68,7 @@ public class AccessMediator extends Mediator {
                 break;
             case "handleAccessButton":
                 assert userLoginController != null;
-                userLoginController.genericButton("/fxml/eventScreen.fxml", screenPane, facade, null);
+                userLoginController.genericButton("/fxml/attendeeScreen.fxml", screenPane, facade, null);
                 break;
             case "returnToLogin":
                 assert userSignUpController != null;

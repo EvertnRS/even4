@@ -22,4 +22,5 @@ public interface Controller {
 
     <T> List <T> getAll();
 
+    <T> List <T> getEventArticles(UUID eventId);
 }

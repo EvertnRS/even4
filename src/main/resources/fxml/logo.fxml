@@ -6,7 +6,7 @@
 <AnchorPane fx:id="anchorPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/21.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.LogoController">
     <ImageView fx:id="imageView" fitHeight="378.0" fitWidth="368.0" layoutX="306.0" layoutY="107.0" preserveRatio="true">
         <image>
-            <Image url="@/images/Even4.png" />
+            <Image url="@/images/logo/Even4.png" />
         </image>
     </ImageView>
 </AnchorPane>

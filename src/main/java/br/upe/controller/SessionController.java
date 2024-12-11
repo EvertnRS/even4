@@ -35,6 +35,11 @@ public class SessionController implements Controller {
     }
 
     @Override
+    public <T> List<T> getEventArticles(UUID eventId) {
+        return List.of();
+    }
+
+    @Override
     public List<Model> getAll() {
         return List.of();
     }
