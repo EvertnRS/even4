@@ -64,7 +64,7 @@ public class SubmitMediator extends Mediator {
     private void loadScreenForEvent(String event){
         String fxmlFile = getFxmlPathForEvent(event);
 
-        if (!event.equals("handleUpdateEvent")) {
+        if (!event.equals("handleUpdateArticle")) {
             this.articleId = null;
         }
 

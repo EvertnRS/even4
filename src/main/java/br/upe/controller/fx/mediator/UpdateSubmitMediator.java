@@ -2,10 +2,14 @@ package br.upe.controller.fx.mediator;
 
 import br.upe.controller.fx.UpdateSubmitScreenController;
 import br.upe.facade.FacadeInterface;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class UpdateSubmitMediator extends Mediator{
     private final UpdateSubmitScreenController updateSubmitScreenController;
@@ -19,6 +23,7 @@ public class UpdateSubmitMediator extends Mediator{
     public void registerComponents() {
         if (screenPane != null) {
             setupButtonAction("#updateButton", "handleArticleUpdate");
+            setupButtonAction("#fileChooser", "openFileChooser");
             setupButtonAction("#handleEventButton", "handleEvent");
             setupButtonAction("#handleSubEventButton", "handleSubEvent");
             setupButtonAction("#handleSessionButton", "handleSession");
@@ -34,7 +39,12 @@ public class UpdateSubmitMediator extends Mediator{
         if (updateSubmitScreenController != null) {
             switch (event) {
                 case "handleArticleUpdate":
-                    handleArticleUpdate();
+                    if (validateAddress()){
+                        handleArticleUpdate();
+                    }
+                    break;
+                case "openFileChooser":
+                    updateSubmitScreenController.openFileChooser();
                     break;
                 case "handleUser"
                 , "handleEvent"
@@ -96,5 +106,24 @@ public class UpdateSubmitMediator extends Mediator{
                 e.printStackTrace();
             }
         }, screenPane);
+    }
+
+    public boolean validateAddress() {
+        Path path = Paths.get(updateSubmitScreenController.getNewArticleTextField().getText());
+
+        if (Files.exists(path)) {
+            if (Files.isRegularFile(path)) {
+                return true;
+            } else {
+                errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+                errorUpdtLabel.setAlignment(Pos.CENTER);
+            }
+            errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+            return false;
+        }
+        errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+        errorUpdtLabel.setAlignment(Pos.CENTER);
+        return false;
     }
 }

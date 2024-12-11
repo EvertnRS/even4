@@ -1,25 +1,30 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.UpdateSubmitMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
 public class UpdateSubmitScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
-    private String eventName;
-    private String nameArticle;
-    private UUID ArticleId;
+    private UUID articleId;
     private UpdateSubmitMediator mediator;
 
     @FXML
@@ -27,15 +32,15 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     @FXML
     private Label userEmail;
     @FXML
-    private ComboBox<String> eventComboBox;
+    private  Text newArticlePlaceholder;
+    @FXML
+    private  TextField newArticleTextField;
+    @FXML
+    private Label errorUpdtLabel;
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
+    public void setEventName(String articleId) {
+        this.articleId = UUID.fromString(articleId);
     }
-    public void setNameArticle(String nameArticle) {
-        this.nameArticle = nameArticle;
-    }
-    public void setArticleId(UUID articleId) {this.ArticleId = articleId;}
 
     public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
@@ -44,45 +49,46 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
 
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
-        loadArticles();
 
-        this.mediator = new UpdateSubmitMediator(this, facade, submitPane, null);
+        setupPlaceholders();
+
+        this.mediator = new UpdateSubmitMediator(this, facade, submitPane, errorUpdtLabel);
         mediator.registerComponents();
     }
 
-    private void loadArticles() throws IOException {
-        List<Model> allEvents = facade.getAllEvent();
-        eventComboBox.getItems().clear();
+    public void openFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Selecione um Artigo");
 
-        EventRepository eventRepository = EventRepository.getInstance();
 
-        for (Model event : allEvents) {
-            String eventName = (String) eventRepository.getData(event.getId(), "name");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+        );
 
-            if (eventName != null) {
-                eventComboBox.getItems().add(eventName);
-            }
+        Stage stage = (Stage) submitPane.getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+        if (selectedFile != null) {
+            newArticleTextField.setText(selectedFile.getAbsolutePath());
+        } else {
+            errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
         }
     }
 
     public void updateArticle() throws IOException {
-        String novoEventName = eventComboBox.getSelectionModel().getSelectedItem();
+        String newArticle = newArticleTextField.getText();
 
-        List<Model> allEvents = facade.getAllEvent();
+        facade.updateArticle(newArticle, articleId);
+        mediator.notify("handleBack");
+    }
 
-        UUID eventId = null;
+    public TextField getNewArticleTextField() {
+        return newArticleTextField;
+    }
 
-        for (Model event : allEvents) {
-            if (event.getName().equals(novoEventName)) {
-                eventId = event.getId();
-                break;
-            }
-        }
-
-        if (eventId != null) {
-            facade.updateArticle(eventId, ArticleId);
-            mediator.notify("handleBack");
-        }
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(newArticleTextField, newArticlePlaceholder);
     }
 
 

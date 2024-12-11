@@ -60,8 +60,8 @@ public class CertificateScreenController extends BaseController implements FxCon
         Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/DefaultCertificate.png")).toExternalForm());
         exampleCertificate.setImage(image);
 
+        mediator = new CertificateMediator(this, facade, certificationPane, errorUpdtLabel);
         mediator.registerComponents();
-        mediator.setAddressTextField(addresTextField);
     }
 
     public void createCertificate() throws IOException {
@@ -178,6 +178,10 @@ public class CertificateScreenController extends BaseController implements FxCon
             errorUpdtLabel.setText("Nenhuma pasta selecionada.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
         }
+    }
+
+    public TextField getAddresTextField() {
+        return addresTextField;
     }
 
     @Override

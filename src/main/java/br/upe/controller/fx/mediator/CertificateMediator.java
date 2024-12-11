@@ -15,7 +15,6 @@ import java.nio.file.Paths;
 
 public class CertificateMediator extends Mediator{
     private final CertificateScreenController certificateScreenController;
-    private TextField addresTextField;
 
     public CertificateMediator(CertificateScreenController certificateScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
         super(facade, screenPane, errorUpdtLabel, certificateScreenController);
@@ -122,7 +121,7 @@ public class CertificateMediator extends Mediator{
     }
 
     public boolean validateAddress() {
-        Path path = Paths.get(addresTextField.getText());
+        Path path = Paths.get(certificateScreenController.getAddresTextField().getText());
 
         if (Files.exists(path)) {
             if (Files.isDirectory(path)) {
@@ -131,12 +130,12 @@ public class CertificateMediator extends Mediator{
                 errorUpdtLabel.setText("Nenhuma pasta selecionada.");
                 errorUpdtLabel.setAlignment(Pos.CENTER);
             }
+            errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
             return false;
         }
+        errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+        errorUpdtLabel.setAlignment(Pos.CENTER);
         return false;
-    }
-
-    public void setAddressTextField(TextField addresTextField) {
-        this.addresTextField = addresTextField;
     }
 }
