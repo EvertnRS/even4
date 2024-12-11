@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -139,6 +140,13 @@ public class CertificateScreenController extends BaseController implements FxCon
             File outputFile = new File(directory, "certificate.png");
 
             ImageIO.write(newCertificate, "png", outputFile);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Download Completo");
+            alert.setHeaderText(null);
+            alert.setContentText("O certificado foi baixado com sucesso!");
+            alert.showAndWait();
+
         } catch (IOException e) {
             errorUpdtLabel.setText("Erro: " + e.getMessage());
             e.printStackTrace();
