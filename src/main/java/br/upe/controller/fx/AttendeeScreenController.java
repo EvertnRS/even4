@@ -8,11 +8,15 @@ import br.upe.persistence.repository.AttendeeRepository;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SessionRepository;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -33,6 +37,12 @@ public class AttendeeScreenController extends BaseController implements FxContro
     private Label userEmail;
     @FXML
     private AnchorPane attendeePane;
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private Text searchPlaceholder;
+    @FXML
+    private ImageView logoView6;
 
     public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
@@ -42,6 +52,15 @@ public class AttendeeScreenController extends BaseController implements FxContro
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadSessions();
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            setupPlaceholders();
+            try {
+                loadSessions();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         this.mediator = new AttendeeMediator(this, facade, attendeePane, null);
         mediator.registerComponents();
@@ -56,52 +75,72 @@ public class AttendeeScreenController extends BaseController implements FxContro
 
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
-        scrollPane.setStyle("-fx-padding: 20px;");
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-top: 2px; -border-color: #cccccc");
+
         attendeeVBox.setAlignment(Pos.CENTER);
 
         for (Attendee attendee : userAttendees) {
             if (attendee.getUserId().getId().equals(UUID.fromString(facade.getUserData("id")))) {
                 for (UUID sessionId : attendee.getSessionIds()) {
                     VBox sessionContainer = new VBox();
-                    sessionContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                    sessionContainer.setStyle("-fx-background-color: #d3d3d3; " +
+                            "-fx-padding: 10px 20px 10px 20px; " +
+                            "-fx-margin: 0 40px 0 40px; " +
+                            "-fx-spacing: 5px; " +
+                            "-fx-border-radius: 10px; " +
+                            "-fx-background-radius: 10px;");
 
-                    Label sessionLabel = new Label((String) sessionRepository.getData(sessionId, "name"));
-                    sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
+                    VBox.setMargin(sessionContainer, new Insets(5, 20, 5, 20));
 
-                    Button deleteButton = new Button("Excluir");
-                    deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                    Label sessionLabel;
+                    if (searchTextField.getText().isEmpty() || String.valueOf(sessionRepository.getData(sessionId,"name")).contains(searchTextField.getText())) {
+                        sessionLabel = new Label((String) sessionRepository.getData(sessionId, "name"));
+                        sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
-                    Button certificateButton = new Button("Detalhes");
-                    certificateButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                        Button deleteButton = new Button("Excluir");
+                        ImageView deleteIcon = new ImageView(new Image("images/icons/buttons/deleteIcon.png"));
+                        deleteIcon.setFitWidth(16);
+                        deleteIcon.setFitHeight(16);
+                        deleteButton.setGraphic(deleteIcon);
+                        deleteButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                    String sessionDate = (String) sessionRepository.getData(sessionId, "date");
-                    verifyCertification(certificateButton, sessionDate);
+                        Button certificateButton = new Button("Detalhes");
+                        ImageView certificateIcon = new ImageView(new Image("images/icons/buttons/certificateIcon.png"));
+                        certificateIcon.setFitWidth(16);
+                        certificateIcon.setFitHeight(16);
+                        certificateButton.setGraphic(certificateIcon);
+                        certificateButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                    deleteButton.setOnAction(e -> {
-                        try {
-                            handleDeleteAttendee((UUID) attendeeRepository.getData(attendee.getId(),"id"), UUID.fromString(facade.getUserData("id")));
-                        } catch (IOException ex) {
-                            throw new IllegalArgumentException(ex);
-                        }
-                    });
 
-                    certificateButton.setOnAction(e -> {
-                        try {
-                            handleCertificate(String.valueOf(attendeeRepository.getData(attendee.getId(),"id")));
-                        } catch (IOException ex) {
-                            throw new IllegalArgumentException(ex);
-                        }
-                    });
+                        String sessionDate = (String) sessionRepository.getData(sessionId, "date");
+                        verifyCertification(certificateButton, sessionDate);
 
-                    HBox actionButtons = new HBox(10);
-                    actionButtons.setAlignment(Pos.CENTER_RIGHT);
-                    actionButtons.getChildren().addAll(certificateButton, deleteButton);
+                        deleteButton.setOnAction(e -> {
+                            try {
+                                handleDeleteAttendee((UUID) attendeeRepository.getData(attendee.getId(), "id"), UUID.fromString(facade.getUserData("id")));
+                            } catch (IOException ex) {
+                                throw new IllegalArgumentException(ex);
+                            }
+                        });
 
-                    Label eventLabel = createEventLabel((UUID) sessionRepository.getData(sessionId, "eventId"));
+                        certificateButton.setOnAction(e -> {
+                            try {
+                                handleCertificate(String.valueOf(attendeeRepository.getData(attendee.getId(), "id")));
+                            } catch (IOException ex) {
+                                throw new IllegalArgumentException(ex);
+                            }
+                        });
 
-                    sessionContainer.getChildren().addAll(sessionLabel, actionButtons, eventLabel);
+                        HBox actionButtons = new HBox(10);
+                        actionButtons.setAlignment(Pos.CENTER_RIGHT);
+                        actionButtons.getChildren().addAll(certificateButton, deleteButton);
 
-                    attendeeVBox.getChildren().add(sessionContainer);
+                        Label eventLabel = createEventLabel((UUID) sessionRepository.getData(sessionId, "eventId"));
+
+                        sessionContainer.getChildren().addAll(sessionLabel, actionButtons, eventLabel);
+
+                        attendeeVBox.getChildren().add(sessionContainer);
+                    }
                 }
             }
         }
@@ -146,6 +185,16 @@ public class AttendeeScreenController extends BaseController implements FxContro
         if (result.isPresent() && result.get() == buttonSim) {
             facade.deleteAttendee(id, userId);
             loadSessions();
+        }
+    }
+
+    public void setupPlaceholders() {
+        if (!searchTextField.getText().isEmpty()) {
+            searchPlaceholder.setVisible(false);
+            logoView6.setVisible(false);
+        } else {
+            searchPlaceholder.setVisible(true);
+            logoView6.setVisible(true);
         }
     }
 

@@ -27,6 +27,7 @@ public class SubEventMediator extends Mediator {
             setupButtonAction("#handleEventButton", "handleEvent");
             setupButtonAction("#handleSessionButton", "handleSession");
             setupButtonAction("#handleSubmitButton", "handleSubmit");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#handleUserButton", "handleUser");
             setupButtonAction("#logoutButton", "logout");
         }
@@ -41,6 +42,7 @@ public class SubEventMediator extends Mediator {
                 , "handleUser"
                 , "handleEvent"
                 , "handleSession"
+                , "handleInscription"
                 , "handleSubmit":
                     loadScreenForEvent(event);
                     break;
@@ -79,6 +81,7 @@ public class SubEventMediator extends Mediator {
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case "handleCreateSubEvent" -> "/fxml/createSubEventScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "handleUpdateSubEvent" -> "/fxml/updateSubEventScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
             case "handleEvent" -> "/fxml/eventScreen.fxml";

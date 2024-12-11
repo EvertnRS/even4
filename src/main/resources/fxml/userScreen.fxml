@@ -183,5 +183,27 @@
                 </ImageView>
             </children>
         </Pane>
+        <Pane layoutX="-1.0" layoutY="81.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+            <effect>
+                <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
+                    <color>
+                        <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+                    </color>
+                </DropShadow>
+            </effect>
+            <children>
+                <Label layoutX="69.0" layoutY="19.0" text="Início" textFill="WHITE">
+                    <font>
+                        <Font name="Inter Semi Bold" size="16.0" />
+                    </font>
+                </Label>
+                <ImageView fx:id="logoView7" fitHeight="29.0" fitWidth="29.0" layoutX="28.0" layoutY="15.0" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/icons/white/wHomeIcon.png" />
+                    </image>
+                </ImageView>
+                <Button fx:id="handleInscriptionButton" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="inscription" />
+            </children>
+        </Pane>
     </children>
 </AnchorPane>

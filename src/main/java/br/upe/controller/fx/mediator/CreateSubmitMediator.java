@@ -28,6 +28,7 @@ public class CreateSubmitMediator extends Mediator{
             setupButtonAction("#handleSessionButton", "handleSession");
             setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleUserButton", "handleUser");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#handleBackButton", "handleBack");
             setupButtonAction("#fileChooser", "openFileChooser");
             setupButtonAction("#logoutButton", "logout");
@@ -47,6 +48,7 @@ public class CreateSubmitMediator extends Mediator{
                     handleFileChooser();
                     break;
                 case "handleUser"
+                , "handleInscription"
                 , "handleEvent"
                 , "handleBack"
                 , "handleSession"
@@ -87,6 +89,7 @@ public class CreateSubmitMediator extends Mediator{
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case "handleArticleCreate" -> "/fxml/createSubmitScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
             case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";

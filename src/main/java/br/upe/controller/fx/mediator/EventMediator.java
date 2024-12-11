@@ -24,6 +24,7 @@ public class EventMediator extends Mediator {
     public void registerComponents() {
         if (screenPane != null) {
             setupButtonAction("#handleAddButton", "handleCreateEvent");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#handleSubEventButton", "handleSubEvent");
             setupButtonAction("#handleSessionButton", "handleSession");
             setupButtonAction("#handleSubmitButton", "handleSubmit");
@@ -40,6 +41,7 @@ public class EventMediator extends Mediator {
                 , "handleUpdateEvent"
                 , "handleUser"
                 , "handleSession"
+                , "handleInscription"
                 , "handleSubEvent"
                 , "handleSubmit":
                     loadScreenForEvent(event);
@@ -82,6 +84,7 @@ public class EventMediator extends Mediator {
             case "handleUpdateEvent" -> "/fxml/updateEventScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";

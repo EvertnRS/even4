@@ -27,6 +27,7 @@ public class SubmitMediator extends Mediator {
             setupButtonAction("#handleAddButton", "handleCreateArticle");
             setupButtonAction("#handleSubEventButton", "handleSubEvent");
             setupButtonAction("#handleSessionButton", "handleSession");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#handleEventButton", "handleEvent");
             setupButtonAction("#handleUserButton", "handleUser");
             setupButtonAction("#logoutButton", "logout");
@@ -41,6 +42,7 @@ public class SubmitMediator extends Mediator {
                 , "handleUpdateArticle"
                 , "handleUser"
                 , "handleSession"
+                , "handleInscription"
                 , "handleSubEvent"
                 , "handleEvent":
                     loadScreenForEvent(event);
@@ -82,6 +84,7 @@ public class SubmitMediator extends Mediator {
             case "handleCreateArticle" -> "/fxml/createSubmitScreen.fxml";
             case "handleUpdateArticle" -> "/fxml/updateSubmitScreen.fxml";
             case "handleUser" -> "/fxml/userScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleEvent" -> "/fxml/eventScreen.fxml";

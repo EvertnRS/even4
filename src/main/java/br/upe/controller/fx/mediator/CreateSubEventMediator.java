@@ -45,6 +45,7 @@ public class CreateSubEventMediator extends Mediator{
             setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleUserButton", "handleUser");
             setupButtonAction("#handleBackButton", "handleBack");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -58,6 +59,7 @@ public class CreateSubEventMediator extends Mediator{
                     break;
                 case "handleUser"
                 , "handleSubEvent"
+                , "handleInscription"
                 , "handleBack"
                 , "handleSession"
                 , "handleEvent"
@@ -100,6 +102,7 @@ public class CreateSubEventMediator extends Mediator{
             case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };
     }

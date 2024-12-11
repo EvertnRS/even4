@@ -10,7 +10,7 @@
 <AnchorPane fx:id="editSubEventPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.UpdateSubEventScreenController">
 
     <children>
-        <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="29.0" preserveRatio="true">
+        <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="-1.0" preserveRatio="true">
             <image>
                 <Image url="@/images/icons/userIcon.png" />
             </image>
@@ -56,7 +56,7 @@
                 <Button fx:id="handleBackButton" layoutX="85.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="68.0" prefWidth="80.0" style="-fx-cursor: hand;" text="back" />
             </children>
         </Pane>
-        <Label fx:id="userEmail" layoutX="87.0" layoutY="66.0" prefHeight="18.0" prefWidth="135.0" style="-fx-text-fill: white;" text="Teste">
+        <Label fx:id="userEmail" layoutX="87.0" layoutY="36.0" prefHeight="18.0" prefWidth="135.0" style="-fx-text-fill: white;" text="Teste">
             <font>
                 <Font name="Inter Semi Bold" size="12.0" />
             </font></Label>
@@ -174,6 +174,28 @@
                         <Image url="@/images/icons/white/wSetingsIcon.png" />
                     </image>
                 </ImageView>
+            </children>
+        </Pane>
+        <Pane layoutX="-1.0" layoutY="81.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">
+            <effect>
+                <DropShadow height="17.52" offsetX="-1.0" offsetY="5.0" radius="3.88" spread="0.1" width="0.0">
+                    <color>
+                        <Color red="0.7894737124443054" green="0.458089679479599" blue="0.20467835664749146" />
+                    </color>
+                </DropShadow>
+            </effect>
+            <children>
+                <Label layoutX="69.0" layoutY="19.0" text="Início" textFill="WHITE">
+                    <font>
+                        <Font name="Inter Semi Bold" size="16.0" />
+                    </font>
+                </Label>
+                <ImageView fx:id="logoView7" fitHeight="29.0" fitWidth="29.0" layoutX="28.0" layoutY="15.0" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/icons/white/wHomeIcon.png" />
+                    </image>
+                </ImageView>
+                <Button fx:id="handleInscriptionButton" mnemonicParsing="false" opacity="0.0" prefHeight="63.0" prefWidth="222.0" style="-fx-cursor: hand;" text="inscription" />
             </children>
         </Pane>
     </children>
