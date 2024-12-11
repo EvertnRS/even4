@@ -3,20 +3,17 @@ package br.upe.persistence.repository;
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.User;
+import br.upe.persistence.builder.SubEventBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
+import java.io.IOException;
 import java.sql.Date;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -43,8 +40,169 @@ public class SubEventRepository implements Persistence {
     }
 
     @Override
+    public void create(Object... params) {
+        if (params.length != 6) {
+            LOGGER.warning("Só pode ter 6 parametros");
+            return;
+        }
+
+        UUID id = UUID.fromString((String) params[0]);
+        String name = (String) params[1];
+        Date date = (Date) params[2];
+        String description = (String) params[3];
+        String location = (String) params[4];
+        UUID ownerId = UUID.fromString((String) params[5]);
+
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        Event event = entityManager.find(Event.class, id);
+        User owner = entityManager.find(User.class, ownerId);
+
+        SubEvent subevent = SubEventBuilder.builder()
+                .withId(event)
+                .withName(name)
+                .withDate(date)
+                .withDescription(description)
+                .withLocation(location)
+                .withOwner(owner)
+                .build();
+
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            if (entityManager.contains(subevent)) {
+                entityManager.merge(subevent);
+            } else {
+                entityManager.persist(subevent);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            LOGGER.severe("Erro ao commitar a transação: " + e.getMessage());
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
+
+    @Override
+    public HashMap<UUID, Persistence> read() throws IOException {
+        return null;
+    }
+
+    @Override
+    public HashMap<UUID, Persistence> read(Object... params) {
+        try {
+            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+            TypedQuery<SubEvent> query = entityManager.createQuery(
+                    "SELECT e FROM SubEvent e", SubEvent.class);
+            return (HashMap<UUID, Persistence>) query.getResultList();
+        } catch (NoResultException e) {
+            LOGGER.warning("Informação não encontrada.");
+        }
+        return null;
+    }
+
+    @Override
+    public void update(Object... params) throws IOException {
+        if (params.length != 5) {
+            LOGGER.warning("Só pode ter 5 parâmetros");
+            return;
+        }
+
+        UUID id = (UUID) params[0];
+        String newName = (String) params[1];
+        Date newDate = (Date) params[2];
+        String newDescription = (String) params[3];
+        String newLocation = (String) params[4];
+
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityTransaction transaction = entityManager.getTransaction();
+
+        try {
+            transaction.begin();
+            SubEvent subevent = entityManager.find(SubEvent.class, id);
+
+            if (subevent != null) {
+                subevent.setName(newName);
+                subevent.setDate(newDate);
+                subevent.setDescription(newDescription);
+                subevent.setLocation(newLocation);
+                entityManager.merge(subevent);
+                transaction.commit();
+                LOGGER.info("SubEvento atualizado com sucesso.");
+            } else {
+                LOGGER.warning("SubEvento não encontrado com o ID fornecido.");
+            }
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            LOGGER.severe("Erro ao atualizar evento: " + e.getMessage());
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
+
+    @Override
+    public void setData(String dataToSet, Object data) {
+
+    }
+
+    @Override
     public Object getData(String dataToGet) {
         return null;
+    }
+
+    @Override
+    public void delete(Object... params) throws IOException {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parametros");
+            return;
+        }
+
+        UUID id = (UUID) params[0];
+        UUID ownerId = (UUID) params[1];
+
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+
+            SubEvent idSubEvent = entityManager.find(SubEvent.class, id);
+            User owner = entityManager.find(User.class, ownerId);
+
+            if ((owner) == null) {
+                LOGGER.warning("Criador inválido.");
+                return;
+            }
+
+            if (idSubEvent != null) {
+                entityManager.remove(idSubEvent);
+                transaction.commit();
+                LOGGER.info("SubEvento deletado com sucesso.");
+            } else {
+                LOGGER.warning("SubEvento não encontrado com o ID fornecido.");
+            }
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            LOGGER.severe("Erro ao deletar evento: " + e.getMessage());
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
+
+    @Override
+    public boolean loginValidate(String email, String password) {
+        return false;
     }
 
     @Override
@@ -94,169 +252,6 @@ public class SubEventRepository implements Persistence {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-    }
-
-    @Override
-    public void setData(String dataToSet, Object data){
-
-    }
-
-//    private String generateUniqueId() {
-//        SecureRandom secureRandom = new SecureRandom();
-//        long timestamp = Instant.now().toEpochMilli();
-//        int lastThreeDigitsOfTimestamp = (int) (timestamp % 1000);
-//        int randomValue = secureRandom.nextInt(900) + 100;
-//        return String.format("%03d%03d", lastThreeDigitsOfTimestamp, randomValue);
-//    }
-
-    @Override
-    public void create(Object... params) {
-        if (params.length < 6) {
-            LOGGER.warning("Só pode ter 6 parametros");
-        }
-
-        UUID parsedEventId = UUID.fromString((String) params[0]);
-        String parsedName = (String) params[1];
-        Date parsedDate = (Date) params[2];
-        String parsedDescription = (String) params[3];
-        String parsedLocation = (String) params[4];
-        UUID parsedOwnerId = UUID.fromString((String) params[5]);
-
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-        User parsedOwner = entityManager.find(User.class, parsedOwnerId);
-        Event parsedEvent = entityManager.find(Event.class, parsedEventId);
-
-        SubEvent subevent = new SubEvent();
-        subevent.setName(parsedName);
-        subevent.setDate(parsedDate);
-        subevent.setDescription(parsedDescription);
-        subevent.setLocation(parsedLocation);
-        subevent.setOwnerId(parsedOwner);
-        subevent.setEventId(parsedEvent);
-
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        try {
-            transaction.begin();
-            entityManager.persist(subevent);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            LOGGER.severe("Erro ao commitar a transação: " + e.getMessage());
-        } finally {
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-    }
-
-    @Override
-    public HashMap<UUID, Persistence> read() throws IOException {
-        return null;
-    }
-
-    @Override
-    public HashMap<UUID, Persistence> read(Object... params) {
-        try {
-            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-            TypedQuery<SubEvent> query = entityManager.createQuery(
-                    "SELECT e FROM SubEvent e", SubEvent.class);
-            return (HashMap<UUID, Persistence>) query.getResultList();
-        } catch (NoResultException e) {
-            LOGGER.warning("Informação não encontrada.");
-        }
-        return null;
-    }
-
-    @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
-    }
-
-    @Override
-    public void update(Object... params) throws IOException {
-        if (params.length != 5) {
-            LOGGER.warning("Só pode ter 5 parâmetros");
-            return;
-        }
-
-        UUID id = (UUID) params[0];
-        String newName = (String) params[1];
-        Date newDate = (Date) params[2];
-        String newDescription = (String) params[3];
-        String newLocation = (String) params[4];
-
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-        EntityTransaction transaction = entityManager.getTransaction();
-
-        try {
-            transaction.begin();
-            SubEvent subevent = entityManager.find(SubEvent.class, id);
-
-            if (subevent != null) {
-                setData(id, "name", newName);
-                setData(id, "date", newDate);
-                setData(id, "description", newDescription);
-                setData(id, "location", newLocation);
-                transaction.commit();
-                LOGGER.info("SubEvento atualizado com sucesso.");
-            } else {
-                LOGGER.warning("SubEvento não encontrado com o ID fornecido.");
-            }
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            LOGGER.severe("Erro ao atualizar evento: " + e.getMessage());
-        } finally {
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-    }
-
-    @Override
-    public void delete(Object... params) throws IOException {
-        if (params.length != 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
-            return;
-        }
-
-        UUID id = (UUID) params[0];
-        UUID ownerId = (UUID) params[1];
-
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-
-            SubEvent idSubEvent = entityManager.find(SubEvent.class, id);
-            User owner = entityManager.find(User.class, ownerId);
-
-            if ((owner) == null) {
-                LOGGER.warning("Criador inválido.");
-                return;
-            }
-
-            if (idSubEvent != null) {
-                entityManager.remove(idSubEvent);
-                transaction.commit();
-                LOGGER.info("SubEvento deletado com sucesso.");
-            } else {
-                LOGGER.warning("SubEvento não encontrado com o ID fornecido.");
-            }
-        } catch (Exception e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            LOGGER.severe("Erro ao deletar evento: " + e.getMessage());
         } finally {
             if (entityManager.isOpen()) {
                 entityManager.close();
