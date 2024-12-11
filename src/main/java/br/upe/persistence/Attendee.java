@@ -1,33 +1,38 @@
 package br.upe.persistence;
 
-import br.upe.persistence.repository.Persistence;
+import jakarta.persistence.*;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Logger;
 
-public class Attendee implements Persistence{
-    private static final Logger LOGGER = Logger.getLogger(Attendee.class.getName());
-    private static final String ATTENDEE_PATH = "./db/attendee.csv";
-    private static final String WRITE_ERROR = "Erro na escrita do arquivo";
-    private static final String SESSION_ID = "sessionId";
-    private static final String USER_ID = "userId";
+@Entity
+@Table(name = "attendees")
+public class Attendee implements Model {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "UUID")
     private UUID id;
-    private UUID userId;
-    private String name;
-    private UUID sessionId;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @NotNull
+    private User userId;
 
-    public UUID getUserId() {
+    @ManyToMany
+    @JoinTable(
+            name = "participations",
+            joinColumns = @JoinColumn(name = "attendee_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "session_id", referencedColumnName = "id")
+    )
+    private Set<Session> sessions = new HashSet<>();
+
+    public @NotNull User getUserId() {
         return userId;
     }
 
-    public void setUserId(UUID userId) {
+    public void setUserId(@NotNull User userId) {
         this.userId = userId;
     }
 
@@ -39,23 +44,30 @@ public class Attendee implements Persistence{
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Set<UUID> getSessionIds() {
+        Set<UUID> sessionIds = new HashSet<>();
+        for (Session session : sessions) {
+            sessionIds.add(session.getId());
+        }
+        return sessionIds;
     }
 
-    public void setName(String name) {
-        this.name = name;
+
+    public void setSessions(Set<Session> sessions) {
+        this.sessions = sessions;
     }
 
-    public UUID getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(UUID sessionId) {
-        this.sessionId = sessionId;
+    public void addSession(Session session) {
+        this.sessions.add(session);
     }
 
     @Override
+    public String getName() {
+
+        return "";
+    }
+
+    /*@Override
     public void create(Object... params) {
         if (params.length < 2) {
             LOGGER.warning("Erro: Parâmetros insuficientes.");
@@ -223,5 +235,5 @@ public class Attendee implements Persistence{
     @Override
     public boolean loginValidate(String email, String password) {
         return false;
-    }
+    }*/
 }

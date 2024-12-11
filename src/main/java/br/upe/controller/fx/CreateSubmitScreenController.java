@@ -4,6 +4,7 @@ import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -69,7 +70,6 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
 
     }
 
-    @FXML
     public void openFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Selecione um Artigo");
@@ -86,7 +86,12 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
             namesTextField.setText(selectedFile.getAbsolutePath());
         } else {
             errorUpdtLabel.setText("Nenhum arquivo selecionado.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
         }
+    }
+
+    public TextField getNamesTextField() {
+        return namesTextField;
     }
 
     @Override

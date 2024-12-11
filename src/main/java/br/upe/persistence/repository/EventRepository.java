@@ -52,6 +52,9 @@ public class EventRepository implements Persistence {
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         User owner = entityManager.find(User.class, ownerId);
+        if (owner == null) {
+            throw new IllegalArgumentException("Usuário não encontrado com o ID: " + ownerId);
+        }
 
         Event event = new Event();
         event.setName(name);
