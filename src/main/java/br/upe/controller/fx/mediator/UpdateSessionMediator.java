@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import static br.upe.ui.Validation.areValidTimes;
 
-public class UpdateSessionMediator extends Mediator{
+public class UpdateSessionMediator extends Mediator {
     private final UpdateSessionScreenController updateSessionScreenController;
     private TextField nameTextField;
     private DatePicker datePicker;
@@ -89,13 +89,13 @@ public class UpdateSessionMediator extends Mediator{
 
         if (validateInputs() && areValidTimes(startTime, endTime)) {
             updateSessionScreenController.updateSession();
-        } else{
+        } else {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
         }
     }
 
-    private void loadScreenForEvent(String event){
+    private void loadScreenForEvent(String event) {
         String fxmlFile = getFxmlPathForEvent(event);
 
         loadScreenWithTask(() -> {

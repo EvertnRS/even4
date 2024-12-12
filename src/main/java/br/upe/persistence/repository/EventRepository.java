@@ -1,4 +1,5 @@
 package br.upe.persistence.repository;
+
 import br.upe.persistence.Event;
 import br.upe.persistence.User;
 import br.upe.persistence.builder.EventBuilder;
@@ -7,7 +8,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
-import java.io.*;
+
+import java.io.IOException;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;

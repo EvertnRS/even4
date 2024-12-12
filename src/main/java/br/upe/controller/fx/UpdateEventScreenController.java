@@ -9,7 +9,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
@@ -77,9 +76,9 @@ public class UpdateEventScreenController extends BaseController implements FxCon
     private void loadEventDetails() {
         EventRepository eventRepository = EventRepository.getInstance();
         if (eventRepository != null) {
-            String eventName = (String) eventRepository.getData(eventId,"name");
-            String eventLocation = (String) eventRepository.getData(eventId,"location");
-            String eventDescription = (String) eventRepository.getData(eventId,"description");
+            String eventName = (String) eventRepository.getData(eventId, "name");
+            String eventLocation = (String) eventRepository.getData(eventId, "location");
+            String eventDescription = (String) eventRepository.getData(eventId, "description");
             editNameTextField.setText(eventName);
             editLocationTextField.setText(eventLocation);
             editDescriptionTextField.setText(eventDescription);
@@ -114,8 +113,8 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         Date newDate = Date.valueOf(editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "");
-            facade.updateEvent(eventId, newName, newDate, newDescription, newLocation);
-            mediator.notify("handleEvent");
+        facade.updateEvent(eventId, newName, newDate, newDescription, newLocation);
+        mediator.notify("handleEvent");
     }
 
     @Override

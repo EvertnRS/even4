@@ -1,18 +1,19 @@
 package br.upe.controller;
 
-import br.upe.persistence.*;
+import br.upe.persistence.Attendee;
+import br.upe.persistence.Session;
 import br.upe.persistence.repository.AttendeeRepository;
-import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class AttendeeController implements Controller {
@@ -31,7 +32,7 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public <T> List <T> getAll() {
+    public <T> List<T> getAll() {
         AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
         return (List<T>) attendeeRepository.getAllAttendees();
     }

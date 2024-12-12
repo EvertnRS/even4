@@ -13,13 +13,17 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
-import javafx.scene.text.Text;
 
 
 public class CreateSubEventScreenController extends BaseController implements FxController {
@@ -55,7 +59,6 @@ public class CreateSubEventScreenController extends BaseController implements Fx
     private Text datePlaceholder;
     @FXML
     private Label errorUpdtLabel;
-
 
 
     public void setFacade(FacadeInterface facade) throws IOException {
@@ -119,10 +122,10 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         UUID selectedEvent = getEventIdByName(searchField.getText());
 
         if (!validateEventDate(subEventDate.toString(), String.valueOf(selectedEvent), "evento")) {
-            errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
+            errorUpdtLabel.setText("Data do subEvento não pode ser anterior a data do Evento.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
         } else {
-            facade.createSubEvent(searchField.getText(),subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
+            facade.createSubEvent(searchField.getText(), subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
             mediator.notify("handleSubEvent");
         }
 

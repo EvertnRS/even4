@@ -7,17 +7,13 @@ import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
-import static br.upe.ui.Validation.isValidCPF;
-import static br.upe.ui.Validation.isValidEmail;
 
 public class SignUpScreenController extends BaseController implements FxController {
     private AccessMediator accessMediator;

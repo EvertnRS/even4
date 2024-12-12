@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class UpdateSubmitMediator extends Mediator{
+public class UpdateSubmitMediator extends Mediator {
     private final UpdateSubmitScreenController updateSubmitScreenController;
 
     public UpdateSubmitMediator(UpdateSubmitScreenController updateSubmitScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
@@ -40,7 +40,7 @@ public class UpdateSubmitMediator extends Mediator{
         if (updateSubmitScreenController != null) {
             switch (event) {
                 case "handleArticleUpdate":
-                    if (validateAddress()){
+                    if (validateAddress()) {
                         handleArticleUpdate();
                     }
                     break;
@@ -89,7 +89,7 @@ public class UpdateSubmitMediator extends Mediator{
             case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
-            case "handleSubmit" , "handleBack"-> "/fxml/submitScreen.fxml";
+            case "handleSubmit", "handleBack" -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };

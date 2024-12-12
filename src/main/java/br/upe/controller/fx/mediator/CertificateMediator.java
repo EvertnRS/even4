@@ -4,7 +4,6 @@ import br.upe.controller.fx.CertificateScreenController;
 import br.upe.facade.FacadeInterface;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
@@ -13,7 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class CertificateMediator extends Mediator{
+public class CertificateMediator extends Mediator {
     private final CertificateScreenController certificateScreenController;
 
     public CertificateMediator(CertificateScreenController certificateScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
@@ -43,7 +42,7 @@ public class CertificateMediator extends Mediator{
         if (certificateScreenController != null) {
             switch (event) {
                 case "handleCertificateCreate":
-                    if (validateAddress()){
+                    if (validateAddress()) {
                         certificateScreenController.createCertificate();
                     }
                     break;

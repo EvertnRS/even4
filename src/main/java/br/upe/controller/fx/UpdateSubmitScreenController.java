@@ -3,12 +3,8 @@ package br.upe.controller.fx;
 import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.UpdateSubmitMediator;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Event;
-import br.upe.persistence.Model;
-import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,7 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 public class UpdateSubmitScreenController extends BaseController implements FxController {
@@ -32,9 +27,9 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
     @FXML
     private Label userEmail;
     @FXML
-    private  Text newArticlePlaceholder;
+    private Text newArticlePlaceholder;
     @FXML
-    private  TextField newArticleTextField;
+    private TextField newArticleTextField;
     @FXML
     private Label errorUpdtLabel;
 

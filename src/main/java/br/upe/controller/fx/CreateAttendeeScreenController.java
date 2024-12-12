@@ -1,9 +1,8 @@
 package br.upe.controller.fx;
+
 import br.upe.controller.fx.mediator.CreateAttendeeMediator;
-import br.upe.controller.fx.mediator.CreateSubEventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
-import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SessionRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -33,7 +32,7 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
         initial();
     }
 
-    private void initial(){
+    private void initial() {
         userEmail.setText(facade.getUserData("email"));
         loadSessions();
 
@@ -59,7 +58,7 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
     public void createAttendee() throws IOException {
         String selectedSessionName = eventComboBox.getSelectionModel().getSelectedItem();
 
-        facade.createAttendee(selectedSessionName,facade.getUserData("id"));
+        facade.createAttendee(selectedSessionName, facade.getUserData("id"));
         mediator.notify("handleBack");
 
     }

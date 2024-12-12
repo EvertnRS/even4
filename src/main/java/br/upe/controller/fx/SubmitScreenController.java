@@ -3,11 +3,9 @@ package br.upe.controller.fx;
 import br.upe.controller.fx.mediator.SubmitMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.SubmitArticle;
-import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SubmitArticlesRepository;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -23,7 +21,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class SubmitScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -98,7 +98,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         VBox.setMargin(articleContainer, new Insets(5, 20, 5, 20));
 
         Label articleLabel;
-        if (searchTextField.getText().isEmpty() || String.valueOf(submitArticlesRepository.getData(articleId,"name")).contains(searchTextField.getText())){
+        if (searchTextField.getText().isEmpty() || String.valueOf(submitArticlesRepository.getData(articleId, "name")).contains(searchTextField.getText())) {
             articleLabel = new Label((String) submitArticlesRepository.getData(articleId, "name"));
             articleLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
@@ -108,7 +108,7 @@ public class SubmitScreenController extends BaseController implements FxControll
             eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
             articleContainer.getChildren().addAll(articleLabel, actionButtons, eventLabel);
             articleVBox.getChildren().add(articleContainer);
-            }
+        }
     }
 
     private HBox createActionButtons(UUID articleId) {
@@ -173,17 +173,17 @@ public class SubmitScreenController extends BaseController implements FxControll
 
     private void handleDetailArticle(UUID articleId) {
         loadScreen("Carregando", () -> {
-        SubmitArticlesRepository submitArticlesRepository = SubmitArticlesRepository.getInstance();
+            SubmitArticlesRepository submitArticlesRepository = SubmitArticlesRepository.getInstance();
 
-        String content = "Nome: " + submitArticlesRepository.getData(articleId, "name") + "\n" +
-                "Evento: " + submitArticlesRepository.getData(articleId, "event") + "\n";
+            String content = "Nome: " + submitArticlesRepository.getData(articleId, "name") + "\n" +
+                    "Evento: " + submitArticlesRepository.getData(articleId, "event") + "\n";
 
-        Platform.runLater(() -> {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detalhes do Artigo");
-        alert.setHeaderText("Detalhes do Artigo");
-        alert.setContentText(content);
-        alert.showAndWait();
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Detalhes do Artigo");
+                alert.setHeaderText("Detalhes do Artigo");
+                alert.setContentText(content);
+                alert.showAndWait();
             });
         }, submitPane);
     }
@@ -198,23 +198,23 @@ public class SubmitScreenController extends BaseController implements FxControll
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
         File file = fileChooser.showSaveDialog(submitPane.getScene().getWindow());
 
-            if (file != null) {
-                try (OutputStream os = new FileOutputStream(file)) {
-                    os.write(pdfBytes);  // Grava os bytes do PDF no arquivo escolhido
-                    os.flush();
-                    Alert  alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Download Completo");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Arquivo PDF salvo com sucesso em " + file.getAbsolutePath());
-                    alert.showAndWait();
-                } catch (IOException e) {
-                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                    errorAlert.setTitle("Erro no Download");
-                    errorAlert.setHeaderText("Não foi possível salvar o arquivo");
-                    errorAlert.setContentText("Erro: " + e.getMessage());
-                    errorAlert.showAndWait();
-                }
+        if (file != null) {
+            try (OutputStream os = new FileOutputStream(file)) {
+                os.write(pdfBytes);  // Grava os bytes do PDF no arquivo escolhido
+                os.flush();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Download Completo");
+                alert.setHeaderText(null);
+                alert.setContentText("Arquivo PDF salvo com sucesso em " + file.getAbsolutePath());
+                alert.showAndWait();
+            } catch (IOException e) {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Erro no Download");
+                errorAlert.setHeaderText("Não foi possível salvar o arquivo");
+                errorAlert.setContentText("Erro: " + e.getMessage());
+                errorAlert.showAndWait();
             }
+        }
     }
 
 

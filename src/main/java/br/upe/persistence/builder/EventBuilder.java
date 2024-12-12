@@ -3,6 +3,7 @@ package br.upe.persistence.builder;
 import br.upe.persistence.Event;
 import br.upe.persistence.User;
 import org.jetbrains.annotations.NotNull;
+
 import java.sql.Date;
 import java.util.UUID;
 

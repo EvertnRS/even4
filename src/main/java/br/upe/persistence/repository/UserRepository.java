@@ -9,7 +9,9 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -20,7 +22,8 @@ public class UserRepository implements Persistence {
 
     private static UserRepository instance;
 
-    private UserRepository() {}
+    private UserRepository() {
+    }
 
     public static UserRepository getInstance() {
         if (instance == null) {
@@ -144,7 +147,7 @@ public class UserRepository implements Persistence {
 
     @Override
     public Object getData(UUID id, String dataToGet) {
-       return null;
+        return null;
     }
 
     @Override

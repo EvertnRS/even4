@@ -1,4 +1,5 @@
 package br.upe.controller.fx;
+
 import br.upe.controller.UserController;
 import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.AccessMediator;

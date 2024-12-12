@@ -1,7 +1,6 @@
 package br.upe.controller;
 
 import br.upe.persistence.Model;
-import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -91,7 +90,6 @@ public class UserController implements Controller {
 
         userRepository.create(name, cpf, email, hashedPassword);
     }
-
 
 
     @Override

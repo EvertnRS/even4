@@ -7,7 +7,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 
-public class AttendeeMediator extends Mediator{
+public class AttendeeMediator extends Mediator {
     private final AttendeeScreenController attendeeScreenController;
     private String attendeeId;
 
@@ -64,7 +64,7 @@ public class AttendeeMediator extends Mediator{
         return null;
     }
 
-    private void loadScreenForEvent(String event){
+    private void loadScreenForEvent(String event) {
         String fxmlFile = getFxmlPathForEvent(event);
 
         if (!event.equals("handleCertificate")) {

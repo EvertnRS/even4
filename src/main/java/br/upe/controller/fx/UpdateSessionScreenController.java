@@ -4,9 +4,7 @@ import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.UpdateSessionMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Session;
-import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SessionRepository;
-import br.upe.persistence.repository.SubEventRepository;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -19,11 +17,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -69,7 +67,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
 
     public void setEventName(String eventName) {
         this.sessionName = eventName;
-        String [] list = verifyType(eventName);
+        String[] list = verifyType(eventName);
         this.sessionId = list[2];
         loadSessionDetails();
     }

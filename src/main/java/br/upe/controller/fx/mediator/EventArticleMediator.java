@@ -64,7 +64,7 @@ public class EventArticleMediator extends Mediator {
         return null;
     }
 
-    private void loadScreenForEvent(String event){
+    private void loadScreenForEvent(String event) {
         String fxmlFile = getFxmlPathForEvent(event);
 
         if (!event.equals("handleUpdateArticle")) {

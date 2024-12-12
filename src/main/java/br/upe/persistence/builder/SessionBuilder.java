@@ -7,7 +7,6 @@ import br.upe.persistence.User;
 
 import java.sql.Time;
 import java.util.Date;
-import java.util.UUID;
 
 public class SessionBuilder {
     private String name;

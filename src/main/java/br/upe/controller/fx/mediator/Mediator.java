@@ -1,11 +1,12 @@
 package br.upe.controller.fx.mediator;
+
 import br.upe.controller.fx.FxController;
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.Model;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import br.upe.persistence.Model;
-
 import javafx.scene.layout.AnchorPane;
+
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
@@ -66,7 +67,7 @@ public abstract class Mediator implements MediatorInterface {
             return false;
         }
 
-        if(isValidName(newName, eventList)){
+        if (isValidName(newName, eventList)) {
             errorUpdtLabel.setText("Nome inválido.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
             return false;
@@ -85,7 +86,7 @@ public abstract class Mediator implements MediatorInterface {
         return false;
     }
 
-    public Optional<ButtonType> deleteButtonAlert(){
+    public Optional<ButtonType> deleteButtonAlert() {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
         confirmationAlert.setHeaderText("Deseja realmente excluir este evento?");

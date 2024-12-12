@@ -12,7 +12,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 
-public class UpdateSubEventMediator extends Mediator{
+public class UpdateSubEventMediator extends Mediator {
     private final UpdateSubEventScreenController updateScreenSubEventController;
     private TextField nameTextField;
     private DatePicker datePicker;
@@ -82,7 +82,7 @@ public class UpdateSubEventMediator extends Mediator{
         }
     }
 
-    private void loadScreenForEvent(String event){
+    private void loadScreenForEvent(String event) {
         String fxmlFile = getFxmlPathForEvent(event);
 
         loadScreenWithTask(() -> {

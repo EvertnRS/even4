@@ -2,12 +2,13 @@ package br.upe.persistence;
 
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
+
 import java.sql.Date;
 import java.util.UUID;
 
 @Entity
 @Table(name = "subevents")
-public class SubEvent implements Model{
+public class SubEvent implements Model {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "UUID")

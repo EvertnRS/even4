@@ -1,7 +1,6 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.fx.mediator.EventArticleMediator;
-import br.upe.controller.fx.mediator.SubmitMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.repository.SubmitArticlesRepository;
@@ -102,7 +101,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
         VBox.setMargin(eventArticleContainer, new Insets(5, 20, 5, 20));
 
         Label articleLabel;
-        if (searchTextField.getText().isEmpty() || String.valueOf(submitArticlesRepository.getData(articleId,"name")).contains(searchTextField.getText())){
+        if (searchTextField.getText().isEmpty() || String.valueOf(submitArticlesRepository.getData(articleId, "name")).contains(searchTextField.getText())) {
             articleLabel = new Label((String) submitArticlesRepository.getData(articleId, "name"));
             articleLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
@@ -110,7 +109,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
 
             eventArticleContainer.getChildren().addAll(articleLabel, actionButtons);
             articleVBox.getChildren().add(eventArticleContainer);
-            }
+        }
     }
 
     private HBox createActionButtons(UUID articleId) {
@@ -161,17 +160,17 @@ public class EventArticleScreenController extends BaseController implements FxCo
 
     private void handleDetailArticle(UUID articleId) {
         loadScreen("Carregando", () -> {
-        SubmitArticlesRepository submitArticlesRepository = SubmitArticlesRepository.getInstance();
+            SubmitArticlesRepository submitArticlesRepository = SubmitArticlesRepository.getInstance();
 
-        String content = "Nome: " + submitArticlesRepository.getData(articleId, "name") + "\n" +
-                "Evento: " + submitArticlesRepository.getData(articleId, "event") + "\n";
+            String content = "Nome: " + submitArticlesRepository.getData(articleId, "name") + "\n" +
+                    "Evento: " + submitArticlesRepository.getData(articleId, "event") + "\n";
 
-        Platform.runLater(() -> {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detalhes do Artigo");
-        alert.setHeaderText("Detalhes do Artigo");
-        alert.setContentText(content);
-        alert.showAndWait();
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Detalhes do Artigo");
+                alert.setHeaderText("Detalhes do Artigo");
+                alert.setContentText(content);
+                alert.showAndWait();
             });
         }, submitPane);
     }
@@ -186,23 +185,23 @@ public class EventArticleScreenController extends BaseController implements FxCo
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
         File file = fileChooser.showSaveDialog(submitPane.getScene().getWindow());
 
-            if (file != null) {
-                try (OutputStream os = new FileOutputStream(file)) {
-                    os.write(pdfBytes);  // Grava os bytes do PDF no arquivo escolhido
-                    os.flush();
-                    Alert  alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Download Completo");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Arquivo PDF salvo com sucesso em " + file.getAbsolutePath());
-                    alert.showAndWait();
-                } catch (IOException e) {
-                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                    errorAlert.setTitle("Erro no Download");
-                    errorAlert.setHeaderText("Não foi possível salvar o arquivo");
-                    errorAlert.setContentText("Erro: " + e.getMessage());
-                    errorAlert.showAndWait();
-                }
+        if (file != null) {
+            try (OutputStream os = new FileOutputStream(file)) {
+                os.write(pdfBytes);  // Grava os bytes do PDF no arquivo escolhido
+                os.flush();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Download Completo");
+                alert.setHeaderText(null);
+                alert.setContentText("Arquivo PDF salvo com sucesso em " + file.getAbsolutePath());
+                alert.showAndWait();
+            } catch (IOException e) {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Erro no Download");
+                errorAlert.setHeaderText("Não foi possível salvar o arquivo");
+                errorAlert.setContentText("Erro: " + e.getMessage());
+                errorAlert.showAndWait();
             }
+        }
     }
 
     private void handleDeleteArticle(UUID articleId) throws IOException {

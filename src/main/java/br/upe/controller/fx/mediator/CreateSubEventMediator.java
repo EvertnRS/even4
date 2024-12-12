@@ -12,7 +12,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 
-public class CreateSubEventMediator extends Mediator{
+public class CreateSubEventMediator extends Mediator {
     private final CreateSubEventScreenController createSubEventScreenController;
     private TextField nameTextField;
     private DatePicker datePicker;

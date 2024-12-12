@@ -11,7 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class CreateSubmitMediator extends Mediator{
+public class CreateSubmitMediator extends Mediator {
     private final CreateSubmitScreenController createSubmitScreenController;
 
     public CreateSubmitMediator(CreateSubmitScreenController createSubmitScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
@@ -74,7 +74,7 @@ public class CreateSubmitMediator extends Mediator{
         createSubmitScreenController.openFileChooser();
     }
 
-    private void loadScreenForEvent(String event){
+    private void loadScreenForEvent(String event) {
         String fxmlFile = getFxmlPathForEvent(event);
 
         loadScreenWithTask(() -> {

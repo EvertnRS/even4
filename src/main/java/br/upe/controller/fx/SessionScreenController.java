@@ -5,7 +5,10 @@ import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
-import br.upe.persistence.repository.*;
+import br.upe.persistence.repository.EventRepository;
+import br.upe.persistence.repository.SessionRepository;
+import br.upe.persistence.repository.SubEventRepository;
+import br.upe.persistence.repository.UserRepository;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -20,7 +23,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class SessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -75,7 +80,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
         List<Session> userSessions = facade.listSessions(facade.getUserData("id")); // Método para buscar as sessões
         for (Session session : userSessions) {
-            if (searchTextField.getText().isEmpty() || String.valueOf(sessionRepository.getData(session.getId(),"name")).contains(searchTextField.getText())) {
+            if (searchTextField.getText().isEmpty() || String.valueOf(sessionRepository.getData(session.getId(), "name")).contains(searchTextField.getText())) {
                 VBox sessionContainer = createSessionContainer(session);
                 sessionVBox.getChildren().add(sessionContainer);
             }
@@ -107,7 +112,7 @@ public class SessionScreenController extends BaseController implements FxControl
         Label eventLabel = null;
         if (event == null && subEvent != null) {
             eventLabel = createSubEventLabel(subEvent.getId());
-        } else if (event != null && subEvent == null){
+        } else if (event != null && subEvent == null) {
             eventLabel = createEventLabel(event.getId());
         }
 
@@ -119,7 +124,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
     private Label createEventLabel(UUID eventId) {
         Label eventLabel = new Label();
-        if(eventId != null){
+        if (eventId != null) {
 
             EventRepository eventRepository = EventRepository.getInstance();
             String eventName = (String) eventRepository.getData(eventId, "name");
@@ -154,7 +159,7 @@ public class SessionScreenController extends BaseController implements FxControl
         detailsIcon.setFitHeight(16);
         detailsButton.setGraphic(detailsIcon);
         detailsButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
-        detailsButton.setOnAction(e -> handleDetailSession((UUID) sessionRepository.getData(session.getId(),"id")));
+        detailsButton.setOnAction(e -> handleDetailSession((UUID) sessionRepository.getData(session.getId(), "id")));
 
         Button editButton = new Button("Editar");
         ImageView editIcon = new ImageView(new Image("images/icons/buttons/editIcon.png"));
@@ -180,7 +185,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
         deleteButton.setOnAction(e -> {
             try {
-                handleDeleteSession((UUID) sessionRepository.getData(session.getId(),"id"), facade.getUserData("id"));
+                handleDeleteSession((UUID) sessionRepository.getData(session.getId(), "id"), facade.getUserData("id"));
             } catch (IOException ex) {
                 throw new IllegalArgumentException(ex);
             }

@@ -1,7 +1,6 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.fx.mediator.AttendeeMediator;
-import br.upe.controller.fx.mediator.EventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Attendee;
 import br.upe.persistence.Event;
@@ -28,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class AttendeeScreenController extends BaseController implements FxController{
+public class AttendeeScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private AttendeeMediator mediator;
 
@@ -96,7 +95,7 @@ public class AttendeeScreenController extends BaseController implements FxContro
                     VBox.setMargin(sessionContainer, new Insets(5, 20, 5, 20));
 
                     Label sessionLabel;
-                    if (searchTextField.getText().isEmpty() || String.valueOf(sessionRepository.getData(sessionId,"name")).contains(searchTextField.getText())) {
+                    if (searchTextField.getText().isEmpty() || String.valueOf(sessionRepository.getData(sessionId, "name")).contains(searchTextField.getText())) {
                         sessionLabel = new Label((String) sessionRepository.getData(sessionId, "name"));
                         sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
@@ -144,7 +143,7 @@ public class AttendeeScreenController extends BaseController implements FxContro
                         Label eventLabel = null;
                         if (event == null && subEvent != null) {
                             eventLabel = createSubEventLabel(subEvent.getId());
-                        } else if (event != null && subEvent == null){
+                        } else if (event != null && subEvent == null) {
                             eventLabel = createEventLabel(event.getId());
                         }
 

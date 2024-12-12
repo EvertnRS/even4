@@ -1,8 +1,6 @@
 package br.upe.controller.fx.mediator;
 
-import br.upe.controller.SessionController;
 import br.upe.controller.fx.SessionScreenController;
-import br.upe.controller.fx.SubEventScreenController;
 import br.upe.facade.FacadeInterface;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;

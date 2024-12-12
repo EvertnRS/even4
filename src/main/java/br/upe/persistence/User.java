@@ -1,8 +1,8 @@
 package br.upe.persistence;
 
-import br.upe.persistence.builder.UserBuilder;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.UUID;
 
 @Entity

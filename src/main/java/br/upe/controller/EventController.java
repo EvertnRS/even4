@@ -1,10 +1,9 @@
 package br.upe.controller;
 
 import br.upe.persistence.Event;
-import br.upe.persistence.Model;
-import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
+
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
@@ -23,8 +22,8 @@ public class EventController implements Controller {
         this.read();
     }
 
-@Override
-    public <T> List <T> getAll() {
+    @Override
+    public <T> List<T> getAll() {
         EventRepository eventRepository = EventRepository.getInstance();
         return (List<T>) eventRepository.getAllEvents();
     }

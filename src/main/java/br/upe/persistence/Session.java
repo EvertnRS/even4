@@ -50,7 +50,8 @@ public class Session implements Model {
     private Event eventId;
 
     // Construtor vazio
-    public Session() {}
+    public Session() {
+    }
 
     // Getters e Setters
     public UUID getId() {

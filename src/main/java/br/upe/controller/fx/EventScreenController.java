@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -93,7 +92,7 @@ public class EventScreenController extends BaseController implements FxControlle
                 VBox.setMargin(eventContainer, new Insets(5, 20, 5, 20));
                 Label eventLabel;
 
-                if (searchTextField.getText().isEmpty() || String.valueOf(eventRepository.getData(event.getId(),"name")).contains(searchTextField.getText())) {
+                if (searchTextField.getText().isEmpty() || String.valueOf(eventRepository.getData(event.getId(), "name")).contains(searchTextField.getText())) {
                     eventLabel = new Label((String) eventRepository.getData(event.getId(), "name"));
                     eventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
@@ -176,10 +175,10 @@ public class EventScreenController extends BaseController implements FxControlle
             UserRepository userRepository = UserRepository.getInstance();
 
             String content = "Nome: " + eventRepository.getData(id, "name") + "\n" +
-                    "Data: " + eventRepository.getData(id,"date") + "\n" +
-                    "Descrição: " + eventRepository.getData(id,"description") + "\n" +
-                    "Local: " + eventRepository.getData(id,"location") + "\n" +
-                    "Administrador: " + userRepository.getData((UUID) eventRepository.getData(id,"ownerId"), "email") + "\n";
+                    "Data: " + eventRepository.getData(id, "date") + "\n" +
+                    "Descrição: " + eventRepository.getData(id, "description") + "\n" +
+                    "Local: " + eventRepository.getData(id, "location") + "\n" +
+                    "Administrador: " + userRepository.getData((UUID) eventRepository.getData(id, "ownerId"), "email") + "\n";
 
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

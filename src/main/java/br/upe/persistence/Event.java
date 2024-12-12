@@ -2,6 +2,7 @@ package br.upe.persistence;
 
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -41,7 +42,7 @@ public class Event implements Model {
         return name;
     }
 
-    public @NotNull Date  getDate() {
+    public @NotNull Date getDate() {
 
         return date;
     }

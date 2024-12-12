@@ -2,7 +2,6 @@ package br.upe.controller;
 
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
-import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.utils.JPAUtils;
@@ -10,7 +9,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -34,7 +33,7 @@ public class SubEventController implements Controller {
     }
 
     @Override
-    public <T> List <T> getAll() {
+    public <T> List<T> getAll() {
         SubEventRepository subeventRepository = SubEventRepository.getInstance();
         return (List<T>) subeventRepository.getAllSubEvents();
     }
@@ -45,7 +44,7 @@ public class SubEventController implements Controller {
     }
 
     @Override
-    public <T> List <T> list(Object... params) throws IOException {
+    public <T> List<T> list(Object... params) throws IOException {
         UUID userId = UUID.fromString((String) params[0]);
         SubEventRepository subeventRepository = SubEventRepository.getInstance();
         List<SubEvent> allSubEvents = subeventRepository.getAllSubEvents();
@@ -181,7 +180,6 @@ public class SubEventController implements Controller {
     }
 
 
-
     @Override
     public void update(Object... params) throws IOException {
         if (!isValidParamsLength(params)) {
@@ -196,7 +194,7 @@ public class SubEventController implements Controller {
         String newLocation = (String) params[4];
 
 
-        updateSubEvent( id, newName, newDate, newDescription, newLocation);
+        updateSubEvent(id, newName, newDate, newDescription, newLocation);
     }
 
     private boolean isValidParamsLength(Object... params) {

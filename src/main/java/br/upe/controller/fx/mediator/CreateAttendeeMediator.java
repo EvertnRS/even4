@@ -8,7 +8,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 
-public class CreateAttendeeMediator extends Mediator{
+public class CreateAttendeeMediator extends Mediator {
     private final CreateAttendeeScreenController createAttendeeScreenController;
 
     public CreateAttendeeMediator(CreateAttendeeScreenController createAttendeeScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {

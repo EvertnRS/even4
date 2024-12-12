@@ -5,7 +5,6 @@ import br.upe.controller.fx.mediator.CreateSessionMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
-import br.upe.persistence.repository.Persistence;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -15,15 +14,17 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.util.*;
-
-import static br.upe.ui.Validation.areValidTimes;
+import java.util.List;
+import java.util.UUID;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -163,7 +164,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
         String sessionName = nameTextField.getText();
         String sessionLocation = locationTextField.getText();
         String sessionDescription = descriptionTextField.getText();
-        java.sql.Date sessionDate = Date.valueOf( datePicker.getValue() != null ? datePicker.getValue().toString() : "");
+        java.sql.Date sessionDate = Date.valueOf(datePicker.getValue() != null ? datePicker.getValue().toString() : "");
         String startTime = startTimeTextField.getText();
         String endTime = endTimeTextField.getText();
         String selectedEventName = searchField.getText();

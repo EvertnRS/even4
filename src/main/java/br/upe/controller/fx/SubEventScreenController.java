@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SubEventScreenController extends BaseController implements FxController{
+public class SubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private SubEventMediator mediator;
 

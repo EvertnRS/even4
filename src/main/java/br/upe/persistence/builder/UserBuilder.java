@@ -2,6 +2,7 @@ package br.upe.persistence.builder;
 
 import br.upe.persistence.User;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.UUID;
 
 public class UserBuilder {

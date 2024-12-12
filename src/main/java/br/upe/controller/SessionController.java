@@ -1,8 +1,6 @@
 package br.upe.controller;
 
-import br.upe.persistence.Event;
 import br.upe.persistence.Session;
-import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SessionRepository;
 
@@ -126,9 +124,9 @@ public class SessionController implements Controller {
         String[] type = (String[]) params[8];
         UUID eventId = null;
         UUID subEventId = null;
-        if (type[1].equals("evento")){
+        if (type[1].equals("evento")) {
             eventId = UUID.fromString(type[0]);
-        } else if(type[1].equals("subEvento")) {
+        } else if (type[1].equals("subEvento")) {
             subEventId = UUID.fromString(type[0]);
 
         }
@@ -159,7 +157,7 @@ public class SessionController implements Controller {
         List<Session> allSessions = sessionRepository.getAllSessions();
         List<Session> userSessions = new ArrayList<>();
 
-        for (Session session: allSessions) {
+        for (Session session : allSessions) {
             if (session.getOwnerId().getId().equals(userId)) {
                 userSessions.add(session);
             }
@@ -171,6 +169,7 @@ public class SessionController implements Controller {
 
         return (List<T>) userSessions;
     }
+
     @Override
     public boolean loginValidate(String email, String cpf) {
         return false;
@@ -239,7 +238,6 @@ public class SessionController implements Controller {
 
 
     }
-
 
 
     @Override

@@ -40,7 +40,7 @@ public class AccessMediator extends Mediator {
 
         if (userSignUpController != null) {
             setupRegisterListeners();
-        } else if(userLoginController != null) {
+        } else if (userLoginController != null) {
             setupLoginListeners();
         }
     }

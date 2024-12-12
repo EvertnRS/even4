@@ -1,12 +1,8 @@
 package br.upe.controller;
 
-import br.upe.persistence.Model;
-import br.upe.persistence.SubEvent;
-import br.upe.persistence.repository.Persistence;
-import br.upe.persistence.Event;
 import br.upe.persistence.SubmitArticle;
-import br.upe.persistence.repository.SubmitArticlesRepository;
 import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.repository.SubmitArticlesRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,7 +26,7 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public <T> List <T> getAll() {
+    public <T> List<T> getAll() {
         return (List<T>) submitArticlesRepository.getAllArticles();
     }
 
@@ -64,7 +60,6 @@ public class SubmitArticleController implements Controller {
         String ownerId = (String) params[2];
 
 
-
         Path path = Paths.get(filePath);
         String articleName = path.getFileName().toString();
 
@@ -81,7 +76,7 @@ public class SubmitArticleController implements Controller {
             LOGGER.warning("É necessário 1 parâmetro: id do artigo.");
             return;
         }
-        UUID articleId = (UUID) params [0];
+        UUID articleId = (UUID) params[0];
 
         submitArticlesRepository.delete(articleId);
 
@@ -110,7 +105,7 @@ public class SubmitArticleController implements Controller {
         return (List<T>) userArticles;
     }
 
-    public <T> List <T> getEventArticles(UUID eventId) {
+    public <T> List<T> getEventArticles(UUID eventId) {
         return (List<T>) submitArticlesRepository.getAllEventArticles(eventId);
     }
 
@@ -121,8 +116,8 @@ public class SubmitArticleController implements Controller {
             return;
         }
 
-        String filePath = (String) params [0];
-        UUID articleId = (UUID) params [1];
+        String filePath = (String) params[0];
+        UUID articleId = (UUID) params[1];
 
         Path path = Paths.get(filePath);
         String articleName = path.getFileName().toString();

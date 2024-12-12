@@ -1,8 +1,8 @@
 package br.upe.persistence.repository;
 
+import br.upe.persistence.Event;
 import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.User;
-import br.upe.persistence.Event;
 import br.upe.persistence.builder.SubmitArticleBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
@@ -161,7 +161,7 @@ public class SubmitArticlesRepository implements Persistence {
             return;
         }
 
-        UUID articleId = (UUID) params [0];
+        UUID articleId = (UUID) params[0];
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();

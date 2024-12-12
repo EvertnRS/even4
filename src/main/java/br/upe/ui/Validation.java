@@ -80,7 +80,7 @@ public class Validation {
             return true;
         }
         LOGGER.warning("Formato de hora inválido. Use o formato hh:mm");
-    return false;
+        return false;
     }
 }
 

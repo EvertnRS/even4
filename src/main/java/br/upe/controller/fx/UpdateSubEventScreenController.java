@@ -3,7 +3,6 @@ package br.upe.controller.fx;
 import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.UpdateSubEventMediator;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Model;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
@@ -16,14 +15,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
-
-import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -70,7 +67,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         mediator = new UpdateSubEventMediator(this, facade, editSubEventPane, errorUpdtLabel);
         mediator.registerComponents();
 
-        mediator.setComponents(editNameTextField, editDatePicker,editLocationTextField, editDescriptionTextField);
+        mediator.setComponents(editNameTextField, editDatePicker, editLocationTextField, editDescriptionTextField);
     }
 
     private void setupPlaceholders() {
@@ -84,9 +81,9 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
     private void loadSubEventDetails() {
         SubEventRepository subeventRepository = SubEventRepository.getInstance();
         if (subeventRepository != null) {
-            String eventName = (String) subeventRepository.getData(subEventId,"name");
-            String eventLocation = (String) subeventRepository.getData(subEventId,"location");
-            String eventDescription = (String) subeventRepository.getData(subEventId,"description");
+            String eventName = (String) subeventRepository.getData(subEventId, "name");
+            String eventLocation = (String) subeventRepository.getData(subEventId, "location");
+            String eventDescription = (String) subeventRepository.getData(subEventId, "description");
             editNameTextField.setText(eventName);
             editLocationTextField.setText(eventLocation);
             editDescriptionTextField.setText(eventDescription);
@@ -123,7 +120,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         Date newDate = Date.valueOf(editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "");
 
         if (!validateEventDate(newDate.toString(), String.valueOf(getEventIdBySubEventId(subEventId)), "evento")) {
-            errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
+            errorUpdtLabel.setText("Data do SubEvento não pode ser anterior a data do Evento.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
         } else {
             facade.updateSubEvent(subEventId, newName, newDate, newDescription, newLocation);

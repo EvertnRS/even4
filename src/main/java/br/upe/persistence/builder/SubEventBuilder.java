@@ -4,8 +4,8 @@ import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.User;
 import org.jetbrains.annotations.NotNull;
+
 import java.sql.Date;
-import java.util.UUID;
 
 public class SubEventBuilder {
     private Event id;

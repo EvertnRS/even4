@@ -1,10 +1,11 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.CertificateMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Attendee;
-import br.upe.persistence.Session;
 import br.upe.persistence.Event;
+import br.upe.persistence.Session;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,24 +15,23 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import br.upe.controller.fx.fxutils.PlaceholderUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.Duration;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
@@ -76,8 +76,8 @@ public class CertificateScreenController extends BaseController implements FxCon
     public void createCertificate() throws IOException {
         String certificateAddress = addressTextField.getText();
 
-            drawCertificate(certificateAddress);
-            mediator.notify("handleBack");
+        drawCertificate(certificateAddress);
+        mediator.notify("handleBack");
     }
 
     private void drawCertificate(String certificateAddres) {

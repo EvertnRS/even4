@@ -1,11 +1,9 @@
 package br.upe.facade;
+
 import br.upe.controller.*;
-import br.upe.persistence.Event;
-import br.upe.persistence.Model;
-import br.upe.persistence.Session;
-import br.upe.persistence.SubEvent;
 import br.upe.persistence.*;
 import br.upe.persistence.repository.Persistence;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -157,7 +155,7 @@ public class Facade implements FacadeInterface {
         return submitArticleController.list(params);
     }
 
-    public <T> List <T> getEventArticles(UUID eventId){
+    public <T> List<T> getEventArticles(UUID eventId) {
         return (List<T>) submitArticleController.getEventArticles(eventId);
     }
 

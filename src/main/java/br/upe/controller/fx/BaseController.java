@@ -1,16 +1,8 @@
 package br.upe.controller.fx;
 
-import br.upe.controller.EventController;
-import br.upe.controller.SessionController;
-import br.upe.controller.SubEventController;
-import br.upe.facade.Facade;
+
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Event;
-import br.upe.persistence.Model;
-import br.upe.persistence.Session;
-import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.EventRepository;
-import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SubEventRepository;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -28,9 +20,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public abstract class BaseController {
@@ -138,7 +127,6 @@ public abstract class BaseController {
             parentDateString = String.valueOf(subEventRepository.getData(UUID.fromString(searchId), "date"));
         }
 
-        // Remove time part if present
         if (parentDateString.contains(" ")) {
             parentDateString = parentDateString.split(" ")[0];
         }

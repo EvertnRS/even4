@@ -11,7 +11,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
-
 import java.io.IOException;
 import java.sql.Time;
 import java.util.Date;
@@ -106,6 +105,7 @@ public class SessionRepository implements Persistence {
             }
         }
     }
+
     public Time convertTime(String timeString) {
         Time time = null;
         try {
@@ -325,7 +325,6 @@ public class SessionRepository implements Persistence {
             return null;
         }
     }
-
 
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-public class AttendeeRepository implements Persistence{
+public class AttendeeRepository implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(AttendeeRepository.class.getName());
     private static AttendeeRepository instance;
 

@@ -1,4 +1,5 @@
 package br.upe.controller.fx;
+
 import br.upe.controller.fx.mediator.CreateSubmitMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
@@ -12,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -62,7 +64,7 @@ public class CreateSubmitScreenController extends BaseController implements FxCo
     }
 
     @FXML
-    public void createArticle()throws IOException {
+    public void createArticle() throws IOException {
         String eventName = eventComboBox.getSelectionModel().getSelectedItem();
         String nameArticle = namesTextField.getText();
         facade.createArticle(eventName, nameArticle, facade.getUserData("id"));
