@@ -1,5 +1,9 @@
 package br.upe.facade;
 import br.upe.controller.*;
+import br.upe.persistence.Event;
+import br.upe.persistence.Model;
+import br.upe.persistence.Session;
+import br.upe.persistence.SubEvent;
 import br.upe.persistence.*;
 import br.upe.persistence.repository.Persistence;
 import java.io.IOException;
@@ -74,7 +78,7 @@ public class Facade implements FacadeInterface {
     }
 
 
-    public List<String> listSessions(Object... params) throws IOException {
+    public List<Session> listSessions(Object... params) throws IOException {
         return sessionController.list(params);
     }
 
@@ -153,6 +157,10 @@ public class Facade implements FacadeInterface {
         return submitArticleController.list(params);
     }
 
+    public <T> List <T> getEventArticles(UUID eventId){
+        return (List<T>) submitArticleController.getEventArticles(eventId);
+    }
+
     // UserController methods
     public Map<UUID, Persistence> getUserHashMap() {
         return userController.getHashMap();
@@ -194,10 +202,6 @@ public class Facade implements FacadeInterface {
 
     public void readAttendee() throws IOException {
         attendeeController.read();
-    }
-
-    public void updateAttendee(Object... params) throws IOException {
-        attendeeController.update(params);
     }
 
     public List<Attendee> listAttendees(Object... params) throws IOException {

@@ -26,6 +26,7 @@ public class CreateAttendeeMediator extends Mediator{
             setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleUserButton", "handleUser");
             setupButtonAction("#handleBackButton", "handleBack");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#logoutButton", "logout");
         }
         setupListeners();
@@ -42,6 +43,7 @@ public class CreateAttendeeMediator extends Mediator{
                 , "handleSubEvent"
                 , "handleBack"
                 , "handleSession"
+                , "handleInscription"
                 , "handleEvent"
                 , "handleSubmit":
                     loadScreenForEvent(event);
@@ -71,6 +73,7 @@ public class CreateAttendeeMediator extends Mediator{
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case "handleUser" -> "/fxml/userScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleBack" -> "/fxml/attendeeScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";

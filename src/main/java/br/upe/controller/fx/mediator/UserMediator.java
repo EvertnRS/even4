@@ -46,6 +46,8 @@ public class UserMediator extends Mediator {
             setupButtonAction("#handleSessionButton", "handleSession");
             setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleEventButton", "handleEvent");
+            setupButtonAction("#handleUserButton", "handleUser");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -57,7 +59,6 @@ public class UserMediator extends Mediator {
                 case "handleUpdateUser":
                     handleUpdateUser();
                     break;
-
                 case "handleDeleteUser":
                     userScreenController.deleteUser();
                     break;
@@ -66,6 +67,7 @@ public class UserMediator extends Mediator {
                 , "handleEvent"
                 , "handleSession"
                 , "handleSubEvent"
+                , "handleInscription"
                 , "handleSubmit":
                     loadScreenForEvent(event);
                     break;
@@ -111,6 +113,7 @@ public class UserMediator extends Mediator {
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case "handleUser" -> "/fxml/userScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSession" -> "/fxml/sessionScreen.fxml";
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";

@@ -45,6 +45,7 @@ public class UpdateEventMediator extends Mediator {
             setupButtonAction("#handleSubmitButton", "handleSubmit");
             setupButtonAction("#handleUserButton", "handleUser");
             setupButtonAction("#handleBackButton", "handleBack");
+            setupButtonAction("#handleInscriptionButton", "handleInscription");
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -60,6 +61,7 @@ public class UpdateEventMediator extends Mediator {
                 , "handleEvent"
                 , "handleBack"
                 , "handleSession"
+                , "handleInscription"
                 , "handleSubEvent"
                 , "handleSubmit":
                     loadScreenForEvent(event);
@@ -100,6 +102,7 @@ public class UpdateEventMediator extends Mediator {
             case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
+            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };
     }
