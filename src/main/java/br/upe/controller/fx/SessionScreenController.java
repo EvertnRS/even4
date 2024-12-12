@@ -1,5 +1,6 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.mediator.SessionMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
@@ -18,6 +19,7 @@ import java.util.*;
 
 public class SessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
+    private SessionMediator mediator;
 
     @FXML
     private Label userEmail;
@@ -36,6 +38,8 @@ public class SessionScreenController extends BaseController implements FxControl
     private void initialize() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadUserSessions();
+        this.mediator = new SessionMediator(this, facade, sessionPane, null);
+        mediator.registerComponents();
     }
 
     public void handleUser() throws IOException {
