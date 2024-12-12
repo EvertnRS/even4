@@ -2,6 +2,7 @@ package br.upe.persistence.builder;
 
 import br.upe.persistence.Event;
 import br.upe.persistence.Session;
+import br.upe.persistence.SubEvent;
 import br.upe.persistence.User;
 
 import java.sql.Time;
@@ -15,6 +16,7 @@ public class SessionBuilder {
     private String location;
     private Time startTime;
     private Time endTime;
+    private SubEvent subEventId;
     private Event eventId;
     private User ownerId;
 
@@ -52,12 +54,17 @@ public class SessionBuilder {
         return this;
     }
 
-    public SessionBuilder withEventId(Event eventId) {
+    public SessionBuilder withSubEvent(SubEvent subEventId) {
+        this.subEventId = subEventId;
+        return this;
+    }
+
+    public SessionBuilder withEvent(Event eventId) {
         this.eventId = eventId;
         return this;
     }
 
-    public SessionBuilder withOwnerId(User ownerId) {
+    public SessionBuilder withOwner(User ownerId) {
         this.ownerId = ownerId;
         return this;
     }
@@ -70,6 +77,7 @@ public class SessionBuilder {
         session.setLocation(this.location);
         session.setStartTime(this.startTime);
         session.setEndTime(this.endTime);
+        session.setSubEventId(this.subEventId);
         session.setEventId(this.eventId);
         session.setOwnerId(this.ownerId);
         return session;
