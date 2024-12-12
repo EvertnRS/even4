@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -24,9 +23,6 @@ public class Session implements Model {
     private Date date;
 
     @NotNull
-    private String email;
-
-    @NotNull
     private String description;
 
     @NotNull
@@ -38,11 +34,6 @@ public class Session implements Model {
     @NotNull
     private Time endTime;
 
-    @NotNull
-    private String eventName;
-
-    @NotNull
-    private String subEventName;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
@@ -86,13 +77,6 @@ public class Session implements Model {
         this.date = date;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getDescription() {
         return description;

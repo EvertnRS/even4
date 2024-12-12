@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - jpa
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:

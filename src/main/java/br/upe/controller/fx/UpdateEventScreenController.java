@@ -1,14 +1,15 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
+import br.upe.controller.fx.mediator.UpdateEventMediator;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Event;
-import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
@@ -16,14 +17,12 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
-
-import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private UUID eventId;
+    private UpdateEventMediator mediator;
 
     @FXML
     private AnchorPane editEventPane;
@@ -58,12 +57,6 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         loadEventDetails();
     }
 
-
-    private void initial() {
-        userEmail.setText(facade.getUserData("email"));
-        setupPlaceholders();
-    }
-
     private void setupPlaceholders() {
         PlaceholderUtils.setupPlaceholder(editNameTextField, namePlaceholder);
         PlaceholderUtils.setupPlaceholder(editDatePicker, datePlaceholder);
@@ -71,28 +64,14 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         PlaceholderUtils.setupPlaceholder(editDescriptionTextField, descriptionPlaceholder);
     }
 
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", editEventPane, facade, null);
-    }
+    private void initial() {
+        userEmail.setText(facade.getUserData("email"));
+        setupPlaceholders();
 
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", editEventPane, facade, null);
-    }
+        this.mediator = new UpdateEventMediator(this, facade, editEventPane, errorUpdtLabel);
+        mediator.registerComponents();
 
-    public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", editEventPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", editEventPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", editEventPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", editEventPane, facade, null);
+        mediator.setComponents(editNameTextField, editDatePicker, editLocationTextField, editDescriptionTextField);
     }
 
     private void loadEventDetails() {
@@ -129,25 +108,33 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         }
     }
 
-
     public void updateEvent() throws IOException {
 
         String newName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         Date newDate = Date.valueOf(editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "");
-        List<Model> eventList = facade.getAllEvent();
-        if (!isValidDate(String.valueOf(newDate))) {
-            errorUpdtLabel.setText("Data inválida.");
-            errorUpdtLabel.setAlignment(Pos.CENTER);
-        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(String.valueOf(eventId), eventList)){
-            errorUpdtLabel.setText("Erro no preenchimento das informações.");
-            errorUpdtLabel.setAlignment(Pos.CENTER);
-        }
-        else{
             facade.updateEvent(eventId, newName, newDate, newDescription, newLocation);
-            handleEvent();
-        }
+            mediator.notify("handleEvent");
     }
 
+    @Override
+    public TextField getNameTextField() {
+        return editNameTextField;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return editLocationTextField;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return editDescriptionTextField;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return editDatePicker;
+    }
 }

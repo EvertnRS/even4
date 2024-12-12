@@ -1,4 +1,4 @@
-package br.upe.controller.fx;
+package br.upe.controller.fx.fxutils;
 
 import javafx.animation.TranslateTransition;
 import javafx.scene.Cursor;

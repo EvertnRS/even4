@@ -1,5 +1,6 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Session;
 import br.upe.persistence.repository.Persistence;
@@ -14,12 +15,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
-import org.w3c.dom.ls.LSOutput;
+
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
+
 
 import static br.upe.ui.Validation.areValidTimes;
 import static br.upe.ui.Validation.isValidDate;
@@ -86,7 +86,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", editSessionPane, facade, null);
+        genericButton("/fxml/eventScreen.fxml", editSessionPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
@@ -181,5 +181,25 @@ public class UpdateSessionScreenController extends BaseController implements FxC
 
 
 
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
 
 }

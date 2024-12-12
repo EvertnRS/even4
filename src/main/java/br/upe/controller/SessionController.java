@@ -2,13 +2,10 @@ package br.upe.controller;
 
 import br.upe.persistence.Event;
 import br.upe.persistence.Session;
-import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SessionRepository;
-import br.upe.persistence.repository.SubEventRepository;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -37,6 +34,11 @@ public class SessionController implements Controller {
 
     public Map<UUID, Persistence> getHashMap() {
         return sessionHashMap;
+    }
+
+    @Override
+    public <T> List<T> getEventArticles(UUID eventId) {
+        return List.of();
     }
 
     @Override

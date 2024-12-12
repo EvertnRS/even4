@@ -1,5 +1,6 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
@@ -64,7 +65,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", newSessionPane, facade, null);
+        genericButton("/fxml/eventScreen.fxml", newSessionPane, facade, null);
     }
 
     public void handleSubEvent() throws IOException {
@@ -182,4 +183,25 @@ public class CreateSessionScreenController extends BaseController implements FxC
             handleSession();
         }
     }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
+
 }

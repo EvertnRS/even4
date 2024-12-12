@@ -51,7 +51,7 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/eventScreen.fxml", sessionPane, facade, null);
     }
 
     public void handleAddSession() throws IOException {
@@ -59,7 +59,7 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     public void handleInscriptionSession() throws IOException {
-        genericButton("/fxml/enterSessionScreen.fxml", sessionPane, facade, null);
+        genericButton("/fxml/attendeeScreen.fxml", sessionPane, facade, null);
     }
 
     public void logout() throws IOException {
@@ -203,7 +203,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
                 Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
                 stage.getIcons().clear();
-                stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
+                stage.getIcons().add(new javafx.scene.image.Image("/images/logo/Logo.png"));
 
                 DialogPane dialogPane = alert.getDialogPane();
                 dialogPane.setStyle("-fx-background-color: #f0f0f0; -fx-font-size: 14px; -fx-text-fill: #333333;");
@@ -237,4 +237,26 @@ public class SessionScreenController extends BaseController implements FxControl
             loadUserSessions();
         }
     }
+
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
+
 }

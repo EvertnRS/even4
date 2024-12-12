@@ -4,6 +4,7 @@ import br.upe.persistence.Event;
 import br.upe.persistence.Model;
 import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
+import br.upe.persistence.*;
 import br.upe.persistence.repository.Persistence;
 import java.io.IOException;
 import java.util.List;
@@ -22,6 +23,7 @@ public interface FacadeInterface {
     String getEventData(String dataToGet);
 
     // SessionController methods
+    List<Model> getAllSession();
     Map<UUID, Persistence> getSessionHashMap();
     List<Session> listSessions(Object... params) throws IOException;
     void createSession(Object... params) throws IOException;
@@ -45,6 +47,8 @@ public interface FacadeInterface {
     void deleteArticle(Object... params) throws IOException;
     void updateArticle(Object... params) throws IOException;
     void readArticle(String id) throws IOException;
+    List<SubmitArticle> listSubmitArticles(Object... params) throws IOException;
+    <T> List <T> getEventArticles(UUID eventId);
 
     // UserController methods
     Map<UUID, Persistence> getUserHashMap();
@@ -59,7 +63,6 @@ public interface FacadeInterface {
     Map<UUID, Persistence> getAttendeeHashMap();
     void createAttendee(Object... params) throws IOException;
     void readAttendee() throws IOException;
-    void updateAttendee(Object... params) throws IOException;
-    List<String> listAttendees(Object... params) throws IOException;
+    List<Attendee> listAttendees(Object... params) throws IOException;
     void deleteAttendee(Object... params) throws IOException;
 }

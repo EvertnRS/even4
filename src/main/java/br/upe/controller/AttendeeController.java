@@ -1,9 +1,13 @@
 package br.upe.controller;
 
-import br.upe.persistence.Attendee;
-import br.upe.persistence.Model;
-import br.upe.persistence.SubEvent;
+import br.upe.persistence.*;
+import br.upe.persistence.repository.AttendeeRepository;
+import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
+import br.upe.utils.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,174 +31,72 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public List<Model> getAll() {
-        return List.of();
-    }
-
-    public void setAttendeeHashMap(Map<UUID, Persistence> attendeeHashMap) {
-        this.attendeeHashMap = attendeeHashMap;
-    }
-
-    public Persistence getAttendeeLog() {
-        return attendeeLog;
-    }
-
-    public void setAttendeeLog(Persistence attendeeLog) {
-        this.attendeeLog = attendeeLog;
+    public <T> List <T> getAll() {
+        AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
+        return (List<T>) attendeeRepository.getAllAttendees();
     }
 
     @Override
-    public void create(Object... params) throws FileNotFoundException {
+    public <T> List<T> getEventArticles(UUID eventId) {
+        return List.of();
+    }
+
+    @Override
+    public <T> List<T> list(Object... params) throws IOException {
+        UUID userId = UUID.fromString((String) params[0]);
+        AttendeeRepository eventRepository = AttendeeRepository.getInstance();
+        List<Attendee> allAttendees = eventRepository.getAllAttendees();
+        List<Attendee> userAttendees = new ArrayList<>();
+
+        for (Attendee attendee : allAttendees) {
+            if (attendee.getUserId().getId().equals(userId)) {
+                userAttendees.add(attendee);
+            }
+        }
+
+        if (userAttendees.isEmpty()) {
+            LOGGER.warning("Seu usuário não participa de nenhum evento");
+        }
+
+        return (List<T>) userAttendees;
+    }
+
+    @Override
+    public void create(Object... params) throws IOException {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
         }
 
-        String name = (String) params[0];
-        String sessionId = (String) params[1];
-        String userId = (String) params[2];
-        Persistence attendeePersistence = new Attendee();
+        String sessionId = getSessionId((String) params[0]);
+        String userId = (String) params[1];
 
-        try {
-
-            if (!validateSessionId(sessionId)) {
-                LOGGER.warning("Id Incorreto ou Sessão não Existe");
-                return;
-            }
-
-            for (Map.Entry<UUID, Persistence> entry : this.attendeeHashMap.entrySet()) {
-                Persistence attendee = entry.getValue();
-                if (attendee.getData(USER_ID).equals(userId) && attendee.getData(SESSION_ID).equals(sessionId)) {
-                    throw new IOException();
-                }
-            }
-
-            attendeePersistence.create(userId, name, sessionId);
-            Persistence attendee = new Attendee();
-            attendee.setData("name", name);
-            attendee.setData(SESSION_ID, sessionId);
-            attendee.setData(USER_ID, userId);
-            this.setAttendeeLog(attendee);
-
-        } catch (IOException exception) {
-            LOGGER.warning("Usuário já cadastrado");
-        }
+        Persistence attendee = new AttendeeRepository();
+        attendee.create(userId, sessionId);
     }
 
     @Override
     public void update(Object... params) throws IOException {
-        if (params.length < 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
-            return;
-        }
-        this.read();
-        Persistence attendeePersistence = new Attendee();
-        String newName = (String) params[0];
-        String sessionId = (String) params[1];
-
-        if (!validateSessionId(sessionId)) {
-            LOGGER.warning("Id Incorreto ou Sessão não Existe");
-            return;
-        }
-
-        boolean nameExists = false;
-        for (Map.Entry<UUID, Persistence> entry : attendeeHashMap.entrySet()) {
-            Persistence attendee = entry.getValue();
-            String name = (String) attendee.getData("name");
-            if (name.isEmpty() || name.equals(newName)) {
-                nameExists = true;
-                break;
-            }
-        }
-
-        if (nameExists || newName.isEmpty()) {
-            LOGGER.warning("Nome em uso ou vazio");
-            return;
-        }
-
-        boolean found = false;
-        for (Map.Entry<UUID, Persistence> entry : this.attendeeHashMap.entrySet()) {
-            Persistence attendee = entry.getValue();
-            if (attendee.getData(SESSION_ID).equals(sessionId)) {
-                attendee.setData("name", newName);
-                UUID attendeeId = (UUID) attendee.getData("id");
-                this.attendeeHashMap.put(attendeeId, attendee);
-                found = true;
-                break;
-            }
-        }
-
-        if (!found && LOGGER.isLoggable(Level.WARNING)) {
-            LOGGER.warning(String.format("Nenhum attendee encontrado para a sessão %s", sessionId));
-        }
-
-        attendeePersistence.update(this.attendeeHashMap);
+        //
     }
-
 
     @Override
     public void read() throws IOException {
-        Persistence attendeePersistence = new Attendee();
-        this.attendeeHashMap = attendeePersistence.read();
+        //
     }
 
     @Override
     public void delete(Object... params) throws IOException {
-        if ((params[1]).equals("id")) {
-            Iterator<Map.Entry<UUID, Persistence>> iterator = attendeeHashMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<UUID, Persistence> entry = iterator.next();
-                Persistence attendee = entry.getValue();
-
-                if (attendee.getData(USER_ID).equals(params[0]) && attendee.getData(SESSION_ID).equals(params[2])) {
-
-                    iterator.remove();
-                }
-            }
-            Persistence attendeePersistence = new Attendee();
-            attendeePersistence.delete(attendeeHashMap);
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parametro");
+            return;
         }
-    }
 
+        AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
 
-    private boolean validateSessionId (String sessionId) throws IOException {
-        SessionController sessionController = new SessionController();
-        Map<UUID, Persistence> sessH = sessionController.getHashMap();
-        boolean hasSession = false;
-        for (Map.Entry<UUID, Persistence> entry : sessH.entrySet()) {
-            Persistence session = entry.getValue();
-            if (session.getData("id").equals(sessionId)) {
-                hasSession = true;
-            }
-        }
-        return hasSession;
-    }
+        UUID id = (UUID) params[0];
+        UUID userId = UUID.fromString((String) params[1]);
 
-    @Override
-    public List<String> list(Object... params) throws IOException {
-            this.read();
-            List<String> userEvents = new ArrayList<>();
-
-            try {
-                for (Map.Entry<UUID, Persistence> entry : attendeeHashMap.entrySet()) {
-                    Persistence persistence = entry.getValue();
-                    if (persistence.getData(USER_ID).equals(params[0])) {
-                        String EventName = (String) persistence.getData("name");
-                        userEvents.add(EventName);
-                    }
-                }
-                if (userEvents.isEmpty()) {
-                    LOGGER.warning("Seu usuário atual não está participando de nenhum evento");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return userEvents;
-    }
-
-    @Override
-    public boolean loginValidate(String email, String cpf) {
-        //Método não implementado
-        return false;
+        attendeeRepository.delete(id, userId);
     }
 
     @Override
@@ -214,6 +116,29 @@ public class AttendeeController implements Controller {
         return data;
     }
 
+    private String getSessionId(String searchName) {
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        String fatherId = null;
+        try {
+            TypedQuery<Session> query = entityManager.createQuery("SELECT e FROM Session e WHERE e.name = :name", Session.class);
+            query.setParameter("name", searchName);
+            Session session = query.getSingleResult();
+            fatherId = session.getId().toString();
+        } catch (NoResultException e) {
+            LOGGER.warning("Sessão não encontrada\n");
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        return fatherId;
+    }
+
+    @Override
+    public boolean loginValidate(String email, String cpf) {
+        //Método não implementado
+        return false;
+    }
 
 }
 

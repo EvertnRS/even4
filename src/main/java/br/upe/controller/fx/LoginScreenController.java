@@ -1,15 +1,15 @@
 package br.upe.controller.fx;
 import br.upe.controller.UserController;
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
+import br.upe.controller.fx.mediator.AccessMediator;
 import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -34,35 +34,33 @@ public class LoginScreenController extends BaseController implements FxControlle
     @FXML
     private Label errorLabel;
 
+    private AccessMediator accessMediator;
+
+    public TextField getPassTextField() {
+        return passTextField;
+    }
+
+    public TextField getEmailTextField() {
+        return emailTextField;
+    }
+
+    public Label getErrorLabel() {
+        return errorLabel;
+    }
+
     @FXML
-    public void initialize() {
-        loginAnchorPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.setOnKeyPressed(event -> {
-                    if (event.getCode() == KeyCode.ENTER) {
-                        try {
-                            handleLogin();
-                        } catch (IOException e) {
-                            throw new IllegalArgumentException(e);
-                        }
-                    }
-                });
-            }
-        });
+    public void initialize() throws IOException {
+        UserController userController = UserController.getInstance();
+        FacadeInterface facade = new Facade(userController);
 
-        emailTextField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.DOWN) {
-                passTextField.requestFocus();
-            }
-        });
-
-        passTextField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.UP) {
-                emailTextField.requestFocus();
-            }
-        });
+        this.accessMediator = new AccessMediator(null, facade, loginAnchorPane, errorLabel, this);
+        accessMediator.registerComponents();
 
         setupPlaceholders();
+
+        accessMediator.setComponents(null, null, emailTextField, passTextField);
+
+        Platform.runLater(() -> loginAnchorPane.requestFocus());
     }
 
     private void setupPlaceholders() {
@@ -70,37 +68,38 @@ public class LoginScreenController extends BaseController implements FxControlle
         PlaceholderUtils.setupPlaceholder(passTextField, passPlaceholder);
     }
 
-    public void handleLogin() throws IOException {
-        String email = emailTextField.getText();
-        String pass = passTextField.getText();
-
-        UserController userController = UserController.getInstance();
-        FacadeInterface facade = new Facade(userController);
-
-        loadScreen("Carregando", () -> {
-            if (userController.loginValidate(email, pass)) {
-                Platform.runLater(() -> {
-                    try {
-                        genericButton("/fxml/mainScreen.fxml", loginAnchorPane, facade, null);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            } else {
-                Platform.runLater(() -> errorLabel.setText("Login falhou! Verifique suas credenciais."));
-                errorLabel.setAlignment(Pos.CENTER);
-            }
-        }, loginAnchorPane);
-    }
-
-    public void moveToSignUp() throws IOException {
-        genericButton("/fxml/signUpScreen.fxml", loginAnchorPane, null, null);
+    public void handleLogin() {
+        try {
+            accessMediator.notify("handleAccessButton");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
     @Override
     public void setFacade(FacadeInterface facade) {
         // Método não implementado
+    }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
     }
 
 

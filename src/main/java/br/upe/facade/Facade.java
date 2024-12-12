@@ -4,6 +4,7 @@ import br.upe.persistence.Event;
 import br.upe.persistence.Model;
 import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
+import br.upe.persistence.*;
 import br.upe.persistence.repository.Persistence;
 import java.io.IOException;
 import java.util.List;
@@ -63,8 +64,17 @@ public class Facade implements FacadeInterface {
 
 
     // SessionController methods
+    @Override
+    public List<Model> getAllSession() {
+        return sessionController.getAll();
+    }
+
     public Map<UUID, Persistence> getSessionHashMap() {
         return sessionController.getHashMap();
+    }
+
+    public List<Model> getAllSessions() {
+        return eventController.getAll();
     }
 
 
@@ -143,6 +153,14 @@ public class Facade implements FacadeInterface {
         submitArticleController.read();
     }
 
+    public List<SubmitArticle> listSubmitArticles(Object... params) throws IOException {
+        return submitArticleController.list(params);
+    }
+
+    public <T> List <T> getEventArticles(UUID eventId){
+        return (List<T>) submitArticleController.getEventArticles(eventId);
+    }
+
     // UserController methods
     public Map<UUID, Persistence> getUserHashMap() {
         return userController.getHashMap();
@@ -166,9 +184,6 @@ public class Facade implements FacadeInterface {
 
     @Override
     public boolean loginValidate(String email, String password) {
-        System.out.println("Facade: loginValidate");
-        System.out.println("email: " + email);
-        System.out.println("pass: " + password);
         return userController.loginValidate(email, password);
     }
 
@@ -189,11 +204,7 @@ public class Facade implements FacadeInterface {
         attendeeController.read();
     }
 
-    public void updateAttendee(Object... params) throws IOException {
-        attendeeController.update(params);
-    }
-
-    public List<String> listAttendees(Object... params) throws IOException {
+    public List<Attendee> listAttendees(Object... params) throws IOException {
         return attendeeController.list(params);
     }
 

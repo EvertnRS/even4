@@ -1,29 +1,32 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.fx.mediator.SubEventMediator;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.EventRepository;
-import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.persistence.repository.UserRepository;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 public class SubEventScreenController extends BaseController implements FxController{
     private FacadeInterface facade;
+    private SubEventMediator mediator;
 
     @FXML
     private Label userEmail;
@@ -33,40 +36,33 @@ public class SubEventScreenController extends BaseController implements FxContro
     private ScrollPane scrollPane;
     @FXML
     private AnchorPane subEventPane;
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private Text searchPlaceholder;
+    @FXML
+    private ImageView logoView6;
 
     public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
         initial();
     }
 
-
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadUserSubEvents();
-    }
 
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", subEventPane, facade, null);
-    }
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            setupPlaceholders();
+            try {
+                loadUserSubEvents();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/mainScreen.fxml", subEventPane, facade, null);
-    }
-
-    public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", subEventPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", subEventPane, facade, null);
-    }
-
-    public void handleAddSubEvent() throws IOException {
-        genericButton("/fxml/createSubEventScreen.fxml", subEventPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", subEventPane, facade, null);
+        mediator = new SubEventMediator(this, facade, subEventPane, null);
+        mediator.registerComponents();
     }
 
     private void loadUserSubEvents() throws IOException {
@@ -78,7 +74,7 @@ public class SubEventScreenController extends BaseController implements FxContro
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
 
-        scrollPane.setStyle("-fx-padding: 20px;");
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-top: 2px; -border-color: #cccccc");
 
         subEventVBox.setAlignment(Pos.CENTER);
 
@@ -86,46 +82,67 @@ public class SubEventScreenController extends BaseController implements FxContro
             if (subevent.getOwnerId().getId().equals(UUID.fromString(facade.getUserData("id")))) {
 
                 VBox eventContainer = new VBox();
-                eventContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+                eventContainer.setStyle("-fx-background-color: #d3d3d3; " +
+                        "-fx-padding: 10px 20px 10px 20px; " +
+                        "-fx-margin: 0 40px 0 40px; " +
+                        "-fx-spacing: 5px; " +
+                        "-fx-border-radius: 10px; " +
+                        "-fx-background-radius: 10px;");
 
-                Label subEventLabel = new Label((String) subeventRepository.getData(subevent.getId(),"name"));
-                subEventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
+                VBox.setMargin(eventContainer, new Insets(5, 20, 5, 20));
+                Label subEventLabel;
+                if (searchTextField.getText().isEmpty() || String.valueOf(subeventRepository.getData(subevent.getId(), "name")).contains(searchTextField.getText())) {
+                    subEventLabel = new Label((String) subeventRepository.getData(subevent.getId(), "name"));
+                    subEventLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
-                Button editButton = new Button("Editar");
-                editButton.setStyle("-fx-background-color: #6fa3ef; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                    Button editButton = new Button("Editar");
+                    ImageView editIcon = new ImageView(new Image("images/icons/buttons/editIcon.png"));
+                    editIcon.setFitWidth(16);
+                    editIcon.setFitHeight(16);
+                    editButton.setGraphic(editIcon);
+                    editButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                Button deleteButton = new Button("Excluir");
-                deleteButton.setStyle("-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                    Button deleteButton = new Button("Excluir");
+                    ImageView deleteIcon = new ImageView(new Image("images/icons/buttons/deleteIcon.png"));
+                    deleteIcon.setFitWidth(16);
+                    deleteIcon.setFitHeight(16);
+                    deleteButton.setGraphic(deleteIcon);
+                    deleteButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                Button detailsButton = new Button("Detalhes");
-                detailsButton.setStyle("-fx-background-color: #ff914d; -fx-text-fill: white; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                    Button detailsButton = new Button("Detalhes");
+                    ImageView detailsIcon = new ImageView(new Image("images/icons/buttons/detailsIcon.png"));
+                    detailsIcon.setFitWidth(16);
+                    detailsIcon.setFitHeight(16);
+                    detailsButton.setGraphic(detailsIcon);
+                    detailsButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                detailsButton.setOnAction(e ->
-                        handleDetailSubEvent((UUID) subeventRepository.getData(subevent.getId(),"id")));
+                    detailsButton.setOnAction(e ->
+                            handleDetailSubEvent((UUID) subeventRepository.getData(subevent.getId(), "id")));
 
-                editButton.setOnAction(e -> {
-                    try {
-                        handleEditSubEvent((UUID) subeventRepository.getData(subevent.getId(),"id"));
-                    } catch (IOException ex) {
-                        throw new IllegalArgumentException(ex);
-                    }
-                });
+                    editButton.setOnAction(e -> {
+                        try {
+                            handleEditSubEvent((UUID) subeventRepository.getData(subevent.getId(), "id"));
+                        } catch (IOException ex) {
+                            throw new IllegalArgumentException(ex);
+                        }
+                    });
 
-                deleteButton.setOnAction(e -> {
-                    try {
-                        handleDeleteSubEvent((UUID) subeventRepository.getData(subevent.getId(),"id"), facade.getUserData("id"));
-                    } catch (IOException ex) {
-                        throw new IllegalArgumentException(ex);
-                    }
-                });
+                    deleteButton.setOnAction(e -> {
+                        try {
+                            handleDeleteSubEvent((UUID) subeventRepository.getData(subevent.getId(), "id"), facade.getUserData("id"));
+                        } catch (IOException ex) {
+                            throw new IllegalArgumentException(ex);
+                        }
+                    });
 
-                HBox actionButtons = new HBox(10);
-                actionButtons.setAlignment(Pos.CENTER_RIGHT);
-                actionButtons.getChildren().addAll(detailsButton,editButton, deleteButton);
-                Label eventLabel = createEventLabel((UUID) subeventRepository.getData(subevent.getId(), "eventId"));
-                eventContainer.getChildren().addAll(subEventLabel, actionButtons, eventLabel);
+                    HBox actionButtons = new HBox(10);
+                    actionButtons.setAlignment(Pos.CENTER_RIGHT);
+                    actionButtons.getChildren().addAll(detailsButton, editButton, deleteButton);
+                    Label eventLabel = createEventLabel((UUID) subeventRepository.getData(subevent.getId(), "eventId"));
+                    eventContainer.getChildren().addAll(subEventLabel, actionButtons, eventLabel);
 
-                subEventVBox.getChildren().add(eventContainer);
+                    subEventVBox.getChildren().add(eventContainer);
+                }
             }
         }
     }
@@ -161,7 +178,7 @@ public class SubEventScreenController extends BaseController implements FxContro
 
                 Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
                 stage.getIcons().clear();
-                stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
+                stage.getIcons().add(new javafx.scene.image.Image("/images/logo/Logo.png"));
 
                 DialogPane dialogPane = alert.getDialogPane();
                 dialogPane.setStyle("-fx-background-color: #f0f0f0; -fx-font-size: 14px; -fx-text-fill: #333333;");
@@ -175,27 +192,49 @@ public class SubEventScreenController extends BaseController implements FxContro
     }
 
 
-    private void handleEditSubEvent(UUID eventName) throws IOException {
-        SubEventRepository subeventRepository = SubEventRepository.getInstance();
-        genericButton("/fxml/updateSubEventScreen.fxml", subEventPane, facade, String.valueOf(subeventRepository.getData(eventName, "id")));
+    private void handleEditSubEvent(UUID subEventId) throws IOException {
+        mediator.setSubEventId(String.valueOf(subEventId));
+        mediator.notify("handleUpdateSubEvent");
     }
 
     private void handleDeleteSubEvent(UUID eventId, String userId) throws IOException {
-        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("Confirmação de Exclusão");
-        confirmationAlert.setHeaderText("Deseja realmente excluir este subEvento?");
-        confirmationAlert.setContentText("Esta ação não pode ser desfeita.");
+        mediator.setSubEventId(String.valueOf(eventId));
+        Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteSubEvent");
 
-        ButtonType buttonSim = new ButtonType("Sim");
-        ButtonType buttonNao = new ButtonType("Não", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        confirmationAlert.getButtonTypes().setAll(buttonSim, buttonNao);
-
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
-
-        if (result.isPresent() && result.get() == buttonSim) {
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             facade.deleteSubEvent(eventId, userId);
             loadUserSubEvents();
         }
     }
+
+    public void setupPlaceholders() {
+        if (!searchTextField.getText().isEmpty()) {
+            searchPlaceholder.setVisible(false);
+            logoView6.setVisible(false);
+        } else {
+            searchPlaceholder.setVisible(true);
+            logoView6.setVisible(true);
+        }
+    }
+
+    @Override
+    public TextField getNameTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getLocationTextField() {
+        return null;
+    }
+
+    @Override
+    public TextField getDescriptionTextField() {
+        return null;
+    }
+
+    @Override
+    public DatePicker getDatePicker() {
+        return null;
+    }
+
 }
