@@ -62,7 +62,7 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public void create(Object... params) throws IOException {
+    public boolean create(Object... params) throws IOException {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
         }
@@ -71,12 +71,12 @@ public class AttendeeController implements Controller {
         String userId = (String) params[1];
 
         Persistence attendee = new AttendeeRepository();
-        attendee.create(userId, sessionId);
+        return attendee.create(userId, sessionId);
     }
 
     @Override
-    public void update(Object... params) throws IOException {
-        //
+    public boolean update(Object... params) throws IOException {
+        return false;
     }
 
     @Override
@@ -85,10 +85,10 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametro");
-            return;
+            return false;
         }
 
         AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
@@ -96,7 +96,7 @@ public class AttendeeController implements Controller {
         UUID id = (UUID) params[0];
         UUID userId = UUID.fromString((String) params[1]);
 
-        attendeeRepository.delete(id, userId);
+        return attendeeRepository.delete(id, userId);
     }
 
     @Override

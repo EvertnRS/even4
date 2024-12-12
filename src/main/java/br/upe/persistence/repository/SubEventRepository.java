@@ -40,10 +40,10 @@ public class SubEventRepository implements Persistence {
     }
 
     @Override
-    public void create(Object... params) {
+    public boolean create(Object... params) {
         if (params.length != 6) {
             LOGGER.warning("Só pode ter 6 parametros");
-            return;
+            return false;
         }
 
         UUID id = UUID.fromString((String) params[0]);
@@ -52,6 +52,7 @@ public class SubEventRepository implements Persistence {
         String description = (String) params[3];
         String location = (String) params[4];
         UUID ownerId = UUID.fromString((String) params[5]);
+        boolean isCreated = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         Event event = entityManager.find(Event.class, id);
@@ -75,6 +76,7 @@ public class SubEventRepository implements Persistence {
                 entityManager.persist(subevent);
             }
             transaction.commit();
+            isCreated = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -85,6 +87,7 @@ public class SubEventRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isCreated;
     }
 
     @Override
@@ -106,10 +109,10 @@ public class SubEventRepository implements Persistence {
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parâmetros");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
@@ -117,6 +120,7 @@ public class SubEventRepository implements Persistence {
         Date newDate = (Date) params[2];
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
+        boolean isUpdated = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -133,6 +137,7 @@ public class SubEventRepository implements Persistence {
                 entityManager.merge(subevent);
                 transaction.commit();
                 LOGGER.info("SubEvento atualizado com sucesso.");
+                isUpdated = true;
             } else {
                 LOGGER.warning("SubEvento não encontrado com o ID fornecido.");
             }
@@ -146,6 +151,7 @@ public class SubEventRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isUpdated;
     }
 
     @Override
@@ -159,14 +165,15 @@ public class SubEventRepository implements Persistence {
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametros");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
         UUID ownerId = (UUID) params[1];
+        boolean isDeleted = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -178,13 +185,14 @@ public class SubEventRepository implements Persistence {
 
             if ((owner) == null) {
                 LOGGER.warning("Criador inválido.");
-                return;
+                return false;
             }
 
             if (idSubEvent != null) {
                 entityManager.remove(idSubEvent);
                 transaction.commit();
                 LOGGER.info("SubEvento deletado com sucesso.");
+                isDeleted = true;
             } else {
                 LOGGER.warning("SubEvento não encontrado com o ID fornecido.");
             }
@@ -198,6 +206,7 @@ public class SubEventRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isDeleted;
     }
 
     @Override

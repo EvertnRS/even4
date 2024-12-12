@@ -53,10 +53,10 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public void create(Object... params) throws IOException {
+    public boolean create(Object... params) throws IOException {
         if (params.length != 3) {
             LOGGER.warning("São necessários 3 parâmetros: nome do evento, o conteúdo do arquivo (byte[]) e id do proprietário.");
-            return;
+            return false;
         }
 
         String eventName = (String) params[0];
@@ -71,20 +71,19 @@ public class SubmitArticleController implements Controller {
 
         byte[] articleContent = Files.readAllBytes(path);
 
-        submitArticlesRepository.create(eventName, articleContent, ownerId, articleName);
+        return submitArticlesRepository.create(eventName, articleContent, ownerId, articleName);
     }
 
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 1) {
             LOGGER.warning("É necessário 1 parâmetro: id do artigo.");
-            return;
+            return false;
         }
         UUID articleId = (UUID) params [0];
 
-        submitArticlesRepository.delete(articleId);
-
+        return submitArticlesRepository.delete(articleId);
     }
 
     @Override
@@ -115,10 +114,10 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("São necessários 2 parâmetros");
-            return;
+            return false;
         }
 
         String filePath = (String) params [0];
@@ -126,14 +125,16 @@ public class SubmitArticleController implements Controller {
 
         Path path = Paths.get(filePath);
         String articleName = path.getFileName().toString();
+        boolean isUpdated = false;
 
         byte[] articleContent = Files.readAllBytes(path);
 
         if (articleId != null) {
-            submitArticlesRepository.update(articleName, articleContent, articleId);
+            isUpdated = submitArticlesRepository.update(articleName, articleContent, articleId);
         } else {
             LOGGER.warning("Artigo não encontrado.");
         }
+        return isUpdated;
     }
 
     @Override

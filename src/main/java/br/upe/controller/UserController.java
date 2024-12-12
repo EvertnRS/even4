@@ -76,7 +76,7 @@ public class UserController implements Controller {
     }
 
     @Override
-    public void create(Object... params) {
+    public boolean create(Object... params) {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
         }
@@ -89,16 +89,16 @@ public class UserController implements Controller {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         Persistence userRepository = UserRepository.getInstance();
 
-        userRepository.create(name, cpf, email, hashedPassword);
+        return userRepository.create(name, cpf, email, hashedPassword);
     }
 
 
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parâmetros");
-            return;
+            return false;
         }
 
         String name = (String) params[0];
@@ -106,6 +106,7 @@ public class UserController implements Controller {
         String email = (String) params[2];
         String newPassword = (String) params[3];
         String password = (String) params[4];
+        boolean isUpdated = false;
 
         if (isValidEmail(email) && isValidCPF(cpf.toString())) {
             userLog.setData("email", email);
@@ -120,10 +121,11 @@ public class UserController implements Controller {
             }
 
             UUID userID = (UUID) userLog.getData("id");
-            userLog.update(userID, name, cpf, email, newPassword, password);
+            isUpdated = userLog.update(userID, name, cpf, email, newPassword, password);
         } else {
             LOGGER.warning("Email ou CPF inválido.");
         }
+        return isUpdated;
     }
 
     @Override
@@ -135,16 +137,16 @@ public class UserController implements Controller {
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 1) {
             LOGGER.warning("Só pode ter 1 parametro");
-            return;
+            return false;
         }
 
         String password = (String) params[0];
         UUID userID = (UUID) userLog.getData("id");
 
-        userLog.delete(userID, password);
+        return userLog.delete(userID, password);
     }
 
     @Override

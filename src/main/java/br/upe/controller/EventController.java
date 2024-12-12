@@ -64,10 +64,10 @@ public class EventController implements Controller {
     }
 
     @Override
-    public void create(Object... params) {
+    public boolean create(Object... params) {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parâmetros");
-            return;
+            return false;
         }
 
         String name = (String) params[0];
@@ -78,14 +78,14 @@ public class EventController implements Controller {
         String idOwner = (String) params[4];
 
         Persistence event = new EventRepository();
-        event.create(name, date, description, location, idOwner);
+        return event.create(name, date, description, location, idOwner);
 
     }
 
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (!isValidParamsLength(params)) {
             LOGGER.warning("Só pode ter 5 parametros");
-            return;
+            return false;
         }
 
         UUID eventId = (UUID) params[0];
@@ -94,16 +94,18 @@ public class EventController implements Controller {
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
 
-        updateEvent(eventId, newName, newDate, newDescription, newLocation);
+        return updateEvent(eventId, newName, newDate, newDescription, newLocation);
     }
 
-    private void updateEvent(UUID id, String newName, Date newDate, String newDescription, String newLocation) throws IOException {
+    private boolean updateEvent(UUID id, String newName, Date newDate, String newDescription, String newLocation) throws IOException {
+        boolean isUpdated = false;
         if (id != null) {
             EventRepository eventRepository = EventRepository.getInstance();
-            eventRepository.update(id, newName, newDate, newDescription, newLocation);
+            isUpdated = eventRepository.update(id, newName, newDate, newDescription, newLocation);
         } else {
             LOGGER.warning("Evento não encontrado");
         }
+        return isUpdated;
     }
 
     @Override
@@ -113,10 +115,10 @@ public class EventController implements Controller {
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametro");
-            return;
+            return false;
         }
 
         EventRepository eventRepository = EventRepository.getInstance();
@@ -124,7 +126,7 @@ public class EventController implements Controller {
         UUID id = (UUID) params[0];
         UUID ownerId = UUID.fromString((String) params[1]);
 
-        eventRepository.delete(id, ownerId);
+        return eventRepository.delete(id, ownerId);
     }
 
     @Override

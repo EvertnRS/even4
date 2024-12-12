@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface Controller {
-    void create(Object... params) throws IOException;
-    void update(Object... params) throws IOException;
+    boolean create(Object... params) throws IOException;
+    boolean update(Object... params) throws IOException;
     void read() throws IOException;
-    void delete(Object... params) throws IOException;
+    boolean delete(Object... params) throws IOException;
 
     <T> List <T> list(Object... params) throws IOException;
     boolean loginValidate(String email, String cpf);

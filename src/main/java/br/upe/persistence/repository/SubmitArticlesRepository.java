@@ -48,16 +48,17 @@ public class SubmitArticlesRepository implements Persistence {
 
 
     @Override
-    public void create(Object... params) {
+    public boolean create(Object... params) {
         if (params.length != 4) {
             LOGGER.warning("São necessários 2 parâmetros: nome do evento e o artigo escolhido.");
-            return;
+            return false;
         }
 
         String eventName = (String) params[0];
         byte[] article = (byte[]) params[1];
         UUID ownerId = UUID.fromString((String) params[2]);
         String articleName = (String) params[3];
+        boolean isCreated = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -72,7 +73,7 @@ public class SubmitArticlesRepository implements Persistence {
 
             if (event == null) {
                 LOGGER.warning("Evento não encontrado com o nome fornecido: " + eventName);
-                return;
+                return false;
             }
 
             SubmitArticle submitArticle = SubmitArticleBuilder.builder()
@@ -86,6 +87,7 @@ public class SubmitArticlesRepository implements Persistence {
             entityManager.persist(submitArticle);
             transaction.commit();
             LOGGER.info("Artigo submetido com sucesso para o evento: " + eventName);
+            isCreated = true;
         } catch (NoResultException e) {
             LOGGER.warning("Evento não encontrado com o nome fornecido: " + eventName);
         } catch (Exception e) {
@@ -98,6 +100,7 @@ public class SubmitArticlesRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isCreated;
     }
 
 
@@ -107,15 +110,16 @@ public class SubmitArticlesRepository implements Persistence {
     }
 
     @Override
-    public void update(Object... params) {
+    public boolean update(Object... params) {
         if (params.length != 3) {
             LOGGER.warning("São necessários 3 parâmetros.");
-            return;
+            return false;
         }
 
         String articleName = (String) params[0];
         byte[] articleContent = (byte[]) params[1];
         UUID articleId = (UUID) params[2];
+        boolean isUpdated = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -124,7 +128,7 @@ public class SubmitArticlesRepository implements Persistence {
             SubmitArticle article = entityManager.find(SubmitArticle.class, articleId);
             if (article == null) {
                 LOGGER.warning("Artigo não encontrado.");
-                return;
+                return false;
             }
 
 
@@ -135,6 +139,7 @@ public class SubmitArticlesRepository implements Persistence {
             transaction.commit();
 
             LOGGER.info("Artigo atualizado com sucesso.");
+            isUpdated = true;
 
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -146,6 +151,7 @@ public class SubmitArticlesRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isUpdated;
     }
 
 
@@ -155,13 +161,14 @@ public class SubmitArticlesRepository implements Persistence {
     }
 
     @Override
-    public void delete(Object... params) {
+    public boolean delete(Object... params) {
         if (params.length != 1) {
             LOGGER.warning("É necessário um parâmetro: ID do artigo.");
-            return;
+            return false;
         }
 
         UUID articleId = (UUID) params [0];
+        boolean isDeleted = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -170,7 +177,7 @@ public class SubmitArticlesRepository implements Persistence {
             SubmitArticle article = entityManager.find(SubmitArticle.class, articleId);
             if (article == null) {
                 LOGGER.warning("Artigo não encontrado.");
-                return;
+                return false;
             }
 
             transaction.begin();
@@ -178,6 +185,7 @@ public class SubmitArticlesRepository implements Persistence {
             transaction.commit();
 
             LOGGER.info("Artigo deletado com sucesso.");
+            isDeleted = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -188,6 +196,7 @@ public class SubmitArticlesRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isDeleted;
     }
 
     @Override

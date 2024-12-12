@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public interface  Persistence {
-    void create(Object... params);
-    void delete(Object... params) throws IOException;
-    void update(Object... params) throws IOException;
+    boolean create(Object... params);
+    boolean delete(Object... params) throws IOException;
+    boolean update(Object... params) throws IOException;
 
     void setData(String dataToSet, Object data);
     Object getData(String dataToGet);

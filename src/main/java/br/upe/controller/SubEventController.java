@@ -89,10 +89,10 @@ public class SubEventController implements Controller {
     }
 
     @Override
-    public void create(Object... params) throws IOException {
+    public boolean create(Object... params) throws IOException {
         if (params.length != 6) {
             LOGGER.warning("Só pode ter 6 parâmetros");
-            return;
+            return false;
         }
 
         String eventId = getFatherEventId((String) params[0]);
@@ -103,7 +103,7 @@ public class SubEventController implements Controller {
         String userId = (String) params[5];
 
         Persistence subEvent = new SubEventRepository();
-        subEvent.create(eventId, name, date, description, location, userId);
+        return subEvent.create(eventId, name, date, description, location, userId);
     }
 
 //    private void cascadeDelete(String id) throws IOException {
@@ -166,10 +166,10 @@ public class SubEventController implements Controller {
 
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametro");
-            return;
+            return false;
         }
 
         SubEventRepository subeventRepository = SubEventRepository.getInstance();
@@ -177,16 +177,16 @@ public class SubEventController implements Controller {
         UUID id = (UUID) params[0];
         UUID ownerId = UUID.fromString((String) params[1]);
 
-        subeventRepository.delete(id, ownerId);
+        return subeventRepository.delete(id, ownerId);
     }
 
 
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (!isValidParamsLength(params)) {
             LOGGER.warning("Só pode ter 5 parametros");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
@@ -196,7 +196,7 @@ public class SubEventController implements Controller {
         String newLocation = (String) params[4];
 
 
-        updateSubEvent( id, newName, newDate, newDescription, newLocation);
+        return updateSubEvent( id, newName, newDate, newDescription, newLocation);
     }
 
     private boolean isValidParamsLength(Object... params) {
@@ -217,13 +217,15 @@ public class SubEventController implements Controller {
         return null;
     }
 
-    private void updateSubEvent(UUID id, String newName, Date newDate, String newDescription, String newLocation) throws IOException {
+    private boolean updateSubEvent(UUID id, String newName, Date newDate, String newDescription, String newLocation) throws IOException {
+        boolean isUpdated = false;
         if (id != null) {
             SubEventRepository subeventRepository = SubEventRepository.getInstance();
-            subeventRepository.update(id, newName, newDate, newDescription, newLocation);
+            isUpdated = subeventRepository.update(id, newName, newDate, newDescription, newLocation);
         } else {
             LOGGER.warning("Evento não encontrado");
         }
+        return isUpdated;
     }
 
 

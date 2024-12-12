@@ -40,12 +40,13 @@ public class AttendeeRepository implements Persistence{
     }
 
     @Override
-    public void create(Object... params) {
+    public boolean create(Object... params) {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametros");
         }
         UUID parsedUserId = UUID.fromString((String) params[0]);
         UUID parsedSessionId = UUID.fromString((String) params[1]);
+        boolean isCreated = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -82,6 +83,7 @@ public class AttendeeRepository implements Persistence{
             transaction.commit();
 
             LOGGER.info("Sessão adicionada ao Attendee: " + attendee.getId());
+            isCreated = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -92,17 +94,19 @@ public class AttendeeRepository implements Persistence{
                 entityManager.close();
             }
         }
+        return isCreated;
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametros");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
         UUID userId = (UUID) params[1];
+        boolean isDeleted = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -114,13 +118,14 @@ public class AttendeeRepository implements Persistence{
 
             if ((owner) == null) {
                 LOGGER.warning("Usuário inválido.");
-                return;
+                return false;
             }
 
             if (idAttendee != null) {
                 entityManager.remove(idAttendee);
                 transaction.commit();
                 LOGGER.info("Participante deletado com sucesso.");
+                isDeleted = true;
             } else {
                 LOGGER.warning("Participante não encontrado com o ID fornecido.");
             }
@@ -134,11 +139,12 @@ public class AttendeeRepository implements Persistence{
                 entityManager.close();
             }
         }
+        return true;
     }
 
     @Override
-    public void update(Object... params) throws IOException {
-        //
+    public boolean update(Object... params) throws IOException {
+        return false;
     }
 
     @Override

@@ -42,20 +42,20 @@ public class Facade implements FacadeInterface {
         return eventController.list(params);
     }
 
-    public void createEvent(Object... params) throws IOException {
-        eventController.create(params);
+    public boolean createEvent(Object... params) throws IOException {
+        return eventController.create(params);
     }
 
     public void readEvent() throws IOException {
         eventController.read();
     }
 
-    public void updateEvent(Object... params) throws IOException {
-        eventController.update(params);
+    public boolean updateEvent(Object... params) throws IOException {
+        return eventController.update(params);
     }
 
-    public void deleteEvent(Object... params) throws IOException {
-        eventController.delete(params);
+    public boolean deleteEvent(Object... params) throws IOException {
+        return eventController.delete(params);
     }
 
     public String getEventData(String dataToGet) {
@@ -82,20 +82,20 @@ public class Facade implements FacadeInterface {
         return sessionController.list(params);
     }
 
-    public void createSession(Object... params) throws IOException {
-        sessionController.create(params);
+    public boolean createSession(Object... params) throws IOException {
+        return sessionController.create(params);
     }
 
     public void readSession() throws IOException {
         sessionController.read();
     }
 
-    public void updateSession(Object... params) throws IOException {
-        sessionController.update(params);
+    public boolean updateSession(Object... params) throws IOException {
+        return sessionController.update(params);
     }
 
-    public void deleteSession(Object... params) throws IOException {
-        sessionController.delete(params);
+    public boolean deleteSession(Object... params) throws IOException {
+        return sessionController.delete(params);
     }
 
     public String getSessionData(String dataToGet) {
@@ -116,16 +116,16 @@ public class Facade implements FacadeInterface {
         return subEventController.list(params);
     }
 
-    public void updateSubEvent(Object... params) throws IOException {
-        subEventController.update(params);
+    public boolean updateSubEvent(Object... params) throws IOException {
+        return subEventController.update(params);
     }
 
-    public void deleteSubEvent(Object... params) throws IOException {
-        subEventController.delete(params);
+    public boolean deleteSubEvent(Object... params) throws IOException {
+        return subEventController.delete(params);
     }
 
-    public void createSubEvent(Object... params) throws IOException {
-        subEventController.create(params);
+    public boolean createSubEvent(Object... params) throws IOException {
+        return subEventController.create(params);
     }
 
     public void readSubEvent() throws IOException {
@@ -137,16 +137,16 @@ public class Facade implements FacadeInterface {
         return submitArticleController.getHashMap();
     }
 
-    public void createArticle(Object... params) throws IOException {
-        submitArticleController.create(params);
+    public boolean createArticle(Object... params) throws IOException {
+        return submitArticleController.create(params);
     }
 
-    public void deleteArticle(Object... params) throws IOException {
-        submitArticleController.delete(params);
+    public boolean deleteArticle(Object... params) throws IOException {
+        return submitArticleController.delete(params);
     }
 
-    public void updateArticle(Object... params) throws IOException {
-        submitArticleController.update(params);
+    public boolean updateArticle(Object... params) throws IOException {
+        return submitArticleController.update(params);
     }
 
     public void readArticle(String id) throws IOException {
@@ -166,20 +166,20 @@ public class Facade implements FacadeInterface {
         return userController.getHashMap();
     }
 
-    public void createUser(Object... params) throws IOException {
-        userController.create(params);
+    public boolean createUser(Object... params) throws IOException {
+        return userController.create(params);
     }
 
     public void readUser() throws IOException {
         userController.read();
     }
 
-    public void updateUser(Object... params) throws IOException {
-        userController.update(params);
+    public boolean updateUser(Object... params) throws IOException {
+        return userController.update(params);
     }
 
-    public void deleteUser(Object... params) throws IOException {
-        userController.delete(params);
+    public boolean deleteUser(Object... params) throws IOException {
+        return userController.delete(params);
     }
 
     @Override
@@ -196,8 +196,8 @@ public class Facade implements FacadeInterface {
         return attendeeController.getHashMap();
     }
 
-    public void createAttendee(Object... params) throws IOException {
-        attendeeController.create(params);
+    public boolean createAttendee(Object... params) throws IOException {
+        return attendeeController.create(params);
     }
 
     public void readAttendee() throws IOException {
@@ -208,7 +208,7 @@ public class Facade implements FacadeInterface {
         return attendeeController.list(params);
     }
 
-    public void deleteAttendee(Object... params) throws IOException {
-        attendeeController.delete(params);
+    public boolean deleteAttendee(Object... params) throws IOException {
+        return attendeeController.delete(params);
     }
 }
