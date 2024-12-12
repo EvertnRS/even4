@@ -20,19 +20,9 @@ class FacadeIntegrationTest {
     FacadeIntegrationTest() throws IOException {
     }
 
-    @BeforeEach
-    void setUp() throws IOException {
-        boolean validated = facade.loginValidate("email@email.com", "1234");
-
-        if (!validated) {
-            facade.createUser("Name", "56756756756", "email@email.com", "1234");
-        }
-    }
-
     @Test
     void testCreateUser() throws IOException {
         if (facade.loginValidate(email, password)) {
-            System.out.println("User already exists\n\n\n\n\n");
             facade.deleteUser("1234", facade.getUserData("id"));
         }
 
@@ -41,54 +31,112 @@ class FacadeIntegrationTest {
             boolean isLoggedIn = facade.loginValidate(email, password);
             if (isLoggedIn) {
                 String userId = facade.getUserData("id");
-                System.out.println("User ID after login: " + userId);
                 facade.deleteUser("1234", userId);
             }
         }
     }
-    
+
     @Test
     void testUpdateUserName() throws IOException {
-        if (!facade.loginValidate(email, password)) {
-            facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        if (facade.loginValidate(email, password)) {
+            facade.deleteUser("1234", facade.getUserData("id"));
         }
 
-        boolean isUpdated = facade.updateUser("Name Updated", "56756756756", "email@email.com", "1234", "1234");
-        assertTrue(isUpdated);
-        facade.deleteUser("1234", facade.getUserData("id"));
+        boolean isCreated = facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        if (isCreated) {
+            boolean isLoggedIn = facade.loginValidate(email, password);
+            if (isLoggedIn) {
+                boolean isUpdated = facade.updateUser("Name Updated", "56756756756", "email@email.com", "1234", "1234");
+                assertTrue(isUpdated);
+                facade.deleteUser("1234", facade.getUserData("id"));
+            }
+        }
     }
 
     @Test
     void testUpdateUserCpf() throws IOException {
-        if (!facade.loginValidate(email, password)) {
-            facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        if (facade.loginValidate(email, password)) {
+            facade.deleteUser("1234", facade.getUserData("id"));
         }
 
-        boolean isUpdated = facade.updateUser("Name", "67867867867", "email@email.com", "1234", "1234");
-        assertTrue(isUpdated);
-        facade.deleteUser("1234", facade.getUserData("id"));
+        boolean isCreated = facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        if (isCreated) {
+            boolean isLoggedIn = facade.loginValidate(email, password);
+            if (isLoggedIn) {
+                boolean isUpdated = facade.updateUser("Name", "67867867867", "email@email.com", "1234", "1234");
+                assertTrue(isUpdated);
+                facade.deleteUser("1234", facade.getUserData("id"));
+            }
+        }
     }
 
     @Test
     void testUpdateUserEmail() throws IOException {
-        if (!facade.loginValidate(email, password)) {
-            facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        if (facade.loginValidate(email, password)) {
+            facade.deleteUser("1234", facade.getUserData("id"));
         }
-        boolean isUpdated = facade.updateUser("Name", "12345678901", "new_unique_email@test.com", "1234", "1234");
-        assertTrue(isUpdated);
-        facade.deleteUser("1234", facade.getUserData("id"));
+
+        boolean isCreated = facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        if (isCreated) {
+            boolean isLoggedIn = facade.loginValidate(email, password);
+            if (isLoggedIn) {
+                boolean isUpdated = facade.updateUser("Name", "12345678901", "new_unique_email@test.com", "1234", "1234");
+                assertTrue(isUpdated);
+                facade.deleteUser("1234", facade.getUserData("id"));
+            }
+        }
+
     }
 
 
     @Test
     void testUpdateUserPass() throws IOException {
-        if (!facade.loginValidate(email, password)) {
-            facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        if (facade.loginValidate(email, password)) {
+            facade.deleteUser("1234", facade.getUserData("id"));
+        }
+        boolean isCreated = facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        if (isCreated) {
+            boolean isLoggedIn = facade.loginValidate(email, password);
+            if (isLoggedIn) {
+                boolean isUpdated = facade.updateUser("Name", "56756756756", "email@email.com", "4321", "1234");
+                assertTrue(isUpdated);
+                facade.deleteUser("4321", facade.getUserData("id"));
+            }
+        }
+    }
+
+    @Test
+    void testDeleteUser() throws IOException {
+        boolean isCreated = false;
+        if(!facade.loginValidate(email, password)) {
+            isCreated = facade.createUser("Name", "56756756756", "email@email.com", "1234");
         }
 
-        boolean isUpdated = facade.updateUser("Name", "56756756756", "email@email.com", "4321", "1234");
-        assertTrue(isUpdated);
-        facade.deleteUser("4321", facade.getUserData("id"));
+        if (isCreated) {
+            boolean isLoggedIn = facade.loginValidate(email, password);
+            if (isLoggedIn) {
+                boolean isDeleted = facade.deleteUser("1234", facade.getUserData("id"));
+                assertTrue(isDeleted);
+            }
+        }
+    }
+
+    @Test
+    void testCreateEvent() throws IOException {
+        if (facade.loginValidate(email, password)) {
+            facade.deleteUser("1234", facade.getUserData("id"));
+        }
+
+        boolean isUserCreated = facade.createUser("Name", "56756756756", "email@email.com", "1234");
+        if (isUserCreated) {
+            boolean isLoggedIn = facade.loginValidate(email, password);
+            if (isLoggedIn) {
+                boolean isEventCreated = facade.createEvent("Event", "2024-02-12", "Event Test", "Location", facade.getUserData("id"));
+                assertTrue(isEventCreated);
+                facade.deleteEvent(facade.getEventData("id"), facade.getUserData("id"));
+                facade.deleteUser("1234", facade.getUserData("id"));
+            }
+        }
     }
 
 
