@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.fx.fxutils.PlaceholderUtils;
+import br.upe.controller.fx.mediator.CreateSessionMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
@@ -27,17 +28,42 @@ import static br.upe.ui.Validation.areValidTimes;
 public class CreateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private final ObservableList<String> eventList = FXCollections.observableArrayList();
+    private CreateSessionMediator mediator;
 
     @FXML
     private AnchorPane newSessionPane;
     @FXML
     private Label userEmail;
     @FXML
-    private TextField nameTextField, locationTextField, descriptionTextField, startTimeTextField, endTimeTextField, searchField;
+    private TextField nameTextField;
     @FXML
     private DatePicker datePicker;
     @FXML
-    private Text namePlaceholder, datePlaceholder, locationPlaceholder, descriptionPlaceholder, startTimePlaceholder, endTimePlaceholder, searchFieldPlaceholder;
+    private TextField locationTextField;
+    @FXML
+    private TextField descriptionTextField;
+    @FXML
+    private TextField startTimeTextField;
+    @FXML
+    private TextField endTimeTextField;
+    @FXML
+    private TextField searchField;
+
+    @FXML
+    private Text namePlaceholder;
+    @FXML
+    private Text datePlaceholder;
+    @FXML
+    private Text locationPlaceholder;
+    @FXML
+    private Text descriptionPlaceholder;
+    @FXML
+    private Text startTimePlaceholder;
+    @FXML
+    private Text endTimePlaceholder;
+    @FXML
+    private Text searchFieldPlaceholder;
+
     @FXML
     private ListView<String> suggestionsListView;
     @FXML
@@ -52,6 +78,10 @@ public class CreateSessionScreenController extends BaseController implements FxC
         userEmail.setText(facade.getUserData("email"));
         setupPlaceholders();
         loadUserEvents();
+
+        this.mediator = new CreateSessionMediator(this, facade, newSessionPane, errorUpdtLabel);
+        mediator.registerComponents();
+        mediator.setComponents(nameTextField, datePicker, locationTextField, descriptionTextField, startTimeTextField, endTimeTextField, searchField);
     }
 
     private void setupPlaceholders() {
@@ -62,30 +92,6 @@ public class CreateSessionScreenController extends BaseController implements FxC
         PlaceholderUtils.setupPlaceholder(descriptionTextField, descriptionPlaceholder);
         PlaceholderUtils.setupPlaceholder(startTimeTextField, startTimePlaceholder);
         PlaceholderUtils.setupPlaceholder(endTimeTextField, endTimePlaceholder);
-    }
-
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/eventScreen.fxml", newSessionPane, facade, null);
-    }
-
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", newSessionPane, facade, null);
-    }
-
-    public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", newSessionPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", newSessionPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", newSessionPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", newSessionPane, facade, null);
     }
 
     private String[] verifyType(String name) {
@@ -127,9 +133,6 @@ public class CreateSessionScreenController extends BaseController implements FxC
         }
     }
 
-
-
-
     private void loadUserEvents() throws IOException {
         List<Event> userEvents = facade.listEvents(facade.getUserData("id"));
         List<SubEvent> userSubEvents = facade.listSubEvents(facade.getUserData("id"));
@@ -166,42 +169,33 @@ public class CreateSessionScreenController extends BaseController implements FxC
         String selectedEventName = searchField.getText();
         String[] type = verifyType(selectedEventName);
 
-
-
-        if (selectedEventName == null || selectedEventName.isEmpty()) {
-            errorUpdtLabel.setText("Por favor, selecione um evento ou subevento válido.");
-            return;
-        }
-
-        if (sessionDate == null || !areValidTimes(startTime, endTime) || sessionLocation.isEmpty() || sessionDescription.isEmpty()) {
-            errorUpdtLabel.setText("Erro no preenchimento das informações.");
-            errorUpdtLabel.setAlignment(Pos.CENTER);
-        } else if (!validateEventDate(sessionDate.toString(), verifyType(selectedEventName))) {
+        if (!validateEventDate(sessionDate.toString(), type[0], type[1])) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
         } else {
             facade.createSession(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, facade.getUserData("id"), type);
-            handleSession();
+            mediator.notify("handleSession");
         }
     }
 
     @Override
     public TextField getNameTextField() {
-        return null;
+        return nameTextField;
     }
 
     @Override
     public TextField getLocationTextField() {
-        return null;
+        return locationTextField;
     }
 
     @Override
     public TextField getDescriptionTextField() {
-        return null;
+        return descriptionTextField;
     }
 
     @Override
     public DatePicker getDatePicker() {
-        return null;
+        return datePicker;
     }
 
 }

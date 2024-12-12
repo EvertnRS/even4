@@ -4,9 +4,12 @@ import br.upe.controller.fx.mediator.AttendeeMediator;
 import br.upe.controller.fx.mediator.EventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Attendee;
+import br.upe.persistence.Event;
+import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.AttendeeRepository;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SessionRepository;
+import br.upe.persistence.repository.SubEventRepository;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -104,7 +107,7 @@ public class AttendeeScreenController extends BaseController implements FxContro
                         deleteButton.setGraphic(deleteIcon);
                         deleteButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
-                        Button certificateButton = new Button("Detalhes");
+                        Button certificateButton = new Button("Certificado");
                         ImageView certificateIcon = new ImageView(new Image("images/icons/buttons/certificateIcon.png"));
                         certificateIcon.setFitWidth(16);
                         certificateIcon.setFitHeight(16);
@@ -112,7 +115,8 @@ public class AttendeeScreenController extends BaseController implements FxContro
                         certificateButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
 
 
-                        String sessionDate = (String) sessionRepository.getData(sessionId, "date");
+                        java.sql.Timestamp sessionTimestamp = (java.sql.Timestamp) sessionRepository.getData(sessionId, "date");
+                        String sessionDate = sessionTimestamp.toString();
                         verifyCertification(certificateButton, sessionDate);
 
                         deleteButton.setOnAction(e -> {
@@ -135,7 +139,14 @@ public class AttendeeScreenController extends BaseController implements FxContro
                         actionButtons.setAlignment(Pos.CENTER_RIGHT);
                         actionButtons.getChildren().addAll(certificateButton, deleteButton);
 
-                        Label eventLabel = createEventLabel((UUID) sessionRepository.getData(sessionId, "eventId"));
+                        Event event = (Event) sessionRepository.getData(sessionId, "eventId");
+                        SubEvent subEvent = ((SubEvent) sessionRepository.getData(sessionId, "subEvent_id"));
+                        Label eventLabel = null;
+                        if (event == null && subEvent != null) {
+                            eventLabel = createSubEventLabel(subEvent.getId());
+                        } else if (event != null && subEvent == null){
+                            eventLabel = createEventLabel(event.getId());
+                        }
 
                         sessionContainer.getChildren().addAll(sessionLabel, actionButtons, eventLabel);
 
@@ -152,11 +163,12 @@ public class AttendeeScreenController extends BaseController implements FxContro
     }
 
     private void verifyCertification(Button certificateButton, String sessionDateStr) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate sessionDate = LocalDate.parse(sessionDateStr, formatter);
-            LocalDate currentDate = LocalDate.now();
+        String datePart = sessionDateStr.split(" ")[0];
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate sessionDate = LocalDate.parse(datePart, formatter);
+        LocalDate currentDate = LocalDate.now();
 
-            certificateButton.setVisible(currentDate.isAfter(sessionDate));
+        certificateButton.setVisible(currentDate.isAfter(sessionDate));
     }
 
     private Label createEventLabel(UUID eventId) {
@@ -167,6 +179,19 @@ public class AttendeeScreenController extends BaseController implements FxContro
 
         eventLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
         return eventLabel;
+    }
+
+    private Label createSubEventLabel(UUID subEventId) {
+        Label subEventLabel = new Label();
+        if (subEventId != null) {
+
+            SubEventRepository subEventRepository = SubEventRepository.getInstance();
+            String subEventName = (String) subEventRepository.getData(subEventId, "name");
+            subEventLabel.setText(subEventName);
+            subEventLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #777777;");
+
+        }
+        return subEventLabel;
     }
 
     private void handleDeleteAttendee(UUID id, UUID userId) throws IOException {

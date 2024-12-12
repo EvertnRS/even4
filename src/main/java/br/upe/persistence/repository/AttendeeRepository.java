@@ -41,7 +41,8 @@ public class AttendeeRepository implements Persistence{
     @Override
     public void create(Object... params) {
         if (params.length != 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
+            LOGGER.warning("Só pode ter 2 parâmetros");
+            return;
         }
         UUID parsedUserId = UUID.fromString((String) params[0]);
         UUID parsedSessionId = UUID.fromString((String) params[1]);
@@ -50,6 +51,9 @@ public class AttendeeRepository implements Persistence{
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
+            transaction.begin();
+
+            // Busca entidades gerenciadas
             User parsedUser = entityManager.find(User.class, parsedUserId);
             if (parsedUser == null) {
                 throw new IllegalArgumentException("Usuário não encontrado com o ID: " + parsedUserId);
@@ -60,6 +64,7 @@ public class AttendeeRepository implements Persistence{
                 throw new IllegalArgumentException("Sessão não encontrada com o ID: " + parsedSessionId);
             }
 
+            // Tente buscar o Attendee gerenciado diretamente
             Attendee attendee = entityManager.createQuery(
                             "SELECT a FROM Attendee a WHERE a.userId = :userId", Attendee.class)
                     .setParameter("userId", parsedUser)
@@ -69,16 +74,14 @@ public class AttendeeRepository implements Persistence{
 
             if (attendee == null) {
                 attendee = new Attendee();
-                attendee.setId(UUID.randomUUID());
                 attendee.setUserId(parsedUser);
+                entityManager.persist(attendee); // Persistindo uma nova entidade
             }
 
-            attendee.addSession(session);
+            // Adiciona a sessão ao Attendee
+            attendee.addSession(session); // Atualize diretamente no objeto gerenciado
 
-            transaction.begin();
-            entityManager.persist(attendee);
             transaction.commit();
-
             LOGGER.info("Sessão adicionada ao Attendee: " + attendee.getId());
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -91,6 +94,7 @@ public class AttendeeRepository implements Persistence{
             }
         }
     }
+
 
     @Override
     public void delete(Object... params) throws IOException {

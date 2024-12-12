@@ -15,19 +15,24 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import br.upe.controller.fx.fxutils.PlaceholderUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.Duration;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -41,7 +46,9 @@ public class CertificateScreenController extends BaseController implements FxCon
     @FXML
     private Label userEmail;
     @FXML
-    private TextField addresTextField;
+    private Text addressPlaceholder;
+    @FXML
+    private TextField addressTextField;
     @FXML
     private Label errorUpdtLabel;
     @FXML
@@ -58,6 +65,7 @@ public class CertificateScreenController extends BaseController implements FxCon
 
     private void initial() {
         userEmail.setText(facade.getEventData("email"));
+        setupPlaceholders();
         Image image = new Image(Objects.requireNonNull(getClass().getResource("/images/certificate/DefaultCertificate.png")).toExternalForm());
         exampleCertificate.setImage(image);
 
@@ -66,7 +74,7 @@ public class CertificateScreenController extends BaseController implements FxCon
     }
 
     public void createCertificate() throws IOException {
-        String certificateAddress = addresTextField.getText();
+        String certificateAddress = addressTextField.getText();
 
             drawCertificate(certificateAddress);
             mediator.notify("handleBack");
@@ -93,7 +101,8 @@ public class CertificateScreenController extends BaseController implements FxCon
 
             EntityManager entityManager = JPAUtils.getEntityManagerFactory();
 
-            Attendee attendee = entityManager.find(Attendee.class, attendeeId);
+            UUID attendeeUUID = UUID.fromString(attendeeId);
+            Attendee attendee = entityManager.find(Attendee.class, attendeeUUID);
             if (attendee == null) {
                 throw new EntityNotFoundException("Attendee não encontrado");
             }
@@ -104,17 +113,27 @@ public class CertificateScreenController extends BaseController implements FxCon
                 throw new EntityNotFoundException("Sessão não encontrada");
             }
 
-            Event event = entityManager.find(Event.class, session.getEventId());
+            Event event = entityManager.find(Event.class, session.getEventId().getId());
             if (event == null) {
-                throw new EntityNotFoundException("Evento não encontrado");
+                event = entityManager.find(Event.class, session.getSubEventId().getEventId().getId());
             }
 
             String attendeeName = attendee.getName();
             String eventName = event.getName();
             String startTime = String.valueOf(session.getStartTime());
             String endTime = String.valueOf(session.getEndTime());
+            String eventDate;
+            Date sessionDate = session.getDate();
+
+            if (sessionDate != null) {
+                LocalDate localDate = sessionDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                eventDate = localDate.format(formatter);
+            } else {
+                eventDate = "Data não disponível";
+            }
             String workload = timeDifference(startTime, endTime);
-            String eventDate = String.valueOf(session.getDate());
 
             int xName = 130;
             int yName = 400;
@@ -158,8 +177,8 @@ public class CertificateScreenController extends BaseController implements FxCon
     public String timeDifference(String startTimeStr, String endTimeStr) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime startTime = LocalTime.parse(startTimeStr, formatter);
-        LocalTime endTime = LocalTime.parse(endTimeStr, formatter);
+        LocalTime startTime = LocalTime.parse(startTimeStr.substring(0, 5), formatter);
+        LocalTime endTime = LocalTime.parse(endTimeStr.substring(0, 5), formatter);
 
         Duration duration;
 
@@ -181,15 +200,19 @@ public class CertificateScreenController extends BaseController implements FxCon
         File selectedDirectory = directoryChooser.showDialog(stage);
 
         if (selectedDirectory != null) {
-            addresTextField.setText(selectedDirectory.getAbsolutePath());
+            addressTextField.setText(selectedDirectory.getAbsolutePath());
         } else {
             errorUpdtLabel.setText("Nenhuma pasta selecionada.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
         }
     }
 
+    private void setupPlaceholders() {
+        PlaceholderUtils.setupPlaceholder(addressTextField, addressPlaceholder);
+    }
+
     public TextField getAddresTextField() {
-        return addresTextField;
+        return addressTextField;
     }
 
     @Override

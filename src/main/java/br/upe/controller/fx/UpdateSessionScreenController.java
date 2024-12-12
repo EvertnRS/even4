@@ -1,6 +1,7 @@
 package br.upe.controller.fx;
 
 import br.upe.controller.fx.fxutils.PlaceholderUtils;
+import br.upe.controller.fx.mediator.UpdateSessionMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Session;
 import br.upe.persistence.repository.Persistence;
@@ -24,14 +25,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
-
-import static br.upe.ui.Validation.areValidTimes;
-import static br.upe.ui.Validation.isValidDate;
-
 public class UpdateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private String sessionName;
-    private SessionRepository sessionRepository;
+    private String sessionId;
+    private UpdateSessionMediator mediator;
 
     @FXML
     private AnchorPane editSessionPane;
@@ -63,8 +61,6 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     private Text endTimePlaceholder;
     @FXML
     private Label errorUpdtLabel;
-    @FXML
-    private Label errorDelLabel;
 
     public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
@@ -72,8 +68,9 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     public void setEventName(String eventName) {
+        this.sessionName = eventName;
         String [] list = verifyType(eventName);
-        this.sessionName = list[2];
+        this.sessionId = list[2];
         loadSessionDetails();
     }
 
@@ -81,7 +78,12 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     private void initial() {
         userEmail.setText(facade.getUserData("email"));
         setupPlaceholders();
+
+        mediator = new UpdateSessionMediator(this, facade, editSessionPane, errorUpdtLabel);
+        mediator.registerComponents();
+        mediator.setComponents(editNameTextField, editDatePicker, editLocationTextField, editDescriptionTextField, editStartTimeTextField, editEndTimeTextField);
     }
+
     private void setupPlaceholders() {
         PlaceholderUtils.setupPlaceholder(editNameTextField, namePlaceholder);
         PlaceholderUtils.setupPlaceholder(editDatePicker, datePlaceholder);
@@ -89,30 +91,6 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         PlaceholderUtils.setupPlaceholder(editDescriptionTextField, descriptionPlaceholder);
         PlaceholderUtils.setupPlaceholder(editStartTimeTextField, startTimePlaceholder);
         PlaceholderUtils.setupPlaceholder(editEndTimeTextField, endTimePlaceholder);
-    }
-
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/eventScreen.fxml", editSessionPane, facade, null);
-    }
-
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", editSessionPane, facade, null);
-    }
-
-    public void handleSubmitEvent() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", editSessionPane, facade, null);
-    }
-
-    public void handleSession() throws IOException {
-        genericButton("/fxml/sessionScreen.fxml", editSessionPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", editSessionPane, facade, null);
-    }
-
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", editSessionPane, facade, null);
     }
 
     public void updateSession() throws IOException {
@@ -123,20 +101,14 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
         String newStartTime = editStartTimeTextField.getText();
         String newEndTime = editEndTimeTextField.getText();
-        Map<UUID, Persistence> sessionMap = facade.getSessionHashMap();
-        if (!validateEventDate(newDate, type)) {
+        if (!validateEventDate(newDate, type[0], type[1])) {
             errorUpdtLabel.setText("Data da sessão não pode ser anterior à data do evento.");
-        } else if (!isValidDate(newDate) || !areValidTimes(newStartTime, newEndTime)) {
-            errorUpdtLabel.setText("Data ou horário inválido.");
-        } else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newSubName, new ArrayList<>(sessionMap.values()))) {
-            errorUpdtLabel.setText("Erro no preenchimento das informações.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
         } else {
             facade.updateSession(sessionName, newSubName, newDate, newDescription, newLocation, facade.getUserData("id"), newStartTime, newEndTime);
-            facade.readSession();
-            handleSession();
+            mediator.notify("handleSession");
         }
     }
-
 
     private String[] verifyType(String sessionName) {
         String[] type = new String[3];
@@ -155,6 +127,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
                     Session.class
             );
             sessionQuery.setParameter("name", sessionName.trim());
+            System.out.println("Session Name: " + sessionName);
 
             List<Session> sessionResults = sessionQuery.getResultList();
             if (sessionResults.isEmpty()) {
@@ -186,22 +159,28 @@ public class UpdateSessionScreenController extends BaseController implements FxC
 
     }
 
-
     private void loadSessionDetails() {
         SessionRepository sessionRepository = SessionRepository.getInstance();
         if (sessionRepository != null) {
-            String sessionNames = (String) sessionRepository.getData(UUID.fromString(sessionName),"name");
-            String sessionLocation = (String) sessionRepository.getData(UUID.fromString(sessionName),"location");
-            String sessionDescription = (String) sessionRepository.getData(UUID.fromString(sessionName),"description");
-            String sessionStartTime =  (sessionRepository.getData(UUID.fromString(sessionName),"startTime")).toString();
-            String sessionEndTime = (sessionRepository.getData(UUID.fromString(sessionName),"endTime")).toString();
+            String sessionNames = (String) sessionRepository.getData(UUID.fromString(sessionId), "name");
+            String sessionLocation = (String) sessionRepository.getData(UUID.fromString(sessionId), "location");
+            String sessionDescription = (String) sessionRepository.getData(UUID.fromString(sessionId), "description");
+
+            // Format start time
+            Object startTimeObject = sessionRepository.getData(UUID.fromString(sessionId), "startTime");
+            String sessionStartTime = formatTime(startTimeObject);
+            editStartTimeTextField.setText(sessionStartTime);
+
+            // Format end time
+            Object endTimeObject = sessionRepository.getData(UUID.fromString(sessionId), "endTime");
+            String sessionEndTime = formatTime(endTimeObject);
+            editEndTimeTextField.setText(sessionEndTime);
+
             editNameTextField.setText(sessionNames);
             editLocationTextField.setText(sessionLocation);
             editDescriptionTextField.setText(sessionDescription);
-            editStartTimeTextField.setText(sessionStartTime);
-            editEndTimeTextField.setText(sessionEndTime);
 
-            Object dateObject = sessionRepository.getData(UUID.fromString(sessionName), "date");
+            Object dateObject = sessionRepository.getData(UUID.fromString(sessionId), "date");
             java.sql.Date sqlDate;
 
             if (dateObject instanceof java.sql.Timestamp) {
@@ -225,27 +204,33 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         }
     }
 
-
-
+    private String formatTime(Object timeObject) {
+        if (timeObject instanceof java.sql.Time) {
+            SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+            return timeFormatter.format((java.sql.Time) timeObject);
+        } else {
+            throw new IllegalArgumentException("Tipo inesperado: " + timeObject.getClass().getName());
+        }
+    }
 
     @Override
     public TextField getNameTextField() {
-        return null;
+        return editNameTextField;
     }
 
     @Override
     public TextField getLocationTextField() {
-        return null;
+        return editLocationTextField;
     }
 
     @Override
     public TextField getDescriptionTextField() {
-        return null;
+        return editDescriptionTextField;
     }
 
     @Override
     public DatePicker getDatePicker() {
-        return null;
+        return editDatePicker;
     }
 
 }

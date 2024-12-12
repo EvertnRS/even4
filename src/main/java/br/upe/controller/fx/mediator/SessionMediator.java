@@ -18,7 +18,7 @@ public class SessionMediator extends Mediator {
         this.sessionScreenController = sessionController;
     }
 
-    public void setSessionId(String sessiomId) {
+    public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
 
@@ -69,7 +69,7 @@ public class SessionMediator extends Mediator {
     private void loadScreenForEvent(String event) {
         String fxmlFile = getFxmlPathForEvent(event);
 
-        if (!event.equals("handleUpdateSubEvent")) {
+        if (!event.equals("handleUpdateSession")) {
             this.sessionId = null;
         }
 

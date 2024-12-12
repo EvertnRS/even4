@@ -1,7 +1,8 @@
 package br.upe.controller.fx.mediator;
 
-import br.upe.controller.fx.CreateSubEventScreenController;
+import br.upe.controller.fx.CreateSessionScreenController;
 import br.upe.facade.FacadeInterface;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -12,27 +13,33 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 
-public class CreateSubEventMediator extends Mediator{
-    private final CreateSubEventScreenController createSubEventScreenController;
+import static br.upe.ui.Validation.areValidTimes;
+
+public class CreateSessionMediator extends Mediator{
+    private final CreateSessionScreenController createSessionScreenController;
     private TextField nameTextField;
     private DatePicker datePicker;
     private TextField locationTextField;
     private TextField descriptionTextField;
+    private TextField startTimeTextField;
+    private TextField endTimeTextField;
     private TextField searchField;
 
-    public CreateSubEventMediator(CreateSubEventScreenController createSubEventScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
-        super(facade, screenPane, errorUpdtLabel, createSubEventScreenController);
-        this.createSubEventScreenController = createSubEventScreenController;
+    public CreateSessionMediator(CreateSessionScreenController createSessionScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
+        super(facade, screenPane, errorUpdtLabel, createSessionScreenController);
+        this.createSessionScreenController = createSessionScreenController;
     }
 
-    public void setComponents(TextField nameTextField, DatePicker datePicker, TextField locationTextField, TextField descriptionTextField, TextField searchField) {
+    public void setComponents(TextField nameTextField, DatePicker datePicker, TextField locationTextField, TextField descriptionTextField, TextField startTimeTextField, TextField endTimeTextField, TextField searchField) {
         this.nameTextField = nameTextField;
         this.datePicker = datePicker;
         this.locationTextField = locationTextField;
         this.descriptionTextField = descriptionTextField;
+        this.startTimeTextField = startTimeTextField;
+        this.endTimeTextField = endTimeTextField;
         this.searchField = searchField;
 
-        if (createSubEventScreenController != null) {
+        if (createSessionScreenController != null) {
             setupListeners();
         }
     }
@@ -40,7 +47,7 @@ public class CreateSubEventMediator extends Mediator{
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#createButton", "handleSubEventCreate");
+            setupButtonAction("#createButton", "handleSessionCreate");
             setupButtonAction("#handleEventButton", "handleEvent");
             setupButtonAction("#handleSubEventButton", "handleSubEvent");
             setupButtonAction("#handleSessionButton", "handleSession");
@@ -54,10 +61,10 @@ public class CreateSubEventMediator extends Mediator{
 
     @Override
     public Object notify(String event) throws IOException {
-        if (createSubEventScreenController != null) {
+        if (createSessionScreenController != null) {
             switch (event) {
-                case "handleSubEventCreate":
-                    handleSubEventCreate();
+                case "handleSessionCreate":
+                    handleSessionCreate();
                     break;
                 case "handleUser"
                 , "handleSubEvent"
@@ -78,9 +85,15 @@ public class CreateSubEventMediator extends Mediator{
         return null;
     }
 
-    private void handleSubEventCreate() throws IOException {
-        if (validateInputs()) {
-            createSubEventScreenController.createSubEvent();
+    private void handleSessionCreate() throws IOException {
+        String startTime = startTimeTextField.getText();
+        String endTime = endTimeTextField.getText();
+
+        if (validateInputs() && areValidTimes(startTime, endTime)) {
+            createSessionScreenController.createSession();
+        } else{
+            errorUpdtLabel.setText("Erro no preenchimento das informações.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
         }
     }
 
@@ -89,7 +102,7 @@ public class CreateSubEventMediator extends Mediator{
 
         loadScreenWithTask(() -> {
             try {
-                createSubEventScreenController.genericButton(fxmlFile, screenPane, facade, null);
+                createSessionScreenController.genericButton(fxmlFile, screenPane, facade, null);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -99,8 +112,8 @@ public class CreateSubEventMediator extends Mediator{
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleSubEvent", "handleBack" -> "/fxml/subEventScreen.fxml";
-            case "handleSession" -> "/fxml/sessionScreen.fxml";
+            case "handleSession", "handleBack" -> "/fxml/sessionScreen.fxml";
+            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
             case "handleEvent" -> "/fxml/eventScreen.fxml";
             case "handleSubmit" -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
@@ -116,7 +129,7 @@ public class CreateSubEventMediator extends Mediator{
 
     private void loadScreenWithTask(Runnable task) {
         assert screenPane != null;
-        createSubEventScreenController.loadScreen("Carregando", () -> {
+        createSessionScreenController.loadScreen("Carregando", () -> {
             try {
                 task.run();
             } catch (Exception e) {
@@ -129,7 +142,7 @@ public class CreateSubEventMediator extends Mediator{
         screenPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    notify("handleSubEventCreate");
+                    notify("handleSessionCreate");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -138,11 +151,11 @@ public class CreateSubEventMediator extends Mediator{
 
         configureNavigation(nameTextField, locationTextField, searchField);
         configureNavigation(searchField, nameTextField, datePicker);
-        datePicker.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKeyNavigation(event, searchField, descriptionTextField));
-        configureNavigation(descriptionTextField, datePicker, locationTextField);
+        datePicker.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKeyNavigation(event, searchField, startTimeTextField));
+        configureNavigation(startTimeTextField, datePicker, endTimeTextField);
+        configureNavigation(endTimeTextField, startTimeTextField, descriptionTextField);
+        configureNavigation(descriptionTextField, endTimeTextField, locationTextField);
         configureNavigation(locationTextField, descriptionTextField, nameTextField);
-
-
     }
 
     private void configureNavigation(Node currentField, Node previousField, Node nextField) {

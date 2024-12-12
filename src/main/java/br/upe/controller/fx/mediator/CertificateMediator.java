@@ -47,7 +47,7 @@ public class CertificateMediator extends Mediator{
                         certificateScreenController.createCertificate();
                     }
                     break;
-                case "openDirectoryChooser":
+                case "fileChooser":
                     certificateScreenController.openDirectoryChooser();
                     break;
                 case "handleUser"

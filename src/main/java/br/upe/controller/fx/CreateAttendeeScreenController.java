@@ -3,6 +3,8 @@ import br.upe.controller.fx.mediator.CreateAttendeeMediator;
 import br.upe.controller.fx.mediator.CreateSubEventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
+import br.upe.persistence.repository.EventRepository;
+import br.upe.persistence.repository.SessionRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -39,9 +41,19 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
         mediator.registerComponents();
     }
 
-    private void loadSessions(){
+    private void loadSessions() {
         List<Model> sessions = facade.getAllSession();
-        eventComboBox.getItems().addAll(String.valueOf(sessions));
+        eventComboBox.getItems().clear();
+
+        SessionRepository sessionRepository = SessionRepository.getInstance();
+
+        for (Model session : sessions) {
+            String sessionName = (String) sessionRepository.getData(session.getId(), "name");
+
+            if (sessionName != null) {
+                eventComboBox.getItems().add(sessionName);
+            }
+        }
     }
 
     public void createAttendee() throws IOException {

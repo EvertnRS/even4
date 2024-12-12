@@ -2,6 +2,7 @@ package br.upe.controller;
 
 import br.upe.persistence.Event;
 import br.upe.persistence.Session;
+import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SessionRepository;
 
@@ -42,8 +43,9 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public List<Event> getAll() {
-        return List.of();
+    public <T> List<T> getAll() {
+        SessionRepository sessionRepository = SessionRepository.getInstance();
+        return (List<T>) sessionRepository.getAllSessions();
     }
 
     public void setSessionHashMap(Map<UUID, Persistence> sessionHashMap) {

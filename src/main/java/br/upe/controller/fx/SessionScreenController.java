@@ -2,16 +2,21 @@ package br.upe.controller.fx;
 
 import br.upe.controller.fx.mediator.SessionMediator;
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.Event;
 import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -29,6 +34,12 @@ public class SessionScreenController extends BaseController implements FxControl
     private ScrollPane scrollPane;
     @FXML
     private AnchorPane sessionPane;
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private Text searchPlaceholder;
+    @FXML
+    private ImageView logoView6;
 
     public void setFacade(FacadeInterface facade) throws IOException {
         this.facade = facade;
@@ -38,64 +49,52 @@ public class SessionScreenController extends BaseController implements FxControl
     private void initialize() throws IOException {
         userEmail.setText(facade.getUserData("email"));
         loadUserSessions();
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            setupPlaceholders();
+            try {
+                loadUserSessions();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
         this.mediator = new SessionMediator(this, facade, sessionPane, null);
         mediator.registerComponents();
     }
 
-    public void handleUser() throws IOException {
-        genericButton("/fxml/userScreen.fxml", sessionPane, facade, null);
-    }
-
-    public void handleSubEvent() throws IOException {
-        genericButton("/fxml/subEventScreen.fxml", sessionPane, facade, null);
-    }
-
-    public void handleSubmit() throws IOException {
-        genericButton("/fxml/submitScreen.fxml", sessionPane, facade, null);
-    }
-
-    public void handleEvent() throws IOException {
-        genericButton("/fxml/eventScreen.fxml", sessionPane, facade, null);
-    }
-
-    public void handleAddSession() throws IOException {
-        genericButton("/fxml/createSessionScreen.fxml", sessionPane, facade, null);
-    }
-
-    public void handleInscriptionSession() throws IOException {
-        genericButton("/fxml/attendeeScreen.fxml", sessionPane, facade, null);
-    }
-
-    public void logout() throws IOException {
-        genericButton("/fxml/loginScreen.fxml", sessionPane, facade, null);
-    }
-
     private void loadUserSessions() throws IOException {
+        SessionRepository sessionRepository = SessionRepository.getInstance();
         sessionVBox.getChildren().clear();
 
         // Configurações do ScrollPane
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
-        scrollPane.setStyle("-fx-padding: 20px;");
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-top: 2px; -border-color: #cccccc");
         sessionVBox.setAlignment(Pos.CENTER);
 
-        // Itera pelas sessões do usuário
         List<Session> userSessions = facade.listSessions(facade.getUserData("id")); // Método para buscar as sessões
         for (Session session : userSessions) {
-            if (session.getOwnerId().getId().equals(UUID.fromString(facade.getUserData("id")))) {
+            if (searchTextField.getText().isEmpty() || String.valueOf(sessionRepository.getData(session.getId(),"name")).contains(searchTextField.getText())) {
                 VBox sessionContainer = createSessionContainer(session);
                 sessionVBox.getChildren().add(sessionContainer);
             }
         }
     }
 
-    private VBox createSessionContainer(Session session) throws IOException {
+    private VBox createSessionContainer(Session session) {
         SessionRepository sessionRepository = SessionRepository.getInstance();
 
         VBox sessionContainer = new VBox();
-        sessionContainer.setStyle("-fx-background-color: #d3d3d3; -fx-padding: 10px; -fx-spacing: 5px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+        sessionContainer.setStyle("-fx-background-color: #d3d3d3; " +
+                "-fx-padding: 10px 20px 10px 20px; " +
+                "-fx-margin: 0 40px 0 40px; " +
+                "-fx-spacing: 5px; " +
+                "-fx-border-radius: 10px; " +
+                "-fx-background-radius: 10px;");
 
-        // Nome da sessão
+        VBox.setMargin(sessionContainer, new Insets(5, 20, 5, 20));
+
         Label sessionLabel = new Label(session.getName());
         sessionLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #000000;");
 
@@ -103,11 +102,16 @@ public class SessionScreenController extends BaseController implements FxControl
         HBox actionButtons = createActionButtons(session);
 
         // Informações adicionais
-        Label eventLabel = createEventLabel((UUID) sessionRepository.getData(session.getId(), "eventId"));
-        Label subEventLabel = createSubEventLabel(((SubEvent) sessionRepository.getData(session.getId(), "subEvent_id")).getId());
+        Event event = (Event) sessionRepository.getData(session.getId(), "eventId");
+        SubEvent subEvent = ((SubEvent) sessionRepository.getData(session.getId(), "subEvent_id"));
+        Label eventLabel = null;
+        if (event == null && subEvent != null) {
+            eventLabel = createSubEventLabel(subEvent.getId());
+        } else if (event != null && subEvent == null){
+            eventLabel = createEventLabel(event.getId());
+        }
 
-
-        sessionContainer.getChildren().addAll(sessionLabel, actionButtons, eventLabel, subEventLabel);
+        sessionContainer.getChildren().addAll(sessionLabel, actionButtons, eventLabel);
 
         return sessionContainer;
     }
@@ -124,7 +128,6 @@ public class SessionScreenController extends BaseController implements FxControl
 
         }
         return eventLabel;
-
     }
 
     private Label createSubEventLabel(UUID subEventId) {
@@ -140,26 +143,26 @@ public class SessionScreenController extends BaseController implements FxControl
         return subEventLabel;
     }
 
-    private Label getParentLabel(Persistence session, Map<UUID, Persistence> parentMap) {
-        UUID parentId = (UUID) session.getData("eventId");
-        String parentName = parentMap.containsKey(parentId)
-                ? (String) parentMap.get(parentId).getData("name")
-                : "Evento/Subevento não encontrado";
-
-        Label parentLabel = new Label(parentName);
-        parentLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
-        return parentLabel;
-    }
-
     private HBox createActionButtons(Session session) {
         SessionRepository sessionRepository = SessionRepository.getInstance();
         HBox actionButtons = new HBox(10);
         actionButtons.setAlignment(Pos.CENTER_RIGHT);
 
-        Button detailsButton = createButton("Detalhes", "#ff914d");
+        Button detailsButton = new Button("Detalhes");
+        ImageView detailsIcon = new ImageView(new Image("images/icons/buttons/detailsIcon.png"));
+        detailsIcon.setFitWidth(16);
+        detailsIcon.setFitHeight(16);
+        detailsButton.setGraphic(detailsIcon);
+        detailsButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
         detailsButton.setOnAction(e -> handleDetailSession((UUID) sessionRepository.getData(session.getId(),"id")));
 
-        Button editButton = createButton("Editar", "#6fa3ef");
+        Button editButton = new Button("Editar");
+        ImageView editIcon = new ImageView(new Image("images/icons/buttons/editIcon.png"));
+        editIcon.setFitWidth(16);
+        editIcon.setFitHeight(16);
+        editButton.setGraphic(editIcon);
+        editButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
         editButton.setOnAction(e -> {
             try {
                 handleEditSession((String) sessionRepository.getData(session.getId(), "name"));
@@ -168,7 +171,13 @@ public class SessionScreenController extends BaseController implements FxControl
             }
         });
 
-        Button deleteButton = createButton("Excluir", "#ff6b6b");
+        Button deleteButton = new Button("Excluir");
+        ImageView deleteIcon = new ImageView(new Image("images/icons/buttons/deleteIcon.png"));
+        deleteIcon.setFitWidth(16);
+        deleteIcon.setFitHeight(16);
+        deleteButton.setGraphic(deleteIcon);
+        deleteButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+
         deleteButton.setOnAction(e -> {
             try {
                 handleDeleteSession((UUID) sessionRepository.getData(session.getId(),"id"), facade.getUserData("id"));
@@ -179,12 +188,6 @@ public class SessionScreenController extends BaseController implements FxControl
 
         actionButtons.getChildren().addAll(detailsButton, editButton, deleteButton);
         return actionButtons;
-    }
-
-    private Button createButton(String text, String color) {
-        Button button = new Button(text);
-        button.setStyle(String.format("-fx-background-color: %s; -fx-text-fill: white; -fx-cursor: hand;", color));
-        return button;
     }
 
     private void handleDetailSession(UUID sessionId) {
@@ -207,7 +210,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
                 Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
                 stage.getIcons().clear();
-                stage.getIcons().add(new javafx.scene.image.Image("/images/logo/Logo.png"));
+                stage.getIcons().add(new Image("/images/logo/Logo.png"));
 
                 DialogPane dialogPane = alert.getDialogPane();
                 dialogPane.setStyle("-fx-background-color: #f0f0f0; -fx-font-size: 14px; -fx-text-fill: #333333;");
@@ -221,27 +224,30 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     private void handleEditSession(String sessionName) throws IOException {
-        genericButton("/fxml/updateSessionScreen.fxml", sessionPane, facade, sessionName);
+        System.out.println("Editando sessão: " + sessionName);
+        mediator.setSessionId(sessionName);
+        mediator.notify("handleUpdateSession");
     }
 
     private void handleDeleteSession(UUID sessionId, String userId) throws IOException {
-        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.setTitle("Confirmação de Exclusão");
-        confirmationAlert.setHeaderText("Deseja realmente excluir esta sessão?");
-        confirmationAlert.setContentText("Esta ação não pode ser desfeita.");
+        mediator.setSessionId(String.valueOf(sessionId));
+        Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteSession");
 
-        ButtonType buttonYes = new ButtonType("Sim");
-        ButtonType buttonNo = new ButtonType("Não", ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        confirmationAlert.getButtonTypes().setAll(buttonYes, buttonNo);
-
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
-        if (result.isPresent() && result.get() == buttonYes) {
+        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             facade.deleteSession(sessionId, userId);
             loadUserSessions();
         }
     }
 
+    public void setupPlaceholders() {
+        if (!searchTextField.getText().isEmpty()) {
+            searchPlaceholder.setVisible(false);
+            logoView6.setVisible(false);
+        } else {
+            searchPlaceholder.setVisible(true);
+            logoView6.setVisible(true);
+        }
+    }
 
     @Override
     public TextField getNameTextField() {

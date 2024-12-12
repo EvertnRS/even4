@@ -5,6 +5,10 @@ import br.upe.controller.fx.mediator.UpdateSubEventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
 import br.upe.persistence.repository.SubEventRepository;
+import br.upe.utils.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
@@ -118,8 +122,25 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         String newDescription = editDescriptionTextField.getText();
         Date newDate = Date.valueOf(editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "");
 
-        facade.updateSubEvent(subEventId, newName, newDate, newDescription, newLocation);
-        mediator.notify("handleSubEvent");
+        if (!validateEventDate(newDate.toString(), String.valueOf(getEventIdBySubEventId(subEventId)), "evento")) {
+            errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+        } else {
+            facade.updateSubEvent(subEventId, newName, newDate, newDescription, newLocation);
+            mediator.notify("handleSubEvent");
+        }
+    }
+
+    public UUID getEventIdBySubEventId(UUID subEventId) {
+        try {
+            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+            TypedQuery<UUID> query = entityManager.createQuery(
+                    "SELECT s.eventId FROM SubEvent s WHERE s.id = :subEventId", UUID.class);
+            query.setParameter("subEventId", subEventId);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            throw new IllegalArgumentException("Event not found for sub-event ID: " + subEventId, e);
+        }
     }
 
     @Override

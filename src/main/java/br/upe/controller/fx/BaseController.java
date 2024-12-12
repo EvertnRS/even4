@@ -78,15 +78,6 @@ public abstract class BaseController {
         });
     }
 
-    public <T> boolean isValidName(String name, List<T> items) {
-        for (T item : items) {
-            if (item instanceof Model && ((Model) item).getName().equals(name) || name.isEmpty()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Pane createLoadPane(String text) {
         Label label = new Label(text);
         label.setStyle("-fx-font-size: 14pt; -fx-text-fill: white;");
@@ -136,15 +127,23 @@ public abstract class BaseController {
         new Thread(task).start();
     }
 
-    public boolean validateEventDate(String date, String[] searchId) throws IOException {
+    public boolean validateEventDate(String date, String searchId, String type) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         EventRepository eventRepository = new EventRepository();
         SubEventRepository subEventRepository = new SubEventRepository();
         String parentDateString = "";
-        if(searchId[1].equals("evento")){
-            parentDateString = String.valueOf(eventRepository.getData(UUID.fromString(searchId[0]),"date"));
-        } else if(searchId[1].equals("subEvento")) {
-            parentDateString = String.valueOf(subEventRepository.getData(UUID.fromString(searchId[0]),"date"));
+        if (type.equals("evento")) {
+            parentDateString = String.valueOf(eventRepository.getData(UUID.fromString(searchId), "date"));
+        } else if (type.equals("subEvento")) {
+            parentDateString = String.valueOf(subEventRepository.getData(UUID.fromString(searchId), "date"));
+        }
+
+        // Remove time part if present
+        if (parentDateString.contains(" ")) {
+            parentDateString = parentDateString.split(" ")[0];
+        }
+        if (date.contains(" ")) {
+            date = date.split(" ")[0];
         }
 
         LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
@@ -152,8 +151,6 @@ public abstract class BaseController {
 
         return !inputDate.isBefore(eventDate);
     }
-
-
 
     public abstract void setFacade(FacadeInterface facade) throws IOException;
 }

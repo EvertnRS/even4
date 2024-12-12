@@ -4,7 +4,10 @@ import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.CreateSubEventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
-import br.upe.persistence.Model;
+import br.upe.utils.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -15,10 +18,9 @@ import javafx.scene.layout.AnchorPane;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
-
+import java.util.UUID;
 import javafx.scene.text.Text;
 
-import static br.upe.ui.Validation.isValidDate;
 
 public class CreateSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
@@ -71,7 +73,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
 
         setupPlaceholders();
 
-        mediator.setComponents(nameTextField, datePicker, locationTextField, descriptionTextField);
+        mediator.setComponents(nameTextField, datePicker, locationTextField, descriptionTextField, searchField);
     }
 
     private void setupPlaceholders() {
@@ -114,10 +116,28 @@ public class CreateSubEventScreenController extends BaseController implements Fx
         String subEventLocation = locationTextField.getText();
         String subEventDescription = descriptionTextField.getText();
         Date subEventDate = Date.valueOf(datePicker.getValue() != null ? datePicker.getValue().toString() : "");
-        String selectedEventName = searchField.getText();
+        UUID selectedEvent = getEventIdByName(searchField.getText());
 
-        facade.createSubEvent(selectedEventName,subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
-        mediator.notify("handleSubEvent");
+        if (!validateEventDate(subEventDate.toString(), String.valueOf(selectedEvent), "evento")) {
+            errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+        } else {
+            facade.createSubEvent(searchField.getText(),subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
+            mediator.notify("handleSubEvent");
+        }
+
+    }
+
+    public UUID getEventIdByName(String eventName) {
+        try {
+            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+            TypedQuery<UUID> query = entityManager.createQuery(
+                    "SELECT e.id FROM Event e WHERE LOWER(TRIM(e.name)) = LOWER(TRIM(:name))", UUID.class);
+            query.setParameter("name", eventName.trim());
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            throw new IllegalArgumentException("Event not found: " + eventName, e);
+        }
     }
 
     @Override
