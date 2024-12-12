@@ -3,16 +3,15 @@ package br.upe.controller.fx;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
-import br.upe.persistence.repository.EventRepository;
-import br.upe.persistence.repository.Persistence;
-import br.upe.persistence.repository.SessionRepository;
-import br.upe.persistence.repository.SubEventRepository;
+import br.upe.persistence.repository.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
@@ -159,7 +158,7 @@ public class SessionScreenController extends BaseController implements FxControl
         Button editButton = createButton("Editar", "#6fa3ef");
         editButton.setOnAction(e -> {
             try {
-                handleEditSession((String) sessionRepository.getData("name"));
+                handleEditSession((String) sessionRepository.getData(session.getId(), "name"));
             } catch (IOException ex) {
                 throw new IllegalArgumentException(ex);
             }
@@ -168,7 +167,7 @@ public class SessionScreenController extends BaseController implements FxControl
         Button deleteButton = createButton("Excluir", "#ff6b6b");
         deleteButton.setOnAction(e -> {
             try {
-                handleDeleteSession((UUID) sessionRepository.getData("id"));
+                handleDeleteSession((UUID) sessionRepository.getData(session.getId(),"id"), facade.getUserData("id"));
             } catch (IOException ex) {
                 throw new IllegalArgumentException(ex);
             }
@@ -185,31 +184,43 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     private void handleDetailSession(UUID sessionId) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detalhes da Sessão");
-        alert.setHeaderText("Informações da Sessão");
+        loadScreen("Carregando", () -> {
+            SessionRepository sessionRepository = SessionRepository.getInstance();
+            UserRepository userRepository = UserRepository.getInstance();
 
-        Persistence session = facade.getSessionHashMap().get(sessionId);
-        Persistence owner = facade.getUserHashMap().get(session.getData("ownerId"));
+            String content = "Nome: " + sessionRepository.getData(sessionId, "name") + "\n" +
+                    "Data: " + sessionRepository.getData(sessionId, "date") + "\n" +
+                    "Descrição: " + sessionRepository.getData(sessionId, "description") + "\n" +
+                    "Início: " + sessionRepository.getData(sessionId, "startTime") + "\n" +
+                    "Término: " + sessionRepository.getData(sessionId, "endTime") + "\n" +
+                    "Local: " + sessionRepository.getData(sessionId, "location") + "\n" +
+                    "Administrador: " + userRepository.getData("email") + "\n";
 
-        String content = String.format("Nome: %s\nData: %s\nDescrição: %s\nInício: %s\nTérmino: %s\nLocal: %s\nAdministrador: %s",
-                session.getData("name"),
-                session.getData("date"),
-                session.getData("description"),
-                session.getData("startTime"),
-                session.getData("endTime"),
-                session.getData("location"),
-                owner.getData("email"));
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("Detalhes da Sessão");
+                alert.setTitle(" ");
 
-        alert.setContentText(content);
-        alert.showAndWait();
+                Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+                stage.getIcons().clear();
+                stage.getIcons().add(new javafx.scene.image.Image("/images/Logo.png"));
+
+                DialogPane dialogPane = alert.getDialogPane();
+                dialogPane.setStyle("-fx-background-color: #f0f0f0; -fx-font-size: 14px; -fx-text-fill: #333333;");
+                dialogPane.lookup(".header-panel").setStyle("-fx-background-color: #ff914d; -fx-text-fill: #ffffff; -fx-font-weight: bold;");
+                dialogPane.lookup(".content").setStyle("-fx-font-size: 14px; -fx-text-fill: rgb(51,51,51);");
+
+                alert.setContentText(content);
+                alert.showAndWait();
+            });
+        }, sessionPane);
     }
 
     private void handleEditSession(String sessionName) throws IOException {
         genericButton("/fxml/updateSessionScreen.fxml", sessionPane, facade, sessionName);
     }
 
-    private void handleDeleteSession(UUID sessionId) throws IOException {
+    private void handleDeleteSession(UUID sessionId, String userId) throws IOException {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Confirmação de Exclusão");
         confirmationAlert.setHeaderText("Deseja realmente excluir esta sessão?");
@@ -222,7 +233,7 @@ public class SessionScreenController extends BaseController implements FxControl
 
         Optional<ButtonType> result = confirmationAlert.showAndWait();
         if (result.isPresent() && result.get() == buttonYes) {
-            facade.deleteSession(sessionId, facade.getUserData("id"));
+            facade.deleteSession(sessionId, userId);
             loadUserSessions();
         }
     }

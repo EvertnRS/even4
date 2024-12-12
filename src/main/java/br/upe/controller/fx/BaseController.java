@@ -134,19 +134,18 @@ public abstract class BaseController {
         EventRepository eventRepository = new EventRepository();
         SubEventRepository subEventRepository = new SubEventRepository();
         String parentDateString = "";
-
         if(searchId[1].equals("evento")){
             parentDateString = String.valueOf(eventRepository.getData(UUID.fromString(searchId[0]),"date"));
         } else if(searchId[1].equals("subEvento")) {
-            parentDateString = String.valueOf( subEventRepository.getData(UUID.fromString(searchId[0]),"date"));
-
+            parentDateString = String.valueOf(subEventRepository.getData(UUID.fromString(searchId[0]),"date"));
         }
 
-            LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
-            LocalDate inputDate = LocalDate.parse(date, formatter);
+        LocalDate eventDate = LocalDate.parse(parentDateString, formatter);
+        LocalDate inputDate = LocalDate.parse(date, formatter);
 
-            return !inputDate.isBefore(eventDate);
+        return !inputDate.isBefore(eventDate);
     }
+
 
 
     public abstract void setFacade(FacadeInterface facade) throws IOException;

@@ -158,8 +158,8 @@ public class SessionRepository implements Persistence {
         Date newDate = (Date) params[2];
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
-        Time newStartTime = (Time) params[5];
-        Time newEndTime = (Time) params[6];
+        Time newStartTime = convertTime((String) params[5]);
+        Time newEndTime = convertTime((String) params[6]);
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -306,4 +306,25 @@ public class SessionRepository implements Persistence {
     public Object getData(String dataToGet) {
         return null;
     }
+
+    public UUID getSessionIdByNameAndUser(String sessionName, UUID userId) {
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        try {
+            // JPQL para buscar o ID da sessão com base no nome e no usuário
+            String jpql = "SELECT s.id FROM Session s WHERE s.name = :sessionName AND s.ownerId.id = :userId";
+            return entityManager.createQuery(jpql, UUID.class)
+                    .setParameter("sessionName", sessionName)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            LOGGER.warning("Nenhuma sessão encontrada com o nome: " + sessionName + " e usuário com ID: " + userId);
+            return null;
+        } catch (Exception e) {
+            LOGGER.severe("Erro ao buscar ID da sessão: " + e.getMessage());
+            return null;
+        }
+    }
+
+
+
 }

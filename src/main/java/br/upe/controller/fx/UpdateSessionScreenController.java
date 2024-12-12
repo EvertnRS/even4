@@ -1,18 +1,33 @@
 package br.upe.controller.fx;
 
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.Session;
+import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.repository.SessionRepository;
+import br.upe.utils.JPAUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
+import org.w3c.dom.ls.LSOutput;
 
 import java.io.IOException;
+import java.util.*;
+import java.util.logging.Logger;
+
+import static br.upe.ui.Validation.areValidTimes;
+import static br.upe.ui.Validation.isValidDate;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private String sessionName;
+    private SessionRepository sessionRepository;
 
     @FXML
     private AnchorPane editSessionPane;
@@ -95,23 +110,76 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     public void updateSession() throws IOException {
-        /*String newSubName = editNameTextField.getText();
+        String[] type = verifyType(sessionName);
+        String newSubName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
         String newDescription = editDescriptionTextField.getText();
         String newDate = editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "";
         String newStartTime = editStartTimeTextField.getText();
         String newEndTime = editEndTimeTextField.getText();
         Map<UUID, Persistence> sessionMap = facade.getSessionHashMap();
-        if (!validateEventDate(newDate, newSubName)) {
-            errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
+        if (!validateEventDate(newDate, type)) {
+            errorUpdtLabel.setText("Data da sessão não pode ser anterior à data do evento.");
         } else if (!isValidDate(newDate) || !areValidTimes(newStartTime, newEndTime)) {
             errorUpdtLabel.setText("Data ou horário inválido.");
-        }else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newSubName, sessionMap)){
+        } else if (newLocation.isEmpty() || newDescription.isEmpty() || isValidName(newSubName, new ArrayList<>(sessionMap.values()))) {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
-        }else {
-            facade.updateSession(sessionName, newSubName, newDate, newDescription, newLocation,  facade.getUserData("id"), newStartTime, newEndTime);
+        } else {
+            facade.updateSession(sessionName, newSubName, newDate, newDescription, newLocation, facade.getUserData("id"), newStartTime, newEndTime);
             facade.readSession();
-            handleSession();}*/
+            handleSession();
+        }
     }
+
+
+    private String[] verifyType(String sessionName) {
+        String[] type = new String[2];
+        EntityManager entityManager = null;
+
+        try {
+            if (sessionName == null || sessionName.trim().isEmpty()) {
+                throw new IllegalArgumentException("O nome da sessão não pode ser nulo ou vazio");
+            }
+
+            entityManager = JPAUtils.getEntityManagerFactory();
+
+            // Consulta para buscar a sessão com nome específico
+            TypedQuery<Session> sessionQuery = entityManager.createQuery(
+                    "SELECT s FROM Session s WHERE LOWER(TRIM(s.name)) = LOWER(TRIM(:name))",
+                    Session.class
+            );
+            sessionQuery.setParameter("name", sessionName.trim());
+
+            List<Session> sessionResults = sessionQuery.getResultList();
+            if (sessionResults.isEmpty()) {
+                throw new IllegalArgumentException("Nenhum dado encontrado para o nome da sessão: " + sessionName);
+            }
+
+            // Exibe a sessão encontrada
+            Session session = sessionResults.get(0);
+
+            // Preencha os dados de retorno
+            if (session.getSubEventId() != null && session.getSubEventId().getId() != null) {
+                type[0] = session.getSubEventId().getId().toString();
+                type[1] = "subEvento"; // Ou faça a consulta para obter o nome do subevento
+            } else if (session.getEventId() != null && session.getEventId().getId() != null) {
+                type[0] = session.getEventId().getId().toString();
+                type[1] = "evento"; // Ou faça a consulta para obter o nome do evento
+            }
+
+        } catch (NoResultException e) {
+            throw new IllegalArgumentException("Nenhum dado encontrado para o nome da sessão: " + sessionName, e);
+        } finally {
+            if (entityManager != null && entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        return type;
+
+    }
+
+
+
+
 
 }
