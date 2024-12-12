@@ -21,7 +21,7 @@
             <Image url="@/images/icons/buttons/exit.png" />
          </image>
       </ImageView>
-      <Pane layoutX="222.0" prefHeight="582.0" prefWidth="878.0" style="-fx-background-color: #F2F2F2; -fx-background-radius: 10 0 0 0;">
+      <Pane layoutX="222.0" prefHeight="582.0" prefWidth="878.0" style="-fx-background-color: #F2F2F2; -fx-background-radius: 10 0 0 10;">
          <children>
             <ScrollPane fx:id="scrollPane" focusTraversable="false" layoutY="115.0" mouseTransparent="false" prefHeight="452.0" prefWidth="879.0" style="-fx-background-color: #cccccc;" vvalue="0.0">
                <VBox fx:id="eventVBox" focusTraversable="true" layoutX="161.0" layoutY="90.0" prefHeight="65.0" prefWidth="528.0" spacing="10" style="-fx-background-radius: 10; -fx-border-radius: 10;">

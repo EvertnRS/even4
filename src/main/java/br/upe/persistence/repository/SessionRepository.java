@@ -4,6 +4,7 @@ import br.upe.persistence.Event;
 import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.User;
+import br.upe.persistence.builder.SessionBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -78,17 +79,17 @@ public class SessionRepository implements Persistence {
             return;
         }
 
-        Session session = new Session();
-        session.setName(name);
-        session.setDate(date);
-        session.setDescription(description);
-        session.setLocation(location);
-        session.setStartTime(startTime);
-        session.setEndTime(endTime);
-        session.setEventId(event);
-        session.setOwnerId(owner);
-        session.setSubEventId(subevent);
-
+        Session session = SessionBuilder.builder()
+                .withName(name)
+                .withDate(date)
+                .withDescription(description)
+                .withLocation(location)
+                .withStartTime(startTime)
+                .withEndTime(endTime)
+                .withSubEvent(subevent)
+                .withEvent(event)
+                .withOwner(owner)
+                .build();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

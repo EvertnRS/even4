@@ -1,6 +1,7 @@
 package br.upe.persistence.repository;
 import br.upe.persistence.Event;
 import br.upe.persistence.User;
+import br.upe.persistence.builder.EventBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -56,12 +57,13 @@ public class EventRepository implements Persistence {
             throw new IllegalArgumentException("Usuário não encontrado com o ID: " + ownerId);
         }
 
-        Event event = new Event();
-        event.setName(name);
-        event.setDate(date);
-        event.setDescription(description);
-        event.setLocation(location);
-        event.setOwnerId(owner);
+        Event event = EventBuilder.builder()
+                .withName(name)
+                .withDate(date)
+                .withDescription(description)
+                .withLocation(location)
+                .withOwner(owner)
+                .build();
 
         EntityTransaction transaction = entityManager.getTransaction();
         try {

@@ -226,7 +226,7 @@ public class SubmitScreenController extends BaseController implements FxControll
     private void handleDeleteArticle(UUID articleId) throws IOException {
         mediator.setArticleId(articleId);
 
-        Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteEvent");
+        Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteArticle");
 
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
             facade.deleteArticle(articleId);

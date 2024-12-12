@@ -3,6 +3,7 @@ package br.upe.persistence.repository;
 import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.User;
 import br.upe.persistence.Event;
+import br.upe.persistence.builder.SubmitArticleBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -74,11 +75,13 @@ public class SubmitArticlesRepository implements Persistence {
                 return;
             }
 
-            SubmitArticle submitArticle = new SubmitArticle();
-            submitArticle.setEventId(event);
-            submitArticle.setArticle(article);
-            submitArticle.setOwnerId(owner);
-            submitArticle.setName(articleName);
+            SubmitArticle submitArticle = SubmitArticleBuilder.builder()
+                    .withName(articleName)
+                    .withArticle(article)
+                    .withOwner(owner)
+                    .withEvent(event)
+                    .build();
+
             transaction.begin();
             entityManager.persist(submitArticle);
             transaction.commit();
