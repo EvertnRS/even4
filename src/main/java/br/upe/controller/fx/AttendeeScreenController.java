@@ -121,7 +121,7 @@ public class AttendeeScreenController extends BaseController implements FxContro
 
                         deleteButton.setOnAction(e -> {
                             try {
-                                handleDeleteAttendee((UUID) attendeeRepository.getData(attendee.getId(), "id"), UUID.fromString(facade.getUserData("id")));
+                                handleDeleteAttendee((UUID) attendeeRepository.getData(attendee.getId(), "id"), sessionId);
                             } catch (IOException ex) {
                                 throw new IllegalArgumentException(ex);
                             }

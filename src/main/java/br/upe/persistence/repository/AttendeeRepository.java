@@ -103,34 +103,40 @@ public class AttendeeRepository implements Persistence{
             return;
         }
 
-        UUID id = (UUID) params[0];
-        UUID userId = (UUID) params[1];
+        UUID attendeeId = (UUID) params[0];
+        UUID sessionId = (UUID) params[1];
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
 
-            Attendee idAttendee = entityManager.find(Attendee.class, id);
-            User owner = entityManager.find(User.class, userId);
+            Attendee attendee = entityManager.find(Attendee.class, attendeeId);
+            Session session = entityManager.find(Session.class, sessionId);
 
-            if ((owner) == null) {
-                LOGGER.warning("Usuário inválido.");
+            if (attendee == null) {
+                LOGGER.warning("Participante não encontrado com o ID fornecido.");
                 return;
             }
 
-            if (idAttendee != null) {
-                entityManager.remove(idAttendee);
+            if (session == null) {
+                LOGGER.warning("Sessão não encontrada com o ID fornecido.");
+                return;
+            }
+
+            if (attendee.getSessions().contains(session)) {
+                attendee.getSessions().remove(session);
+                entityManager.merge(attendee);
                 transaction.commit();
-                LOGGER.info("Participante deletado com sucesso.");
+                LOGGER.info("Participação removida com sucesso.");
             } else {
-                LOGGER.warning("Participante não encontrado com o ID fornecido.");
+                LOGGER.warning("Participante não está inscrito na sessão fornecida.");
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            LOGGER.severe("Erro ao deletar Participante: " + e.getMessage());
+            LOGGER.severe("Erro ao remover participação: " + e.getMessage());
         } finally {
             if (entityManager.isOpen()) {
                 entityManager.close();

@@ -94,7 +94,7 @@ public class AttendeeController implements Controller {
         AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
 
         UUID id = (UUID) params[0];
-        UUID userId = UUID.fromString((String) params[1]);
+        UUID userId = (UUID) params[1];
 
         attendeeRepository.delete(id, userId);
     }
