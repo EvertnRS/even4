@@ -5,11 +5,13 @@ import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Session;
 import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SessionRepository;
+import br.upe.persistence.repository.SubEventRepository;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -18,6 +20,8 @@ import javafx.scene.text.Text;
 
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -68,7 +72,9 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     public void setEventName(String eventName) {
-        this.sessionName = eventName;
+        String [] list = verifyType(eventName);
+        this.sessionName = list[2];
+        loadSessionDetails();
     }
 
 
@@ -133,7 +139,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
 
 
     private String[] verifyType(String sessionName) {
-        String[] type = new String[2];
+        String[] type = new String[3];
         EntityManager entityManager = null;
 
         try {
@@ -162,9 +168,11 @@ public class UpdateSessionScreenController extends BaseController implements FxC
             if (session.getSubEventId() != null && session.getSubEventId().getId() != null) {
                 type[0] = session.getSubEventId().getId().toString();
                 type[1] = "subEvento"; // Ou faça a consulta para obter o nome do subevento
+                type[2] = session.getId().toString();
             } else if (session.getEventId() != null && session.getEventId().getId() != null) {
                 type[0] = session.getEventId().getId().toString();
                 type[1] = "evento"; // Ou faça a consulta para obter o nome do evento
+                type[2] = session.getId().toString();
             }
 
         } catch (NoResultException e) {
@@ -178,6 +186,44 @@ public class UpdateSessionScreenController extends BaseController implements FxC
 
     }
 
+
+    private void loadSessionDetails() {
+        SessionRepository sessionRepository = SessionRepository.getInstance();
+        if (sessionRepository != null) {
+            String sessionNames = (String) sessionRepository.getData(UUID.fromString(sessionName),"name");
+            String sessionLocation = (String) sessionRepository.getData(UUID.fromString(sessionName),"location");
+            String sessionDescription = (String) sessionRepository.getData(UUID.fromString(sessionName),"description");
+            String sessionStartTime =  (sessionRepository.getData(UUID.fromString(sessionName),"startTime")).toString();
+            String sessionEndTime = (sessionRepository.getData(UUID.fromString(sessionName),"endTime")).toString();
+            editNameTextField.setText(sessionNames);
+            editLocationTextField.setText(sessionLocation);
+            editDescriptionTextField.setText(sessionDescription);
+            editStartTimeTextField.setText(sessionStartTime);
+            editEndTimeTextField.setText(sessionEndTime);
+
+            Object dateObject = sessionRepository.getData(UUID.fromString(sessionName), "date");
+            java.sql.Date sqlDate;
+
+            if (dateObject instanceof java.sql.Timestamp) {
+                sqlDate = new java.sql.Date(((java.sql.Timestamp) dateObject).getTime());
+            } else if (dateObject instanceof java.sql.Date) {
+                sqlDate = (java.sql.Date) dateObject;
+            } else {
+                throw new IllegalArgumentException("Tipo inesperado: " + dateObject.getClass().getName());
+            }
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String subeventDate = formatter.format(sqlDate);
+            if (!subeventDate.isEmpty()) {
+                editDatePicker.setValue(LocalDate.parse(subeventDate));
+            }
+
+            setupPlaceholders();
+        } else {
+            errorUpdtLabel.setText("SubEvento não encontrado.");
+            errorUpdtLabel.setAlignment(Pos.CENTER);
+        }
+    }
 
 
 
