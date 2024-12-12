@@ -1,7 +1,8 @@
 package br.upe.persistence;
+
+import br.upe.persistence.builder.UserBuilder;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
 
 @Entity
@@ -23,6 +24,7 @@ public class User {
     @Column(length = 60)
     private String password;
 
+    // Getters and Setters
     public UUID getId() {
         return id;
     }
@@ -32,7 +34,7 @@ public class User {
     }
 
     public @NotNull Long getCpf() {
-        return this.cpf;
+        return cpf;
     }
 
     public void setCpf(@NotNull Long cpf) {
@@ -56,11 +58,10 @@ public class User {
     }
 
     public @NotNull String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(@NotNull String name) {
         this.name = name;
     }
-
 }

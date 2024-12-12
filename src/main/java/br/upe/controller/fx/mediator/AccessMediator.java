@@ -3,6 +3,8 @@ package br.upe.controller.fx.mediator;
 import br.upe.controller.fx.LoginScreenController;
 import br.upe.controller.fx.SignUpScreenController;
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.repository.Persistence;
+import br.upe.persistence.repository.UserRepository;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -87,10 +89,17 @@ public class AccessMediator extends Mediator {
 
     private void handleRegisterEvent() {
         assert userSignUpController != null;
+        Persistence userRepository = UserRepository.getInstance();
         String signUpEmail = userSignUpController.getEmailTextField().getText();
         String cpf = userSignUpController.getCpfTextField().getText();
         Label signUpErrorLabel = userSignUpController.getErrorLabel();
 
+        if (((UserRepository) userRepository).userExists(signUpEmail, Long.valueOf(cpf))) {
+            signUpErrorLabel.setText("Usuário com este email ou CPF já existe.");
+            signUpErrorLabel.setAlignment(Pos.CENTER);
+            return;
+
+        }
         userSignUpController.loadScreen("Carregando", () -> {
             if (isValidEmail(signUpEmail) && isValidCPF(cpf)) {
                 Platform.runLater(() -> {
