@@ -83,7 +83,6 @@ public class CertificateScreenController extends BaseController implements FxCon
     private void drawCertificate(String certificateAddres) {
         try {
             BufferedImage certificate = ImageIO.read(new File(Objects.requireNonNull(getClass().getResource("/images/certificate/EmptyCertificate.png")).toURI()));
-
             BufferedImage newCertificate = new BufferedImage(
                     certificate.getWidth(),
                     certificate.getHeight(),

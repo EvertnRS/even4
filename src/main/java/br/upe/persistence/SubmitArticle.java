@@ -30,8 +30,6 @@ public class SubmitArticle implements Model {
     @Lob
     @Column(unique = true)
     private byte[] article;
-
-
     // Getters
     public UUID getId() {
         return id;
