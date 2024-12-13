@@ -30,7 +30,7 @@ import java.util.UUID;
 public class SessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private SessionMediator mediator;
-    private static final String bgColor = "-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);";
+    private static final String BG_COLOR = "-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);";
 
 
     @FXML
@@ -160,7 +160,7 @@ public class SessionScreenController extends BaseController implements FxControl
         detailsIcon.setFitWidth(16);
         detailsIcon.setFitHeight(16);
         detailsButton.setGraphic(detailsIcon);
-        detailsButton.setStyle(bgColor);
+        detailsButton.setStyle(BG_COLOR);
         detailsButton.setOnAction(e -> handleDetailSession((UUID) sessionRepository.getData(session.getId(), "id")));
 
         Button editButton = new Button("Editar");
@@ -168,7 +168,7 @@ public class SessionScreenController extends BaseController implements FxControl
         editIcon.setFitWidth(16);
         editIcon.setFitHeight(16);
         editButton.setGraphic(editIcon);
-        editButton.setStyle(bgColor);
+        editButton.setStyle(BG_COLOR);
 
         editButton.setOnAction(e -> {
             try {
@@ -183,7 +183,7 @@ public class SessionScreenController extends BaseController implements FxControl
         deleteIcon.setFitWidth(16);
         deleteIcon.setFitHeight(16);
         deleteButton.setGraphic(deleteIcon);
-        deleteButton.setStyle(bgColor);
+        deleteButton.setStyle(BG_COLOR);
 
         deleteButton.setOnAction(e -> {
             try {

@@ -24,6 +24,7 @@ public class UpdateSessionMediator extends Mediator {
     private static final String HANDLE_USER = "handleUser";
     private static final String HANDLE_INSCRIPTION = "handleInscription";
     private static final String HANDLE_BACK = "handleBack";
+    private static final String HANDLE_SESSION_UPDATE = "handleSessionUpdate";
     private TextField nameTextField;
     private DatePicker datePicker;
     private TextField locationTextField;
@@ -52,7 +53,7 @@ public class UpdateSessionMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#updateButton", "handleSessionUpdate");
+            setupButtonAction("#updateButton", HANDLE_SESSION_UPDATE);
             setupButtonAction("#handleEventButton", HANDLE_EVENT);
             setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
             setupButtonAction("#handleSessionButton", HANDLE_SESSION);
@@ -68,7 +69,7 @@ public class UpdateSessionMediator extends Mediator {
     public Object notify(String event) throws IOException {
         if (updateSessionScreenController != null) {
             switch (event) {
-                case "handleSessionUpdate":
+                case HANDLE_SESSION_UPDATE:
                     handleSessionUpdate();
                     break;
                 case HANDLE_USER
@@ -147,7 +148,7 @@ public class UpdateSessionMediator extends Mediator {
         screenPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    notify("handleSessionUpdate");
+                    notify(HANDLE_SESSION_UPDATE);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

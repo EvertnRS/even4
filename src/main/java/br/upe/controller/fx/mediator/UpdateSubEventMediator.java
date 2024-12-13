@@ -21,6 +21,8 @@ public class UpdateSubEventMediator extends Mediator {
     private static final String HANDLE_USER = "handleUser";
     private static final String HANDLE_INSCRIPTION = "handleInscription";
     private static final String HANDLE_BACK = "handleBack";
+    private static final String HANDLE_SUB_EVENT_UPDATE = "handleSubEventUpdate";
+
 
     private TextField nameTextField;
     private DatePicker datePicker;
@@ -46,7 +48,7 @@ public class UpdateSubEventMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#updateButton", "handleSubEventUpdate");
+            setupButtonAction("#updateButton", HANDLE_SUB_EVENT_UPDATE);
             setupButtonAction("#handleEventButton", HANDLE_EVENT);
             setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
             setupButtonAction("#handleSessionButton", HANDLE_SESSION);
@@ -62,7 +64,7 @@ public class UpdateSubEventMediator extends Mediator {
     public Object notify(String event) throws IOException {
         if (updateScreenSubEventController != null) {
             switch (event) {
-                case "handleSubEventUpdate":
+                case HANDLE_SUB_EVENT_UPDATE:
                     handleSubEventUpdate();
                     break;
                 case HANDLE_USER
@@ -104,7 +106,7 @@ public class UpdateSubEventMediator extends Mediator {
 
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
-            case "handleSubEventUpdate" -> "/fxml/updateSubEventScreen.fxml";
+            case HANDLE_SUB_EVENT_UPDATE -> "/fxml/updateSubEventScreen.fxml";
 
             case HANDLE_USER -> "/fxml/userScreen.fxml";
             case HANDLE_SUB_EVENT, HANDLE_BACK -> "/fxml/subEventScreen.fxml";
@@ -137,7 +139,7 @@ public class UpdateSubEventMediator extends Mediator {
         screenPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    notify("handleSubEventUpdate");
+                    notify(HANDLE_SUB_EVENT_UPDATE);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

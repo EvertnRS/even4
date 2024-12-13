@@ -29,7 +29,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
     private FacadeInterface facade;
     private UUID eventId;
     private EventArticleMediator mediator;
-    private static final String bgColor = "-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);";
+    private static final String BG_COLOR = "-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);";
 
     @FXML
     private Label userEmail;
@@ -119,7 +119,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
         deleteIcon.setFitWidth(16);
         deleteIcon.setFitHeight(16);
         deleteButton.setGraphic(deleteIcon);
-        deleteButton.setStyle(bgColor);
+        deleteButton.setStyle(BG_COLOR);
 
         deleteButton.setOnAction(e -> {
             try {
@@ -134,7 +134,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
         detailsIcon.setFitWidth(16);
         detailsIcon.setFitHeight(16);
         detailsButton.setGraphic(detailsIcon);
-        detailsButton.setStyle(bgColor);
+        detailsButton.setStyle(BG_COLOR);
 
         detailsButton.setOnAction(e -> handleDetailArticle(articleId));
 
@@ -143,7 +143,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
         downloadIcon.setFitWidth(16);
         downloadIcon.setFitHeight(16);
         downloadButton.setGraphic(downloadIcon);
-        downloadButton.setStyle(bgColor);
+        downloadButton.setStyle(BG_COLOR);
 
         downloadButton.setOnAction(e -> {
             try {

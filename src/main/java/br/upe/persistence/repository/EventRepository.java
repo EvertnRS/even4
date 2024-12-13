@@ -22,7 +22,7 @@ public class EventRepository implements Persistence {
     private static EventRepository instance;
     private static final String DESCRIPTION = "description";
     private static final String LOCATION = "location";
-    private static final String eventNotFound = "Evento não encontrado com o ID fornecido.";
+    private static final String EVENT_NOT_FOUND = "Evento não encontrado com o ID fornecido.";
 
     public EventRepository() {
         // Construtor vazio porque esta classe não requer inicialização específica.
@@ -134,7 +134,7 @@ public class EventRepository implements Persistence {
                 transaction.commit();
                 LOGGER.info("Evento atualizado com sucesso.");
             } else {
-                LOGGER.warning(eventNotFound);
+                LOGGER.warning(EVENT_NOT_FOUND);
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -186,7 +186,7 @@ public class EventRepository implements Persistence {
                 transaction.commit();
                 LOGGER.info("Evento deletado com sucesso.");
             } else {
-                LOGGER.warning(eventNotFound);
+                LOGGER.warning(EVENT_NOT_FOUND);
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -242,7 +242,7 @@ public class EventRepository implements Persistence {
                 entityManager.merge(event);
                 transaction.commit();
             } else {
-                throw new IllegalArgumentException(eventNotFound);
+                throw new IllegalArgumentException(EVENT_NOT_FOUND);
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
