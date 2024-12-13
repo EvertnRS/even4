@@ -64,16 +64,22 @@ public class AttendeeController implements Controller {
 
     @Override
     public void create(Object... params) throws IOException {
-        if (params.length < 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
+        if (params == null || params.length != 2) {
+            LOGGER.warning("É necessário passar exatamente 2 parâmetros: sessionId e userId.");
+            return;
         }
 
-        String sessionId = getSessionId((String) params[0]);
-        String userId = (String) params[1];
+        try {
+            String sessionId = getSessionId((String) params[0]);
+            String userId = (String) params[1];
 
-        Persistence attendee = new AttendeeRepository();
-        attendee.create(userId, sessionId);
+            Persistence attendee = new AttendeeRepository();
+            attendee.create(userId, sessionId);
+        } catch (ClassCastException e) {
+            LOGGER.warning("Parâmetros inválidos: os tipos esperados são String.");
+        }
     }
+
 
     @Override
     public void update(Object... params) throws IOException {
