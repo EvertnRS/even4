@@ -20,9 +20,7 @@ public class SessionController implements Controller {
     private static final String LOCATION = "location";
     private static final String STARTTIME = "startTime";
     private static final String ENDTIME = "endTime";
-    private static final String EVENT_TYPE = "Event";
     private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
-    private static final String[] TYPE = new String[]{"type"};
     private Map<UUID, Persistence> sessionHashMap;
     private Persistence sessionLog;
 
@@ -46,12 +44,6 @@ public class SessionController implements Controller {
         return (List<T>) sessionRepository.getAllSessions();
     }
 
-    public void setSessionHashMap(Map<UUID, Persistence> sessionHashMap) {
-        this.sessionHashMap = sessionHashMap;
-        if (!sessionHashMap.isEmpty()) {
-            this.sessionLog = sessionHashMap.values().iterator().next();
-        }
-    }
 
     @Override
     public String getData(String dataToGet) {
@@ -249,37 +241,7 @@ public class SessionController implements Controller {
         }*/
     }
 
-    private String getFatherEventId(String eventName, String eventType) throws IOException {
-        String fatherId = "";
 
-        // Inicializa o mapa de eventos
-        Map<UUID, Persistence> eventH = new HashMap<>();
-
-        // Garante que o mapa de eventos (eventH) seja preenchido corretamente com base no tipo de evento
-        if (eventType.equals(EVENT_TYPE)) {
-            EventController eventController = new EventController();
-            eventH = eventController.getHashMap();
-        } else {
-            SubEventController subEventController = new SubEventController();
-            eventH = subEventController.getHashMap();
-        }
-
-        // Verifica se o mapa de eventos não é nulo e está preenchido
-        if (eventH != null && !eventH.isEmpty()) {
-            for (Map.Entry<UUID, Persistence> entry : eventH.entrySet()) {
-                Persistence eventIndice = entry.getValue();
-                if (eventIndice.getData(NAME).equals(eventName)) {
-                    fatherId = (String) eventIndice.getData(ID);
-                    break;
-                }
-            }
-        } else {
-            // Caso o mapa de eventos esteja vazio ou nulo, exibe um aviso
-            LOGGER.warning("Nenhum evento encontrado para o tipo especificado: " + eventType);
-        }
-
-        return fatherId;
-    }
 
 
 }
