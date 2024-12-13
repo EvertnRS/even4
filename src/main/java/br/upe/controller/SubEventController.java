@@ -201,19 +201,7 @@ public class SubEventController implements Controller {
         return params.length == 5;
     }
 
-    private String getOwnerSubEventId(String oldName, String userId) {
-        for (Map.Entry<UUID, Persistence> entry : subEventHashMap.entrySet()) {
-            Persistence persistence = entry.getValue();
-            String name = (String) persistence.getData("name");
-            String ownerId = (String) persistence.getData(OWNER_ID);
 
-            if (name != null && name.equals(oldName) && ownerId != null && ownerId.equals(userId)) {
-                LOGGER.info("Owner found for the sub-event.");
-                return (String) persistence.getData("id");
-            }
-        }
-        return null;
-    }
 
     private void updateSubEvent(UUID id, String newName, Date newDate, String newDescription, String newLocation) throws IOException {
         if (id != null) {

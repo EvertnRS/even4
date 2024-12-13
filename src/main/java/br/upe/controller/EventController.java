@@ -9,10 +9,8 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class EventController implements Controller {
-    private static final String OWNER_ID = "ownerId";
     private static final String DESCRIPTION = "description";
     private static final String LOCATION = "location";
-    private static final String EVENT_ID = "eventId";
     private static final Logger LOGGER = Logger.getLogger(EventController.class.getName());
 
     private Map<UUID, Persistence> eventHashMap;
