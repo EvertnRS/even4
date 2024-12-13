@@ -14,7 +14,6 @@ public class SubmitArticle implements Model {
     private UUID id;
 
     @NotNull
-    @Column(unique = true)
     private String name;
 
 
@@ -29,6 +28,7 @@ public class SubmitArticle implements Model {
 
     @NotNull
     @Lob
+    @Column(unique = true)
     private byte[] article;
 
 
