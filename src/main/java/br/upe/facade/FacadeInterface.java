@@ -40,6 +40,7 @@ public interface FacadeInterface {
     boolean deleteSubEvent(Object... params) throws IOException;
     boolean createSubEvent(Object... params) throws IOException;
     void readSubEvent() throws IOException;
+    String getSubEventData(String dataToGet);
 
     // SubmitArticleController methods
     Map<UUID, Persistence> getArticleHashMap();

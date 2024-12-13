@@ -132,6 +132,10 @@ public class Facade implements FacadeInterface {
         subEventController.read();
     }
 
+    public String getSubEventData(String dataToGet) {
+        return subEventController.getData(dataToGet);
+    }
+
     // SubmitArticleController methods
     public Map<UUID, Persistence> getArticleHashMap() {
         return submitArticleController.getHashMap();
