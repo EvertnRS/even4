@@ -17,6 +17,7 @@ import static br.upe.ui.Validation.isValidEmail;
 public class UserController implements Controller {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
     private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
 
     private static UserController instance;
 
@@ -65,7 +66,7 @@ public class UserController implements Controller {
                 case "cpf" -> data = this.userLog.getData("cpf").toString();
                 case "id" -> data = this.userLog.getData("id").toString();
                 case "name" -> data = (String) this.userLog.getData("name");
-                case "password" -> data = (String) this.userLog.getData("password");
+                case PASSWORD -> data = (String) this.userLog.getData(PASSWORD);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -106,15 +107,15 @@ public class UserController implements Controller {
         String password = (String) params[4];
 
         if (isValidEmail(email) && isValidCPF(cpf.toString())) {
-            userLog.setData("email", email);
+            userLog.setData(EMAIL, email);
             userLog.setData("cpf", cpf);
             userLog.setData("name", name);
 
             if (!newPassword.isEmpty()) {
                 newPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-                userLog.setData("password", newPassword);
+                userLog.setData(PASSWORD, newPassword);
             } else {
-                newPassword = (String) userLog.getData("password");
+                newPassword = (String) userLog.getData(PASSWORD);
             }
 
             UUID userID = (UUID) userLog.getData("id");

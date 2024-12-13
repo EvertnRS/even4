@@ -19,10 +19,12 @@ import java.util.logging.Logger;
 public class UserRepository implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(UserRepository.class.getName());
     private UUID userId;
+    private static final String EMAIL = "email";
 
     private static UserRepository instance;
 
     private UserRepository() {
+        // Construtor vazio porque esta classe não requer inicialização específica.
     }
 
     public static UserRepository getInstance() {
@@ -40,7 +42,7 @@ public class UserRepository implements Persistence {
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         TypedQuery<User> query = entityManager.createQuery(
                 "SELECT u FROM User u WHERE u.email = :email OR u.cpf = :cpf", User.class);
-        query.setParameter("email", email);
+        query.setParameter(EMAIL, email);
         query.setParameter("cpf", cpf);
 
         try {
@@ -160,7 +162,7 @@ public class UserRepository implements Persistence {
         return switch (dataToGet) {
             case "id" -> user.getId();
             case "name" -> user.getName();
-            case "email" -> user.getEmail();
+            case EMAIL -> user.getEmail();
             case "password" -> user.getPassword();
             case "cpf" -> user.getCpf();
             default -> null;
@@ -169,13 +171,14 @@ public class UserRepository implements Persistence {
 
     @Override
     public void setData(UUID eventId, String dataToSet, Object data) {
+        // classe não necessita desse metodo
 
     }
 
     public void setData(String dataToSet, Object data) {
         /*
         switch (dataToSet) {
-            case "email" -> userLog.setEmail((String) data);
+            case EMAIL -> userLog.setEmail((String) data);
             case "cpf" -> userLog.setCpf((Long) data);
             case "name" -> userLog.setName((String) data);
             case "password" -> userLog.setPassword((String) data);
@@ -278,7 +281,7 @@ public class UserRepository implements Persistence {
         try {
             TypedQuery<User> query = entityManager.createQuery(
                     "SELECT u FROM User u WHERE u.email = :email", User.class);
-            query.setParameter("email", email);
+            query.setParameter(EMAIL, email);
             User user = query.getSingleResult();
 
             if (isPasswordEqual(password, user.getPassword())) {
@@ -301,7 +304,7 @@ public class UserRepository implements Persistence {
     /*private UserRepository parseToUserRepository(User user) {
         UserRepository userRepository = new UserRepository();
         userRepository.setData("id", user.getId());
-        userRepository.setData("email", user.getEmail());
+        userRepository.setData(EMAIL, user.getEmail());
         userRepository.setData("cpf", user.getCpf());
         userRepository.setData("name", user.getName());
         userRepository.setData("password", user.getPassword());

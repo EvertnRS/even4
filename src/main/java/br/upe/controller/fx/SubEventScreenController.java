@@ -27,6 +27,8 @@ import java.util.UUID;
 public class SubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private SubEventMediator mediator;
+    private static final String bgColor = "-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);";
+
 
     @FXML
     private Label userEmail;
@@ -100,21 +102,21 @@ public class SubEventScreenController extends BaseController implements FxContro
                     editIcon.setFitWidth(16);
                     editIcon.setFitHeight(16);
                     editButton.setGraphic(editIcon);
-                    editButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                    editButton.setStyle(bgColor);
 
                     Button deleteButton = new Button("Excluir");
                     ImageView deleteIcon = new ImageView(new Image("images/icons/buttons/deleteIcon.png"));
                     deleteIcon.setFitWidth(16);
                     deleteIcon.setFitHeight(16);
                     deleteButton.setGraphic(deleteIcon);
-                    deleteButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                    deleteButton.setStyle(bgColor);
 
                     Button detailsButton = new Button("Detalhes");
                     ImageView detailsIcon = new ImageView(new Image("images/icons/buttons/detailsIcon.png"));
                     detailsIcon.setFitWidth(16);
                     detailsIcon.setFitHeight(16);
                     detailsButton.setGraphic(detailsIcon);
-                    detailsButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+                    detailsButton.setStyle(bgColor);
 
                     detailsButton.setOnAction(e ->
                             handleDetailSubEvent((UUID) subeventRepository.getData(subevent.getId(), "id")));

@@ -28,6 +28,8 @@ import java.util.UUID;
 public class SubmitScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private SubmitMediator mediator;
+    private static final String bgColor = "-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);";
+
 
 
     @FXML
@@ -117,7 +119,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         editIcon.setFitWidth(16);
         editIcon.setFitHeight(16);
         editButton.setGraphic(editIcon);
-        editButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+        editButton.setStyle(bgColor);
         editButton.setOnAction(e -> {
             try {
                 handleEditArticle(articleId);
@@ -131,7 +133,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         deleteIcon.setFitWidth(16);
         deleteIcon.setFitHeight(16);
         deleteButton.setGraphic(deleteIcon);
-        deleteButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+        deleteButton.setStyle(bgColor);
 
         deleteButton.setOnAction(e -> {
             try {
@@ -146,7 +148,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         detailsIcon.setFitWidth(16);
         detailsIcon.setFitHeight(16);
         detailsButton.setGraphic(detailsIcon);
-        detailsButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+        detailsButton.setStyle(bgColor);
 
         detailsButton.setOnAction(e -> handleDetailArticle(articleId));
 
@@ -155,7 +157,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         downloadIcon.setFitWidth(16);
         downloadIcon.setFitHeight(16);
         downloadButton.setGraphic(downloadIcon);
-        downloadButton.setStyle("-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);");
+        downloadButton.setStyle(bgColor);
 
         downloadButton.setOnAction(e -> {
             try {

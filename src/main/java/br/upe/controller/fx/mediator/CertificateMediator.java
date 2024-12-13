@@ -14,6 +14,15 @@ import java.nio.file.Paths;
 
 public class CertificateMediator extends Mediator {
     private final CertificateScreenController certificateScreenController;
+    private static final String HANDLE_CERTIFICATE_CREATE = "handleCertificateCreate";
+    private static final String HANDLE_EVENT = "handleEvent";
+    private static final String HANDLE_SUB_EVENT = "handleSubEvent";
+    private static final String HANDLE_SESSION = "handleSession";
+    private static final String HANDLE_SUBMIT = "handleSubmit";
+    private static final String HANDLE_USER = "handleUser";
+    private static final String HANDLE_BACK = "handleBack";
+    private static final String HANDLE_INSCRIPTION = "handleInscription";
+
 
     public CertificateMediator(CertificateScreenController certificateScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
         super(facade, screenPane, errorUpdtLabel, certificateScreenController);
@@ -24,14 +33,14 @@ public class CertificateMediator extends Mediator {
     public void registerComponents() {
         if (screenPane != null) {
             setupButtonAction("#openDirectoryChooser", "fileChooser");
-            setupButtonAction("#createButton", "handleCertificateCreate");
-            setupButtonAction("#handleEventButton", "handleEvent");
-            setupButtonAction("#handleSubEventButton", "handleSubEvent");
-            setupButtonAction("#handleSessionButton", "handleSession");
-            setupButtonAction("#handleSubmitButton", "handleSubmit");
-            setupButtonAction("#handleUserButton", "handleUser");
-            setupButtonAction("#handleBackButton", "handleBack");
-            setupButtonAction("#handleInscriptionButton", "handleInscription");
+            setupButtonAction("#createButton", HANDLE_CERTIFICATE_CREATE);
+            setupButtonAction("#handleEventButton", HANDLE_EVENT);
+            setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
+            setupButtonAction("#handleSessionButton", HANDLE_SESSION);
+            setupButtonAction("#handleSubmitButton", HANDLE_SUBMIT);
+            setupButtonAction("#handleUserButton", HANDLE_USER);
+            setupButtonAction("#handleBackButton", HANDLE_BACK);
+            setupButtonAction("#handleInscriptionButton", HANDLE_INSCRIPTION);
             setupButtonAction("#logoutButton", "logout");
         }
         setupListeners();
@@ -41,7 +50,7 @@ public class CertificateMediator extends Mediator {
     public Object notify(String event) throws IOException {
         if (certificateScreenController != null) {
             switch (event) {
-                case "handleCertificateCreate":
+                case HANDLE_CERTIFICATE_CREATE:
                     if (validateAddress()) {
                         certificateScreenController.createCertificate();
                     }
@@ -49,13 +58,13 @@ public class CertificateMediator extends Mediator {
                 case "fileChooser":
                     certificateScreenController.openDirectoryChooser();
                     break;
-                case "handleUser"
-                , "handleSubEvent"
-                , "handleInscription"
-                , "handleBack"
-                , "handleSession"
-                , "handleEvent"
-                , "handleSubmit":
+                case HANDLE_USER
+                , HANDLE_SUB_EVENT
+                , HANDLE_INSCRIPTION
+                , HANDLE_BACK
+                , HANDLE_SESSION
+                , HANDLE_EVENT
+                , HANDLE_SUBMIT:
                     loadScreenForEvent(event);
                     break;
                 case "logout":
@@ -82,13 +91,13 @@ public class CertificateMediator extends Mediator {
 
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
-            case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
-            case "handleBack" -> "/fxml/attendeeScreen.fxml";
-            case "handleSession" -> "/fxml/sessionScreen.fxml";
-            case "handleEvent" -> "/fxml/eventScreen.fxml";
-            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
-            case "handleSubmit" -> "/fxml/submitScreen.fxml";
+            case HANDLE_USER -> "/fxml/userScreen.fxml";
+            case HANDLE_SUB_EVENT -> "/fxml/subEventScreen.fxml";
+            case HANDLE_BACK -> "/fxml/attendeeScreen.fxml";
+            case HANDLE_SESSION -> "/fxml/sessionScreen.fxml";
+            case HANDLE_EVENT -> "/fxml/eventScreen.fxml";
+            case HANDLE_INSCRIPTION -> "/fxml/attendeeScreen.fxml";
+            case HANDLE_SUBMIT -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };
@@ -114,7 +123,7 @@ public class CertificateMediator extends Mediator {
         screenPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    notify("handleCertificateCreate");
+                    notify(HANDLE_CERTIFICATE_CREATE);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

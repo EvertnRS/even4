@@ -20,8 +20,12 @@ import java.util.logging.Logger;
 public class EventRepository implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(EventRepository.class.getName());
     private static EventRepository instance;
+    private static final String DESCRIPTION = "description";
+    private static final String LOCATION = "location";
+    private static final String eventNotFound = "Evento não encontrado com o ID fornecido.";
 
     public EventRepository() {
+        // Construtor vazio porque esta classe não requer inicialização específica.
     }
 
     public static EventRepository getInstance() {
@@ -125,12 +129,12 @@ public class EventRepository implements Persistence {
             if (event != null) {
                 setData(id, "name", newName);
                 setData(id, "date", newDate);
-                setData(id, "description", newDescription);
-                setData(id, "location", newLocation);
+                setData(id, DESCRIPTION, newDescription);
+                setData(id, LOCATION, newLocation);
                 transaction.commit();
                 LOGGER.info("Evento atualizado com sucesso.");
             } else {
-                LOGGER.warning("Evento não encontrado com o ID fornecido.");
+                LOGGER.warning(eventNotFound);
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -146,7 +150,7 @@ public class EventRepository implements Persistence {
 
     @Override
     public void setData(String dataToSet, Object data) {
-
+        // classe não necessita desse metodo
     }
 
     @Override
@@ -182,7 +186,7 @@ public class EventRepository implements Persistence {
                 transaction.commit();
                 LOGGER.info("Evento deletado com sucesso.");
             } else {
-                LOGGER.warning("Evento não encontrado com o ID fornecido.");
+                LOGGER.warning(eventNotFound);
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -212,8 +216,8 @@ public class EventRepository implements Persistence {
             case "id" -> event.getId();
             case "name" -> event.getName();
             case "date" -> event.getDate();
-            case "description" -> event.getDescription();
-            case "location" -> event.getLocation();
+            case DESCRIPTION -> event.getDescription();
+            case LOCATION -> event.getLocation();
             case "ownerId" -> event.getIdOwner().getId();
             default -> null;
         };
@@ -231,14 +235,14 @@ public class EventRepository implements Persistence {
                     case "id" -> event.setId((UUID) data);
                     case "name" -> event.setName((String) data);
                     case "date" -> event.setDate((Date) data);
-                    case "description" -> event.setDescription((String) data);
-                    case "location" -> event.setLocation((String) data);
+                    case DESCRIPTION -> event.setDescription((String) data);
+                    case LOCATION -> event.setLocation((String) data);
                     default -> throw new IllegalArgumentException("Campo inválido: " + dataToSet);
                 }
                 entityManager.merge(event);
                 transaction.commit();
             } else {
-                throw new IllegalArgumentException("Evento não encontrado com o ID fornecido.");
+                throw new IllegalArgumentException(eventNotFound);
             }
         } catch (Exception e) {
             if (transaction.isActive()) {

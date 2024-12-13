@@ -151,7 +151,7 @@ public class SubmitArticlesRepository implements Persistence {
 
     @Override
     public void setData(String dataToSet, Object data) {
-
+        // classe não necessita desse metodo
     }
 
     @Override

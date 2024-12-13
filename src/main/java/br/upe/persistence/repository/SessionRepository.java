@@ -22,8 +22,9 @@ import java.util.logging.Logger;
 public class SessionRepository implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(SessionRepository.class.getName());
     private static SessionRepository instance;
-
+    private static String sessionNotFound = "Sessão não encontrada com o ID fornecido.";
     public SessionRepository() {
+        // Construtor vazio porque esta classe não requer inicialização específica.
     }
 
     public static SessionRepository getInstance() {
@@ -180,7 +181,7 @@ public class SessionRepository implements Persistence {
                 transaction.commit();
                 LOGGER.info("Sessão atualizada com sucesso.");
             } else {
-                LOGGER.warning("Sessão não encontrada com o ID fornecido.");
+                LOGGER.warning(sessionNotFound);
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -222,7 +223,7 @@ public class SessionRepository implements Persistence {
                 transaction.commit();
                 LOGGER.info("Sessão deletada com sucesso.");
             } else {
-                LOGGER.warning("Sessão não encontrada com o ID fornecido.");
+                LOGGER.warning(sessionNotFound);
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
@@ -284,7 +285,7 @@ public class SessionRepository implements Persistence {
                 entityManager.merge(session);
                 transaction.commit();
             } else {
-                throw new IllegalArgumentException("Sessão não encontrada com o ID fornecido.");
+                throw new IllegalArgumentException(sessionNotFound);
             }
         } catch (Exception e) {
             if (transaction.isActive()) {
