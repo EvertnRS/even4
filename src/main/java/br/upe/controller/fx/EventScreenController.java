@@ -1,5 +1,6 @@
 package br.upe.controller.fx;
 
+import br.upe.controller.UserController;
 import br.upe.controller.fx.mediator.EventMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
@@ -180,7 +181,7 @@ public class EventScreenController extends BaseController implements FxControlle
                     "Data: " + eventRepository.getData(id, "date") + "\n" +
                     "Descrição: " + eventRepository.getData(id, "description") + "\n" +
                     "Local: " + eventRepository.getData(id, "location") + "\n" +
-                    "Administrador: " + userRepository.getData((UUID) eventRepository.getData(id, "ownerId"), "email") + "\n";
+                    "Administrador: " + userRepository.getData("email") + "\n";
 
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

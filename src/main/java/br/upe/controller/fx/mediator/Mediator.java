@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static br.upe.ui.Validation.isValidDate;
 
@@ -41,7 +42,7 @@ public abstract class Mediator implements MediatorInterface {
         }
     }
 
-    public boolean validateInputs() {
+    public boolean validateInputs(UUID currentItemId, List<Model> eventList) {
         String newName = fxController.getNameTextField().getText();
         String newLocation = fxController.getLocationTextField().getText();
         String newDescription = fxController.getDescriptionTextField().getText();
@@ -53,8 +54,6 @@ public abstract class Mediator implements MediatorInterface {
         }
 
         Date newDate = Date.valueOf(fxController.getDatePicker().getValue());
-
-        List<Model> eventList = facade.getAllEvent();
 
         if (!isValidDate(String.valueOf(newDate))) {
             errorUpdtLabel.setText("Data inválida.");
@@ -68,7 +67,7 @@ public abstract class Mediator implements MediatorInterface {
             return false;
         }
 
-        if (isValidName(newName, eventList)) {
+        if (!isValidName(newName, eventList, currentItemId) || newName.isEmpty()) {
             errorUpdtLabel.setText("Nome inválido.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
             return false;
@@ -78,14 +77,21 @@ public abstract class Mediator implements MediatorInterface {
     }
 
 
-    protected <T> boolean isValidName(String name, List<T> items) {
+    protected <T> boolean isValidName(String name, List<T> items, UUID currentItemId) {
         for (T item : items) {
-            if (item instanceof Model && ((Model) item).getName().equals(name) || name.isEmpty()) {
-                return true;
+            if (item instanceof Model) {
+                Model modelItem = (Model) item;
+
+                if (modelItem.getName().equals(name) && (!modelItem.getId().equals(currentItemId)) || currentItemId == null) {
+                    System.out.println(modelItem.getId());
+                    System.out.println(currentItemId);
+                    return false;
+                }
             }
         }
-        return false;
+        return true;
     }
+
 
     public Optional<ButtonType> deleteButtonAlert() {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);

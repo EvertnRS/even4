@@ -214,6 +214,10 @@ public class UpdateSessionScreenController extends BaseController implements FxC
         }
     }
 
+    public UUID getId() {
+        return UUID.fromString(sessionId);
+    }
+
     @Override
     public TextField getNameTextField() {
         return editNameTextField;

@@ -117,6 +117,10 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         mediator.notify("handleEvent");
     }
 
+    public UUID getId() {
+        return eventId;
+    }
+
     @Override
     public TextField getNameTextField() {
         return editNameTextField;

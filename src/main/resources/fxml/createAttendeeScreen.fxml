@@ -27,6 +27,11 @@
         </ImageView>
         <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #f2f2f2; -fx-background-radius: 10 0 0 10;">
             <children>
+                <ImageView fx:id="logoView7" fitHeight="65.0" fitWidth="63.0" layoutX="93.0" layoutY="54.0" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/icons/buttons/arrowBack.png" />
+                    </image>
+                </ImageView>
                 <Label layoutX="335.0" layoutY="71.0" text="Criar Participante" textAlignment="CENTER" textFill="#ff914d">
                     <font>
                         <Font name="Inter Semi Bold" size="23.0" />
@@ -45,12 +50,7 @@
                     </style>
                 </Button>
                 <Label fx:id="errorUpdtLabel" layoutX="300.0" layoutY="446.0" prefHeight="17.0" prefWidth="293.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
-                <Button fx:id="handleBackButton" layoutX="96.0" layoutY="68.0" mnemonicParsing="false" opacity="0.0" prefHeight="35.0" prefWidth="51.0" style="-fx-cursor: hand;" text="back" />
-                <ImageView fx:id="logoView7" fitHeight="65.0" fitWidth="63.0" layoutX="93.0" layoutY="54.0" preserveRatio="true">
-                    <image>
-                        <Image url="@/images/icons/buttons/arrowBack.png" />
-                    </image>
-                </ImageView>
+                <Button fx:id="handleBackButton" layoutX="87.0" layoutY="60.0" mnemonicParsing="false" opacity="0.0" prefHeight="50.0" prefWidth="72.0" style="-fx-cursor: hand;" text="back" />
                 <ComboBox fx:id="eventComboBox" layoutX="358.0" layoutY="186.0" prefWidth="150.0" promptText="Selecione a Sessão" />
             </children>
         </Pane>

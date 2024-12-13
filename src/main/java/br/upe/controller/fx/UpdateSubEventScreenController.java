@@ -140,6 +140,10 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         }
     }
 
+    public UUID getId() {
+        return subEventId;
+    }
+
     @Override
     public TextField getNameTextField() {
         return editNameTextField;

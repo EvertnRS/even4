@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 public class CreateAttendeeScreenController extends BaseController implements FxController {
@@ -48,8 +49,9 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
 
         for (Model session : sessions) {
             String sessionName = (String) sessionRepository.getData(session.getId(), "name");
+            java.sql.Timestamp sessionTimestamp = (java.sql.Timestamp) sessionRepository.getData(session.getId(), "date");
 
-            if (sessionName != null) {
+            if (sessionName != null && sessionTimestamp != null && isAfterToday(sessionTimestamp.toLocalDateTime().toLocalDate())) {
                 eventComboBox.getItems().add(sessionName);
             }
         }
@@ -61,6 +63,10 @@ public class CreateAttendeeScreenController extends BaseController implements Fx
         facade.createAttendee(selectedSessionName, facade.getUserData("id"));
         mediator.notify("handleBack");
 
+    }
+
+    public boolean isAfterToday(java.time.LocalDate date) {
+        return date.isAfter(java.time.LocalDate.now());
     }
 
     @Override

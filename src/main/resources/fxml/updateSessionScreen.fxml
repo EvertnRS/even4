@@ -53,7 +53,7 @@
                 <TextField fx:id="editLocationTextField" layoutX="300.0" layoutY="419.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
                 <Text fx:id="locationPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="447.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Novo Local" wrappingWidth="129.12890625" />
                 <Text fx:id="descriptionPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="392.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite a Nova Descrição da Sessão" wrappingWidth="187.05078125" />
-                <Button fx:id="handleBackButton" layoutX="95.0" layoutY="64.0" mnemonicParsing="false" opacity="0.0" prefHeight="42.0" prefWidth="52.0" style="-fx-cursor: hand;" text="back" />
+                <Button fx:id="handleBackButton" layoutX="95.0" layoutY="64.0" mnemonicParsing="false" opacity="0.0" prefHeight="42.0" prefWidth="63.0" style="-fx-cursor: hand;" text="back" />
             <TextField fx:id="editStartTimeTextField" cache="true" layoutX="300.0" layoutY="255.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
             <Text fx:id="startTimePlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="283.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite a Hora de Inicio da Sessão" wrappingWidth="187.05078125" />
             <TextField fx:id="editEndTimeTextField" layoutX="300.0" layoutY="309.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />

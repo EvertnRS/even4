@@ -99,7 +99,7 @@ public class CreateSessionMediator extends Mediator{
         String startTime = startTimeTextField.getText();
         String endTime = endTimeTextField.getText();
 
-        if (validateInputs() && areValidTimes(startTime, endTime)) {
+        if (validateInputs(null, facade.getAllSession()) && areValidTimes(startTime, endTime)) {
             createSessionScreenController.createSession();
         } else{
             errorUpdtLabel.setText("Erro no preenchimento das informações.");

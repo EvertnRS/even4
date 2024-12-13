@@ -39,10 +39,18 @@ public class AttendeeBuilder {
     }
 
     public Attendee build() {
+        if (this.userId == null) {
+            throw new IllegalStateException("Usuário é obrigatório");
+        }
+        if (this.sessions == null) {
+            this.sessions = new HashSet<>();
+        }
+
         Attendee attendee = new Attendee();
         attendee.setId(this.id);
         attendee.setUserId(this.userId);
         attendee.setSessions(this.sessions);
         return attendee;
     }
+
 }

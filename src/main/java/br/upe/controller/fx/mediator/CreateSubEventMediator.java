@@ -91,7 +91,7 @@ public class CreateSubEventMediator extends Mediator {
     }
 
     private void handleSubEventCreate() throws IOException {
-        if (validateInputs()) {
+        if (validateInputs(null, facade.getAllSubEvent())) {
             createSubEventScreenController.createSubEvent();
         }
     }

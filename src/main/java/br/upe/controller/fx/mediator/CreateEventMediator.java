@@ -87,7 +87,7 @@ public class CreateEventMediator extends Mediator {
     }
 
     private void handleEventCreate() throws IOException {
-        if (validateInputs()) {
+        if (validateInputs(null, facade.getAllEvent())) {
             createEventScreenController.createEvent();
         }
     }

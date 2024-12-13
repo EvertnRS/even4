@@ -12,9 +12,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class UpdateSubEventMediator extends Mediator {
     private final UpdateSubEventScreenController updateScreenSubEventController;
+    private UUID currentId;
     private static final String HANDLE_SUB_EVENT = "handleSubEvent";
     private static final String HANDLE_SESSION = "handleSession";
     private static final String HANDLE_EVENT = "handleEvent";
@@ -33,6 +35,7 @@ public class UpdateSubEventMediator extends Mediator {
     public UpdateSubEventMediator(UpdateSubEventScreenController updateScreenSubEventController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
         super(facade, screenPane, errorUpdtLabel, updateScreenSubEventController);
         this.updateScreenSubEventController = updateScreenSubEventController;
+
     }
 
     public void setComponents(TextField nameTextField, DatePicker datePicker, TextField locationTextField, TextField descriptionTextField) {
@@ -88,7 +91,8 @@ public class UpdateSubEventMediator extends Mediator {
     }
 
     private void handleSubEventUpdate() throws IOException {
-        if (validateInputs()) {
+        if (validateInputs(currentId, facade.getAllSubEvent())) {
+            this.currentId = updateScreenSubEventController.getId();
             updateScreenSubEventController.updateSubEvent();
         }
     }

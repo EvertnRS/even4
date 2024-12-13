@@ -171,7 +171,7 @@ public class SubEventScreenController extends BaseController implements FxContro
                     "Descrição: " + subeventRepository.getData(id, "description") + "\n" +
                     "Local: " + subeventRepository.getData(id, "location") + "\n" +
                     "Evento: " + eventRepository.getData((UUID) subeventRepository.getData(id, "eventId"), "name") + "\n" +
-                    "Administrador: " + userRepository.getData((UUID) subeventRepository.getData(id, "ownerId"), "email") + "\n";
+                    "Administrador: " + userRepository.getData("email") + "\n";
 
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

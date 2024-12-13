@@ -13,11 +13,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import static br.upe.ui.Validation.areValidTimes;
 
 public class UpdateSessionMediator extends Mediator {
     private final UpdateSessionScreenController updateSessionScreenController;
+    private UUID currentId;
     private static final String HANDLE_SUB_EVENT = "handleSubEvent";
     private static final String HANDLE_SESSION = "handleSession";
     private static final String HANDLE_EVENT = "handleEvent";
@@ -36,6 +38,7 @@ public class UpdateSessionMediator extends Mediator {
     public UpdateSessionMediator(UpdateSessionScreenController updateSessionScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
         super(facade, screenPane, errorUpdtLabel, updateSessionScreenController);
         this.updateSessionScreenController = updateSessionScreenController;
+
     }
 
     public void setComponents(TextField nameTextField, DatePicker datePicker, TextField locationTextField, TextField descriptionTextField, TextField startTimeTextField, TextField endTimeTextField) {
@@ -93,10 +96,11 @@ public class UpdateSessionMediator extends Mediator {
     }
 
     private void handleSessionUpdate() throws IOException {
+        this.currentId = updateSessionScreenController.getId();
         String startTime = startTimeTextField.getText();
         String endTime = endTimeTextField.getText();
 
-        if (validateInputs() && areValidTimes(startTime, endTime)) {
+        if (validateInputs(currentId, facade.getAllSession()) && areValidTimes(startTime, endTime)) {
             updateSessionScreenController.updateSession();
         } else {
             errorUpdtLabel.setText("Erro no preenchimento das informações.");
