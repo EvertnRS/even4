@@ -145,7 +145,7 @@ public class SessionRepository implements Persistence {
         } catch (NoResultException e) {
             LOGGER.warning("Nenhuma sessão encontrada.");
         }*/
-        return null;
+        return new HashMap<>();  // Retorna um HashMap vazio
     }
 
     @Override

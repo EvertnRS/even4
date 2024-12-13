@@ -90,7 +90,7 @@ public class SubEventRepository implements Persistence {
 
     @Override
     public HashMap<UUID, Persistence> read() throws IOException {
-        return null;
+        return new HashMap<>();  // Retorna um HashMap vazio
     }
 
     @Override
@@ -103,7 +103,7 @@ public class SubEventRepository implements Persistence {
         } catch (NoResultException e) {
             LOGGER.warning("Informação não encontrada.");
         }
-        return null;
+        return new HashMap<>();  // Retorna um HashMap vazio
     }
 
     @Override
@@ -151,7 +151,7 @@ public class SubEventRepository implements Persistence {
 
     @Override
     public void setData(String dataToSet, Object data) {
-        // classe não necessita desse metodo
+         //classe não necessita desse metodo
 
     }
 

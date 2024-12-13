@@ -22,12 +22,15 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private String sessionName;
     private String sessionId;
     private UpdateSessionMediator mediator;
+    private static final Logger LOGGER = Logger.getLogger(UpdateSessionScreenController.class.getName());
+
 
     @FXML
     private AnchorPane editSessionPane;
@@ -125,7 +128,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
                     Session.class
             );
             sessionQuery.setParameter("name", sessionName.trim());
-            System.out.println("Session Name: " + sessionName);
+            LOGGER.info("Session Name: " + sessionName);
 
             List<Session> sessionResults = sessionQuery.getResultList();
             if (sessionResults.isEmpty()) {

@@ -11,7 +11,6 @@ import jakarta.persistence.TypedQuery;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 public class SubEventController implements Controller {
