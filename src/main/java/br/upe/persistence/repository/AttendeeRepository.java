@@ -20,6 +20,7 @@ public class AttendeeRepository implements Persistence {
     private static AttendeeRepository instance;
 
     public AttendeeRepository() {
+        // Construtor vazio porque esta classe não requer inicialização específica.
     }
 
     public static AttendeeRepository getInstance() {
@@ -166,7 +167,7 @@ public class AttendeeRepository implements Persistence {
 
     @Override
     public void setData(UUID eventId, String dataToSet, Object data) {
-        //
+        // classe não necessita desse metodo
     }
 
     @Override

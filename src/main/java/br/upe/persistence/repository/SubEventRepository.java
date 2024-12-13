@@ -22,6 +22,7 @@ public class SubEventRepository implements Persistence {
     private static SubEventRepository instance;
 
     public SubEventRepository() {
+        // Construtor vazio porque esta classe não requer inicialização específica.
     }
 
     public static SubEventRepository getInstance() {
@@ -150,6 +151,7 @@ public class SubEventRepository implements Persistence {
 
     @Override
     public void setData(String dataToSet, Object data) {
+        // classe não necessita desse metodo
 
     }
 

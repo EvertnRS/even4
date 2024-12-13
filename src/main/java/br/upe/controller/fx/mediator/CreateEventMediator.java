@@ -18,6 +18,15 @@ public class CreateEventMediator extends Mediator {
     private DatePicker datePicker;
     private TextField locationTextField;
     private TextField descriptionTextField;
+    private static final String HANDLE_EVENT_CREATE = "handleEventCreate";
+    private static final String HANDLE_EVENT = "handleEvent";
+    private static final String HANDLE_SUB_EVENT = "handleSubEvent";
+    private static final String HANDLE_INSCRIPTION = "handleInscription";
+    private static final String HANDLE_SESSION = "handleSession";
+    private static final String HANDLE_SUBMIT = "handleSubmit";
+    private static final String HANDLE_USER = "handleUser";
+    private static final String HANDLE_BACK = "handleBack";
+
 
     public CreateEventMediator(CreateEventScreenController createEventController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
         super(facade, screenPane, errorUpdtLabel, createEventController);
@@ -38,14 +47,14 @@ public class CreateEventMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#createButton", "handleEventCreate");
-            setupButtonAction("#handleEventButton", "handleEvent");
-            setupButtonAction("#handleSubEventButton", "handleSubEvent");
-            setupButtonAction("#handleInscriptionButton", "handleInscription");
-            setupButtonAction("#handleSessionButton", "handleSession");
-            setupButtonAction("#handleSubmitButton", "handleSubmit");
-            setupButtonAction("#handleUserButton", "handleUser");
-            setupButtonAction("#handleBackButton", "handleBack");
+            setupButtonAction("#createButton", HANDLE_EVENT_CREATE);
+            setupButtonAction("#handleEventButton", HANDLE_EVENT);
+            setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
+            setupButtonAction("#handleInscriptionButton", HANDLE_INSCRIPTION);
+            setupButtonAction("#handleSessionButton", HANDLE_SESSION);
+            setupButtonAction("#handleSubmitButton", HANDLE_SUBMIT);
+            setupButtonAction("#handleUserButton", HANDLE_USER);
+            setupButtonAction("#handleBackButton", HANDLE_BACK);
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -54,16 +63,16 @@ public class CreateEventMediator extends Mediator {
     public Object notify(String event) throws IOException {
         if (createEventScreenController != null) {
             switch (event) {
-                case "handleEventCreate":
+                case HANDLE_EVENT_CREATE:
                     handleEventCreate();
                     break;
-                case "handleUser"
-                , "handleEvent"
-                , "handleBack"
-                , "handleInscription"
-                , "handleSession"
-                , "handleSubEvent"
-                , "handleSubmit":
+                case HANDLE_USER
+                , HANDLE_EVENT
+                , HANDLE_BACK
+                , HANDLE_INSCRIPTION
+                , HANDLE_SESSION
+                , HANDLE_SUB_EVENT
+                , HANDLE_SUBMIT:
                     loadScreenForEvent(event);
                     break;
                 case "logout":
@@ -96,13 +105,13 @@ public class CreateEventMediator extends Mediator {
 
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
-            case "handleEventCreate" -> "/fxml/createEventScreen.fxml";
-            case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleEvent", "handleBack" -> "/fxml/eventScreen.fxml";
-            case "handleSession" -> "/fxml/sessionScreen.fxml";
-            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
-            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
-            case "handleSubmit" -> "/fxml/submitScreen.fxml";
+            case HANDLE_EVENT_CREATE -> "/fxml/createEventScreen.fxml";
+            case HANDLE_USER -> "/fxml/userScreen.fxml";
+            case HANDLE_EVENT, HANDLE_BACK -> "/fxml/eventScreen.fxml";
+            case HANDLE_SESSION -> "/fxml/sessionScreen.fxml";
+            case HANDLE_SUB_EVENT -> "/fxml/subEventScreen.fxml";
+            case HANDLE_INSCRIPTION -> "/fxml/attendeeScreen.fxml";
+            case HANDLE_SUBMIT -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };
@@ -128,7 +137,7 @@ public class CreateEventMediator extends Mediator {
         screenPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    notify("handleEventCreate");
+                    notify(HANDLE_EVENT_CREATE);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

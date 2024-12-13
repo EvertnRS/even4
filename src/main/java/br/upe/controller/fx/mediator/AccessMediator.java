@@ -20,6 +20,10 @@ import static br.upe.ui.Validation.isValidEmail;
 public class AccessMediator extends Mediator {
     private final SignUpScreenController userSignUpController;
     private final LoginScreenController userLoginController;
+    private final String handleLogin = "handleLogin";
+    private final String handleRegister = "handleRegister";
+
+
 
     private TextField nameTextField;
     private TextField cpfTextField;
@@ -48,8 +52,8 @@ public class AccessMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#handleRegisterButton", "handleRegister");
-            setupButtonAction("#handleLoginButton", "handleLogin");
+            setupButtonAction("#handleRegisterButton", handleRegister);
+            setupButtonAction("#handleLoginButton", handleLogin);
             setupButtonAction("#handleMoveToSignUp", "handleSignUp");
             setupButtonAction("#handleReturnButton", "returnToLogin");
         }
@@ -62,10 +66,10 @@ public class AccessMediator extends Mediator {
         }
 
         switch (event) {
-            case "handleRegister":
+            case handleRegister:
                 handleRegisterEvent();
                 break;
-            case "handleLogin":
+            case handleLogin:
                 handleLoginEvent();
                 break;
             case "handleAccessButton":
@@ -144,7 +148,7 @@ public class AccessMediator extends Mediator {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
                         try {
-                            notify("handleLogin");
+                            notify(handleLogin);
                         } catch (IOException e) {
                             throw new IllegalArgumentException(e);
                         }
@@ -180,7 +184,7 @@ public class AccessMediator extends Mediator {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
                         try {
-                            notify("handleRegister");
+                            notify(handleRegister);
                         } catch (IOException e) {
                             throw new IllegalArgumentException(e);
                         }
