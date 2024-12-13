@@ -13,6 +13,13 @@ import java.nio.file.Paths;
 
 public class UpdateSubmitMediator extends Mediator {
     private final UpdateSubmitScreenController updateSubmitScreenController;
+    private static final String HANDLE_SUB_EVENT = "handleSubEvent";
+    private static final String HANDLE_SESSION = "handleSession";
+    private static final String HANDLE_EVENT = "handleEvent";
+    private static final String HANDLE_SUBMIT = "handleSubmit";
+    private static final String HANDLE_USER = "handleUser";
+    private static final String HANDLE_INSCRIPTION = "handleInscription";
+    private static final String HANDLE_BACK = "handleBack";
 
     public UpdateSubmitMediator(UpdateSubmitScreenController updateSubmitScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
         super(facade, screenPane, errorUpdtLabel, updateSubmitScreenController);
@@ -24,13 +31,13 @@ public class UpdateSubmitMediator extends Mediator {
         if (screenPane != null) {
             setupButtonAction("#updateButton", "handleArticleUpdate");
             setupButtonAction("#fileChooser", "openFileChooser");
-            setupButtonAction("#handleEventButton", "handleEvent");
-            setupButtonAction("#handleSubEventButton", "handleSubEvent");
-            setupButtonAction("#handleSessionButton", "handleSession");
-            setupButtonAction("#handleSubmitButton", "handleSubmit");
-            setupButtonAction("#handleUserButton", "handleUser");
-            setupButtonAction("#handleBackButton", "handleBack");
-            setupButtonAction("#handleInscriptionButton", "handleInscription");
+            setupButtonAction("#handleEventButton", HANDLE_EVENT);
+            setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
+            setupButtonAction("#handleSessionButton", HANDLE_SESSION);
+            setupButtonAction("#handleSubmitButton", HANDLE_SUBMIT);
+            setupButtonAction("#handleUserButton", HANDLE_USER);
+            setupButtonAction("#handleBackButton", HANDLE_BACK);
+            setupButtonAction("#handleInscriptionButton", HANDLE_INSCRIPTION);
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -47,13 +54,13 @@ public class UpdateSubmitMediator extends Mediator {
                 case "openFileChooser":
                     updateSubmitScreenController.openFileChooser();
                     break;
-                case "handleUser"
-                , "handleEvent"
-                , "handleBack"
-                , "handleInscription"
-                , "handleSession"
-                , "handleSubEvent"
-                , "handleSubmit":
+                case HANDLE_USER
+                , HANDLE_EVENT
+                , HANDLE_BACK
+                , HANDLE_INSCRIPTION
+                , HANDLE_SESSION
+                , HANDLE_SUB_EVENT
+                , HANDLE_SUBMIT:
                     loadScreenForEvent(event);
                     break;
                 case "logout":
@@ -84,12 +91,12 @@ public class UpdateSubmitMediator extends Mediator {
 
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
-            case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
-            case "handleEvent" -> "/fxml/eventScreen.fxml";
-            case "handleSession" -> "/fxml/sessionScreen.fxml";
-            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
-            case "handleSubmit", "handleBack" -> "/fxml/submitScreen.fxml";
+            case HANDLE_USER -> "/fxml/userScreen.fxml";
+            case HANDLE_INSCRIPTION -> "/fxml/attendeeScreen.fxml";
+            case HANDLE_EVENT -> "/fxml/eventScreen.fxml";
+            case HANDLE_SESSION -> "/fxml/sessionScreen.fxml";
+            case HANDLE_SUB_EVENT -> "/fxml/subEventScreen.fxml";
+            case HANDLE_SUBMIT, HANDLE_BACK -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };

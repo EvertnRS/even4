@@ -14,6 +14,17 @@ import java.io.IOException;
 
 public class CreateSubEventMediator extends Mediator {
     private final CreateSubEventScreenController createSubEventScreenController;
+    private static final String HANDLE_SUB_EVENT = "handleSubEvent";
+    private static final String HANDLE_SESSION = "handleSession";
+    private static final String HANDLE_EVENT = "handleEvent";
+    private static final String HANDLE_SUBMIT = "handleSubmit";
+    private static final String HANDLE_USER = "handleUser";
+    private static final String HANDLE_INSCRIPTION = "handleInscription";
+    private static final String HANDLE_BACK = "handleBack";
+    private static final String HANDLE_SUBEVENTCREATE = "handleSubEventCreate";
+
+
+
     private TextField nameTextField;
     private DatePicker datePicker;
     private TextField locationTextField;
@@ -40,14 +51,14 @@ public class CreateSubEventMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#createButton", "handleSubEventCreate");
-            setupButtonAction("#handleEventButton", "handleEvent");
-            setupButtonAction("#handleSubEventButton", "handleSubEvent");
-            setupButtonAction("#handleSessionButton", "handleSession");
-            setupButtonAction("#handleSubmitButton", "handleSubmit");
-            setupButtonAction("#handleUserButton", "handleUser");
-            setupButtonAction("#handleBackButton", "handleBack");
-            setupButtonAction("#handleInscriptionButton", "handleInscription");
+            setupButtonAction("#createButton", HANDLE_SUBEVENTCREATE);
+            setupButtonAction("#handleEventButton", HANDLE_EVENT);
+            setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
+            setupButtonAction("#handleSessionButton", HANDLE_SESSION);
+            setupButtonAction("#handleSubmitButton", HANDLE_SUBMIT);
+            setupButtonAction("#handleUserButton", HANDLE_USER);
+            setupButtonAction("#handleBackButton", HANDLE_BACK);
+            setupButtonAction("#handleInscriptionButton", HANDLE_INSCRIPTION);
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -56,16 +67,16 @@ public class CreateSubEventMediator extends Mediator {
     public Object notify(String event) throws IOException {
         if (createSubEventScreenController != null) {
             switch (event) {
-                case "handleSubEventCreate":
+                case HANDLE_SUBEVENTCREATE:
                     handleSubEventCreate();
                     break;
-                case "handleUser"
-                , "handleSubEvent"
-                , "handleInscription"
-                , "handleBack"
-                , "handleSession"
-                , "handleEvent"
-                , "handleSubmit":
+                case HANDLE_USER
+                , HANDLE_SUB_EVENT
+                , HANDLE_INSCRIPTION
+                , HANDLE_BACK
+                , HANDLE_SESSION
+                , HANDLE_EVENT
+                , HANDLE_SUBMIT:
                     loadScreenForEvent(event);
                     break;
                 case "logout":
@@ -98,13 +109,13 @@ public class CreateSubEventMediator extends Mediator {
 
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
-            case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleSubEvent", "handleBack" -> "/fxml/subEventScreen.fxml";
-            case "handleSession" -> "/fxml/sessionScreen.fxml";
-            case "handleEvent" -> "/fxml/eventScreen.fxml";
-            case "handleSubmit" -> "/fxml/submitScreen.fxml";
+            case HANDLE_USER -> "/fxml/userScreen.fxml";
+            case HANDLE_SUB_EVENT, HANDLE_BACK -> "/fxml/subEventScreen.fxml";
+            case HANDLE_SESSION -> "/fxml/sessionScreen.fxml";
+            case HANDLE_EVENT -> "/fxml/eventScreen.fxml";
+            case HANDLE_SUBMIT -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
-            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
+            case HANDLE_INSCRIPTION -> "/fxml/attendeeScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };
     }
@@ -129,7 +140,7 @@ public class CreateSubEventMediator extends Mediator {
         screenPane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    notify("handleSubEventCreate");
+                    notify(HANDLE_SUBEVENTCREATE);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

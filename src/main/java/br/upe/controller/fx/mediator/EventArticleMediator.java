@@ -10,6 +10,13 @@ import java.util.UUID;
 
 public class EventArticleMediator extends Mediator {
     private final EventArticleScreenController eventArticleScreenController;
+    private static final String HANDLE_SUB_EVENT = "handleSubEvent";
+    private static final String HANDLE_SESSION = "handleSession";
+    private static final String HANDLE_EVENT = "handleEvent";
+    private static final String HANDLE_SUBMIT = "handleSubmit";
+    private static final String HANDLE_USER = "handleUser";
+    private static final String HANDLE_INSCRIPTION = "handleInscription";
+    private static final String HANDLE_BACK = "handleBack";
     private UUID articleId;
 
     public EventArticleMediator(EventArticleScreenController eventArticleScreenController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel) {
@@ -24,13 +31,13 @@ public class EventArticleMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#handleSubEventButton", "handleSubEvent");
-            setupButtonAction("#handleSubmitButton", "handleSubmit");
-            setupButtonAction("#handleSessionButton", "handleSession");
-            setupButtonAction("#handleInscriptionButton", "handleInscription");
-            setupButtonAction("#handleEventButton", "handleEvent");
-            setupButtonAction("#handleUserButton", "handleUser");
-            setupButtonAction("#handleBackButton", "handleBack");
+            setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
+            setupButtonAction("#handleSubmitButton", HANDLE_SUBMIT);
+            setupButtonAction("#handleSessionButton", HANDLE_SESSION);
+            setupButtonAction("#handleInscriptionButton", HANDLE_INSCRIPTION);
+            setupButtonAction("#handleEventButton", HANDLE_EVENT);
+            setupButtonAction("#handleUserButton", HANDLE_USER);
+            setupButtonAction("#handleBackButton", HANDLE_BACK);
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -39,13 +46,13 @@ public class EventArticleMediator extends Mediator {
     public Object notify(String event) throws IOException {
         if (eventArticleScreenController != null) {
             switch (event) {
-                case "handleUser"
-                , "handleSubmit"
-                , "handleBack"
-                , "handleSession"
-                , "handleInscription"
-                , "handleSubEvent"
-                , "handleEvent":
+                case HANDLE_USER
+                , HANDLE_SUBMIT
+                , HANDLE_BACK
+                , HANDLE_SESSION
+                , HANDLE_INSCRIPTION
+                , HANDLE_SUB_EVENT
+                , HANDLE_EVENT:
                     loadScreenForEvent(event);
                     break;
 
@@ -82,12 +89,12 @@ public class EventArticleMediator extends Mediator {
 
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
-            case "handleUser" -> "/fxml/userScreen.fxml";
-            case "handleInscription" -> "/fxml/attendeeScreen.fxml";
-            case "handleSubmit" -> "/fxml/submitScreen.fxml";
-            case "handleSession" -> "/fxml/sessionScreen.fxml";
-            case "handleSubEvent" -> "/fxml/subEventScreen.fxml";
-            case "handleEvent", "handleBack" -> "/fxml/eventScreen.fxml";
+            case HANDLE_USER -> "/fxml/userScreen.fxml";
+            case HANDLE_INSCRIPTION -> "/fxml/attendeeScreen.fxml";
+            case HANDLE_SUBMIT -> "/fxml/submitScreen.fxml";
+            case HANDLE_SESSION -> "/fxml/sessionScreen.fxml";
+            case HANDLE_SUB_EVENT -> "/fxml/subEventScreen.fxml";
+            case HANDLE_EVENT, HANDLE_BACK -> "/fxml/eventScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
         };
