@@ -5,6 +5,7 @@ import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.AccessMediator;
 import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
+import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -73,7 +74,7 @@ public class LoginScreenController extends BaseController implements FxControlle
         try {
             accessMediator.notify("handleAccessButton");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new CustomRuntimeException("Algo deu errado", e);
         }
     }
 

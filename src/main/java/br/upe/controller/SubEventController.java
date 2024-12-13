@@ -11,6 +11,7 @@ import jakarta.persistence.TypedQuery;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 public class SubEventController implements Controller {
@@ -28,7 +29,7 @@ public class SubEventController implements Controller {
     }
 
     public Map<UUID, Persistence> getHashMap() {
-        System.out.println(subEventHashMap);
+        LOGGER.info("SubEvent HashMap: " + subEventHashMap);
         return subEventHashMap;
     }
 

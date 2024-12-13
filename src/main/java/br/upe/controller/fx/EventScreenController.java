@@ -5,6 +5,7 @@ import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.UserRepository;
+import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -133,7 +134,7 @@ public class EventScreenController extends BaseController implements FxControlle
                         try {
                             handleEventArticles((UUID) eventRepository.getData(event.getId(), "id"));
                         } catch (IOException ex) {
-                            throw new RuntimeException(ex);
+                            throw new CustomRuntimeException("Algo deu errado", ex);
                         }
                     });
 

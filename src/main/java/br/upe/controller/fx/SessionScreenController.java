@@ -26,12 +26,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class SessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private SessionMediator mediator;
     private static final String BG_COLOR = "-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);";
-
+    private static final Logger logger = Logger.getLogger(SessionScreenController.class.getName());
 
     @FXML
     private Label userEmail;
@@ -231,7 +232,7 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     private void handleEditSession(String sessionName) throws IOException {
-        System.out.println("Editando sessão: " + sessionName);
+        logger.info("Editando sessão: " + sessionName);
         mediator.setSessionId(sessionName);
         mediator.notify("handleUpdateSession");
     }

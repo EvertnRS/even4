@@ -2,6 +2,7 @@ package br.upe.controller.fx.mediator;
 
 import br.upe.controller.fx.SubEventScreenController;
 import br.upe.facade.FacadeInterface;
+import br.upe.utils.CustomRuntimeException;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
@@ -85,7 +86,7 @@ public class SubEventMediator extends Mediator {
             try {
                 subEventScreenController.genericButton(fxmlFile, screenPane, facade, subEventId);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
     }

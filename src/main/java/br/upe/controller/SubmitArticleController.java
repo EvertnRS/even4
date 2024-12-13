@@ -38,7 +38,8 @@ public class SubmitArticleController implements Controller {
     public String getData(String dataToGet) {
         String data = "";
         try {
-            Persistence article = this.articleHashMap.get(dataToGet);
+            UUID uuidKey = UUID.fromString(dataToGet); // Converter a String para UUID
+            Persistence article = this.articleHashMap.get(uuidKey); // Usar a chave UUID para acessar o mapa
             if (article != null) {
                 data = (String) article.getData(dataToGet);
             }

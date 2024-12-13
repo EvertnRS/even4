@@ -2,6 +2,7 @@ package br.upe.controller.fx.mediator;
 
 import br.upe.controller.fx.CreateSubEventScreenController;
 import br.upe.facade.FacadeInterface;
+import br.upe.utils.CustomRuntimeException;
 import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -102,7 +103,7 @@ public class CreateSubEventMediator extends Mediator {
             try {
                 createSubEventScreenController.genericButton(fxmlFile, screenPane, facade, null);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
     }

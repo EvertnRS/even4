@@ -2,6 +2,7 @@ package br.upe.controller.fx.mediator;
 
 import br.upe.controller.fx.CertificateScreenController;
 import br.upe.facade.FacadeInterface;
+import br.upe.utils.CustomRuntimeException;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -84,7 +85,7 @@ public class CertificateMediator extends Mediator {
             try {
                 certificateScreenController.genericButton(fxmlFile, screenPane, facade, null);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
     }

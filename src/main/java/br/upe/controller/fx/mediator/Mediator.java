@@ -3,6 +3,7 @@ package br.upe.controller.fx.mediator;
 import br.upe.controller.fx.FxController;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
+import br.upe.utils.CustomRuntimeException;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -34,7 +35,7 @@ public abstract class Mediator implements MediatorInterface {
                 try {
                     notify(action);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new CustomRuntimeException("Algo deu errado", e);
                 }
             });
         }

@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JPAUtils {
+    private JPAUtils() {
+        throw new UnsupportedOperationException("Esta classe não pode ser instanciada");
+    }
     private static final EntityManagerFactory entityManagerFactory;
 
     static {

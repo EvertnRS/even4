@@ -2,6 +2,7 @@ package br.upe.controller.fx.mediator;
 
 import br.upe.controller.fx.AttendeeScreenController;
 import br.upe.facade.FacadeInterface;
+import br.upe.utils.CustomRuntimeException;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
@@ -84,7 +85,7 @@ public class AttendeeMediator extends Mediator {
             try {
                 attendeeScreenController.genericButton(fxmlFile, screenPane, facade, attendeeId);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
     }

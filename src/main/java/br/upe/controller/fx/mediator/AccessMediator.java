@@ -5,6 +5,7 @@ import br.upe.controller.fx.SignUpScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.UserRepository;
+import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -110,7 +111,7 @@ public class AccessMediator extends Mediator {
                     try {
                         userSignUpController.handleRegister();
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw new CustomRuntimeException("Algo deu errado", e);
                     }
                 });
             } else {

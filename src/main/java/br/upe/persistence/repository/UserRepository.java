@@ -68,7 +68,7 @@ public class UserRepository implements Persistence {
         String email = (String) params[2];
         String hashedPassword = (String) params[3];
 
-        System.out.println("password: " + hashedPassword);
+        LOGGER.info("password: " + hashedPassword);
 
         User user = UserBuilder.builder()
                 .withEmail(email)
@@ -84,7 +84,7 @@ public class UserRepository implements Persistence {
             transaction.begin();
             entityManager.persist(user);
             transaction.commit();
-            System.out.println("Usuário criado com sucesso.");
+            LOGGER.info("Usuário criado com sucesso.");
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -266,13 +266,13 @@ public class UserRepository implements Persistence {
 
     @Override
     public HashMap<UUID, Persistence> read(Object... params) {
-        return null;
+        return new HashMap<>();  // Retorna um HashMap vazio
     }
 
     private boolean isPasswordEqual(String password, String hashedPassword) {
-        System.out.println("password: " + password);
-        System.out.println("hashedPassword: " + hashedPassword);
-        System.out.println("isPasswordEqual: " + BCrypt.checkpw(password, hashedPassword));
+        LOGGER.info("password: " + password);
+        LOGGER.info("hashedPassword: " + hashedPassword);
+        LOGGER.info("isPasswordEqual: " + BCrypt.checkpw(password, hashedPassword));
         return BCrypt.checkpw(password, hashedPassword);
     }
 

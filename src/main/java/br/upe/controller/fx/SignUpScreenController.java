@@ -5,6 +5,7 @@ import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.AccessMediator;
 import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
+import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
@@ -103,13 +104,13 @@ public class SignUpScreenController extends BaseController implements FxControll
             try {
                 facade.createUser(name, cpf, email, password);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
             Platform.runLater(() -> {
                 try {
                     accessMediator.notify("returnToLogin");
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new CustomRuntimeException("Algo deu errado", e);
                 }
             });
         }, registerAnchorPane);

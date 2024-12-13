@@ -71,7 +71,7 @@ public class SubmitArticlesRepository implements Persistence {
             Event event = query.getSingleResult();
 
             if (event == null) {
-                LOGGER.warning("Evento não encontrado com o nome fornecido: " + eventName);
+                LOGGER.warning(String.format("Evento não encontrado com o nome fornecido: %s", eventName));
                 return;
             }
 
@@ -85,7 +85,7 @@ public class SubmitArticlesRepository implements Persistence {
             transaction.begin();
             entityManager.persist(submitArticle);
             transaction.commit();
-            LOGGER.info("Artigo submetido com sucesso para o evento: " + eventName);
+            LOGGER.warning(String.format("Artigo submetido com sucesso para o evento: %s", eventName));
         } catch (NoResultException e) {
             LOGGER.warning("Evento não encontrado com o nome fornecido: " + eventName);
         } catch (Exception e) {
@@ -103,7 +103,7 @@ public class SubmitArticlesRepository implements Persistence {
 
     @Override
     public HashMap<UUID, Persistence> read(Object... params) {
-        return null;
+        return new HashMap<>();  // Retorna um HashMap vazio
     }
 
     @Override

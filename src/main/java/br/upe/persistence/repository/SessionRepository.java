@@ -120,7 +120,7 @@ public class SessionRepository implements Persistence {
             time = Time.valueOf(timeString);
             // Agora você pode usar startTime e endTime como objetos Time
         } catch (IllegalArgumentException e) {
-            System.out.println("Erro ao converter a hora: " + e.getMessage());
+            LOGGER.info("Erro ao converter a hora: " + e.getMessage());
             e.printStackTrace();
         }
         return time;
@@ -128,7 +128,7 @@ public class SessionRepository implements Persistence {
 
     @Override
     public HashMap<UUID, Persistence> read() throws IOException {
-        return null;
+        return new HashMap<>();  // Retorna um HashMap vazio
     }
 
     @Override

@@ -2,6 +2,7 @@ package br.upe.controller.fx.mediator;
 
 import br.upe.controller.fx.UpdateSessionScreenController;
 import br.upe.facade.FacadeInterface;
+import br.upe.utils.CustomRuntimeException;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
@@ -110,7 +111,7 @@ public class UpdateSessionMediator extends Mediator {
             try {
                 updateSessionScreenController.genericButton(fxmlFile, screenPane, facade, null);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
     }

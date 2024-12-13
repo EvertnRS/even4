@@ -4,6 +4,7 @@ import br.upe.controller.fx.mediator.EventArticleMediator;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.repository.SubmitArticlesRepository;
+import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -125,7 +126,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
             try {
                 handleDeleteArticle(articleId);
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                throw new CustomRuntimeException("Algo deu errado", ex);
             }
         });
 
@@ -149,7 +150,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
             try {
                 handleDownloadArticle(articleId);
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                throw new CustomRuntimeException("Algo deu errado", ex);
             }
         });
 

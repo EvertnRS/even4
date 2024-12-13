@@ -90,7 +90,7 @@ public class EventRepository implements Persistence {
 
     @Override
     public HashMap<UUID, Persistence> read() throws IOException {
-        return null;
+        return new HashMap<>();  // Retorna um HashMap vazio
     }
 
     @Override
@@ -103,7 +103,7 @@ public class EventRepository implements Persistence {
         } catch (NoResultException e) {
             LOGGER.warning("Informação não encontrada.");
         }
-        return null;
+        return new HashMap<>();  // Retorna um HashMap vazio
     }
 
     @Override
