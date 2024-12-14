@@ -20,11 +20,6 @@
                 <Image url="@/images/icons/buttons/exit.png" />
             </image>
         </ImageView>
-        <ImageView fx:id="backArrow" fitHeight="42.0" fitWidth="90.0" layoutX="976.0" layoutY="25.0" preserveRatio="true">
-            <image>
-                <Image url="@/images/icons/buttons/flecheback.png" />
-            </image>
-        </ImageView>
         <Pane layoutX="222.0" prefHeight="582.0" prefWidth="865.0" style="-fx-background-color: #f2f2f2; -fx-background-radius: 10 0 0 10;">
             <children>
                 <ImageView fx:id="logoView7" fitHeight="65.0" fitWidth="63.0" layoutX="93.0" layoutY="54.0" preserveRatio="true">
