@@ -181,22 +181,6 @@ public class AttendeeRepository implements Persistence {
     }
 
     @Override
-    public HashMap<UUID, Persistence> read() throws IOException {
-        return new HashMap<>();  // Retorna um HashMap vazio
-    }
-
-    @Override
-    public HashMap<UUID, Persistence> read(Object... params) {
-
-        return new HashMap<>();  // Retorna um HashMap vazio
-    }
-
-    @Override
-    public void setData(String dataToSet, Object data) {
-
-    }
-
-    @Override
     public Object getData(String dataToGet) {
         return null;
     }

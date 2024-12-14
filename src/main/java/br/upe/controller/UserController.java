@@ -18,18 +18,10 @@ public class UserController implements Controller {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
     private static final String EMAIL = "email";
     private static final String PASSWORD = "password";
-
     private static UserController instance;
-
-    private Map<UUID, Persistence> userHashMap;
     private Persistence userLog;
-    private UUID userId;
 
     private UserController() {
-    }
-
-    public UUID getUserId() {
-        return userId;
     }
 
     public static UserController getInstance() {
@@ -37,42 +29,6 @@ public class UserController implements Controller {
             instance = new UserController();
         }
         return instance;
-    }
-
-    public Map<UUID, Persistence> getHashMap() {
-        return userHashMap;
-    }
-
-    @Override
-    public <T> List<T> getEventArticles(UUID eventId) {
-        return List.of();
-    }
-
-    @Override
-    public List<Model> getAll() {
-        return List.of();
-    }
-
-    public void setUserHashMap(Map<UUID, Persistence> userHashMap) {
-        this.userHashMap = userHashMap;
-    }
-
-    @Override
-    public String getData(String dataToGet) {
-        String data = "";
-        try {
-            switch (dataToGet) {
-                case EMAIL -> data = (String) this.userLog.getData(EMAIL);
-                case "cpf" -> data = this.userLog.getData("cpf").toString();
-                case "id" -> data = this.userLog.getData("id").toString();
-                case "name" -> data = (String) this.userLog.getData("name");
-                case PASSWORD -> data = (String) this.userLog.getData(PASSWORD);
-                default -> throw new IOException();
-            }
-        } catch (IOException e) {
-            LOGGER.warning("Informação não existe ou é restrita");
-        }
-        return data;
     }
 
     @Override
@@ -107,13 +63,10 @@ public class UserController implements Controller {
         String password = (String) params[4];
 
         if (isValidEmail(email) && isValidCPF(cpf.toString())) {
-            userLog.setData(EMAIL, email);
-            userLog.setData("cpf", cpf);
-            userLog.setData("name", name);
 
             if (!newPassword.isEmpty()) {
                 newPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
-                userLog.setData(PASSWORD, newPassword);
+
             } else {
                 newPassword = (String) userLog.getData(PASSWORD);
             }
@@ -123,14 +76,6 @@ public class UserController implements Controller {
         } else {
             LOGGER.warning("Email ou CPF inválido.");
         }
-    }
-
-    @Override
-    public void read() throws IOException {
-        /*
-        Persistence userRepository = UserRepository.getInstance();
-        this.userHashMap = userRepository.read();
-        */
     }
 
     @Override
@@ -147,8 +92,36 @@ public class UserController implements Controller {
     }
 
     @Override
+    public String getData(String dataToGet) {
+        String data = "";
+        try {
+            switch (dataToGet) {
+                case EMAIL -> data = (String) this.userLog.getData(EMAIL);
+                case "cpf" -> data = this.userLog.getData("cpf").toString();
+                case "id" -> data = this.userLog.getData("id").toString();
+                case "name" -> data = (String) this.userLog.getData("name");
+                case PASSWORD -> data = (String) this.userLog.getData(PASSWORD);
+                default -> throw new IOException();
+            }
+        } catch (IOException e) {
+            LOGGER.warning("Informação não existe ou é restrita");
+        }
+        return data;
+    }
+
+    @Override
     public List<String> list(Object... params) {
         // Método não implementado
+        return List.of();
+    }
+
+    @Override
+    public <T> List<T> getEventArticles(UUID eventId) {
+        return List.of();
+    }
+
+    @Override
+    public List<Model> getAll() {
         return List.of();
     }
 

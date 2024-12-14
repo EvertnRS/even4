@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="sessionPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.SessionScreenController">
+<AnchorPane fx:id="sessionPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.screen.session.SessionScreenController">
 
    <children>
       <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="2.0" preserveRatio="true">
@@ -28,6 +28,12 @@
                   <!-- Aqui será a lista de eventos -->
                </VBox>
             </ScrollPane>
+            <ImageView fx:id="logoView0" fitHeight="65.0" fitWidth="63.0" layoutX="93.0" layoutY="54.0" preserveRatio="true">
+               <image>
+                  <Image url="@/images/icons/buttons/arrowBack.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="handleBackButton" layoutX="88.0" layoutY="56.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="72.0" style="-fx-cursor: hand;" text="back" />
             <Circle fill="#ff914d" layoutX="52.0" layoutY="552.0" radius="24.0" stroke="#ff914d" strokeType="INSIDE">
                <effect>
                   <DropShadow offsetX="5.0" offsetY="4.0">

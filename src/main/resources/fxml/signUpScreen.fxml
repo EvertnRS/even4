@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="registerAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.SignUpScreenController">
+<AnchorPane fx:id="registerAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.screen.user.SignUpScreenController">
 
     <ImageView fx:id="imageView" fitHeight="378.0" fitWidth="368.0" layoutX="296.0" layoutY="-87.0" preserveRatio="true">
         <image>

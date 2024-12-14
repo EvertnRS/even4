@@ -12,19 +12,16 @@ public interface Controller {
 
     void update(Object... params) throws IOException;
 
-    void read() throws IOException;
-
     void delete(Object... params) throws IOException;
 
+    <T> List<T> getAll();
+
     <T> List<T> list(Object... params) throws IOException;
+
+    <T> List<T> getEventArticles(UUID eventId);
 
     boolean loginValidate(String email, String cpf);
 
     String getData(String dataToGet);
 
-    Map<UUID, Persistence> getHashMap();
-
-    <T> List<T> getAll();
-
-    <T> List<T> getEventArticles(UUID eventId);
 }

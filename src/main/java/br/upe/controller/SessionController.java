@@ -21,17 +21,7 @@ public class SessionController implements Controller {
     private static final String STARTTIME = "startTime";
     private static final String ENDTIME = "endTime";
     private static final Logger LOGGER = Logger.getLogger(SessionController.class.getName());
-    private Map<UUID, Persistence> sessionHashMap;
     private Persistence sessionLog;
-
-    public SessionController() throws IOException {
-        this.sessionHashMap = new HashMap<>();
-        this.read();
-    }
-
-    public Map<UUID, Persistence> getHashMap() {
-        return sessionHashMap;
-    }
 
     @Override
     public <T> List<T> getEventArticles(UUID eventId) {
@@ -44,59 +34,24 @@ public class SessionController implements Controller {
         return (List<T>) sessionRepository.getAllSessions();
     }
 
-
     @Override
-    public String getData(String dataToGet) {
-        String data = "";
-        if (this.sessionLog == null) {
-            LOGGER.warning("Sessão não inicializada.");
-            return "";
-        }
+    public <T> List<T> list(Object... params) throws IOException {
+        UUID userId = UUID.fromString((String) params[0]);
+        SessionRepository sessionRepository = SessionRepository.getInstance();
+        List<Session> allSessions = sessionRepository.getAllSessions();
+        List<Session> userSessions = new ArrayList<>();
 
-        try {
-            switch (dataToGet) {
-                case ID -> data = (String) this.sessionLog.getData(ID);
-                case NAME -> data = (String) this.sessionLog.getData(NAME);
-                case DESCRIPTION -> data = (String) this.sessionLog.getData(DESCRIPTION);
-                case "date" -> data = String.valueOf(this.sessionLog.getData("date"));
-                case LOCATION -> data = (String) this.sessionLog.getData(LOCATION);
-                case EVENT_ID -> data = (String) this.sessionLog.getData(EVENT_ID);
-                case OWNER_ID -> data = (String) this.sessionLog.getData(OWNER_ID);
-                case STARTTIME -> data = (String) this.sessionLog.getData(STARTTIME);
-                case ENDTIME -> data = (String) this.sessionLog.getData(ENDTIME);
-                default -> throw new IOException();
+        for (Session session : allSessions) {
+            if (session.getOwnerId().getId().equals(userId)) {
+                userSessions.add(session);
             }
-        } catch (IOException e) {
-            LOGGER.warning("Informação não existe ou é restrita");
-        }
-        return data;
-    }
-
-
-    public String setData(String dataToGet) {
-        String data = "";
-        if (this.sessionLog == null) {
-            LOGGER.warning("Sessão não inicializada.");
-            return "";
         }
 
-        try {
-            switch (dataToGet) {
-                case ID -> data = (String) this.sessionLog.getData(ID);
-                case NAME -> data = (String) this.sessionLog.getData(NAME);
-                case DESCRIPTION -> data = (String) this.sessionLog.getData(DESCRIPTION);
-                case "date" -> data = String.valueOf(this.sessionLog.getData("date"));
-                case LOCATION -> data = (String) this.sessionLog.getData(LOCATION);
-                case EVENT_ID -> data = (String) this.sessionLog.getData(EVENT_ID);
-                case OWNER_ID -> data = (String) this.sessionLog.getData(OWNER_ID);
-                case STARTTIME -> data = (String) this.sessionLog.getData(STARTTIME);
-                case ENDTIME -> data = (String) this.sessionLog.getData(ENDTIME);
-                default -> throw new IOException();
-            }
-        } catch (IOException e) {
-            LOGGER.warning("Informação não existe ou é restrita");
+        if (userSessions.isEmpty()) {
+            LOGGER.warning("Seu usuário atual é organizador de nenhuma sessão");
         }
-        return data;
+
+        return (List<T>) userSessions;
     }
 
     public void create(Object... params) throws IOException {
@@ -125,8 +80,6 @@ public class SessionController implements Controller {
 
         Persistence session = new SessionRepository();
         session.create(eventId, name, date, description, location, startTime, endTime, userId, subEventId);
-        UUID sessionId = (UUID) session.getData(ID);
-        sessionHashMap.put(sessionId, session);
 
         this.sessionLog = session;
     }
@@ -140,31 +93,6 @@ public class SessionController implements Controller {
         UUID ownerId = UUID.fromString((String) params[1]);
 
         sessionRepository.delete(id, ownerId);
-    }
-
-    @Override
-    public <T> List<T> list(Object... params) throws IOException {
-        UUID userId = UUID.fromString((String) params[0]);
-        SessionRepository sessionRepository = SessionRepository.getInstance();
-        List<Session> allSessions = sessionRepository.getAllSessions();
-        List<Session> userSessions = new ArrayList<>();
-
-        for (Session session : allSessions) {
-            if (session.getOwnerId().getId().equals(userId)) {
-                userSessions.add(session);
-            }
-        }
-
-        if (userSessions.isEmpty()) {
-            LOGGER.warning("Seu usuário atual é organizador de nenhuma sessão");
-        }
-
-        return (List<T>) userSessions;
-    }
-
-    @Override
-    public boolean loginValidate(String email, String cpf) {
-        return false;
     }
 
     @Override
@@ -228,20 +156,65 @@ public class SessionController implements Controller {
         session.update(sessionId, newName, newDate, newDescription, newLocation, newStartTime, newEndTime);
         this.sessionLog = session;
 
-
     }
-
 
     @Override
-    public void read() throws IOException {
-        /*Persistence persistence = new Session();
-        this.sessionHashMap = persistence.read();
-        if (!sessionHashMap.isEmpty()) {
-            this.sessionLog = sessionHashMap.values().iterator().next();
-        }*/
+    public String getData(String dataToGet) {
+        String data = "";
+        if (this.sessionLog == null) {
+            LOGGER.warning("Sessão não inicializada.");
+            return "";
+        }
+
+        try {
+            switch (dataToGet) {
+                case ID -> data = (String) this.sessionLog.getData(ID);
+                case NAME -> data = (String) this.sessionLog.getData(NAME);
+                case DESCRIPTION -> data = (String) this.sessionLog.getData(DESCRIPTION);
+                case "date" -> data = String.valueOf(this.sessionLog.getData("date"));
+                case LOCATION -> data = (String) this.sessionLog.getData(LOCATION);
+                case EVENT_ID -> data = (String) this.sessionLog.getData(EVENT_ID);
+                case OWNER_ID -> data = (String) this.sessionLog.getData(OWNER_ID);
+                case STARTTIME -> data = (String) this.sessionLog.getData(STARTTIME);
+                case ENDTIME -> data = (String) this.sessionLog.getData(ENDTIME);
+                default -> throw new IOException();
+            }
+        } catch (IOException e) {
+            LOGGER.warning("Informação não existe ou é restrita");
+        }
+        return data;
     }
 
 
+    public String setData(String dataToGet) {
+        String data = "";
+        if (this.sessionLog == null) {
+            LOGGER.warning("Sessão não inicializada.");
+            return "";
+        }
 
+        try {
+            switch (dataToGet) {
+                case ID -> data = (String) this.sessionLog.getData(ID);
+                case NAME -> data = (String) this.sessionLog.getData(NAME);
+                case DESCRIPTION -> data = (String) this.sessionLog.getData(DESCRIPTION);
+                case "date" -> data = String.valueOf(this.sessionLog.getData("date"));
+                case LOCATION -> data = (String) this.sessionLog.getData(LOCATION);
+                case EVENT_ID -> data = (String) this.sessionLog.getData(EVENT_ID);
+                case OWNER_ID -> data = (String) this.sessionLog.getData(OWNER_ID);
+                case STARTTIME -> data = (String) this.sessionLog.getData(STARTTIME);
+                case ENDTIME -> data = (String) this.sessionLog.getData(ENDTIME);
+                default -> throw new IOException();
+            }
+        } catch (IOException e) {
+            LOGGER.warning("Informação não existe ou é restrita");
+        }
+        return data;
+    }
+
+    @Override
+    public boolean loginValidate(String email, String cpf) {
+        return false;
+    }
 
 }

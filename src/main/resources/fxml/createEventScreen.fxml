@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="newEventPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.CreateEventScreenController">
+<AnchorPane fx:id="newEventPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.screen.event.CreateEventScreenController">
 
     <children>
         <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="2.0" preserveRatio="true">
@@ -27,6 +27,7 @@
                   <Image url="@/images/icons/buttons/arrowBack.png" />
                </image>
             </ImageView>
+             <Button fx:id="handleBackButton" layoutX="88.0" layoutY="56.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="72.0" style="-fx-cursor: hand;" text="back" />
             <Label layoutX="375.0" layoutY="71.0" text="Criar Evento" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="23.0" />
@@ -53,7 +54,6 @@
              <Text fx:id="descriptionPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="357.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite a Descrição do Evento" />
             <TextField fx:id="locationTextField" layoutX="300.0" layoutY="396.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
              <Text fx:id="locationPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="424.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Local do Evento" wrappingWidth="129.12890625" />
-            <Button fx:id="handleEventButton" layoutX="88.0" layoutY="56.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="72.0" style="-fx-cursor: hand;" text="back" />
          </children>
         </Pane>
         <Label fx:id="userEmail" layoutX="87.0" layoutY="39.0" prefHeight="18.0" prefWidth="135.0" style="-fx-text-fill: white;" text="Teste">
@@ -85,7 +85,7 @@
                         <Font name="Inter Semi Bold" size="16.0" />
                     </font>
                 </Label>
-            <Button fx:id="handleBackButton" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="214.0" style="-fx-cursor: hand;" text="back" />
+            <Button fx:id="handleEventButton" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="214.0" style="-fx-cursor: hand;" text="event" />
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="227.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">

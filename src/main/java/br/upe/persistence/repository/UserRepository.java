@@ -175,17 +175,6 @@ public class UserRepository implements Persistence {
 
     }
 
-    public void setData(String dataToSet, Object data) {
-        /*
-        switch (dataToSet) {
-            case EMAIL -> userLog.setEmail((String) data);
-            case "cpf" -> userLog.setCpf((Long) data);
-            case "name" -> userLog.setName((String) data);
-            case "password" -> userLog.setPassword((String) data);
-            default -> LOGGER.warning("Informação não existe ou é restrita");
-        }*/
-    }
-
     @Override
     public void delete(Object... params) throws IOException {
         if (params.length != 2) {
@@ -227,48 +216,6 @@ public class UserRepository implements Persistence {
         }
     }
 
-    @Override
-    public HashMap<UUID, Persistence> read() throws IOException {
-        HashMap<UUID, Persistence> list = new HashMap<>();
-        BufferedReader reader = new BufferedReader(new FileReader("./db/users.csv"));
-        try (reader) {
-
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(";");
-                if (parts.length == 3) {
-                    String parsedId = parts[0].trim();
-                    String parsedEmail = parts[1].trim();
-                    String parsedCpf = parts[2].trim();
-
-                    User user = new User();
-                    user.setId(UUID.fromString(parsedId));
-                    user.setCpf(Long.parseLong(parsedCpf));
-                    user.setEmail(parsedEmail);
-
-                    UserRepository userRepository = new UserRepository();
-                    list.put(user.getId(), userRepository);
-                }
-            }
-
-
-        } catch (IOException readerEx) {
-            LOGGER.warning("Erro ao ler o arquivo");
-            readerEx.printStackTrace();
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        } finally {
-            reader.close();
-        }
-        return list;
-    }
-
-    @Override
-    public HashMap<UUID, Persistence> read(Object... params) {
-        return new HashMap<>();  // Retorna um HashMap vazio
-    }
-
     private boolean isPasswordEqual(String password, String hashedPassword) {
         LOGGER.info("password: " + password);
         LOGGER.info("hashedPassword: " + hashedPassword);
@@ -300,16 +247,4 @@ public class UserRepository implements Persistence {
         }
         return false;
     }
-
-    /*private UserRepository parseToUserRepository(User user) {
-        UserRepository userRepository = new UserRepository();
-        userRepository.setData("id", user.getId());
-        userRepository.setData(EMAIL, user.getEmail());
-        userRepository.setData("cpf", user.getCpf());
-        userRepository.setData("name", user.getName());
-        userRepository.setData("password", user.getPassword());
-        return userRepository;
-    }*/
-
-
 }

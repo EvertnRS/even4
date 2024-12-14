@@ -127,28 +127,6 @@ public class SessionRepository implements Persistence {
     }
 
     @Override
-    public HashMap<UUID, Persistence> read() throws IOException {
-        return new HashMap<>();  // Retorna um HashMap vazio
-    }
-
-    @Override
-    public HashMap<UUID, Persistence> read(Object... params) {/*
-        try {
-            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-            TypedQuery<Session> query = entityManager.createQuery("SELECT s FROM Session s", Session.class);
-            List<Session> sessions = query.getResultList();
-            HashMap<UUID, Persistence> sessionMap = new HashMap<>();
-            for (Session session : sessions) {
-                sessionMap.put(session.getId(), session);
-            }
-            return sessionMap;
-        } catch (NoResultException e) {
-            LOGGER.warning("Nenhuma sessão encontrada.");
-        }*/
-        return new HashMap<>();  // Retorna um HashMap vazio
-    }
-
-    @Override
     public void update(Object... params) throws IOException {
         if (params.length != 7) {
             LOGGER.warning("Devem ser fornecidos 7 parâmetros.");
@@ -297,11 +275,6 @@ public class SessionRepository implements Persistence {
                 entityManager.close();
             }
         }
-    }
-
-    @Override
-    public void setData(String dataToSet, Object data) {
-        // Implementação opcional
     }
 
     @Override

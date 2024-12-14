@@ -20,15 +20,10 @@ public class AttendeeController implements Controller {
     private static final String USER_ID = "userId";
     private static final String SESSION_ID = "sessionId";
     private static final Logger LOGGER = Logger.getLogger(AttendeeController.class.getName());
-    private Map<UUID, Persistence> attendeeHashMap;
     private Persistence attendeeLog;
 
     public AttendeeController() throws IOException {
-        this.read();
-    }
-
-    public Map<UUID, Persistence> getHashMap() {
-        return attendeeHashMap;
+       //
     }
 
     @Override
@@ -83,11 +78,6 @@ public class AttendeeController implements Controller {
 
     @Override
     public void update(Object... params) throws IOException {
-        //
-    }
-
-    @Override
-    public void read() throws IOException {
         //
     }
 

@@ -12,7 +12,6 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class SubmitArticleController implements Controller {
-    private Map<UUID, Persistence> articleHashMap = new HashMap<>();
     private static final Logger LOGGER = Logger.getLogger(SubmitArticleController.class.getName());
 
     private final SubmitArticlesRepository submitArticlesRepository;
@@ -21,32 +20,15 @@ public class SubmitArticleController implements Controller {
         this.submitArticlesRepository = SubmitArticlesRepository.getInstance();
     }
 
-    public Map<UUID, Persistence> getHashMap() {
-        return articleHashMap;
-    }
-
     @Override
     public <T> List<T> getAll() {
         return (List<T>) submitArticlesRepository.getAllArticles();
     }
 
-    public void setArticleHashMap(Map<UUID, Persistence> articleHashMap) {
-        this.articleHashMap = articleHashMap;
-    }
-
     @Override
     public String getData(String dataToGet) {
-        String data = "";
-        try {
-            UUID uuidKey = UUID.fromString(dataToGet); // Converter a String para UUID
-            Persistence article = this.articleHashMap.get(uuidKey); // Usar a chave UUID para acessar o mapa
-            if (article != null) {
-                data = (String) article.getData(dataToGet);
-            }
-        } catch (Exception e) {
-            LOGGER.warning("Informação não existe ou é restrita");
-        }
-        return data;
+        // Não implementado
+        return null;
     }
 
     @Override
@@ -130,24 +112,6 @@ public class SubmitArticleController implements Controller {
         } else {
             LOGGER.warning("Artigo não encontrado.");
         }
-    }
-
-    @Override
-    public void read() {
-        articleHashMap.clear();
-
-        HashMap<UUID, Persistence> articles = submitArticlesRepository.read();
-        if (!articles.isEmpty()) {
-            this.articleHashMap.putAll(articles);
-            articles.forEach((key, value) -> LOGGER.info("Artigo encontrado: " + key));
-        } else {
-            LOGGER.warning("Nenhum artigo encontrado.");
-        }
-    }
-
-
-    public void read(Object... params) {
-
     }
 
     @Override

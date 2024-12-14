@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="newSessionPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.CreateSessionScreenController">
+<AnchorPane fx:id="newSessionPane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.screen.session.CreateSessionScreenController">
 
     <children>
         <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="2.0" preserveRatio="true">
@@ -53,7 +53,7 @@
              <Text fx:id="descriptionPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="417.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite a Descrição da Sessão" wrappingWidth="206.0" />
             <TextField fx:id="locationTextField" layoutX="300.0" layoutY="443.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
              <Text fx:id="locationPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="471.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Digite o Local da Sessão" wrappingWidth="129.12890625" />
-            <Button fx:id="handleSessionButton" layoutX="93.0" layoutY="66.0" mnemonicParsing="false" opacity="0.0" prefHeight="42.0" prefWidth="63.0" style="-fx-cursor: hand;" text="back" />
+            <Button fx:id="handleBackButton" layoutX="93.0" layoutY="66.0" mnemonicParsing="false" opacity="0.0" prefHeight="42.0" prefWidth="63.0" style="-fx-cursor: hand;" text="back" />
             <TextField fx:id="searchField" layoutX="300.0" layoutY="173.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
              <Text fx:id="searchFieldPlaceholder" fill="DARKGREY" layoutX="315.0" layoutY="201.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Pesquisar Evento" wrappingWidth="206.0" />
              <ListView fx:id="suggestionsListView" layoutX="300.0" layoutY="219.0" prefHeight="100.0" prefWidth="293.0" visible="false" />
@@ -136,7 +136,7 @@
                         <Image url="@/images/icons/orange/oSessionIcon.png" />
                     </image>
                 </ImageView>
-            <Button fx:id="handleBackButton" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="back" />
+            <Button fx:id="handleSessionButton" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="222.0" style="-fx-cursor: hand;" text="session" />
             </children>
         </Pane>
         <Pane layoutX="-1.0" layoutY="365.0" prefHeight="58.0" prefWidth="222.0" style="-fx-background-color: #ff914d; -fx-background-radius: 10 0 0 10;">

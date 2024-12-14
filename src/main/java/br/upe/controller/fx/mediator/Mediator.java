@@ -1,6 +1,6 @@
 package br.upe.controller.fx.mediator;
 
-import br.upe.controller.fx.FxController;
+import br.upe.controller.fx.screen.FxController;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
 import br.upe.utils.CustomRuntimeException;

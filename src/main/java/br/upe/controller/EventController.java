@@ -12,32 +12,16 @@ public class EventController implements Controller {
     private static final String DESCRIPTION = "description";
     private static final String LOCATION = "location";
     private static final Logger LOGGER = Logger.getLogger(EventController.class.getName());
-
-    private Map<UUID, Persistence> eventHashMap;
     private Persistence eventLog;
 
     public EventController() throws IOException {
-        this.read();
+        //
     }
 
     @Override
     public <T> List<T> getAll() {
         EventRepository eventRepository = EventRepository.getInstance();
         return (List<T>) eventRepository.getAllEvents();
-    }
-
-    @Override
-    public <T> List<T> getEventArticles(UUID eventId) {
-        return List.of();
-    }
-
-    public Map<UUID, Persistence> getHashMap() {
-        System.out.println(eventHashMap);
-        return eventHashMap;
-    }
-
-    public void setEventHashMap(Map<UUID, Persistence> eventHashMap) {
-        this.eventHashMap = eventHashMap;
     }
 
     @Override
@@ -104,12 +88,6 @@ public class EventController implements Controller {
     }
 
     @Override
-    public void read() throws IOException {
-        Persistence eventPersistence = new EventRepository();
-        this.eventHashMap = eventPersistence.read();
-    }
-
-    @Override
     public void delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametro");
@@ -127,6 +105,7 @@ public class EventController implements Controller {
     @Override
     public String getData(String dataToGet) {
         String data = "";
+        this.eventLog = EventRepository.getInstance();
         try {
             switch (dataToGet) {
                 case "id" -> data = (String) this.eventLog.getData("id");
@@ -150,5 +129,10 @@ public class EventController implements Controller {
     public boolean loginValidate(String email, String cpf) {
         //Método não implementado
         return false;
+    }
+
+    @Override
+    public <T> List<T> getEventArticles(UUID eventId) {
+        return List.of();
     }
 }

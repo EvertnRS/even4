@@ -89,24 +89,6 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public HashMap<UUID, Persistence> read() throws IOException {
-        return new HashMap<>();  // Retorna um HashMap vazio
-    }
-
-    @Override
-    public HashMap<UUID, Persistence> read(Object... params) {
-        try {
-            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-            TypedQuery<Event> query = entityManager.createQuery(
-                    "SELECT e FROM Event e", Event.class);
-            return (HashMap<UUID, Persistence>) query.getResultList();
-        } catch (NoResultException e) {
-            LOGGER.warning("Informação não encontrada.");
-        }
-        return new HashMap<>();  // Retorna um HashMap vazio
-    }
-
-    @Override
     public void update(Object... params) throws IOException {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parâmetros");
@@ -146,11 +128,6 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
-    }
-
-    @Override
-    public void setData(String dataToSet, Object data) {
-        // classe não necessita desse metodo
     }
 
     @Override

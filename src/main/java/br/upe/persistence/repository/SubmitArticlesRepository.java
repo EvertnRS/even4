@@ -100,12 +100,6 @@ public class SubmitArticlesRepository implements Persistence {
         }
     }
 
-
-    @Override
-    public HashMap<UUID, Persistence> read(Object... params) {
-        return new HashMap<>();  // Retorna um HashMap vazio
-    }
-
     @Override
     public void update(Object... params) {
         if (params.length != 3) {
@@ -146,12 +140,6 @@ public class SubmitArticlesRepository implements Persistence {
                 entityManager.close();
             }
         }
-    }
-
-
-    @Override
-    public void setData(String dataToSet, Object data) {
-        // classe não necessita desse metodo
     }
 
     @Override
@@ -248,28 +236,5 @@ public class SubmitArticlesRepository implements Persistence {
                 entityManager.close();
             }
         }
-    }
-
-    @Override
-    public HashMap<UUID, Persistence> read() {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-        HashMap<UUID, Persistence> articlesMap = new HashMap<>();
-
-        try {
-            TypedQuery<SubmitArticle> query = entityManager.createQuery("SELECT a FROM SubmitArticle a", SubmitArticle.class);
-            List<SubmitArticle> articles = query.getResultList();
-            for (SubmitArticle article : articles) {
-                articlesMap.put(article.getId(), (Persistence) article);
-            }
-            return articlesMap;
-        } catch (Exception e) {
-            LOGGER.warning("Erro ao buscar todos os artigos: " + e.getMessage());
-        } finally {
-            if (entityManager.isOpen()) {
-                entityManager.close();
-            }
-        }
-
-        return articlesMap;
     }
 }
