@@ -67,7 +67,7 @@ public abstract class Mediator implements MediatorInterface {
             return false;
         }
 
-        if (!isValidName(newName, eventList, currentItemId) || newName.isEmpty()) {
+        if ((currentItemId != null && !isValidName(newName, eventList, currentItemId)) || newName.isEmpty()) {
             errorUpdtLabel.setText("Nome inválido.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
             return false;
@@ -76,22 +76,17 @@ public abstract class Mediator implements MediatorInterface {
         return true;
     }
 
-
     protected <T> boolean isValidName(String name, List<T> items, UUID currentItemId) {
         for (T item : items) {
             if (item instanceof Model) {
                 Model modelItem = (Model) item;
-
-                if (modelItem.getName().equals(name) && (!modelItem.getId().equals(currentItemId)) || currentItemId == null) {
-                    System.out.println(modelItem.getId());
-                    System.out.println(currentItemId);
+                if (modelItem.getName().equals(name) && (currentItemId == null || !modelItem.getId().equals(currentItemId))) {
                     return false;
                 }
             }
         }
         return true;
     }
-
 
     public Optional<ButtonType> deleteButtonAlert() {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
