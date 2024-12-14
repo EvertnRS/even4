@@ -88,7 +88,7 @@ public class CreateAttendeeMediator extends Mediator {
             case HANDLE_SUB_EVENT -> "/fxml/allSubEventsScreen.fxml";
             case HANDLE_BACK -> "/fxml/attendeeScreen.fxml";
             case HANDLE_SESSION -> "/fxml/allSessionsScreen.fxml";
-            case HANDLE_EVENT -> "/fxml/eventScreen.fxml";
+            case HANDLE_EVENT -> "/fxml/allEventsScreen.fxml";
             case HANDLE_SUBMIT -> "/fxml/submitScreen.fxml";
             case "loginScreen" -> "/fxml/loginScreen.fxml";
             default -> throw new IllegalArgumentException("Unknown event: " + event);
