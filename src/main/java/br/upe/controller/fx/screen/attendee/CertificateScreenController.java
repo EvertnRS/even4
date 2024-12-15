@@ -8,6 +8,7 @@ import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Attendee;
 import br.upe.persistence.Event;
 import br.upe.persistence.Session;
+import br.upe.utils.CustomRuntimeException;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,8 +38,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class CertificateScreenController extends BaseController implements FxController {
+    private static final Logger LOGGER = Logger.getLogger(CertificateScreenController.class.getName());
     private FacadeInterface facade;
     private String attendeeId;
     private CertificateMediator mediator;
@@ -154,8 +157,12 @@ public class CertificateScreenController extends BaseController implements FxCon
 
             File directory = new File(certificateAddres);
             if (!directory.exists()) {
-                directory.mkdirs();
+                boolean created = directory.mkdirs();
+                if (!created) {
+                    LOGGER.warning("Falha ao criar o diretório: " + directory.getAbsolutePath());
+                }
             }
+
 
             File outputFile = new File(directory, "certificate.png");
 
@@ -169,9 +176,9 @@ public class CertificateScreenController extends BaseController implements FxCon
 
         } catch (IOException e) {
             errorUpdtLabel.setText("Erro: " + e.getMessage());
-            e.printStackTrace();
+            throw new CustomRuntimeException("Erro", e);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CustomRuntimeException("Algo deu errado", e);
         }
     }
 

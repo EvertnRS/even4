@@ -8,6 +8,7 @@ import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.persistence.repository.UserRepository;
+import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -61,7 +62,7 @@ public class SubEventScreenController extends BaseController implements FxContro
             try {
                 loadUserSubEvents();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
 

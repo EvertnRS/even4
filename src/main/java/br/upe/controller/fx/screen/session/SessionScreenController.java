@@ -11,6 +11,7 @@ import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SessionRepository;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.persistence.repository.UserRepository;
+import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -65,7 +66,7 @@ public class SessionScreenController extends BaseController implements FxControl
             try {
                 loadUserSessions();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
 
@@ -234,7 +235,6 @@ public class SessionScreenController extends BaseController implements FxControl
     }
 
     private void handleEditSession(String sessionName) throws IOException {
-        logger.info("Editando sessão: " + sessionName);
         mediator.setSessionId(sessionName);
         mediator.notify("handleUpdateSession");
     }
