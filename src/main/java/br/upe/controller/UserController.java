@@ -21,8 +21,9 @@ public class UserController implements Controller {
 
     @Override
     public void create(Object... params) {
-        if (params.length < 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
+        if (params.length != 4) {
+            LOGGER.warning("São necessários 4 parâmetros.");
+            return;
         }
 
         String name = (String) params[0];
