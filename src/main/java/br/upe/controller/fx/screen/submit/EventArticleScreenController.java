@@ -67,7 +67,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
             try {
                 loadEventArticles();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
 

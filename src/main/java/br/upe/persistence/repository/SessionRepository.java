@@ -5,6 +5,7 @@ import br.upe.persistence.Session;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.User;
 import br.upe.persistence.builder.SessionBuilder;
+import br.upe.utils.CustomRuntimeException;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
 public class SessionRepository implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(SessionRepository.class.getName());
     private static SessionRepository instance;
-    private static String sessionNotFound = "Sessão não encontrada com o ID fornecido.";
+    private static final String sessionNotFound = "Sessão não encontrada com o ID fornecido.";
     public SessionRepository() {
         // Construtor vazio porque esta classe não requer inicialização específica.
     }
@@ -118,7 +119,7 @@ public class SessionRepository implements Persistence {
             // Agora você pode usar startTime e endTime como objetos Time
         } catch (IllegalArgumentException e) {
             LOGGER.info("Erro ao converter a hora: " + e.getMessage());
-            e.printStackTrace();
+            throw new CustomRuntimeException("Algo deu errado", e);
         }
         return time;
     }

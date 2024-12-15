@@ -61,7 +61,7 @@ public class EventScreenController extends BaseController implements FxControlle
             try {
                 loadUserEvents();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo  deu errado", e);
             }
         });
 

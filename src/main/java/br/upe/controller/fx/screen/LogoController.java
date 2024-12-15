@@ -1,5 +1,6 @@
 package br.upe.controller.fx.screen;
 
+import br.upe.utils.CustomRuntimeException;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -52,7 +53,7 @@ public class LogoController {
 
                 stage.show();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
 

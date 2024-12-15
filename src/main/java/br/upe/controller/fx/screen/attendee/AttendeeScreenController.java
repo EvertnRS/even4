@@ -11,6 +11,7 @@ import br.upe.persistence.repository.AttendeeRepository;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SessionRepository;
 import br.upe.persistence.repository.SubEventRepository;
+import br.upe.utils.CustomRuntimeException;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -62,7 +63,7 @@ public class AttendeeScreenController extends BaseController implements FxContro
             try {
                 loadSessions();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
 

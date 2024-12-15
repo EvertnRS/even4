@@ -8,6 +8,7 @@ import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.persistence.repository.UserRepository;
+import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -27,7 +28,6 @@ import java.util.UUID;
 
 public class AllSubEventScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
-    private AllSubEventMediator mediator;
     private static final String BG_COLOR = "-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);";
 
 
@@ -53,22 +53,22 @@ public class AllSubEventScreenController extends BaseController implements FxCon
 
     private void initial() throws IOException {
         userEmail.setText(facade.getUserData("email"));
-        loadUserSubEvents();
+        loadAllSubEvents();
 
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             setupPlaceholders();
             try {
-                loadUserSubEvents();
+                loadAllSubEvents();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
 
-        mediator = new AllSubEventMediator(this, facade, subEventPane, null);
+        AllSubEventMediator mediator = new AllSubEventMediator(this, facade, subEventPane, null);
         mediator.registerComponents();
     }
 
-    private void loadUserSubEvents() throws IOException {
+    private void loadAllSubEvents() throws IOException {
         subEventVBox.getChildren().clear();
 
         List<Model> subEvents = facade.getAllSubEvent();

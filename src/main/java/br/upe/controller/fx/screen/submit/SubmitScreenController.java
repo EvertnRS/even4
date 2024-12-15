@@ -63,7 +63,7 @@ public class SubmitScreenController extends BaseController implements FxControll
             try {
                 loadUserArticles();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
 
@@ -127,7 +127,7 @@ public class SubmitScreenController extends BaseController implements FxControll
             try {
                 handleEditArticle(articleId);
             } catch (IOException ex) {
-                throw new CustomRuntimeException("Algo deu errado", ex);
+                throw new CustomRuntimeException("Erro ao editar artigo", ex);
             }
         });
 
@@ -142,7 +142,7 @@ public class SubmitScreenController extends BaseController implements FxControll
             try {
                 handleDeleteArticle(articleId);
             } catch (IOException ex) {
-                throw new CustomRuntimeException("Algo deu errado", ex);
+                throw new CustomRuntimeException("Erro ao deletar artigo", ex);
             }
         });
 
@@ -166,7 +166,7 @@ public class SubmitScreenController extends BaseController implements FxControll
             try {
                 handleDownloadArticle(articleId);
             } catch (IOException ex) {
-                throw new CustomRuntimeException("Algo deu errado", ex);
+                throw new CustomRuntimeException("Erro ao mostrar detalhes do artigo", ex);
             }
         });
 

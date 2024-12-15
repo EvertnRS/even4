@@ -12,6 +12,7 @@ import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SessionRepository;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.persistence.repository.UserRepository;
+import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -27,15 +28,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class AllSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
-    private AllSessionMediator mediator;
     private static final String BG_COLOR = "-fx-background-color: #ffffff; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(128, 128, 128, 1), 3.88, 0, -1, 5);";
-    private static final Logger logger = Logger.getLogger(AllSessionScreenController.class.getName());
 
     @FXML
     private Label userEmail;
@@ -59,22 +56,22 @@ public class AllSessionScreenController extends BaseController implements FxCont
 
     private void initialize() throws IOException {
         userEmail.setText(facade.getUserData("email"));
-        loadUserSessions();
+        loadAllSessions();
 
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             setupPlaceholders();
             try {
-                loadUserSessions();
+                loadAllSessions();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         });
 
-        this.mediator = new AllSessionMediator(this, facade, sessionPane, null);
+        AllSessionMediator mediator = new AllSessionMediator(this, facade, sessionPane, null);
         mediator.registerComponents();
     }
 
-    private void loadUserSessions() throws IOException {
+    private void loadAllSessions() throws IOException {
         SessionRepository sessionRepository = SessionRepository.getInstance();
         sessionVBox.getChildren().clear();
 
@@ -201,22 +198,6 @@ public class AllSessionScreenController extends BaseController implements FxCont
                 alert.showAndWait();
             });
         }, sessionPane);
-    }
-
-    private void handleEditSession(String sessionName) throws IOException {
-        logger.info("Editando sessão: " + sessionName);
-        mediator.setSessionId(sessionName);
-        mediator.notify("handleUpdateSession");
-    }
-
-    private void handleDeleteSession(UUID sessionId, String userId) throws IOException {
-        mediator.setSessionId(String.valueOf(sessionId));
-        Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteSession");
-
-        if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-            facade.deleteSession(sessionId, userId);
-            loadUserSessions();
-        }
     }
 
     public void setupPlaceholders() {
