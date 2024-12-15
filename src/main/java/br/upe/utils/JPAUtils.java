@@ -22,7 +22,7 @@ public class JPAUtils {
         entityManagerFactory = Persistence.createEntityManagerFactory("even4", properties);
     }
 
-    static public EntityManager getEntityManagerFactory() {
+    public static EntityManager getEntityManagerFactory() {
         return entityManagerFactory.createEntityManager();
     }
 }

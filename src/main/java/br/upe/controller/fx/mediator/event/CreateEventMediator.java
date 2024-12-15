@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.event;
 
-import br.upe.controller.fx.screen.event.CreateEventScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.event.CreateEventScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.scene.Node;
@@ -100,7 +100,7 @@ public class CreateEventMediator extends Mediator {
             try {
                 createEventScreenController.genericButton(fxmlFile, screenPane, facade, null);
             } catch (IOException e) {
-                throw new CustomRuntimeException("Algo deu errado", e);
+                throw new CustomRuntimeException("Tela não carregada", e);
             }
         });
     }
@@ -131,7 +131,7 @@ public class CreateEventMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }
@@ -142,7 +142,7 @@ public class CreateEventMediator extends Mediator {
                 try {
                     notify(HANDLE_EVENT_CREATE);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new CustomRuntimeException("Algo deu errado", e);
                 }
             }
         });

@@ -1,14 +1,15 @@
 package br.upe.controller;
 
 import br.upe.persistence.SubmitArticle;
-import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SubmitArticlesRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class SubmitArticleController implements Controller {

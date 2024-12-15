@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.attendee;
 
-import br.upe.controller.fx.screen.attendee.CreateAttendeeScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.attendee.CreateAttendeeScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.scene.control.Label;
@@ -84,9 +84,8 @@ public class CreateAttendeeMediator extends Mediator {
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case HANDLE_USER -> "/fxml/userScreen.fxml";
-            case HANDLE_INSCRIPTION -> "/fxml/attendeeScreen.fxml";
+            case HANDLE_INSCRIPTION, HANDLE_BACK -> "/fxml/attendeeScreen.fxml";
             case HANDLE_SUB_EVENT -> "/fxml/allSubEventsScreen.fxml";
-            case HANDLE_BACK -> "/fxml/attendeeScreen.fxml";
             case HANDLE_SESSION -> "/fxml/allSessionsScreen.fxml";
             case HANDLE_EVENT -> "/fxml/allEventsScreen.fxml";
             case HANDLE_SUBMIT -> "/fxml/submitScreen.fxml";
@@ -106,7 +105,7 @@ public class CreateAttendeeMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }
@@ -117,7 +116,7 @@ public class CreateAttendeeMediator extends Mediator {
                 try {
                     notify(HANDLE_ATTENDEE_CREATE);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new CustomRuntimeException("Listener desconfigurado", e);
                 }
             }
         });

@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.session;
 
-import br.upe.controller.fx.screen.session.UpdateSessionScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.session.UpdateSessionScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.geometry.Pos;
@@ -20,7 +20,6 @@ import static br.upe.ui.Validation.areValidTimes;
 
 public class UpdateSessionMediator extends Mediator {
     private final UpdateSessionScreenController updateSessionScreenController;
-    private UUID currentId;
     private static final String HANDLE_SUB_EVENT = "handleSubEvent";
     private static final String HANDLE_SESSION = "handleSession";
     private static final String HANDLE_EVENT = "handleEvent";
@@ -59,8 +58,8 @@ public class UpdateSessionMediator extends Mediator {
     public void registerComponents() {
         if (screenPane != null) {
             setupButtonAction("#updateButton", HANDLE_SESSION_UPDATE);
-            setupButtonAction("#handleEventButton", HANDLE_EVENT);
             setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
+            setupButtonAction("#handleEventButton", HANDLE_EVENT);
             setupButtonAction("#handleSessionButton", HANDLE_SESSION);
             setupButtonAction("#handleSubmitButton", HANDLE_SUBMIT);
             setupButtonAction("#handleUserButton", HANDLE_USER);
@@ -97,7 +96,7 @@ public class UpdateSessionMediator extends Mediator {
     }
 
     private void handleSessionUpdate() throws IOException {
-        this.currentId = updateSessionScreenController.getId();
+        UUID currentId = updateSessionScreenController.getId();
         String startTime = startTimeTextField.getText();
         String endTime = endTimeTextField.getText();
 
@@ -146,7 +145,7 @@ public class UpdateSessionMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }
@@ -157,16 +156,15 @@ public class UpdateSessionMediator extends Mediator {
                 try {
                     notify(HANDLE_SESSION_UPDATE);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new CustomRuntimeException("Algo deu  errado", e);
                 }
             }
         });
 
         configureNavigation(nameTextField, locationTextField, datePicker);
-        datePicker.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKeyNavigation(event, nameTextField, startTimeTextField));
         configureNavigation(startTimeTextField, datePicker, endTimeTextField);
         configureNavigation(endTimeTextField, startTimeTextField, descriptionTextField);
-        configureNavigation(descriptionTextField, datePicker, locationTextField);
+        datePicker.addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKeyNavigation(event, nameTextField, startTimeTextField));        configureNavigation(descriptionTextField, datePicker, locationTextField);
         configureNavigation(locationTextField, descriptionTextField, nameTextField);
     }
 

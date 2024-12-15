@@ -6,12 +6,10 @@ import br.upe.persistence.builder.EventBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -31,9 +29,7 @@ public class EventRepository implements Persistence {
     public static EventRepository getInstance() {
         if (instance == null) {
             synchronized (EventRepository.class) {
-                if (instance == null) {
-                    instance = new EventRepository();
-                }
+                instance = new EventRepository();
             }
         }
         return instance;

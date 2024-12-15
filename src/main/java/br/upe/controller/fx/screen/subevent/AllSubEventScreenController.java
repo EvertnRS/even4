@@ -5,7 +5,6 @@ import br.upe.controller.fx.screen.BaseController;
 import br.upe.controller.fx.screen.FxController;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
-import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.persistence.repository.UserRepository;

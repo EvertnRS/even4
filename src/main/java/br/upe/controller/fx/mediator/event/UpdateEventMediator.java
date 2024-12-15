@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.event;
 
-import br.upe.controller.fx.screen.event.UpdateEventScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.event.UpdateEventScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.scene.Node;
@@ -50,7 +50,7 @@ public class UpdateEventMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#updateButton", HANDLE_EVENT_UPDATE);
+
             setupButtonAction("#handleEventButton", HANDLE_EVENT);
             setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
             setupButtonAction("#handleSessionButton", HANDLE_SESSION);
@@ -58,6 +58,7 @@ public class UpdateEventMediator extends Mediator {
             setupButtonAction("#handleUserButton", HANDLE_USER);
             setupButtonAction("#handleBackButton", HANDLE_BACK);
             setupButtonAction("#handleInscriptionButton", HANDLE_INSCRIPTION);
+            setupButtonAction("#updateButton", HANDLE_EVENT_UPDATE);
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -132,7 +133,7 @@ public class UpdateEventMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }
@@ -143,7 +144,7 @@ public class UpdateEventMediator extends Mediator {
                 try {
                     notify(HANDLE_EVENT_UPDATE);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new CustomRuntimeException("Listener desconfigurado", e);
                 }
             }
         });

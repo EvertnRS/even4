@@ -108,7 +108,7 @@ public class AllSessionMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }

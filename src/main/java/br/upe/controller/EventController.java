@@ -5,7 +5,10 @@ import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.Persistence;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 public class EventController implements Controller {

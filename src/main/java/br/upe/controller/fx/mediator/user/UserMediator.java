@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.user;
 
-import br.upe.controller.fx.screen.user.UserScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.user.UserScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.scene.Node;
@@ -142,7 +142,7 @@ public class UserMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }

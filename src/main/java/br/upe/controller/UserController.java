@@ -7,7 +7,6 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -18,18 +17,7 @@ public class UserController implements Controller {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
     private static final String EMAIL = "email";
     private static final String PASSWORD = "password";
-    private static UserController instance;
     private Persistence userLog;
-
-    private UserController() {
-    }
-
-    public static UserController getInstance() {
-        if (instance == null) {
-            instance = new UserController();
-        }
-        return instance;
-    }
 
     @Override
     public void create(Object... params) {

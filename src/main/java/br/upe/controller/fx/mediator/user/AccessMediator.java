@@ -1,10 +1,9 @@
 package br.upe.controller.fx.mediator.user;
 
+import br.upe.controller.fx.mediator.Mediator;
 import br.upe.controller.fx.screen.user.LoginScreenController;
 import br.upe.controller.fx.screen.user.SignUpScreenController;
-import br.upe.controller.fx.mediator.Mediator;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.UserRepository;
 import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
@@ -22,8 +21,8 @@ import static br.upe.ui.Validation.isValidEmail;
 public class AccessMediator extends Mediator {
     private final SignUpScreenController userSignUpController;
     private final LoginScreenController userLoginController;
-    private final String handleLogin = "handleLogin";
-    private final String handleRegister = "handleRegister";
+    private static final  String HANDLE_LOGIN = "handleLogin";
+    private static final  String HANDLE_REGISTER = "handleRegister";
 
 
 
@@ -54,8 +53,8 @@ public class AccessMediator extends Mediator {
     @Override
     public void registerComponents() {
         if (screenPane != null) {
-            setupButtonAction("#handleRegisterButton", handleRegister);
-            setupButtonAction("#handleLoginButton", handleLogin);
+            setupButtonAction("#handleRegisterButton", HANDLE_REGISTER);
+            setupButtonAction("#handleLoginButton", HANDLE_LOGIN);
             setupButtonAction("#handleMoveToSignUp", "handleSignUp");
             setupButtonAction("#handleReturnButton", "returnToLogin");
         }
@@ -68,10 +67,10 @@ public class AccessMediator extends Mediator {
         }
 
         switch (event) {
-            case handleRegister:
+            case HANDLE_REGISTER:
                 handleRegisterEvent();
                 break;
-            case handleLogin:
+            case HANDLE_LOGIN:
                 handleLoginEvent();
                 break;
             case "handleAccessButton":
@@ -95,12 +94,12 @@ public class AccessMediator extends Mediator {
 
     private void handleRegisterEvent() {
         assert userSignUpController != null;
-        Persistence userRepository = UserRepository.getInstance();
+        UserRepository userRepository = UserRepository.getInstance();
         String signUpEmail = userSignUpController.getEmailTextField().getText();
         String cpf = userSignUpController.getCpfTextField().getText();
         Label signUpErrorLabel = userSignUpController.getErrorLabel();
 
-        if (((UserRepository) userRepository).userExists(signUpEmail, Long.valueOf(cpf))) {
+        if (userRepository.userExists(signUpEmail, Long.valueOf(cpf))) {
             signUpErrorLabel.setText("Usuário com este email ou CPF já existe.");
             signUpErrorLabel.setAlignment(Pos.CENTER);
             return;
@@ -132,9 +131,7 @@ public class AccessMediator extends Mediator {
 
         userLoginController.loadScreen("Carregando", () -> {
             if (facade.loginValidate(loginInEmail, pass)) {
-                Platform.runLater(() -> {
-                    userLoginController.handleLogin();
-                });
+                Platform.runLater(userLoginController::handleLogin);
             } else {
                 Platform.runLater(() -> {
                     logInErrorLabel.setText("Login falhou! Verifique suas credenciais.");
@@ -150,7 +147,7 @@ public class AccessMediator extends Mediator {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
                         try {
-                            notify(handleLogin);
+                            notify(HANDLE_LOGIN);
                         } catch (IOException e) {
                             throw new IllegalArgumentException(e);
                         }
@@ -186,7 +183,7 @@ public class AccessMediator extends Mediator {
                 newScene.setOnKeyPressed(event -> {
                     if (event.getCode() == KeyCode.ENTER) {
                         try {
-                            notify(handleRegister);
+                            notify(HANDLE_REGISTER);
                         } catch (IOException e) {
                             throw new IllegalArgumentException(e);
                         }

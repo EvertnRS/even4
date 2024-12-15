@@ -1,4 +1,5 @@
 package br.upe.controller.fx.screen.event;
+
 import br.upe.controller.fx.fxutils.PlaceholderUtils;
 import br.upe.controller.fx.mediator.event.CreateEventMediator;
 import br.upe.controller.fx.screen.BaseController;
@@ -10,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+
 import java.io.IOException;
 import java.sql.Date;
 

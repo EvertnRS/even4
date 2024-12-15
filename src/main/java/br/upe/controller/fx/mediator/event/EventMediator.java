@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.event;
 
-import br.upe.controller.fx.screen.event.EventScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.event.EventScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.scene.control.Label;

@@ -1,14 +1,12 @@
 package br.upe.controller.fx.screen.event;
 
 import br.upe.controller.fx.mediator.event.AllEventMediator;
-import br.upe.controller.fx.mediator.event.EventMediator;
 import br.upe.controller.fx.screen.BaseController;
 import br.upe.controller.fx.screen.FxController;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.UserRepository;
-import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -24,7 +22,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class AllEventScreenController extends BaseController implements FxController {

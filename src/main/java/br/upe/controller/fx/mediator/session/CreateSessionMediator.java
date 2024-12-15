@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.session;
 
-import br.upe.controller.fx.screen.session.CreateSessionScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.session.CreateSessionScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.geometry.Pos;
@@ -145,7 +145,7 @@ public class CreateSessionMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }
@@ -156,7 +156,7 @@ public class CreateSessionMediator extends Mediator {
                 try {
                     notify(HANDLE_SESSION_CREATE);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new CustomRuntimeException("Algo deu errado ", e);
                 }
             }
         });

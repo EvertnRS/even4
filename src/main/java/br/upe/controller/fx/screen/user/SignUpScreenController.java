@@ -99,7 +99,7 @@ public class SignUpScreenController extends BaseController implements FxControll
         String cpf = cpfTextField.getText().trim();
         String name = nameTextField.getText().trim();
         String password = passTextField.getText().trim();
-        UserController userController = UserController.getInstance();
+        UserController userController = new UserController();
         FacadeInterface facade = new Facade(userController);
 
         loadScreen("Carregando", () -> {

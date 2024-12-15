@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.subevent;
 
-import br.upe.controller.fx.screen.subevent.CreateSubEventScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.subevent.CreateSubEventScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.scene.Node;
@@ -57,9 +57,9 @@ public class CreateSubEventMediator extends Mediator {
             setupButtonAction("#handleEventButton", HANDLE_EVENT);
             setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
             setupButtonAction("#handleSessionButton", HANDLE_SESSION);
-            setupButtonAction("#handleSubmitButton", HANDLE_SUBMIT);
             setupButtonAction("#handleUserButton", HANDLE_USER);
             setupButtonAction("#handleBackButton", HANDLE_BACK);
+            setupButtonAction("#handleSubmitButton", HANDLE_SUBMIT);
             setupButtonAction("#handleInscriptionButton", HANDLE_INSCRIPTION);
             setupButtonAction("#logoutButton", "logout");
         }
@@ -134,7 +134,7 @@ public class CreateSubEventMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }
@@ -145,7 +145,7 @@ public class CreateSubEventMediator extends Mediator {
                 try {
                     notify(HANDLE_SUBEVENTCREATE);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new CustomRuntimeException("Algo  deu errado", e);
                 }
             }
         });

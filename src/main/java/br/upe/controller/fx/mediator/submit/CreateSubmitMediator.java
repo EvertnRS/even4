@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.submit;
 
-import br.upe.controller.fx.screen.submit.CreateSubmitScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.submit.CreateSubmitScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.geometry.Pos;
@@ -123,7 +123,7 @@ public class CreateSubmitMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }

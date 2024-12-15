@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.attendee;
 
-import br.upe.controller.fx.screen.attendee.CertificateScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.attendee.CertificateScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.geometry.Pos;
@@ -115,7 +115,7 @@ public class CertificateMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }
@@ -126,7 +126,7 @@ public class CertificateMediator extends Mediator {
                 try {
                     notify(HANDLE_CERTIFICATE_CREATE);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new CustomRuntimeException("Listener desconfigurado", e);
                 }
             }
         });

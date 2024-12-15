@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.event;
 
-import br.upe.controller.fx.screen.event.AllEventScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.event.AllEventScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.scene.control.Label;
@@ -97,7 +97,7 @@ public class AllEventMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }

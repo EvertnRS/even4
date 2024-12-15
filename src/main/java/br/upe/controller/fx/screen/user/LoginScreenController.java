@@ -54,7 +54,7 @@ public class LoginScreenController extends BaseController implements FxControlle
 
     @FXML
     public void initialize() throws IOException {
-        UserController userController = UserController.getInstance();
+        UserController userController = new UserController();
         FacadeInterface facade = new Facade(userController);
 
         this.accessMediator = new AccessMediator(null, facade, loginAnchorPane, errorLabel, this);

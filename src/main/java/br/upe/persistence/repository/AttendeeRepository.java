@@ -7,12 +7,9 @@ import br.upe.persistence.builder.AttendeeBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.TypedQuery;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -28,9 +25,7 @@ public class AttendeeRepository implements Persistence {
     public static AttendeeRepository getInstance() {
         if (instance == null) {
             synchronized (AttendeeRepository.class) {
-                if (instance == null) {
-                    instance = new AttendeeRepository();
-                }
+                instance = new AttendeeRepository();
             }
         }
         return instance;
@@ -76,7 +71,6 @@ public class AttendeeRepository implements Persistence {
                     .orElse(null);
 
             if (attendee == null) {
-                System.out.println("Criando novo participante");
                 attendee = AttendeeBuilder.builder()
                         .withUser(user)
                         .build();

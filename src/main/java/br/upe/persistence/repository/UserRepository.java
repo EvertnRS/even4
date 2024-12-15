@@ -9,10 +9,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -30,9 +27,7 @@ public class UserRepository implements Persistence {
     public static UserRepository getInstance() {
         if (instance == null) {
             synchronized (UserRepository.class) {
-                if (instance == null) {
-                    instance = new UserRepository();
-                }
+                instance = new UserRepository();
             }
         }
         return instance;
@@ -67,8 +62,6 @@ public class UserRepository implements Persistence {
         Long cpf = (Long) params[1];
         String email = (String) params[2];
         String hashedPassword = (String) params[3];
-
-        LOGGER.info("password: " + hashedPassword);
 
         User user = UserBuilder.builder()
                 .withEmail(email)
@@ -123,17 +116,12 @@ public class UserRepository implements Persistence {
                 LOGGER.warning("Senha inválida");
                 return;
             }
-
-            if (user != null) {
-                user.setEmail(newEmail);
-                user.setName(newName);
-                user.setCpf(newCpf);
-                user.setPassword(newPassword);
-                transaction.commit();
-                LOGGER.info("Usuário atualizado com sucesso.");
-            } else {
-                LOGGER.warning("Usuário não encontrado com o ID fornecido.");
-            }
+            user.setEmail(newEmail);
+            user.setName(newName);
+            user.setCpf(newCpf);
+            user.setPassword(newPassword);
+            transaction.commit();
+            LOGGER.info("Usuário atualizado com sucesso.");
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -197,13 +185,10 @@ public class UserRepository implements Persistence {
                 return;
             }
 
-            if (user != null) {
-                entityManager.remove(user);
-                transaction.commit();
-                LOGGER.info("Usuário deletado com sucesso.");
-            } else {
-                LOGGER.warning("Usuário não encontrado com o ID fornecido.");
-            }
+            entityManager.remove(user);
+            transaction.commit();
+            LOGGER.info("Usuário deletado com sucesso.");
+
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -217,9 +202,6 @@ public class UserRepository implements Persistence {
     }
 
     private boolean isPasswordEqual(String password, String hashedPassword) {
-        LOGGER.info("password: " + password);
-        LOGGER.info("hashedPassword: " + hashedPassword);
-        LOGGER.info("isPasswordEqual: " + BCrypt.checkpw(password, hashedPassword));
         return BCrypt.checkpw(password, hashedPassword);
     }
 

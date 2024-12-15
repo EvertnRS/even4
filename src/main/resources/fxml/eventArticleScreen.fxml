@@ -148,12 +148,12 @@
                   <VBox fx:id="articleVBox" alignment="CENTER" layoutX="161.0" layoutY="90.0" prefHeight="65.0" prefWidth="528.0" spacing="10" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 10px;" />
                </content>
             </ScrollPane>
-            <ImageView fx:id="logoView9" fitHeight="65.0" fitWidth="63.0" layoutX="72.0" layoutY="54.0" preserveRatio="true">
+            <ImageView fx:id="logoView9" fitHeight="65.0" fitWidth="63.0" layoutX="93.0" layoutY="54.0" preserveRatio="true">
                <image>
                   <Image url="@/images/icons/buttons/arrowBack.png" />
                </image>
             </ImageView>
-            <Button fx:id="handleBackButton" layoutX="72.0" layoutY="56.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="63.0" style="-fx-cursor: hand;" text="back" />
+            <Button fx:id="handleBackButton" layoutX="88.0" layoutY="56.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="63.0" style="-fx-cursor: hand;" text="back" />
             <Label layoutX="51.0" layoutY="22.0" text="Artigos Recebidos" textFill="#ff914d">
                <font>
                   <Font name="Inter Semi Bold" size="22.0" />

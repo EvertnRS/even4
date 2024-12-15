@@ -10,7 +10,6 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -25,9 +24,7 @@ public class SubmitArticlesRepository implements Persistence {
     public static SubmitArticlesRepository getInstance() {
         if (instance == null) {
             synchronized (SubmitArticlesRepository.class) {
-                if (instance == null) {
-                    instance = new SubmitArticlesRepository();
-                }
+                instance = new SubmitArticlesRepository();
             }
         }
         return instance;
@@ -71,7 +68,6 @@ public class SubmitArticlesRepository implements Persistence {
             Event event = query.getSingleResult();
 
             if (event == null) {
-                LOGGER.warning(String.format("Evento não encontrado com o nome fornecido: %s", eventName));
                 return;
             }
 
@@ -85,7 +81,6 @@ public class SubmitArticlesRepository implements Persistence {
             transaction.begin();
             entityManager.persist(submitArticle);
             transaction.commit();
-            LOGGER.warning(String.format("Artigo submetido com sucesso para o evento: %s", eventName));
         } catch (NoResultException e) {
             LOGGER.warning("Evento não encontrado com o nome fornecido: " + eventName);
         } catch (Exception e) {

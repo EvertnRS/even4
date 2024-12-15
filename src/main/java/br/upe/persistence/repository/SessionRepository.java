@@ -14,7 +14,6 @@ import jakarta.persistence.TypedQuery;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -30,9 +29,7 @@ public class SessionRepository implements Persistence {
     public static SessionRepository getInstance() {
         if (instance == null) {
             synchronized (SessionRepository.class) {
-                if (instance == null) {
-                    instance = new SessionRepository();
-                }
+                instance = new SessionRepository();
             }
         }
         return instance;

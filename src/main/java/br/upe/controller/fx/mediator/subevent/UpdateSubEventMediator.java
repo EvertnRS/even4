@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.subevent;
 
-import br.upe.controller.fx.screen.subevent.UpdateSubEventScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.subevent.UpdateSubEventScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.scene.Node;
@@ -126,7 +126,7 @@ public class UpdateSubEventMediator extends Mediator {
         };
     }
 
-    private void logout() throws IOException {
+    private void logout(){
         facade = null;
         loadScreenForEvent("loginScreen");
     }
@@ -137,7 +137,7 @@ public class UpdateSubEventMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }
@@ -148,7 +148,7 @@ public class UpdateSubEventMediator extends Mediator {
                 try {
                     notify(HANDLE_SUB_EVENT_UPDATE);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new CustomRuntimeException(" Algo deu errado", e);
                 }
             }
         });

@@ -1,7 +1,7 @@
 package br.upe.controller.fx.mediator.submit;
 
-import br.upe.controller.fx.screen.submit.UpdateSubmitScreenController;
 import br.upe.controller.fx.mediator.Mediator;
+import br.upe.controller.fx.screen.submit.UpdateSubmitScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.geometry.Pos;
@@ -115,7 +115,7 @@ public class UpdateSubmitMediator extends Mediator {
             try {
                 task.run();
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CustomRuntimeException("Algo deu errado", e);
             }
         }, screenPane);
     }
@@ -123,19 +123,12 @@ public class UpdateSubmitMediator extends Mediator {
     public boolean validateAddress() {
         Path path = Paths.get(updateSubmitScreenController.getNewArticleTextField().getText());
 
-        if (Files.exists(path)) {
-            if (Files.isRegularFile(path)) {
-                return true;
-            } else {
-                errorUpdtLabel.setText("Nenhum arquivo selecionado.");
-                errorUpdtLabel.setAlignment(Pos.CENTER);
-            }
+        if (Files.exists(path) && Files.isRegularFile(path)) {
+            return true;
+        } else {
             errorUpdtLabel.setText("Nenhum arquivo selecionado.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
             return false;
         }
-        errorUpdtLabel.setText("Nenhum arquivo selecionado.");
-        errorUpdtLabel.setAlignment(Pos.CENTER);
-        return false;
     }
 }
