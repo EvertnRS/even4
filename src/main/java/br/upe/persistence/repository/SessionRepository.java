@@ -43,10 +43,10 @@ public class SessionRepository implements Persistence {
     }
 
     @Override
-    public void create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 9) {
             LOGGER.warning("Devem ser fornecidos 9 parâmetros.");
-            return;
+            return new Object[]{false, null};
         }
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         UUID eventId = null;
@@ -70,11 +70,11 @@ public class SessionRepository implements Persistence {
 
 
         User owner = entityManager.find(User.class, ownerId);
-
+        boolean isCreated = false;
 
         if (owner == null) {
             LOGGER.warning("Usuário inválido.");
-            return;
+            return new Object[]{false, null};
         }
 
         Session session = SessionBuilder.builder()
@@ -88,11 +88,23 @@ public class SessionRepository implements Persistence {
                 .withEvent(event)
                 .withOwner(owner)
                 .build();
+
+        List<Session> userSessions = owner.getSessions();
+        userSessions.add(session);
+        owner.setSessions(userSessions);
+
+        if(event != null) {
+            List<Session> eventSessions = event.getSessions();
+            eventSessions.add(session);
+            event.setSessions(eventSessions);
+        }
+
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
             entityManager.persist(session);
             transaction.commit();
+            isCreated = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -103,6 +115,7 @@ public class SessionRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return new Object[]{isCreated, session.getId()};
     }
 
     public Time convertTime(String timeString) {
@@ -125,10 +138,10 @@ public class SessionRepository implements Persistence {
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 7) {
             LOGGER.warning("Devem ser fornecidos 7 parâmetros.");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
@@ -138,7 +151,7 @@ public class SessionRepository implements Persistence {
         String newLocation = (String) params[4];
         Time newStartTime = convertTime((String) params[5]);
         Time newEndTime = convertTime((String) params[6]);
-
+        boolean isUpdated = false;
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -156,6 +169,7 @@ public class SessionRepository implements Persistence {
                 entityManager.merge(session);
                 transaction.commit();
                 LOGGER.info("Sessão atualizada com sucesso.");
+                isUpdated = true;
             } else {
                 LOGGER.warning(sessionNotFound);
             }
@@ -169,17 +183,19 @@ public class SessionRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isUpdated;
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Devem ser fornecidos 2 parâmetros.");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
         UUID ownerId = (UUID) params[1];
+        boolean isDeleted = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
@@ -189,15 +205,27 @@ public class SessionRepository implements Persistence {
             Session session = entityManager.find(Session.class, id);
             User owner = entityManager.find(User.class, ownerId);
 
+            List<Session> userSessions = owner.getSessions();
+            userSessions.remove(session);
+            owner.setSessions(userSessions);
+
+            Event event = session.getEventId();
+            if(event != null) {
+                List<Session> eventSessions = event.getSessions();
+                eventSessions.remove(session);
+                event.setSessions(eventSessions);
+            }
+
             if (owner == null) {
                 LOGGER.warning("Criador inválido.");
-                return;
+                return false;
             }
 
             if (session != null) {
                 entityManager.remove(session);
                 transaction.commit();
                 LOGGER.info("Sessão deletada com sucesso.");
+                isDeleted = true;
             } else {
                 LOGGER.warning(sessionNotFound);
             }
@@ -211,12 +239,9 @@ public class SessionRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isDeleted;
     }
 
-    @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
-    }
 
     @Override
     public Object getData(UUID id, String dataToGet) {
@@ -298,5 +323,32 @@ public class SessionRepository implements Persistence {
         }
     }
 
+    @Override
+    public Object[] isExist(Object... params) {
+        if (params.length != 2) {
+            LOGGER.warning("Devem ser fornecidos 1 parâmetro.");
+            return new Object[]{false, null};
+        }
+
+        String name = (String) params[0];
+        UUID userId = UUID.fromString((String) params[1]);
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        try {
+            TypedQuery<Session> query = entityManager.createQuery("SELECT s FROM Session s WHERE s.name = :name AND s.ownerId.id = :userId", Session.class);
+            query.setParameter("name", name);
+            query.setParameter("userId", userId);
+            Session session = query.getSingleResult();
+            return new Object[]{true, session.getId()};
+        } catch (NoResultException e) {
+            LOGGER.warning("Nenhuma sessão encontrada com o nome: " + name + " e usuário com ID: " + userId);
+        } catch (Exception e) {
+            LOGGER.severe("Erro ao buscar sessão: " + e.getMessage());
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        return new Object[]{false, null};
+    }
 
 }

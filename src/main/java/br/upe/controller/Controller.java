@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.UUID;
 
 public interface Controller {
-    void create(Object... params) throws IOException;
+    Object[] create(Object... params) throws IOException;
 
-    void update(Object... params) throws IOException;
+    boolean update(Object... params) throws IOException;
 
-    void delete(Object... params) throws IOException;
+    boolean delete(Object... params) throws IOException;
 
     <T> List<T> getAll();
 
@@ -17,7 +17,7 @@ public interface Controller {
 
     <T> List<T> getEventArticles(UUID eventId);
 
-    boolean loginValidate(String email, String cpf);
+    Object[] isExist(Object... params) throws IOException;
 
     String getData(String dataToGet);
 

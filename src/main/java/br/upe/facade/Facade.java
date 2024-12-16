@@ -34,20 +34,25 @@ public class Facade implements FacadeInterface {
         return eventController.list(params);
     }
 
-    public void createEvent(Object... params) throws IOException {
-        eventController.create(params);
+    public Object[] createEvent(Object... params) throws IOException {
+        return eventController.create(params);
     }
 
-    public void updateEvent(Object... params) throws IOException {
-        eventController.update(params);
+    public boolean updateEvent(Object... params) throws IOException {
+        return eventController.update(params);
     }
 
-    public void deleteEvent(Object... params) throws IOException {
-        eventController.delete(params);
+    public boolean deleteEvent(Object... params) throws IOException {
+        return eventController.delete(params);
     }
 
     public String getEventData(String dataToGet) {
         return eventController.getData(dataToGet);
+    }
+
+    @Override
+    public Object[] isEventExist(Object... params) throws IOException {
+        return eventController.isExist(params);
     }
 
     // SubEventController methods
@@ -60,20 +65,25 @@ public class Facade implements FacadeInterface {
         return subEventController.list(params);
     }
 
-    public void createSubEvent(Object... params) throws IOException {
-        subEventController.create(params);
+    public Object[] createSubEvent(Object... params) throws IOException {
+        return subEventController.create(params);
     }
 
-    public void updateSubEvent(Object... params) throws IOException {
-        subEventController.update(params);
+    public boolean updateSubEvent(Object... params) throws IOException {
+        return subEventController.update(params);
     }
 
-    public void deleteSubEvent(Object... params) throws IOException {
-        subEventController.delete(params);
+    public boolean deleteSubEvent(Object... params) throws IOException {
+        return subEventController.delete(params);
     }
 
     public Object getSubEventData(String dataToGet){
         return subEventController.getData(dataToGet);
+    }
+
+    @Override
+    public Object[] isSubEventExist(Object... params) throws IOException {
+        return subEventController.isExist(params);
     }
 
     // SessionController methods
@@ -92,20 +102,25 @@ public class Facade implements FacadeInterface {
         return sessionController.list(params);
     }
 
-    public void createSession(Object... params) throws IOException {
-        sessionController.create(params);
+    public Object[] createSession(Object... params) throws IOException {
+        return sessionController.create(params);
     }
 
-    public void updateSession(Object... params) throws IOException {
-        sessionController.update(params);
+    public boolean updateSession(Object... params) throws IOException {
+        return sessionController.update(params);
     }
 
-    public void deleteSession(Object... params) throws IOException {
-        sessionController.delete(params);
+    public boolean deleteSession(Object... params) throws IOException {
+        return sessionController.delete(params);
     }
 
     public Object getSessionData(String dataToGet) {
         return sessionController.getData(dataToGet);
+    }
+
+    @Override
+    public Object[] isSessionExist(Object... params) throws IOException {
+        return sessionController.isExist(params);
     }
 
 
@@ -119,40 +134,46 @@ public class Facade implements FacadeInterface {
         return submitArticleController.getEventArticles(eventId);
     }
 
-    public void createArticle(Object... params) throws IOException {
-        submitArticleController.create(params);
+    public Object[] createArticle(Object... params) throws IOException {
+        return submitArticleController.create(params);
     }
 
-    public void deleteArticle(Object... params) throws IOException {
-        submitArticleController.delete(params);
+    public boolean deleteArticle(Object... params) throws IOException {
+        return submitArticleController.delete(params);
     }
 
-    public void updateArticle(Object... params) throws IOException {
-        submitArticleController.update(params);
+    public boolean updateArticle(Object... params) throws IOException {
+        return submitArticleController.update(params);
     }
 
     public Object getArticleData(String dataToGet){
         return submitArticleController.getData(dataToGet);
     }
 
+    @Override
+    public Object[] isArticleExist(Object... params) throws IOException {
+        return submitArticleController.isExist(params);
+    }
+
 
     // UserController methods
 
-    public void createUser(Object... params) throws IOException {
-        userController.create(params);
+    public Object[] createUser(Object... params) throws IOException {
+        return userController.create(params);
     }
 
-    public void updateUser(Object... params) throws IOException {
-        userController.update(params);
+    public boolean updateUser(Object... params) throws IOException {
+        return userController.update(params);
     }
 
-    public void deleteUser(Object... params) throws IOException {
-        userController.delete(params);
+    public boolean deleteUser(Object... params) throws IOException {
+        return userController.delete(params);
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        return userController.loginValidate(email, password);
+    public boolean loginValidate(String email, String password) throws IOException {
+        Object[] results = userController.isExist(email, password);
+        return (boolean) results[0];
     }
 
     public String getUserData(String dataToGet) {
@@ -161,20 +182,25 @@ public class Facade implements FacadeInterface {
 
     // AttendeeController methods
 
-    public void createAttendee(Object... params) throws IOException {
-        attendeeController.create(params);
+    public Object[] createAttendee(Object... params) throws IOException {
+        return attendeeController.create(params);
     }
 
     public List<Attendee> listAttendees(Object... params) throws IOException {
         return attendeeController.list(params);
     }
 
-    public void deleteAttendee(Object... params) throws IOException {
-        attendeeController.delete(params);
+    public boolean deleteAttendee(Object... params) throws IOException {
+        return attendeeController.delete(params);
     }
 
     public Object getAttendeeData(String dataToGet){
         return attendeeController.getData(dataToGet);
+    }
+
+    @Override
+    public Object[] isAttendeeExist(Object... params) throws IOException {
+        return attendeeController.isExist(params);
     }
 
 }

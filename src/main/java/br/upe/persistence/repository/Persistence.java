@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.UUID;
 
 public interface Persistence {
-    void create(Object... params);
+    Object[] create(Object... params);
 
-    void delete(Object... params) throws IOException;
+    boolean delete(Object... params) throws IOException;
 
-    void update(Object... params) throws IOException;
+    boolean update(Object... params) throws IOException;
 
     Object getData(String dataToGet);
 
@@ -16,5 +16,5 @@ public interface Persistence {
 
     void setData(UUID eventId, String dataToSet, Object data);
 
-    boolean loginValidate(String email, String password);
+    Object[] isExist(Object... params) throws IOException;
 }

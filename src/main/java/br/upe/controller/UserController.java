@@ -20,10 +20,10 @@ public class UserController implements Controller {
     private Persistence userLog;
 
     @Override
-    public void create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 4) {
             LOGGER.warning("São necessários 4 parâmetros.");
-            return;
+            return new Object[]{false, null};
         }
 
         String name = (String) params[0];
@@ -34,15 +34,15 @@ public class UserController implements Controller {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         Persistence userRepository = UserRepository.getInstance();
 
-        userRepository.create(name, cpf, email, hashedPassword);
+        return userRepository.create(name, cpf, email, hashedPassword);
     }
 
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parâmetros");
-            return;
+            return false;
         }
 
         String name = (String) params[0];
@@ -50,6 +50,7 @@ public class UserController implements Controller {
         String email = (String) params[2];
         String newPassword = (String) params[3];
         String password = (String) params[4];
+        boolean updated = false;
 
         if (isValidEmail(email) && isValidCPF(cpf.toString())) {
 
@@ -61,23 +62,24 @@ public class UserController implements Controller {
             }
 
             UUID userID = (UUID) userLog.getData("id");
-            userLog.update(userID, name, cpf, email, newPassword, password);
+            updated = userLog.update(userID, name, cpf, email, newPassword, password);
         } else {
             LOGGER.warning("Email ou CPF inválido.");
         }
+        return updated;
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 1) {
             LOGGER.warning("Só pode ter 1 parametro");
-            return;
+            return false;
         }
 
         String password = (String) params[0];
         UUID userID = (UUID) userLog.getData("id");
 
-        userLog.delete(userID, password);
+        return userLog.delete(userID, password);
     }
 
     @Override
@@ -115,13 +117,20 @@ public class UserController implements Controller {
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        Persistence userRepository = UserRepository.getInstance();
-        if (userRepository.loginValidate(email, password)) {
-            this.userLog = userRepository;
-            return true;
+    public Object[] isExist(Object... params) throws IOException {
+        if(params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parametro");
+            return new Object[]{false, null};
         }
-        return false;
+        String email = (String) params[0];
+        String password = (String) params[1];
+        Persistence userRepository = UserRepository.getInstance();
+        Object[] results = userRepository.isExist(email, password);
+        if ((boolean) results[0]) {
+            this.userLog = userRepository;
+            return results;
+        }
+        return new Object[]{false, null};
     }
 
 }

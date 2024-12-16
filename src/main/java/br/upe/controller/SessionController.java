@@ -57,21 +57,21 @@ public class SessionController implements Controller {
         return (List<T>) userSessions;
     }
 
-    public void create(Object... params) throws IOException {
-        if (params.length != 9) {
-            LOGGER.warning("Número incorreto de parâmetros. Esperado: 9");
-            return;
+    public Object[] create(Object... params) throws IOException {
+        if (params.length != 8) {
+            LOGGER.warning("Número incorreto de parâmetros. Esperado: 8");
+            return new Object[]{false, null};
         }
 
 
-        String name = (String) params[1];
-        Date date = (Date) params[2];
-        String description = (String) params[3];
-        String location = (String) params[4];
-        String startTime = (String) params[5];
-        String endTime = (String) params[6];
-        String userId = (String) params[7];
-        String[] type = (String[]) params[8];
+        String name = (String) params[0];
+        Date date = (Date) params[1];
+        String description = (String) params[2];
+        String location = (String) params[3];
+        String startTime = (String) params[4];
+        String endTime = (String) params[5];
+        String userId = (String) params[6];
+        String[] type = (String[]) params[7];
         UUID eventId = null;
         UUID subEventId = null;
         if (type[1].equals("evento")) {
@@ -82,27 +82,28 @@ public class SessionController implements Controller {
         }
 
         Persistence session = new SessionRepository();
-        session.create(eventId, name, date, description, location, startTime, endTime, userId, subEventId);
+        Object[] results = session.create(eventId, name, date, description, location, startTime, endTime, userId, subEventId);
 
         this.sessionLog = session;
+        return results;
     }
 
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         SessionRepository sessionRepository = SessionRepository.getInstance();
 
         UUID id = (UUID) params[0];
         UUID ownerId = UUID.fromString((String) params[1]);
 
-        sessionRepository.delete(id, ownerId);
+        return sessionRepository.delete(id, ownerId);
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 8) {
             LOGGER.warning("Só pode ter 8 parâmetros");
-            return;
+            return false;
         }
 
         // Recuperando os parâmetros
@@ -118,18 +119,19 @@ public class SessionController implements Controller {
         // Convertendo a String para Date
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Formato esperado da data
         Date newDate = null;
+        boolean isUpdated = false;
         try {
             newDate = dateFormat.parse(newDateString);
         } catch (ParseException e) {
             LOGGER.warning("Data inválida: " + newDateString);
-            return;
+            return false;
         }
 
 
         // Validações
         if (newName == null || newName.trim().isEmpty()) {
             LOGGER.warning("Nome não pode ser vazio.");
-            return;
+            return false;
         }
 
         // Obtenção das sessões do repositório
@@ -147,18 +149,18 @@ public class SessionController implements Controller {
 
         if (nameExists) {
             LOGGER.warning("Nome em uso.");
-            return;
+            return false;
         }
         SessionRepository session = new SessionRepository();
         UUID sessionId = session.getSessionIdByNameAndUser(oldName, userId);
         if (sessionId == null) {
             LOGGER.warning("Sessão não encontrada para o nome: " + newName + " e usuário com ID: " + userId);
-            return;
+            return false;
         }
 
-        session.update(sessionId, newName, newDate, newDescription, newLocation, newStartTime, newEndTime);
+        isUpdated = session.update(sessionId, newName, newDate, newDescription, newLocation, newStartTime, newEndTime);
         this.sessionLog = session;
-
+        return isUpdated;
     }
 
     @Override
@@ -216,8 +218,16 @@ public class SessionController implements Controller {
     }
 
     @Override
-    public boolean loginValidate(String email, String cpf) {
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parâmetros");
+            return new Object[]{false, null};
+        }
+
+        String name = (String) params[0];
+        String ownerId = (String) params[1];
+        SessionRepository sessionRepository = SessionRepository.getInstance();
+        return sessionRepository.isExist(name, ownerId);
     }
 
 }

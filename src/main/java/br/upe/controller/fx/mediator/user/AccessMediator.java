@@ -130,13 +130,17 @@ public class AccessMediator extends Mediator {
         Label logInErrorLabel = userLoginController.getErrorLabel();
 
         userLoginController.loadScreen("Carregando", () -> {
-            if (facade.loginValidate(loginInEmail, pass)) {
-                Platform.runLater(userLoginController::handleLogin);
-            } else {
-                Platform.runLater(() -> {
-                    logInErrorLabel.setText("Login falhou! Verifique suas credenciais.");
-                    logInErrorLabel.setAlignment(Pos.CENTER);
-                });
+            try {
+                if (facade.loginValidate(loginInEmail, pass)) {
+                    Platform.runLater(userLoginController::handleLogin);
+                } else {
+                    Platform.runLater(() -> {
+                        logInErrorLabel.setText("Login falhou! Verifique suas credenciais.");
+                        logInErrorLabel.setAlignment(Pos.CENTER);
+                    });
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }, screenPane);
     }

@@ -57,34 +57,37 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public void create(Object... params) throws IOException {
+    public Object[] create(Object... params) throws IOException {
         if (params == null || params.length != 2) {
             LOGGER.warning("É necessário passar exatamente 2 parâmetros: sessionId e userId.");
-            return;
+            return new Object[]{false, null};
         }
 
+        Object[] results = new Object[2];
         try {
             String sessionId = getSessionId((String) params[0]);
             String userId = (String) params[1];
 
             Persistence attendee = new AttendeeRepository();
-            attendee.create(userId, sessionId);
+            results = attendee.create(userId, sessionId);
         } catch (ClassCastException e) {
             LOGGER.warning("Parâmetros inválidos: os tipos esperados são String.");
         }
+
+        return results;
     }
 
 
     @Override
-    public void update(Object... params) throws IOException {
-        //
+    public boolean update(Object... params) throws IOException {
+        return false;
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametro");
-            return;
+            return false;
         }
 
         AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
@@ -92,7 +95,7 @@ public class AttendeeController implements Controller {
         UUID id = (UUID) params[0];
         UUID userId = (UUID) params[1];
 
-        attendeeRepository.delete(id, userId);
+        return attendeeRepository.delete(id, userId);
     }
 
     @Override
@@ -131,9 +134,15 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public boolean loginValidate(String email, String cpf) {
-        //Método não implementado
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 1) {
+            LOGGER.warning("Só pode ter 1 parametro");
+            return new Object[]{false, null};
+        }
+
+        String userId = (String) params[0];
+        AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
+        return attendeeRepository.isExist(userId);
     }
 
 }

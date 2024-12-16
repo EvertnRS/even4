@@ -14,13 +14,15 @@ public interface FacadeInterface {
 
     List<Event> listEvents(Object... params) throws IOException;
 
-    void createEvent(Object... params) throws IOException;
+    Object[] createEvent(Object... params) throws IOException;
 
-    void updateEvent(Object... params) throws IOException;
+    boolean updateEvent(Object... params) throws IOException;
 
-    void deleteEvent(Object... params) throws IOException;
+    boolean deleteEvent(Object... params) throws IOException;
 
     String getEventData(String dataToGet);
+
+    Object[] isEventExist(Object... params) throws IOException;
 
 
     // SubEventController methods
@@ -29,13 +31,15 @@ public interface FacadeInterface {
 
     List<Model> getAllSubEvent();
 
-    void createSubEvent(Object... params) throws IOException;
+    Object[] createSubEvent(Object... params) throws IOException;
 
-    void updateSubEvent(Object... params) throws IOException;
+    boolean updateSubEvent(Object... params) throws IOException;
 
-    void deleteSubEvent(Object... params) throws IOException;
+    boolean deleteSubEvent(Object... params) throws IOException;
 
     Object getSubEventData(String dataToGet);
+
+    Object[] isSubEventExist(Object... params) throws IOException;
 
 
     // SessionController methods
@@ -44,13 +48,15 @@ public interface FacadeInterface {
 
     List<Session> listSessions(Object... params) throws IOException;
 
-    void createSession(Object... params) throws IOException;
+    Object[] createSession(Object... params) throws IOException;
 
-    void updateSession(Object... params) throws IOException;
+    boolean updateSession(Object... params) throws IOException;
 
-    void deleteSession(Object... params) throws IOException;
+    boolean deleteSession(Object... params) throws IOException;
 
     Object getSessionData(String dataToGet);
+
+    Object[] isSessionExist(Object... params) throws IOException;
 
 
     // SubmitArticleController methods
@@ -59,36 +65,41 @@ public interface FacadeInterface {
 
     <T> List<T> getEventArticles(UUID eventId);
 
-    void createArticle(Object... params) throws IOException;
+    Object[] createArticle(Object... params) throws IOException;
 
-    void deleteArticle(Object... params) throws IOException;
+    boolean deleteArticle(Object... params) throws IOException;
 
-    void updateArticle(Object... params) throws IOException;
+    boolean updateArticle(Object... params) throws IOException;
 
     Object getArticleData(String dataToGet);
+
+    Object[] isArticleExist(Object... params) throws IOException;
 
 
     // UserController methods
 
-    void createUser(Object... params) throws IOException;
+    Object[] createUser(Object... params) throws IOException;
 
-    void updateUser(Object... params) throws IOException;
+    boolean updateUser(Object... params) throws IOException;
 
-    void deleteUser(Object... params) throws IOException;
+    boolean deleteUser(Object... params) throws IOException;
 
-    boolean loginValidate(String email, String password);
+    boolean loginValidate(String email, String password) throws IOException;
 
     String getUserData(String dataToGet);
+
 
 
     // AttendeeController methods
 
     List<Attendee> listAttendees(Object... params) throws IOException;
 
-    void createAttendee(Object... params) throws IOException;
+    Object[] createAttendee(Object... params) throws IOException;
 
-    void deleteAttendee(Object... params) throws IOException;
+    boolean deleteAttendee(Object... params) throws IOException;
 
     Object getAttendeeData(String dataToGet);
+
+    Object[] isAttendeeExist(Object... params) throws IOException;
 
 }

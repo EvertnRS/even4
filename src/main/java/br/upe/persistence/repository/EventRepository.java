@@ -6,6 +6,7 @@ import br.upe.persistence.builder.EventBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public void create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parametros");
         }
@@ -52,6 +53,7 @@ public class EventRepository implements Persistence {
         String description = (String) params[2];
         String location = (String) params[3];
         UUID ownerId = UUID.fromString((String) params[4]);
+        boolean isCreated = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         User owner = entityManager.find(User.class, ownerId);
@@ -67,11 +69,16 @@ public class EventRepository implements Persistence {
                 .withOwner(owner)
                 .build();
 
+        List<Event> userEvents = owner.getEvents();
+        userEvents.add(event);
+        owner.setEvents(userEvents);
+
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
             entityManager.persist(event);
             transaction.commit();
+            isCreated = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -82,13 +89,14 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return new Object[]{isCreated, event.getId()};
     }
 
     @Override
-    public void update(Object... params) throws IOException {
+    public boolean update(Object... params) throws IOException {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parâmetros");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
@@ -96,7 +104,7 @@ public class EventRepository implements Persistence {
         Date newDate = (Date) params[2];
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
-
+        boolean isUpdated = false;
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -111,6 +119,7 @@ public class EventRepository implements Persistence {
                 setData(id, LOCATION, newLocation);
                 transaction.commit();
                 LOGGER.info("Evento atualizado com sucesso.");
+                isUpdated = true;
             } else {
                 LOGGER.warning(EVENT_NOT_FOUND);
             }
@@ -124,6 +133,7 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isUpdated;
     }
 
     @Override
@@ -132,15 +142,15 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametros");
-            return;
+            return false;
         }
 
         UUID id = (UUID) params[0];
         UUID ownerId = (UUID) params[1];
-
+        boolean isDeleted = false;
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -149,15 +159,20 @@ public class EventRepository implements Persistence {
             Event idEvent = entityManager.find(Event.class, id);
             User owner = entityManager.find(User.class, ownerId);
 
+            List<Event> userEvents = owner.getEvents();
+            userEvents.remove(idEvent);
+            owner.setEvents(userEvents);
+
             if ((owner) == null) {
                 LOGGER.warning("Criador inválido.");
-                return;
+                return false;
             }
 
             if (idEvent != null) {
                 entityManager.remove(idEvent);
                 transaction.commit();
                 LOGGER.info("Evento deletado com sucesso.");
+                isDeleted = true;
             } else {
                 LOGGER.warning(EVENT_NOT_FOUND);
             }
@@ -171,11 +186,7 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
-    }
-
-    @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
+        return isDeleted;
     }
 
     @Override
@@ -228,5 +239,34 @@ public class EventRepository implements Persistence {
             }
         }
     }
+
+    @Override
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parametro");
+            return new Object[]{false, null};
+        }
+
+        String name = (String) params[0];
+        UUID ownerId = (UUID) params[1];
+
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        TypedQuery<Event> query = entityManager.createQuery(
+                "SELECT e FROM Event e WHERE e.name = :name AND e.ownerId.id = :ownerId", Event.class);
+        query.setParameter("name", name);
+        query.setParameter("ownerId", ownerId);
+        try {
+            Event event = query.getSingleResult();
+            return new Object[]{true, event.getId()};
+        } catch (NoResultException e) {
+            LOGGER.warning("Evento não encontrado.");
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        return new Object[]{false, null};
+    }
+
 }
 

@@ -45,21 +45,23 @@ public class SubmitArticlesRepository implements Persistence {
 
 
     @Override
-    public void create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 4) {
             LOGGER.warning("São necessários 2 parâmetros: nome do evento e o artigo escolhido.");
-            return;
+            return new Object[]{false, null};
         }
 
         String eventName = (String) params[0];
         byte[] article = (byte[]) params[1];
         UUID ownerId = UUID.fromString((String) params[2]);
         String articleName = (String) params[3];
+        boolean isCreated = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         User owner = entityManager.find(User.class, ownerId);
 
+        SubmitArticle submitArticle = null;
         try {
 
             TypedQuery<Event> query = entityManager.createQuery(
@@ -68,19 +70,24 @@ public class SubmitArticlesRepository implements Persistence {
             Event event = query.getSingleResult();
 
             if (event == null) {
-                return;
+                return new Object[]{false, null};
             }
 
-            SubmitArticle submitArticle = SubmitArticleBuilder.builder()
+            submitArticle = SubmitArticleBuilder.builder()
                     .withName(articleName)
                     .withArticle(article)
                     .withOwner(owner)
                     .withEvent(event)
                     .build();
 
+            List<SubmitArticle> userArticles = owner.getArticles();
+            userArticles.add(submitArticle);
+            owner.setArticles(userArticles);
+
             transaction.begin();
             entityManager.persist(submitArticle);
             transaction.commit();
+            isCreated = true;
         } catch (NoResultException e) {
             LOGGER.warning("Evento não encontrado com o nome fornecido: " + eventName);
         } catch (Exception e) {
@@ -93,19 +100,21 @@ public class SubmitArticlesRepository implements Persistence {
                 entityManager.close();
             }
         }
+        assert submitArticle != null;
+        return new Object[]{isCreated, submitArticle.getId()};
     }
 
     @Override
-    public void update(Object... params) {
+    public boolean update(Object... params) {
         if (params.length != 3) {
             LOGGER.warning("São necessários 3 parâmetros.");
-            return;
+            return false;
         }
 
         String articleName = (String) params[0];
         byte[] articleContent = (byte[]) params[1];
         UUID articleId = (UUID) params[2];
-
+        boolean isUpdated = false;
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
 
@@ -113,7 +122,7 @@ public class SubmitArticlesRepository implements Persistence {
             SubmitArticle article = entityManager.find(SubmitArticle.class, articleId);
             if (article == null) {
                 LOGGER.warning("Artigo não encontrado.");
-                return;
+                return false;
             }
 
 
@@ -124,7 +133,7 @@ public class SubmitArticlesRepository implements Persistence {
             transaction.commit();
 
             LOGGER.info("Artigo atualizado com sucesso.");
-
+            isUpdated = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -135,17 +144,19 @@ public class SubmitArticlesRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isUpdated;
     }
 
     @Override
-    public void delete(Object... params) {
-        if (params.length != 1) {
-            LOGGER.warning("É necessário um parâmetro: ID do artigo.");
-            return;
+    public boolean delete(Object... params) {
+        if (params.length != 2) {
+            LOGGER.warning("É necessário um parâmetro: ID do artigo e do proprietário.");
+            return false;
         }
 
         UUID articleId = (UUID) params[0];
 
+        boolean isDeleted = false;
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
 
@@ -153,14 +164,24 @@ public class SubmitArticlesRepository implements Persistence {
             SubmitArticle article = entityManager.find(SubmitArticle.class, articleId);
             if (article == null) {
                 LOGGER.warning("Artigo não encontrado.");
-                return;
+                return false;
             }
+            User owner = article.getOwnerId();
+            List<SubmitArticle> userArticles = owner.getArticles();
+            userArticles.remove(article);
+            owner.setArticles(userArticles);
+
+            Event event = article.getEventId();
+            List<SubmitArticle> eventArticles = event.getArticles();
+            eventArticles.remove(article);
+            event.setArticles(eventArticles);
 
             transaction.begin();
             entityManager.remove(article);
             transaction.commit();
 
             LOGGER.info("Artigo deletado com sucesso.");
+            isDeleted = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -171,11 +192,7 @@ public class SubmitArticlesRepository implements Persistence {
                 entityManager.close();
             }
         }
-    }
-
-    @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
+        return isDeleted;
     }
 
     @Override
@@ -232,4 +249,26 @@ public class SubmitArticlesRepository implements Persistence {
             }
         }
     }
+
+    @Override
+    public Object[] isExist(Object... params) {
+        if (params.length != 2) {
+            LOGGER.warning("É necessário 2 parâmetros: ID do artigo e ID do proprietário.");
+            return new Object[]{false, null};
+        }
+
+        String name = (String) params[0];
+        UUID ownerId = (UUID) params[1];
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        TypedQuery<SubmitArticle> query = entityManager.createQuery(
+                "SELECT a FROM SubmitArticle a WHERE a.name = :name", SubmitArticle.class);
+        query.setParameter("name", name);
+        SubmitArticle article = query.getSingleResult();
+        User owner = entityManager.find(User.class, ownerId);
+        if (article == null || owner == null) {
+            return new Object[]{false, null};
+        }
+        return new Object[]{true, article.getId()};
+    }
+
 }

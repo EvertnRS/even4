@@ -176,7 +176,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
             errorUpdtLabel.setText("Data da sessão não pode ser anterior a data do evento.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
         } else {
-            facade.createSession(selectedEventName, sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, facade.getUserData("id"), type);
+            facade.createSession(sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, facade.getUserData("id"), type);
             mediator.notify("handleSession");
         }
     }

@@ -38,18 +38,19 @@ public class AttendeeRepository implements Persistence {
     }
 
     @Override
-    public void create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parâmetros");
-            return;
+            return new Object[]{false, null};
         }
 
         UUID parsedUserId = UUID.fromString((String) params[0]);
         UUID parsedSessionId = UUID.fromString((String) params[1]);
-
+        boolean isCreated = false;
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
 
+        Attendee attendee = null;
         try {
             transaction.begin();
 
@@ -63,7 +64,7 @@ public class AttendeeRepository implements Persistence {
                 throw new IllegalArgumentException("Sessão não encontrada com o ID: " + parsedSessionId);
             }
 
-            Attendee attendee = entityManager.createQuery(
+            attendee = entityManager.createQuery(
                             "SELECT a FROM Attendee a WHERE a.userId = :userId", Attendee.class)
                     .setParameter("userId", user)
                     .getResultStream()
@@ -86,6 +87,7 @@ public class AttendeeRepository implements Persistence {
 
             transaction.commit();
             LOGGER.info("Sessão adicionada ao Attendee: " + attendee.getId());
+            isCreated = true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -96,20 +98,22 @@ public class AttendeeRepository implements Persistence {
                 entityManager.close();
             }
         }
+        assert attendee != null;
+        return new Object[]{isCreated, attendee.getId()};
     }
 
 
 
     @Override
-    public void delete(Object... params) throws IOException {
+    public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
             LOGGER.warning("Só pode ter 2 parametros");
-            return;
+            return false;
         }
 
         UUID attendeeId = (UUID) params[0];
         UUID sessionId = (UUID) params[1];
-
+        boolean isDeleted = false;
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
@@ -120,12 +124,12 @@ public class AttendeeRepository implements Persistence {
 
             if (attendee == null) {
                 LOGGER.warning("Participante não encontrado com o ID fornecido.");
-                return;
+                return false;
             }
 
             if (session == null) {
                 LOGGER.warning("Sessão não encontrada com o ID fornecido.");
-                return;
+                return false;
             }
 
             if (attendee.getSessions().contains(session)) {
@@ -133,6 +137,7 @@ public class AttendeeRepository implements Persistence {
                 entityManager.merge(attendee);
                 transaction.commit();
                 LOGGER.info("Participação removida com sucesso.");
+                isDeleted = true;
             } else {
                 LOGGER.warning("Participante não está inscrito na sessão fornecida.");
             }
@@ -146,11 +151,12 @@ public class AttendeeRepository implements Persistence {
                 entityManager.close();
             }
         }
+        return isDeleted;
     }
 
     @Override
-    public void update(Object... params) throws IOException {
-        //
+    public boolean update(Object... params) throws IOException {
+        return false;
     }
 
     @Override
@@ -180,7 +186,28 @@ public class AttendeeRepository implements Persistence {
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 1) {
+            LOGGER.warning("Só pode ter 1 parametro");
+            return new Object[]{false, null};
+        }
+
+        String userId = (String) params[0];
+
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        TypedQuery<Attendee> query = entityManager.createQuery(
+                "SELECT e FROM Attendee e WHERE e.userId.id = :userId", Attendee.class);
+        query.setParameter("userId", UUID.fromString(userId));
+        try {
+            Attendee attendee = query.getSingleResult();
+            return new Object[]{true, attendee.getId()};
+        } catch (Exception e) {
+            LOGGER.warning("Participante não encontrado.");
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        return new Object[]{false, null};
     }
 }

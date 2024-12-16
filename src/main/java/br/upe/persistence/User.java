@@ -3,6 +3,7 @@ package br.upe.persistence;
 import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +24,46 @@ public class User {
     @NotNull
     @Column(length = 60)
     private String password;
+    @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Event> events;
+    @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SubEvent> subEvents;
+    @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Session> sessions;
+    @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SubmitArticle> articles;
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public List<SubEvent> getSubEvents() {
+        return subEvents;
+    }
+
+    public void setSubEvents(List<SubEvent> subEvents) {
+        this.subEvents = subEvents;
+    }
+
+    public List<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
+    }
+
+    public List<SubmitArticle> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<SubmitArticle> articles) {
+        this.articles = articles;
+    }
 
     // Getters and Setters
     public UUID getId() {
