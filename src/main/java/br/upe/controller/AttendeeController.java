@@ -62,13 +62,13 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public boolean create(Object... params) throws IOException {
+    public Object[] create(Object... params) throws IOException {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
         }
 
         String sessionId = getSessionId((String) params[0]);
-        String userId = (String) params[1];
+        String userId = params[1].toString();
 
         Persistence attendee = new AttendeeRepository();
         return attendee.create(userId, sessionId);
@@ -135,9 +135,15 @@ public class AttendeeController implements Controller {
     }
 
     @Override
-    public boolean loginValidate(String email, String cpf) {
-        //Método não implementado
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 1) {
+            LOGGER.warning("Só pode ter 1 parametro");
+            return new Object[]{false, null};
+        }
+
+        String userId = (String) params[0];
+        AttendeeRepository attendeeRepository = AttendeeRepository.getInstance();
+        return attendeeRepository.isExist(userId);
     }
 
 }

@@ -96,6 +96,21 @@
       <artifactId>jbcrypt</artifactId>
       <version>0.4</version>
     </dependency>
+
+      <!-- Mockito core -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>5.5.0</version> <!-- Use a última versão estável -->
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>5.5.0</version> <!-- Use a mesma versão do core -->
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

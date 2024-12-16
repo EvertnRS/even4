@@ -11,7 +11,9 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -40,10 +42,10 @@ public class SubEventRepository implements Persistence {
     }
 
     @Override
-    public boolean create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 6) {
             LOGGER.warning("Só pode ter 6 parametros");
-            return false;
+            return new Object[]{false, null};
         }
 
         UUID id = UUID.fromString((String) params[0]);
@@ -67,6 +69,14 @@ public class SubEventRepository implements Persistence {
                 .withOwner(owner)
                 .build();
 
+        List<SubEvent> userSubEvents = owner.getSubEvents();
+        userSubEvents.add(subevent);
+        owner.setSubEvents(userSubEvents);
+
+        List<SubEvent> eventSubEvents = event.getSubEvents();
+        eventSubEvents.add(subevent);
+        event.setSubEvents(eventSubEvents);
+
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -87,7 +97,7 @@ public class SubEventRepository implements Persistence {
                 entityManager.close();
             }
         }
-        return isCreated;
+        return new Object[]{isCreated, subevent.getId()};
     }
 
     @Override
@@ -183,6 +193,14 @@ public class SubEventRepository implements Persistence {
             SubEvent idSubEvent = entityManager.find(SubEvent.class, id);
             User owner = entityManager.find(User.class, ownerId);
 
+            List<SubEvent> userSubEvents = owner.getSubEvents();
+            userSubEvents.remove(idSubEvent);
+            owner.setSubEvents(userSubEvents);
+
+            List<SubEvent> eventSubEvents = idSubEvent.getEventId().getSubEvents();
+            eventSubEvents.remove(idSubEvent);
+            idSubEvent.getEventId().setSubEvents(eventSubEvents);
+
             if ((owner) == null) {
                 LOGGER.warning("Criador inválido.");
                 return false;
@@ -210,8 +228,28 @@ public class SubEventRepository implements Persistence {
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 1 parametro");
+            return new Object[]{false, null};
+        }
+        String name = (String) params[0];
+        UUID ownerId = UUID.fromString((String) params[1]);
+        User owner = JPAUtils.getEntityManagerFactory().find(User.class, ownerId);
+
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        TypedQuery<SubEvent> query = entityManager.createQuery(
+                "SELECT e FROM SubEvent e WHERE e.name = :name AND e.ownerId = :owner", SubEvent.class);
+        query.setParameter("name", name);
+        query.setParameter("owner", owner);
+
+        try {
+            SubEvent subevent = query.getSingleResult();
+            return new Object[]{true, subevent.getId()};
+        } catch (NoResultException e) {
+            LOGGER.warning("SubEvento não encontrado.");
+        }
+        return new Object[]{false, null};
     }
 
     @Override

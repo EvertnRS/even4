@@ -53,10 +53,10 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public boolean create(Object... params) throws IOException {
+    public Object[] create(Object... params) throws IOException {
         if (params.length != 3) {
             LOGGER.warning("São necessários 3 parâmetros: nome do evento, o conteúdo do arquivo (byte[]) e id do proprietário.");
-            return false;
+            return new Object[]{false, null};
         }
 
         String eventName = (String) params[0];
@@ -77,13 +77,14 @@ public class SubmitArticleController implements Controller {
 
     @Override
     public boolean delete(Object... params) throws IOException {
-        if (params.length != 1) {
-            LOGGER.warning("É necessário 1 parâmetro: id do artigo.");
+        if (params.length != 2) {
+            LOGGER.warning("É necessário 2 parâmetro: id do artigo e id do proprietário.");
             return false;
         }
         UUID articleId = (UUID) params [0];
+        UUID ownerId = (UUID) params [1];
 
-        return submitArticlesRepository.delete(articleId);
+        return submitArticlesRepository.delete(articleId, ownerId);
     }
 
     @Override
@@ -156,7 +157,13 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
-    public boolean loginValidate(String email, String cpf) {
-        return false;
+    public Object[] isExist(Object... params) {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parâmetro");
+            return new Object[]{false, null};
+        }
+        String name = (String) params[0];
+        String ownerId = (String) params[1];
+        return submitArticlesRepository.isExist(name, ownerId);
     }
 }

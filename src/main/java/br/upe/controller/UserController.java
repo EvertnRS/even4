@@ -76,7 +76,7 @@ public class UserController implements Controller {
     }
 
     @Override
-    public boolean create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length < 2) {
             LOGGER.warning("Só pode ter 2 parametros");
         }
@@ -156,13 +156,21 @@ public class UserController implements Controller {
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        Persistence userRepository = UserRepository.getInstance();
-        if (userRepository.loginValidate(email, password)) {
-            this.userLog = userRepository;
-            return true;
+    public Object[] isExist(Object... params) throws IOException {
+        if(params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parametro");
+            return new Object[]{false, null};
         }
-        return false;
+        String email = (String) params[0];
+        String password = (String) params[1];
+        Persistence userRepository = UserRepository.getInstance();
+        Object[] results = userRepository.isExist(email, password);
+        if ((boolean) results[0]) {
+            this.userLog = userRepository;
+            return results;
+        }
+
+        return new Object[]{false, null};
     }
 
 }

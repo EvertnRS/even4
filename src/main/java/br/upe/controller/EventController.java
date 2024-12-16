@@ -64,10 +64,10 @@ public class EventController implements Controller {
     }
 
     @Override
-    public boolean create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parâmetros");
-            return false;
+            return new Object[]{false, null};
         }
 
         String name = (String) params[0];
@@ -221,8 +221,15 @@ public class EventController implements Controller {
     }
 
     @Override
-    public boolean loginValidate(String email, String cpf) {
-        //Método não implementado
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 1 parametro");
+            return new Object[]{false, null};
+        }
+
+        String name = (String) params[0];
+        UUID ownerId =  UUID.fromString((String)params[1]);
+        EventRepository eventRepository = EventRepository.getInstance();
+        return eventRepository.isExist(name, ownerId);
     }
 }

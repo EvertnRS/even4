@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface Controller {
-    boolean create(Object... params) throws IOException;
+    Object[] create(Object... params) throws IOException;
     boolean update(Object... params) throws IOException;
     void read() throws IOException;
     boolean delete(Object... params) throws IOException;
 
     <T> List <T> list(Object... params) throws IOException;
-    boolean loginValidate(String email, String cpf);
+    Object[] isExist(Object... params) throws IOException;
     String getData(String dataToGet);
     Map<UUID, Persistence> getHashMap();
 

@@ -229,7 +229,7 @@ public class SubmitScreenController extends BaseController implements FxControll
         Optional<ButtonType> result = (Optional<ButtonType>) mediator.notify("handleDeleteEvent");
 
         if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
-            facade.deleteArticle(articleId);
+            facade.deleteArticle(articleId, facade.getUserData("id"));
             loadUserArticles();
         }
     }

@@ -10,6 +10,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -40,10 +41,12 @@ public class AttendeeRepository implements Persistence{
     }
 
     @Override
-    public boolean create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
+            LOGGER.warning("São necessários exatamente 2 parâmetros.");
+            return new Object[]{false, null};
         }
+
         UUID parsedUserId = UUID.fromString((String) params[0]);
         UUID parsedSessionId = UUID.fromString((String) params[1]);
         boolean isCreated = false;
@@ -52,16 +55,21 @@ public class AttendeeRepository implements Persistence{
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
+            // 1. Certifique-se de que o User está gerenciado
             User parsedUser = entityManager.find(User.class, parsedUserId);
             if (parsedUser == null) {
-                throw new IllegalArgumentException("Usuário não encontrado com o ID: " + parsedUserId);
+                LOGGER.warning("Usuário não encontrado: " + parsedUserId);
+                return new Object[]{false, null};
             }
 
+            // 2. Certifique-se de que a Session está gerenciada
             Session session = entityManager.find(Session.class, parsedSessionId);
             if (session == null) {
-                throw new IllegalArgumentException("Sessão não encontrada com o ID: " + parsedSessionId);
+                LOGGER.warning("Sessão não encontrada: " + parsedSessionId);
+                return new Object[]{false, null};
             }
 
+            // 3. Busque ou crie o Attendee no estado gerenciado
             Attendee attendee = entityManager.createQuery(
                             "SELECT a FROM Attendee a WHERE a.userId = :userId", Attendee.class)
                     .setParameter("userId", parsedUser)
@@ -74,28 +82,37 @@ public class AttendeeRepository implements Persistence{
                         .withId(UUID.randomUUID())
                         .withUser(parsedUser)
                         .build();
+                transaction.begin();
+                entityManager.persist(attendee);
+                transaction.commit();
+            } else {
+                attendee = entityManager.merge(attendee); // Reanexa o Attendee se ele já existe
             }
 
-            attendee.addSession(session);
-
+            // 4. Adicione a sessão ao Attendee gerenciado
             transaction.begin();
-            entityManager.persist(attendee);
+            attendee.addSession(session);
+            entityManager.merge(attendee); // Salva a modificação no Attendee
             transaction.commit();
 
             LOGGER.info("Sessão adicionada ao Attendee: " + attendee.getId());
             isCreated = true;
+
+            return new Object[]{isCreated, attendee.getId()};
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
             LOGGER.severe("Erro ao commitar a transação: " + e.getMessage());
+            throw e;
         } finally {
             if (entityManager.isOpen()) {
                 entityManager.close();
             }
         }
-        return isCreated;
     }
+
+
 
     @Override
     public boolean delete(Object... params) throws IOException {
@@ -189,7 +206,28 @@ public class AttendeeRepository implements Persistence{
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 1) {
+            LOGGER.warning("Só pode ter 1 parametro");
+            return new Object[]{false, null};
+        }
+
+        String userId = (String) params[0];
+
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        TypedQuery<Attendee> query = entityManager.createQuery(
+                "SELECT e FROM Attendee e WHERE e.userId.id = :userId", Attendee.class);
+        query.setParameter("userId", UUID.fromString(userId));
+        try {
+            Attendee attendee = query.getSingleResult();
+            return new Object[]{true, attendee.getId()};
+        } catch (Exception e) {
+            LOGGER.warning("Participante não encontrado.");
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        return new Object[]{false, null};
     }
 }

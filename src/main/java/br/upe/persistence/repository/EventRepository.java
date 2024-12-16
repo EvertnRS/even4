@@ -9,6 +9,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import java.io.*;
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +41,7 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public boolean create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 5) {
             LOGGER.warning("Só pode ter 5 parametros");
         }
@@ -66,6 +67,12 @@ public class EventRepository implements Persistence {
                 .withOwner(owner)
                 .build();
 
+        List<Event> events = owner.getEvents();
+        events.add(event);
+        owner.setEvents(events);
+
+
+
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -82,7 +89,7 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
-        return isCreated;
+        return new Object[]{isCreated, event.getId()};
     }
 
     @Override
@@ -177,6 +184,10 @@ public class EventRepository implements Persistence {
             Event idEvent = entityManager.find(Event.class, id);
             User owner = entityManager.find(User.class, ownerId);
 
+            List<Event> userEvents = owner.getEvents();
+            userEvents.remove(idEvent);
+            owner.setEvents(userEvents);
+
             if ((owner) == null) {
                 LOGGER.warning("Criador inválido.");
                 return false;
@@ -204,8 +215,31 @@ public class EventRepository implements Persistence {
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parametro");
+            return new Object[]{false, null};
+        }
+
+        String name = (String) params[0];
+        UUID ownerId = (UUID) params[1];
+
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        TypedQuery<Event> query = entityManager.createQuery(
+                "SELECT e FROM Event e WHERE e.name = :name AND e.ownerId.id = :ownerId", Event.class);
+        query.setParameter("name", name);
+        query.setParameter("ownerId", ownerId);
+        try {
+            Event event = query.getSingleResult();
+            return new Object[]{true, event.getId()};
+        } catch (NoResultException e) {
+            LOGGER.warning("Evento não encontrado.");
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        return new Object[]{false, null};
     }
 
     @Override

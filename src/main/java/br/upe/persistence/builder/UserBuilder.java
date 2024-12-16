@@ -1,7 +1,9 @@
 package br.upe.persistence.builder;
 
-import br.upe.persistence.User;
+import br.upe.persistence.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 import java.util.UUID;
 
 public class UserBuilder {
@@ -10,6 +12,10 @@ public class UserBuilder {
     private Long cpf;
     private String email;
     private String password;
+    private List<Event> event;
+    private List<SubEvent> subEvent;
+    private List<Session> session;
+    private List<SubmitArticle> article;
 
     public static UserBuilder builder() {
         return new UserBuilder();
@@ -40,6 +46,26 @@ public class UserBuilder {
         return this;
     }
 
+    public UserBuilder withEvent(List<Event> event) {
+        this.event = event;
+        return this;
+    }
+
+    public UserBuilder withSubEvent(List<SubEvent> subEvent) {
+        this.subEvent = subEvent;
+        return this;
+    }
+
+    public UserBuilder withSession(List<Session> session) {
+        this.session = session;
+        return this;
+    }
+
+    public UserBuilder withArticle(List<SubmitArticle> article) {
+        this.article = article;
+        return this;
+    }
+
     public User build() {
         User user = new User();
         user.setId(this.id);
@@ -47,6 +73,10 @@ public class UserBuilder {
         user.setCpf(this.cpf);
         user.setEmail(this.email);
         user.setPassword(this.password);
+        user.setEvents(this.event);
+        user.setSubEvents(this.subEvent);
+        user.setSessions(this.session);
+        user.setArticles(this.article);
         return user;
     }
 }

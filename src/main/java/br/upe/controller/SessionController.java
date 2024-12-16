@@ -107,21 +107,21 @@ public class SessionController implements Controller {
         return data;
     }
 
-    public boolean create(Object... params) throws IOException {
-        if (params.length != 9) {
+    public Object[] create(Object... params) throws IOException {
+        if (params.length != 8) {
             LOGGER.warning("Número incorreto de parâmetros. Esperado: 9");
-            return false;
+            return new Object[]{false, null};
         }
 
 
-        String name = (String) params[1];
-        Date date = (Date) params[2];
-        String description = (String) params[3];
-        String location = (String) params[4];
-        String startTime = (String) params[5];
-        String endTime = (String) params[6];
-        String userId = (String) params[7];
-        String[] type = (String[]) params[8];
+        String name = (String) params[0];
+        Date date = (Date) params[1];
+        String description = (String) params[2];
+        String location = (String) params[3];
+        String startTime = (String) params[4];
+        String endTime = (String) params[5];
+        String userId = (String) params[6];
+        String[] type = (String[]) params[7];
         UUID eventId = null;
         UUID subEventId = null;
         boolean isCreated = false;
@@ -133,12 +133,12 @@ public class SessionController implements Controller {
         }
 
         Persistence session = new SessionRepository();
-        isCreated = session.create(eventId, name, date, description, location, startTime, endTime, userId, subEventId);
-        UUID sessionId = (UUID) session.getData(ID);
+        Object[] results = session.create(eventId, name, date, description, location, startTime, endTime, userId, subEventId);
+        UUID sessionId = (UUID) results[1];
         sessionHashMap.put(sessionId, session);
 
         this.sessionLog = session;
-        return isCreated;
+        return new Object[]{results[0], sessionId};
     }
 
 
@@ -172,8 +172,16 @@ public class SessionController implements Controller {
         return (List<T>) userSessions;
     }
     @Override
-    public boolean loginValidate(String email, String cpf) {
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parâmetros");
+            return new Object[]{false, null};
+        }
+
+        String name = (String) params[0];
+        String ownerId = (String) params[1];
+        SessionRepository sessionRepository = SessionRepository.getInstance();
+        return sessionRepository.isExist(name, ownerId);
     }
 
     @Override

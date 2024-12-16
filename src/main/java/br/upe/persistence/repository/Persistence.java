@@ -1,11 +1,14 @@
 package br.upe.persistence.repository;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public interface  Persistence {
-    boolean create(Object... params);
+    Object[] create(Object... params);
     boolean delete(Object... params) throws IOException;
     boolean update(Object... params) throws IOException;
 
@@ -17,5 +20,5 @@ public interface  Persistence {
     void setData(UUID eventId, String dataToSet, Object data);
     HashMap<UUID, Persistence> read() throws IOException;
     HashMap<UUID, Persistence> read(Object... params);
-    boolean loginValidate(String email, String password);
+    Object[] isExist(Object... params) throws IOException;
 }

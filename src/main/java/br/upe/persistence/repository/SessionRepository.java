@@ -14,10 +14,7 @@ import jakarta.persistence.TypedQuery;
 
 import java.io.IOException;
 import java.sql.Time;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class SessionRepository implements Persistence {
@@ -45,10 +42,10 @@ public class SessionRepository implements Persistence {
     }
 
     @Override
-    public boolean create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 9) {
             LOGGER.warning("Devem ser fornecidos 9 parâmetros.");
-            return false;
+            return new Object[]{false, null};
         }
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         UUID eventId = null;
@@ -77,7 +74,7 @@ public class SessionRepository implements Persistence {
 
         if (owner == null) {
             LOGGER.warning("Usuário inválido.");
-            return false;
+            return new Object[]{false, null};
         }
 
         Session session = SessionBuilder.builder()
@@ -91,6 +88,17 @@ public class SessionRepository implements Persistence {
                 .withEvent(event)
                 .withOwner(owner)
                 .build();
+
+        List<Session> userSessions = owner.getSessions();
+        userSessions.add(session);
+        owner.setSessions(userSessions);
+
+        if(event != null) {
+            List<Session> eventSessions = event.getSessions();
+            eventSessions.add(session);
+            event.setSessions(eventSessions);
+        }
+
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -107,7 +115,7 @@ public class SessionRepository implements Persistence {
                 entityManager.close();
             }
         }
-        return isCreated;
+        return new Object[]{isCreated, session.getId()};
     }
     public Time convertTime(String timeString) {
         Time time = null;
@@ -215,9 +223,19 @@ public class SessionRepository implements Persistence {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-
             Session session = entityManager.find(Session.class, id);
             User owner = entityManager.find(User.class, ownerId);
+
+            List<Session> userSessions = owner.getSessions();
+            userSessions.remove(session);
+            owner.setSessions(userSessions);
+
+            Event event = session.getEventId();
+            if(event != null) {
+                List<Session> eventSessions = event.getSessions();
+                eventSessions.remove(session);
+                event.setSessions(eventSessions);
+            }
 
             if (owner == null) {
                 LOGGER.warning("Criador inválido.");
@@ -246,8 +264,31 @@ public class SessionRepository implements Persistence {
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
+    public Object[] isExist(Object... params) {
+        if (params.length != 2) {
+            LOGGER.warning("Devem ser fornecidos 1 parâmetro.");
+            return new Object[]{false, null};
+        }
+
+        String name = (String) params[0];
+        UUID userId = UUID.fromString((String) params[1]);
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        try {
+            TypedQuery<Session> query = entityManager.createQuery("SELECT s FROM Session s WHERE s.name = :name AND s.ownerId.id = :userId", Session.class);
+            query.setParameter("name", name);
+            query.setParameter("userId", userId);
+            Session session = query.getSingleResult();
+            return new Object[]{true, session.getId()};
+        } catch (NoResultException e) {
+            LOGGER.warning("Nenhuma sessão encontrada com o nome: " + name + " e usuário com ID: " + userId);
+        } catch (Exception e) {
+            LOGGER.severe("Erro ao buscar sessão: " + e.getMessage());
+        } finally {
+            if (entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        return new Object[]{false, null};
     }
 
     @Override

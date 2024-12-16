@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -53,7 +54,7 @@ public class UserRepository implements Persistence {
     }
 
     @Override
-    public boolean create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 4) {
             LOGGER.warning("Só pode ter 4 parametro contendo o email e o cpf do usuário que deseja criar");
         }
@@ -68,7 +69,7 @@ public class UserRepository implements Persistence {
 
         if (userExists(email, cpf)) {
             LOGGER.warning("Usuário com este email ou CPF já existe");
-            return false;
+            return new Object[]{false, null};
         }
 
         User user = UserBuilder.builder()
@@ -96,7 +97,7 @@ public class UserRepository implements Persistence {
                 entityManager.close();
             }
         }
-        return isCreated;
+        return new Object[]{isCreated, user.getId()};
     }
 
 
@@ -283,7 +284,14 @@ public class UserRepository implements Persistence {
         return BCrypt.checkpw(password, hashedPassword);
     }
 
-    public boolean loginValidate(String email, String password) {
+    @Override
+    public Object[] isExist(Object... params) {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parametro");
+            return new Object[]{false, null};
+        }
+        String email = (String) params[0];
+        String password = (String) params[1];
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         try {
             TypedQuery<User> query = entityManager.createQuery(
@@ -294,7 +302,7 @@ public class UserRepository implements Persistence {
             if (isPasswordEqual(password, user.getPassword())) {
                 this.userId = user.getId();
 
-                return true;
+                return new Object[]{true, user.getId()};
             }
         } catch (NoResultException e) {
             LOGGER.warning("Usuário não encontrado com o email fornecido.");
@@ -305,7 +313,7 @@ public class UserRepository implements Persistence {
                 entityManager.close();
             }
         }
-        return false;
+        return new Object[]{false, null};
     }
 
     /*private UserRepository parseToUserRepository(User user) {

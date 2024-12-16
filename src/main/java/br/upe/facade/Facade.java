@@ -42,7 +42,7 @@ public class Facade implements FacadeInterface {
         return eventController.list(params);
     }
 
-    public boolean createEvent(Object... params) throws IOException {
+    public Object[] createEvent(Object... params) throws IOException {
         return eventController.create(params);
     }
 
@@ -60,6 +60,11 @@ public class Facade implements FacadeInterface {
 
     public String getEventData(String dataToGet) {
         return eventController.getData(dataToGet);
+    }
+
+    @Override
+    public Object[] isEventExist(Object... params) throws IOException {
+        return eventController.isExist(params);
     }
 
 
@@ -82,7 +87,7 @@ public class Facade implements FacadeInterface {
         return sessionController.list(params);
     }
 
-    public boolean createSession(Object... params) throws IOException {
+    public Object[] createSession(Object... params) throws IOException {
         return sessionController.create(params);
     }
 
@@ -100,6 +105,11 @@ public class Facade implements FacadeInterface {
 
     public String getSessionData(String dataToGet) {
         return sessionController.getData(dataToGet);
+    }
+
+    @Override
+    public Object[] isSessionExist(Object... params) throws IOException {
+        return sessionController.isExist(params);
     }
 
 
@@ -124,7 +134,7 @@ public class Facade implements FacadeInterface {
         return subEventController.delete(params);
     }
 
-    public boolean createSubEvent(Object... params) throws IOException {
+    public Object[] createSubEvent(Object... params) throws IOException {
         return subEventController.create(params);
     }
 
@@ -136,12 +146,17 @@ public class Facade implements FacadeInterface {
         return subEventController.getData(dataToGet);
     }
 
+    @Override
+    public Object[] isSubEventExist(Object... params) throws IOException {
+        return subEventController.isExist(params);
+    }
+
     // SubmitArticleController methods
     public Map<UUID, Persistence> getArticleHashMap() {
         return submitArticleController.getHashMap();
     }
 
-    public boolean createArticle(Object... params) throws IOException {
+    public Object[] createArticle(Object... params) throws IOException {
         return submitArticleController.create(params);
     }
 
@@ -165,12 +180,17 @@ public class Facade implements FacadeInterface {
         return (List<T>) submitArticleController.getEventArticles(eventId);
     }
 
+    @Override
+    public Object[] isArticleExist(Object... params) throws IOException {
+        return submitArticleController.isExist(params);
+    }
+
     // UserController methods
     public Map<UUID, Persistence> getUserHashMap() {
         return userController.getHashMap();
     }
 
-    public boolean createUser(Object... params) throws IOException {
+    public Object[] createUser(Object... params) throws IOException {
         return userController.create(params);
     }
 
@@ -187,8 +207,9 @@ public class Facade implements FacadeInterface {
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        return userController.loginValidate(email, password);
+    public boolean loginValidate(String email, String password) throws IOException {
+        Object[] results = userController.isExist(email, password);
+        return (boolean) results[0];
     }
 
     public String getUserData(String dataToGet) {
@@ -200,7 +221,7 @@ public class Facade implements FacadeInterface {
         return attendeeController.getHashMap();
     }
 
-    public boolean createAttendee(Object... params) throws IOException {
+    public Object[] createAttendee(Object... params) throws IOException {
         return attendeeController.create(params);
     }
 
@@ -214,5 +235,10 @@ public class Facade implements FacadeInterface {
 
     public boolean deleteAttendee(Object... params) throws IOException {
         return attendeeController.delete(params);
+    }
+
+    @Override
+    public Object[] isAttendeeExist(Object... params) throws IOException {
+        return attendeeController.isExist(params);
     }
 }

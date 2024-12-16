@@ -10,6 +10,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -48,10 +49,10 @@ public class SubmitArticlesRepository implements Persistence {
 
 
     @Override
-    public boolean create(Object... params) {
+    public Object[] create(Object... params) {
         if (params.length != 4) {
             LOGGER.warning("São necessários 2 parâmetros: nome do evento e o artigo escolhido.");
-            return false;
+            return new Object[]{false, null};
         }
 
         String eventName = (String) params[0];
@@ -64,6 +65,7 @@ public class SubmitArticlesRepository implements Persistence {
         EntityTransaction transaction = entityManager.getTransaction();
         User owner = entityManager.find(User.class, ownerId);
 
+        SubmitArticle submitArticle = null;
         try {
 
             TypedQuery<Event> query = entityManager.createQuery(
@@ -73,15 +75,23 @@ public class SubmitArticlesRepository implements Persistence {
 
             if (event == null) {
                 LOGGER.warning("Evento não encontrado com o nome fornecido: " + eventName);
-                return false;
+                return new Object[]{false, null};
             }
 
-            SubmitArticle submitArticle = SubmitArticleBuilder.builder()
+            submitArticle = SubmitArticleBuilder.builder()
                     .withName(articleName)
                     .withArticle(article)
                     .withOwner(owner)
                     .withEvent(event)
                     .build();
+
+            List<SubmitArticle> userArticles = owner.getArticles();
+            userArticles.add(submitArticle);
+            owner.setArticles(userArticles);
+
+            List<SubmitArticle> eventArticles = event.getArticles();
+            eventArticles.add(submitArticle);
+            event.setArticles(eventArticles);
 
             transaction.begin();
             entityManager.persist(submitArticle);
@@ -100,7 +110,8 @@ public class SubmitArticlesRepository implements Persistence {
                 entityManager.close();
             }
         }
-        return isCreated;
+        assert submitArticle != null;
+        return new Object[]{isCreated, submitArticle.getId()};
     }
 
 
@@ -162,12 +173,13 @@ public class SubmitArticlesRepository implements Persistence {
 
     @Override
     public boolean delete(Object... params) {
-        if (params.length != 1) {
-            LOGGER.warning("É necessário um parâmetro: ID do artigo.");
+        if (params.length != 2) {
+            LOGGER.warning("É necessário um parâmetro: ID do artigo e ID do proprietário.");
             return false;
         }
 
         UUID articleId = (UUID) params [0];
+        UUID ownerId = (UUID) params [1];
         boolean isDeleted = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
@@ -175,6 +187,15 @@ public class SubmitArticlesRepository implements Persistence {
 
         try {
             SubmitArticle article = entityManager.find(SubmitArticle.class, articleId);
+            User owner = entityManager.find(User.class, ownerId);
+            List<SubmitArticle> userArticles = owner.getArticles();
+            userArticles.remove(article);
+            owner.setArticles(userArticles);
+
+            List<SubmitArticle> eventArticles = article.getEventId().getArticles();
+            eventArticles.remove(article);
+            article.getEventId().setArticles(eventArticles);
+
             if (article == null) {
                 LOGGER.warning("Artigo não encontrado.");
                 return false;
@@ -200,8 +221,24 @@ public class SubmitArticlesRepository implements Persistence {
     }
 
     @Override
-    public boolean loginValidate(String email, String password) {
-        return false;
+    public Object[] isExist(Object... params) {
+        if (params.length != 2) {
+            LOGGER.warning("É necessário 2 parâmetros: ID do artigo e ID do proprietário.");
+            return new Object[]{false, null};
+        }
+
+        String name = (String) params[0];
+        UUID ownerId = (UUID) params[1];
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        TypedQuery<SubmitArticle> query = entityManager.createQuery(
+                "SELECT a FROM SubmitArticle a WHERE a.name = :name", SubmitArticle.class);
+        query.setParameter("name", name);
+        SubmitArticle article = query.getSingleResult();
+        User owner = entityManager.find(User.class, ownerId);
+        if (article == null || owner == null) {
+            return new Object[]{false, null};
+        }
+        return new Object[]{true, article.getId()};
     }
 
     @Override

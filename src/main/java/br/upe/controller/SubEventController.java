@@ -89,13 +89,14 @@ public class SubEventController implements Controller {
     }
 
     @Override
-    public boolean create(Object... params) throws IOException {
+    public Object[] create(Object... params) throws IOException {
         if (params.length != 6) {
             LOGGER.warning("Só pode ter 6 parâmetros");
-            return false;
+            return new Object[]{false, null};
         }
 
-        String eventId = getFatherEventId((String) params[0]);
+        UUID eventId = (params[0] instanceof UUID) ? (UUID) params[0] : UUID.fromString((String) params[0]);
+        String fatherEventId = getFatherEventId(eventId);
         String name = (String) params[1];
         Date date = (Date) params[2];
         String description = (String) params[3];
@@ -103,7 +104,7 @@ public class SubEventController implements Controller {
         String userId = (String) params[5];
 
         Persistence subEvent = new SubEventRepository();
-        return subEvent.create(eventId, name, date, description, location, userId);
+        return subEvent.create(fatherEventId, name, date, description, location, userId);
     }
 
 //    private void cascadeDelete(String id) throws IOException {
@@ -168,14 +169,32 @@ public class SubEventController implements Controller {
     @Override
     public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
-            LOGGER.warning("Só pode ter 2 parametro");
+            LOGGER.warning("É necessário fornecer exatamente 2 parâmetros.");
             return false;
         }
 
         SubEventRepository subeventRepository = SubEventRepository.getInstance();
 
-        UUID id = (UUID) params[0];
-        UUID ownerId = UUID.fromString((String) params[1]);
+        UUID id;
+        UUID ownerId;
+
+
+
+        if (params[0] instanceof UUID) {
+            id = (UUID) params[0];
+        } else if (params[0] instanceof String) {
+            id = UUID.fromString((String) params[0]);
+        } else {
+            throw new IllegalArgumentException("O primeiro parâmetro deve ser do tipo UUID ou String.");
+        }
+
+        if (params[1] instanceof UUID) {
+            ownerId = (UUID) params[1];
+        } else if (params[1] instanceof String) {
+            ownerId = UUID.fromString((String) params[1]);
+        } else {
+            throw new IllegalArgumentException("O segundo parâmetro deve ser do tipo UUID ou String.");
+        }
 
         return subeventRepository.delete(id, ownerId);
     }
@@ -236,18 +255,24 @@ public class SubEventController implements Controller {
     }
 
     @Override
-    public boolean loginValidate(String email, String cpf) {
-        //Método não implementado
-        return false;
+    public Object[] isExist(Object... params) throws IOException {
+        if (params.length != 2) {
+            LOGGER.warning("Só pode ter 2 parâmetro");
+            return new Object[]{false, null};
+        }
+        SubEventRepository subeventRepository = SubEventRepository.getInstance();
+        String name = (String) params[0];
+        String ownerId = (String) params[1];
+        return subeventRepository.isExist(name, ownerId);
     }
 
 
-    private String getFatherEventId(String searchId) throws IOException {
+    private String getFatherEventId(UUID searchId) throws IOException {
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         String fatherId = null;
         try {
-            TypedQuery<Event> query = entityManager.createQuery("SELECT e FROM Event e WHERE e.name = :name", Event.class);
-            query.setParameter("name", searchId);
+            TypedQuery<Event> query = entityManager.createQuery("SELECT e FROM Event e WHERE e.id = :searchId", Event.class);
+            query.setParameter("searchId", searchId);
             Event event = query.getSingleResult();
             fatherId = event.getId().toString();
         } catch (NoResultException e) {
