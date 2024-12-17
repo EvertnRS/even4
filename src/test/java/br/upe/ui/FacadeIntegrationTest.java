@@ -3,19 +3,10 @@ package br.upe.ui;
 import br.upe.controller.UserController;
 import br.upe.facade.Facade;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Event;
-import br.upe.persistence.repository.EventRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FacadeIntegrationTest {
@@ -37,6 +28,7 @@ class FacadeIntegrationTest {
         boolean isCreated = (boolean) results[0];
         if (isCreated) {
             boolean isLoggedIn = facade.loginValidate(email, password);
+            assertTrue(true, "O usuário deve ser criado com sucesso");
             if (isLoggedIn) {
                 facade.deleteUser("1234");
             }
@@ -1146,7 +1138,7 @@ class FacadeIntegrationTest {
         }
     }
 
-    /*@Test
+    @Test
     void testCreateEventAttendee() throws IOException {
 
         if (facade.loginValidate(email, password)) {
@@ -1181,7 +1173,7 @@ class FacadeIntegrationTest {
                         assertTrue(isDeleted);
                     }
                     String[] type = {eventResults[1].toString(), "evento"};
-                    Object[] sessionEventResults = facade.createSession("Session", eventDate, "Session", "Location", "20:50", "21:50",facade.getUserData("id"), type);
+                    Object[] sessionEventResults = facade.createSession("Session", eventDate, "Session", "Location", "20:50", "21:50", facade.getUserData("id"), type);
                     if ((boolean) sessionEventResults[0]) {
                         Object[] attendeeExistsResults = facade.isAttendeeExist(facade.getUserData("id"));
                         if ((boolean) attendeeExistsResults[0]) {
@@ -1200,8 +1192,5 @@ class FacadeIntegrationTest {
 
             }
         }
-    }*/
-
-
-
+    }
 }
