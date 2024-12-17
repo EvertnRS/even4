@@ -93,12 +93,10 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
             Object dateObject = subeventRepository.getData(subEventId, "date");
             java.sql.Date sqlDate;
 
-            if (dateObject instanceof java.sql.Timestamp) {
-                sqlDate = new java.sql.Date(((java.sql.Timestamp) dateObject).getTime());
-            } else if (dateObject instanceof java.sql.Date) {
-                sqlDate = (java.sql.Date) dateObject;
-            } else {
-                throw new IllegalArgumentException("Tipo inesperado: " + dateObject.getClass().getName());
+            switch (dateObject) {
+                case java.sql.Timestamp timestamp -> sqlDate = new java.sql.Date(timestamp.getTime());
+                case java.sql.Date date -> sqlDate = date;
+                default -> throw new IllegalArgumentException("Tipo inesperado: " + dateObject.getClass().getName());
             }
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

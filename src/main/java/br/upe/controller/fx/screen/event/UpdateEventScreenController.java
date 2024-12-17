@@ -88,13 +88,11 @@ public class UpdateEventScreenController extends BaseController implements FxCon
             Object dateObject = eventRepository.getData(eventId, "date");
             java.sql.Date sqlDate;
 
-            if (dateObject instanceof java.sql.Timestamp) {
-                sqlDate = new java.sql.Date(((java.sql.Timestamp) dateObject).getTime());
-            } else if (dateObject instanceof java.sql.Date) {
-                sqlDate = (java.sql.Date) dateObject;
-            } else {
-                throw new IllegalArgumentException("Tipo inesperado: " + dateObject.getClass().getName());
-            }
+            sqlDate = switch (dateObject) {
+                case java.sql.Timestamp timestamp -> new java.sql.Date(timestamp.getTime());
+                case java.sql.Date date -> date;
+                default -> throw new IllegalArgumentException("Unexpected type: " + dateObject.getClass().getName());
+            };
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             String eventDate = formatter.format(sqlDate);

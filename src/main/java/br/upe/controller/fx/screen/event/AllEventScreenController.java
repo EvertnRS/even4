@@ -7,7 +7,6 @@ import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Model;
 import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.UserRepository;
-import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -50,7 +49,7 @@ public class AllEventScreenController extends BaseController implements FxContro
         initial();
     }
 
-    private void initial() throws IOException {
+    private void initial() {
         userEmail.setText(facade.getUserData("email"));
         loadEvents();
 

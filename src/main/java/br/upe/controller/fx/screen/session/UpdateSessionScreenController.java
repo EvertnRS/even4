@@ -18,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -130,7 +129,7 @@ public class UpdateSessionScreenController extends BaseController implements FxC
                     Session.class
             );
             sessionQuery.setParameter("name", sessionName.trim());
-            LOGGER.info("Session Name: " + sessionName);
+            LOGGER.info("Session name: {}");
 
             List<Session> sessionResults = sessionQuery.getResultList();
             if (sessionResults.isEmpty()) {
@@ -159,7 +158,6 @@ public class UpdateSessionScreenController extends BaseController implements FxC
             }
         }
         return type;
-
     }
 
     private void loadSessionDetails() {
@@ -186,13 +184,11 @@ public class UpdateSessionScreenController extends BaseController implements FxC
             Object dateObject = sessionRepository.getData(UUID.fromString(sessionId), "date");
             java.sql.Date sqlDate;
 
-            if (dateObject instanceof java.sql.Timestamp) {
-                sqlDate = new java.sql.Date(((java.sql.Timestamp) dateObject).getTime());
-            } else if (dateObject instanceof java.sql.Date) {
-                sqlDate = (java.sql.Date) dateObject;
-            } else {
-                throw new IllegalArgumentException("Tipo inesperado: " + dateObject.getClass().getName());
-            }
+            sqlDate = switch (dateObject) {
+                case java.sql.Timestamp timestamp -> new java.sql.Date(timestamp.getTime());
+                case java.sql.Date date -> date;
+                default -> throw new IllegalArgumentException("Unexpected type: " + dateObject.getClass().getName());
+            };
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             String subeventDate = formatter.format(sqlDate);
@@ -208,12 +204,13 @@ public class UpdateSessionScreenController extends BaseController implements FxC
     }
 
     private String formatTime(Object timeObject) {
-        if (timeObject instanceof java.sql.Time) {
-            SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-            return timeFormatter.format((java.sql.Time) timeObject);
-        } else {
-            throw new IllegalArgumentException("Tipo inesperado: " + timeObject.getClass().getName());
-        }
+        return switch (timeObject) {
+            case java.sql.Time time -> {
+                SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
+                yield timeFormatter.format(time);
+            }
+            default -> throw new IllegalArgumentException("Unexpected type: " + timeObject.getClass().getName());
+        };
     }
 
     public UUID getId() {

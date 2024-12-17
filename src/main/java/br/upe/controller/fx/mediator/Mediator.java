@@ -7,16 +7,20 @@ import br.upe.utils.CustomRuntimeException;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 
 import static br.upe.ui.Validation.isValidDate;
 
 public abstract class Mediator implements MediatorInterface {
+    private static final Logger logger = Logger.getLogger(Mediator.class.getName());
+
     private final FxController fxController;
     protected FacadeInterface facade;
     protected final AnchorPane screenPane;
@@ -41,6 +45,8 @@ public abstract class Mediator implements MediatorInterface {
             });
         }
     }
+
+
 
     public boolean validateInputs(UUID currentItemId, List<Model> eventList) {
         String newName = fxController.getNameTextField().getText();
@@ -78,14 +84,12 @@ public abstract class Mediator implements MediatorInterface {
 
     protected <T> boolean isValidName(String name, List<T> items, UUID currentItemId) {
         for (T item : items) {
-            if (item instanceof Model) {
-                Model modelItem = (Model) item;
-                if (modelItem.getName().equals(name) && (currentItemId == null || !modelItem.getId().equals(currentItemId))) {
-                    System.out.println(modelItem.getName());
-                    System.out.println(name);
-                    return false;
+            if (item instanceof Model modelItem && modelItem.getName().equals(name) && (currentItemId == null || !modelItem.getId().equals(currentItemId))) {
+                logger.log(Level.INFO, "Existing name: {0}", modelItem.getName());
+                logger.log(Level.INFO, "Input name: {0}", name);
+                return false;
                 }
-            }
+
         }
         return true;
     }
@@ -101,8 +105,7 @@ public abstract class Mediator implements MediatorInterface {
 
         confirmationAlert.getButtonTypes().setAll(buttonSim, buttonNao);
 
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
-        return result;
+        return confirmationAlert.showAndWait();
     }
 
 }
