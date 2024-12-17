@@ -40,9 +40,7 @@ public class PlaceholderUtils {
         placeholder.setOnMouseEntered(event -> placeholder.setCursor(Cursor.TEXT));
         placeholder.setOnMouseExited(event -> placeholder.setCursor(Cursor.DEFAULT));
 
-        placeholder.setOnMouseClicked(event -> {
-            control.requestFocus();
-        });
+        placeholder.setOnMouseClicked(event -> control.requestFocus());
     }
 
     private static boolean isControlEmpty(Control control) {
