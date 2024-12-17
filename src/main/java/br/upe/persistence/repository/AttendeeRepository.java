@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 public class AttendeeRepository implements Persistence {
     private static final Logger LOGGER = Logger.getLogger(AttendeeRepository.class.getName());
+    private static final String USER_ID = "userId";
     private static AttendeeRepository instance;
 
     public AttendeeRepository() {
@@ -66,7 +67,7 @@ public class AttendeeRepository implements Persistence {
 
             attendee = entityManager.createQuery(
                             "SELECT a FROM Attendee a WHERE a.userId = :userId", Attendee.class)
-                    .setParameter("userId", user)
+                    .setParameter(USER_ID, user)
                     .getResultStream()
                     .findFirst()
                     .orElse(null);
@@ -169,7 +170,7 @@ public class AttendeeRepository implements Persistence {
         return switch (dataToGet) {
             case "id" -> attendee.getId();
             case "name" -> attendee.getName();
-            case "userId" -> attendee.getUserId();
+            case USER_ID -> attendee.getUserId();
             case "sessionIds" -> attendee.getSessionIds();
             default -> null;
         };
@@ -197,7 +198,7 @@ public class AttendeeRepository implements Persistence {
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         TypedQuery<Attendee> query = entityManager.createQuery(
                 "SELECT e FROM Attendee e WHERE e.userId.id = :userId", Attendee.class);
-        query.setParameter("userId", UUID.fromString(userId));
+        query.setParameter(USER_ID, UUID.fromString(userId));
         try {
             Attendee attendee = query.getSingleResult();
             return new Object[]{true, attendee.getId()};

@@ -12,7 +12,6 @@ import br.upe.persistence.repository.EventRepository;
 import br.upe.persistence.repository.SessionRepository;
 import br.upe.persistence.repository.SubEventRepository;
 import br.upe.persistence.repository.UserRepository;
-import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
