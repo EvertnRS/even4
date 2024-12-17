@@ -114,7 +114,6 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         }
     }
 
-
     public void updateSubEvent() throws IOException {
         String newName = editNameTextField.getText();
         String newLocation = editLocationTextField.getText();
@@ -126,7 +125,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
             errorUpdtLabel.setAlignment(Pos.CENTER);
         } else {
             facade.updateSubEvent(subEventId, newName, newDate, newDescription, newLocation);
-            mediator.notify("handleSubEvent");
+            mediator.notify("handleBack");
         }
     }
 
@@ -134,7 +133,7 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         try {
             EntityManager entityManager = JPAUtils.getEntityManagerFactory();
             TypedQuery<UUID> query = entityManager.createQuery(
-                    "SELECT s.eventId FROM SubEvent s WHERE s.id = :subEventId", UUID.class);
+                    "SELECT s.eventId.id FROM SubEvent s WHERE s.id = :subEventId", UUID.class);
             query.setParameter("subEventId", subEventId);
             return query.getSingleResult();
         } catch (NoResultException e) {

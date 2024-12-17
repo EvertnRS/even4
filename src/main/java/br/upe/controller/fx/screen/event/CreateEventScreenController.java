@@ -72,7 +72,7 @@ public class CreateEventScreenController extends BaseController implements FxCon
         Date eventDate = Date.valueOf(datePicker.getValue() != null ? datePicker.getValue().toString() : "");
 
         facade.createEvent(eventName, eventDate, eventDescription, eventLocation, facade.getUserData("id"));
-        mediator.notify("handleEvent");
+        mediator.notify("handleBack");
     }
 
     @Override

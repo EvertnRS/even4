@@ -89,7 +89,7 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
-        return new Object[]{isCreated, event.getId()};
+        return new Object[]{isCreated, event.getId(), event.getName()};
     }
 
     @Override
