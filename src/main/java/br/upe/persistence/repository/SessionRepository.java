@@ -192,43 +192,44 @@ public class SessionRepository implements Persistence {
             LOGGER.warning("Devem ser fornecidos 2 parâmetros.");
             return false;
         }
-
         UUID id = (UUID) params[0];
         UUID ownerId = (UUID) params[1];
         boolean isDeleted = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
+
         try {
             transaction.begin();
 
             Session session = entityManager.find(Session.class, id);
+            if (session == null) {
+                LOGGER.warning("Sessão não encontrada com o ID fornecido.");
+                return false;
+            }
+
             User owner = entityManager.find(User.class, ownerId);
+            if (owner == null) {
+                LOGGER.warning("Criador inválido.");
+                return false;
+            }
 
             List<Session> userSessions = owner.getSessions();
             userSessions.remove(session);
             owner.setSessions(userSessions);
 
             Event event = session.getEventId();
-            if(event != null) {
+            if (event != null) {
                 List<Session> eventSessions = event.getSessions();
                 eventSessions.remove(session);
                 event.setSessions(eventSessions);
             }
 
-            if (owner == null) {
-                LOGGER.warning("Criador inválido.");
-                return false;
-            }
+            entityManager.remove(session);
+            transaction.commit();
+            LOGGER.info("Sessão deletada com sucesso.");
+            isDeleted = true;
 
-            if (session != null) {
-                entityManager.remove(session);
-                transaction.commit();
-                LOGGER.info("Sessão deletada com sucesso.");
-                isDeleted = true;
-            } else {
-                LOGGER.warning(SESSION_NOT_FOUND);
-            }
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -239,8 +240,10 @@ public class SessionRepository implements Persistence {
                 entityManager.close();
             }
         }
+
         return isDeleted;
     }
+
 
 
     @Override

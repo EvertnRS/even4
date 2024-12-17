@@ -144,38 +144,40 @@ public class EventRepository implements Persistence {
     @Override
     public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
+            LOGGER.warning("Só pode ter 2 parâmetros.");
             return false;
         }
-
         UUID id = (UUID) params[0];
         UUID ownerId = (UUID) params[1];
         boolean isDeleted = false;
+
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
+
         try {
             transaction.begin();
 
             Event idEvent = entityManager.find(Event.class, id);
+            if (idEvent == null) {
+                LOGGER.warning("Evento não encontrado com o ID fornecido.");
+                return false;
+            }
+
             User owner = entityManager.find(User.class, ownerId);
+            if (owner == null) {
+                LOGGER.warning("Criador inválido.");
+                return false;
+            }
 
             List<Event> userEvents = owner.getEvents();
             userEvents.remove(idEvent);
             owner.setEvents(userEvents);
 
-            if ((owner) == null) {
-                LOGGER.warning("Criador inválido.");
-                return false;
-            }
+            entityManager.remove(idEvent);
+            transaction.commit();
+            LOGGER.info("Evento deletado com sucesso.");
+            isDeleted = true;
 
-            if (idEvent != null) {
-                entityManager.remove(idEvent);
-                transaction.commit();
-                LOGGER.info("Evento deletado com sucesso.");
-                isDeleted = true;
-            } else {
-                LOGGER.warning(EVENT_NOT_FOUND);
-            }
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -186,8 +188,10 @@ public class EventRepository implements Persistence {
                 entityManager.close();
             }
         }
+
         return isDeleted;
     }
+
 
     @Override
     public Object getData(UUID id, String dataToGet) {

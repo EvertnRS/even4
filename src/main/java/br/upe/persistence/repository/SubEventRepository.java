@@ -152,21 +152,30 @@ public class SubEventRepository implements Persistence {
     @Override
     public boolean delete(Object... params) throws IOException {
         if (params.length != 2) {
-            LOGGER.warning("Só pode ter 2 parametros");
+            LOGGER.warning("Só pode ter 2 parâmetros");
             return false;
         }
-
         UUID id = (UUID) params[0];
         UUID ownerId = (UUID) params[1];
         boolean isDeleted = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         EntityTransaction transaction = entityManager.getTransaction();
+
         try {
             transaction.begin();
 
             SubEvent idSubEvent = entityManager.find(SubEvent.class, id);
+            if (idSubEvent == null) {
+                LOGGER.warning("SubEvento não encontrado com o ID fornecido.");
+                return false;
+            }
+
             User owner = entityManager.find(User.class, ownerId);
+            if (owner == null) {
+                LOGGER.warning("Criador inválido.");
+                return false;
+            }
 
             List<SubEvent> userSubEvents = owner.getSubEvents();
             userSubEvents.remove(idSubEvent);
@@ -176,19 +185,11 @@ public class SubEventRepository implements Persistence {
             eventSubEvents.remove(idSubEvent);
             idSubEvent.getEventId().setSubEvents(eventSubEvents);
 
-            if ((owner) == null) {
-                LOGGER.warning("Criador inválido.");
-                return false;
-            }
+            entityManager.remove(idSubEvent);
+            transaction.commit();
+            LOGGER.info("SubEvento deletado com sucesso.");
+            isDeleted = true;
 
-            if (idSubEvent != null) {
-                entityManager.remove(idSubEvent);
-                transaction.commit();
-                LOGGER.info("SubEvento deletado com sucesso.");
-                isDeleted = true;
-            } else {
-                LOGGER.warning("SubEvento não encontrado com o ID fornecido.");
-            }
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -199,8 +200,10 @@ public class SubEventRepository implements Persistence {
                 entityManager.close();
             }
         }
+
         return isDeleted;
     }
+
 
     @Override
     public Object getData(UUID id, String dataToGet) {
