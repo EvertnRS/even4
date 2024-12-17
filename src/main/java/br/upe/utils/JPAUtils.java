@@ -11,9 +11,11 @@ public class JPAUtils {
     private JPAUtils() {
         throw new UnsupportedOperationException("Esta classe não pode ser instanciada");
     }
+
     private static final EntityManagerFactory entityManagerFactory;
 
     static {
+        // Usa as variáveis de ambiente diretamente do ambiente do sistema
         Map<String, String> properties = new HashMap<>();
         properties.put("jakarta.persistence.jdbc.url", EnvConfig.get("DB_URL"));
         properties.put("jakarta.persistence.jdbc.user", EnvConfig.get("DB_USER"));

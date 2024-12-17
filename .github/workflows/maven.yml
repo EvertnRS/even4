@@ -3,40 +3,56 @@ name: Java CI with Maven
 on:
   push:
     branches:
-    - "master"
-    - "jpa"
+      - "jpa-security"
   pull_request:
     branches:
-    - "master"
-    - "jpa"
+      - "jpa-security"
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
 
-    - name: Create dotenv File
-      run: |
+      - name: Create dotenv File
+        run: |
           touch /home/runner/work/even4/even4/.env
           echo DB_URL="${{ secrets.DB_URL }}" >> /home/runner/work/even4/even4/.env
           echo DB_USER="${{ secrets.DB_USER }}" >> /home/runner/work/even4/even4/.env
           echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> /home/runner/work/even4/even4/.env
           cat /home/runner/work/even4/even4/.env
 
-    - name: Build with Maven
-      run: mvn clean package
+      - name: Build with Maven
+        run: mvn clean package
 
-    - name: Save JAR as Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: even4-21.jar
-        path: target/even4-21.jar
+      - name: Save JAR as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: even4-21.jar
+          path: target/even4-21.jar
+
+      - name: Create Release
+        id: create_release
+        run: |
+          TAG_NAME="v1.0-${GITHUB_SHA}"
+          RELEASE_NAME="Release $TAG_NAME"
+          GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+            -d "{\"tag_name\": \"$TAG_NAME\", \"name\": \"$RELEASE_NAME\", \"body\": \"Release with .jar file\", \"draft\": false, \"prerelease\": false}" \
+            https://api.github.com/repos/${{ github.repository }}/releases
+
+      - name: Upload JAR to Release
+        run: |
+          TAG_NAME="v1.0-${GITHUB_SHA}"
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @target/even4-21.jar \
+            "https://uploads.github.com/repos/${{ github.repository }}/releases/$(curl -s -H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\" https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME | jq .id)/assets?name=even4-21.jar"
