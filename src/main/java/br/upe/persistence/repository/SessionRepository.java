@@ -204,7 +204,7 @@ public class SessionRepository implements Persistence {
 
             Session session = entityManager.find(Session.class, id);
             if (session == null) {
-                LOGGER.warning("Sessão não encontrada com o ID fornecido.");
+                LOGGER.warning(SESSION_NOT_FOUND);
                 return false;
             }
 

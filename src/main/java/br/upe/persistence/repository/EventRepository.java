@@ -159,7 +159,7 @@ public class EventRepository implements Persistence {
 
             Event idEvent = entityManager.find(Event.class, id);
             if (idEvent == null) {
-                LOGGER.warning("Evento não encontrado com o ID fornecido.");
+                LOGGER.warning(EVENT_NOT_FOUND);
                 return false;
             }
 
