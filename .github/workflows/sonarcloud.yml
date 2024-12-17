@@ -22,7 +22,7 @@ jobs:
       - name: Create dotenv File
         run: |
           touch /home/runner/work/even4/even4/.env
-          echo DB_URL="${{ secrets.DB_URL_DEFAULT }}" >> /home/runner/work/even4/even4/.env
+          echo DB_URL="${{ secrets.DB_URL }}" >> /home/runner/work/even4/even4/.env
           echo DB_USER="${{ secrets.DB_USER }}" >> /home/runner/work/even4/even4/.env
           echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> /home/runner/work/even4/even4/.env
           cat /home/runner/work/even4/even4/.env
