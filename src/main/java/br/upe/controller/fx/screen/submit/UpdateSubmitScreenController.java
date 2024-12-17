@@ -44,7 +44,7 @@ public class UpdateSubmitScreenController extends BaseController implements FxCo
         initial();
     }
 
-    private void initial() throws IOException {
+    private void initial() {
         userEmail.setText(facade.getUserData("email"));
 
         setupPlaceholders();
