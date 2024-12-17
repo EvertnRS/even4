@@ -56,18 +56,14 @@ public class AllEventScreenController extends BaseController implements FxContro
 
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             setupPlaceholders();
-            try {
-                loadEvents();
-            } catch (IOException e) {
-                throw new CustomRuntimeException("Algo deu errado", e);
-            }
+            loadEvents();
         });
 
         AllEventMediator mediator = new AllEventMediator(this, facade, mainPane, null);
         mediator.registerComponents();
     }
 
-    private void loadEvents() throws IOException {
+    private void loadEvents()  {
         eventVBox.getChildren().clear();
 
         List<Model> events = facade.getAllEvent();

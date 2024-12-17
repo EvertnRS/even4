@@ -128,7 +128,7 @@ public class CreateSubEventScreenController extends BaseController implements Fx
             errorUpdtLabel.setAlignment(Pos.CENTER);
         } else {
             facade.createSubEvent(searchField.getText(), subEventName, subEventDate, subEventDescription, subEventLocation, facade.getUserData("id"));
-            mediator.notify("handleSubEvent");
+            mediator.notify("handleBack");
         }
 
     }

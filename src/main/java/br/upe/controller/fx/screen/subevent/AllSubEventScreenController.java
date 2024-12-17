@@ -51,24 +51,21 @@ public class AllSubEventScreenController extends BaseController implements FxCon
         initial();
     }
 
-    private void initial() throws IOException {
+    private void initial() {
         userEmail.setText(facade.getUserData("email"));
         loadAllSubEvents();
 
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             setupPlaceholders();
-            try {
-                loadAllSubEvents();
-            } catch (IOException e) {
-                throw new CustomRuntimeException("Algo deu errado", e);
-            }
+            loadAllSubEvents();
         });
 
         AllSubEventMediator mediator = new AllSubEventMediator(this, facade, subEventPane, null);
         mediator.registerComponents();
     }
 
-    private void loadAllSubEvents() throws IOException {
+
+    private void loadAllSubEvents() {
         subEventVBox.getChildren().clear();
 
         List<Model> subEvents = facade.getAllSubEvent();

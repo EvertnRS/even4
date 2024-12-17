@@ -111,7 +111,7 @@ public class UpdateEventMediator extends Mediator {
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case HANDLE_USER -> "/fxml/userScreen.fxml";
-            case HANDLE_EVENT -> "/fxml/allEventScreen.fxml";
+            case HANDLE_EVENT -> "/fxml/allEventsScreen.fxml";
             case HANDLE_BACK -> "/fxml/eventScreen.fxml";
             case HANDLE_SESSION -> "/fxml/allSessionsScreen.fxml";
             case HANDLE_SUB_EVENT -> "/fxml/allSubEventsScreen.fxml";

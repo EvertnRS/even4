@@ -66,8 +66,7 @@ public class SubEventController implements Controller {
             return new Object[]{false, null};
         }
 
-        UUID eventId = (params[0] instanceof UUID) ? (UUID) params[0] : UUID.fromString((String) params[0]);
-        String fatherEventId = getFatherEventId(eventId);
+        String fatherEventId = getFatherEventId((String) params[0]);
         String name = (String) params[1];
         Date date = (Date) params[2];
         String description = (String) params[3];
@@ -147,12 +146,12 @@ public class SubEventController implements Controller {
         return params.length == 5;
     }
 
-    private String getFatherEventId(UUID searchId) {
+    private String getFatherEventId(String searchName) {
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         String fatherId = null;
         try {
-            TypedQuery<Event> query = entityManager.createQuery("SELECT e FROM Event e WHERE e.id = :searchId", Event.class);
-            query.setParameter("searchId", searchId);
+            TypedQuery<Event> query = entityManager.createQuery("SELECT e FROM Event e WHERE e.name = :searchName", Event.class);
+            query.setParameter("searchName", searchName);
             Event event = query.getSingleResult();
             fatherId = event.getId().toString();
         } catch (NoResultException e) {

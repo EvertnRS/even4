@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 
@@ -385,7 +386,7 @@ class FacadeIntegrationTest {
                         boolean isDeleted = facade.deleteSubEvent(subEventId, facade.getUserData("id"));
                         assertTrue(isDeleted);
                     }
-                    Object[] subEventResults = facade.createSubEvent(eventResults[1] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
+                    Object[] subEventResults = facade.createSubEvent(eventResults[2] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
                     assertTrue((boolean) subEventResults[0]);
                     facade.deleteSubEvent(subEventResults[1], facade.getUserData("id"));
                     facade.deleteEvent(eventResults[1], facade.getUserData("id"));
@@ -432,7 +433,7 @@ class FacadeIntegrationTest {
                         assertTrue(isDeleted);
                     }
 
-                    Object[] subEventResults = facade.createSubEvent(eventResults[1] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
+                    Object[] subEventResults = facade.createSubEvent(eventResults[2] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
                     boolean isSubEventCreated = (boolean) subEventResults[0];
                     if (isSubEventCreated) {
                         String dateStringUpdated = "2024-12-13";
@@ -486,7 +487,7 @@ class FacadeIntegrationTest {
                         assertTrue(isDeleted);
                     }
 
-                    Object[] subEventResults = facade.createSubEvent(eventResults[1] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
+                    Object[] subEventResults = facade.createSubEvent(eventResults[2] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
                     boolean isSubEventCreated = (boolean) subEventResults[0];
                     if (isSubEventCreated) {
                         boolean isSubEventUpdated = facade.updateSubEvent(subEventResults[1], "SubEvent Updated", eventDate, "SubEvent", "Location");
@@ -537,7 +538,7 @@ class FacadeIntegrationTest {
                         assertTrue(isDeleted);
                     }
 
-                    Object[] subEventResults = facade.createSubEvent(eventResults[1] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
+                    Object[] subEventResults = facade.createSubEvent(eventResults[2] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
                     boolean isSubEventCreated = (boolean) subEventResults[0];
                     if (isSubEventCreated) {
                         boolean isSubEventUpdated = facade.updateSubEvent(subEventResults[1], "SubEvent", eventDate, "SubEvent Updated", "Location");
@@ -588,7 +589,7 @@ class FacadeIntegrationTest {
                         assertTrue(isDeleted);
                     }
 
-                    Object[] subEventResults = facade.createSubEvent(eventResults[1] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
+                    Object[] subEventResults = facade.createSubEvent(eventResults[2] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
                     boolean isSubEventCreated = (boolean) subEventResults[0];
                     if (isSubEventCreated) {
                         boolean isSubEventUpdated = facade.updateSubEvent(subEventResults[1], "SubEvent", eventDate, "SubEvent", "Location Updated");
@@ -636,7 +637,7 @@ class FacadeIntegrationTest {
                         boolean isDeleted = facade.deleteSubEvent(subEventId, facade.getUserData("id"));
                         assertTrue(isDeleted);
                     }
-                    Object[] subEventResults = facade.createSubEvent(eventResults[1] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
+                    Object[] subEventResults = facade.createSubEvent(eventResults[2] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
                     assertTrue((boolean) subEventResults[0]);
                     boolean isDeletedSubEvent = facade.deleteSubEvent(subEventResults[1], facade.getUserData("id"));
                     assertTrue(isDeletedSubEvent);
@@ -1069,7 +1070,7 @@ class FacadeIntegrationTest {
                         boolean isDeleted = facade.deleteSubEvent(subEventId, facade.getUserData("id"));
                         assertTrue(isDeleted);
                     }
-                    Object[] subEventResults = facade.createSubEvent(eventResults[1] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
+                    Object[] subEventResults = facade.createSubEvent(eventResults[2] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
                     assertTrue((boolean) subEventResults[0]);
                     Object[] eventSessionExistsResults = facade.isSessionExist("Session", facade.getUserData("id"));
                     boolean isSessionEventExist = (boolean) eventSessionExistsResults[0];
@@ -1125,7 +1126,7 @@ class FacadeIntegrationTest {
                         boolean isDeleted = facade.deleteSubEvent(subEventId, facade.getUserData("id"));
                         assertTrue(isDeleted);
                     }
-                    Object[] subEventResults = facade.createSubEvent(eventResults[1] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
+                    Object[] subEventResults = facade.createSubEvent(eventResults[2] ,"SubEvent", eventDate, "SubEvent", "Location", facade.getUserData("id"));
                     assertTrue((boolean) subEventResults[0]);
                     Object[] eventSessionExistsResults = facade.isSessionExist("Session", facade.getUserData("id"));
                     boolean isSessionEventExist = (boolean) eventSessionExistsResults[0];

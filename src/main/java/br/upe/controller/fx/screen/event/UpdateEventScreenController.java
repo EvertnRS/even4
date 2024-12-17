@@ -116,7 +116,7 @@ public class UpdateEventScreenController extends BaseController implements FxCon
         String newDescription = editDescriptionTextField.getText();
         Date newDate = Date.valueOf(editDatePicker.getValue() != null ? editDatePicker.getValue().toString() : "");
         facade.updateEvent(eventId, newName, newDate, newDescription, newLocation);
-        mediator.notify("handleEvent");
+        mediator.notify("handleBack");
     }
 
     public UUID getId() {

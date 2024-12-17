@@ -67,7 +67,7 @@ public abstract class Mediator implements MediatorInterface {
             return false;
         }
 
-        if ((currentItemId != null && !isValidName(newName, eventList, currentItemId)) || newName.isEmpty()) {
+        if ((!isValidName(newName, eventList, currentItemId)) || newName.isEmpty()) {
             errorUpdtLabel.setText("Nome inválido.");
             errorUpdtLabel.setAlignment(Pos.CENTER);
             return false;
@@ -81,6 +81,8 @@ public abstract class Mediator implements MediatorInterface {
             if (item instanceof Model) {
                 Model modelItem = (Model) item;
                 if (modelItem.getName().equals(name) && (currentItemId == null || !modelItem.getId().equals(currentItemId))) {
+                    System.out.println(modelItem.getName());
+                    System.out.println(name);
                     return false;
                 }
             }

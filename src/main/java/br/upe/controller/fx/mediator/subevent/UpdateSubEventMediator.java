@@ -54,13 +54,13 @@ public class UpdateSubEventMediator extends Mediator {
     public void registerComponents() {
         if (screenPane != null) {
             setupButtonAction("#updateButton", HANDLE_SUB_EVENT_UPDATE);
-            setupButtonAction("#handleEventButton", HANDLE_EVENT);
             setupButtonAction("#handleSubEventButton", HANDLE_SUB_EVENT);
             setupButtonAction("#handleSessionButton", HANDLE_SESSION);
             setupButtonAction("#handleSubmitButton", HANDLE_SUBMIT);
             setupButtonAction("#handleUserButton", HANDLE_USER);
             setupButtonAction("#handleBackButton", HANDLE_BACK);
             setupButtonAction("#handleInscriptionButton", HANDLE_INSCRIPTION);
+            setupButtonAction("#handleEventButton", HANDLE_EVENT);
             setupButtonAction("#logoutButton", "logout");
         }
     }
@@ -92,8 +92,8 @@ public class UpdateSubEventMediator extends Mediator {
     }
 
     private void handleSubEventUpdate() throws IOException {
+        this.currentId = updateScreenSubEventController.getId();
         if (validateInputs(currentId, facade.getAllSubEvent())) {
-            this.currentId = updateScreenSubEventController.getId();
             updateScreenSubEventController.updateSubEvent();
         }
     }
@@ -113,7 +113,6 @@ public class UpdateSubEventMediator extends Mediator {
     private String getFxmlPathForEvent(String event) {
         return switch (event) {
             case HANDLE_SUB_EVENT_UPDATE -> "/fxml/updateSubEventScreen.fxml";
-
             case HANDLE_USER -> "/fxml/userScreen.fxml";
             case HANDLE_SUB_EVENT -> "/fxml/allSubEventsScreen.fxml";
             case HANDLE_BACK -> "/fxml/subEventScreen.fxml";

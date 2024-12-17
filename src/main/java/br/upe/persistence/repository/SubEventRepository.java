@@ -46,7 +46,7 @@ public class SubEventRepository implements Persistence {
             return new Object[]{false, null};
         }
 
-        UUID id = UUID.fromString((String) params[0]);
+        UUID fatherId = UUID.fromString((String) params[0]);
         String name = (String) params[1];
         Date date = (Date) params[2];
         String description = (String) params[3];
@@ -55,7 +55,7 @@ public class SubEventRepository implements Persistence {
         boolean isCreated = false;
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-        Event event = entityManager.find(Event.class, id);
+        Event event = entityManager.find(Event.class, fatherId);
         User owner = entityManager.find(User.class, ownerId);
 
         SubEvent subevent = SubEventBuilder.builder()

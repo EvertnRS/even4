@@ -177,7 +177,7 @@ public class CreateSessionScreenController extends BaseController implements FxC
             errorUpdtLabel.setAlignment(Pos.CENTER);
         } else {
             facade.createSession(sessionName, sessionDate, sessionDescription, sessionLocation, startTime, endTime, facade.getUserData("id"), type);
-            mediator.notify("handleSession");
+            mediator.notify("handleBack");
         }
     }
 
