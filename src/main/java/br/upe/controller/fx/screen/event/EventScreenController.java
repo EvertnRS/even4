@@ -83,7 +83,7 @@ public class EventScreenController extends BaseController implements FxControlle
         eventVBox.setAlignment(Pos.CENTER);
 
         for (Event event : userEvents) {
-            if (event.getIdOwner().getId().equals(UUID.fromString(facade.getUserData("id")))) {
+            if (event.getOwnerId().getId().equals(UUID.fromString(facade.getUserData("id")))) {
 
                 VBox eventContainer = new VBox();
                 eventContainer.setStyle("-fx-background-color: #d3d3d3; " +

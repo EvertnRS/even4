@@ -202,7 +202,7 @@ public class EventRepository implements Persistence {
             case "date" -> event.getDate();
             case DESCRIPTION -> event.getDescription();
             case LOCATION -> event.getLocation();
-            case "ownerId" -> event.getIdOwner().getId();
+            case "ownerId" -> event.getOwnerId().getId();
             default -> null;
         };
     }

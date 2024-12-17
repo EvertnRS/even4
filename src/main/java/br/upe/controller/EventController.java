@@ -35,7 +35,7 @@ public class EventController implements Controller {
         List<Event> userEvents = new ArrayList<>();
 
         for (Event event : allEvents) {
-            if (event.getIdOwner().getId().equals(userId)) {
+            if (event.getOwnerId().getId().equals(userId)) {
                 userEvents.add(event);
             }
         }

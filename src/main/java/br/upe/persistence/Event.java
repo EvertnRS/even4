@@ -62,11 +62,6 @@ public class Event implements Model {
         this.articles = articles;
     }
 
-    // Getters
-    public User getIdOwner() {
-        return ownerId;
-    }
-
     public UUID getId() {
 
         return id;

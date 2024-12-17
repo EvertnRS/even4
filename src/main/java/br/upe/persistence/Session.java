@@ -49,8 +49,8 @@ public class Session implements Model {
     @NotNull
     private Event eventId;
 
-    // Construtor vazio
     public Session() {
+        // Construtor não utilizado
     }
 
     // Getters e Setters
