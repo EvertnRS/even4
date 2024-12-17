@@ -1,12 +1,14 @@
 package br.upe.utils;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class EnvConfig {
     private EnvConfig() {
         throw new UnsupportedOperationException("Esta classe não pode ser instanciada");
     }
+    private static final Dotenv dotenv = Dotenv.load();
 
-    // Método para acessar variáveis de ambiente diretamente
     public static String get(String key) {
-        return System.getenv(key);  // Acessa diretamente o ambiente do sistema
+        return dotenv.get(key);
     }
 }
