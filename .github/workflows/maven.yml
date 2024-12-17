@@ -39,20 +39,10 @@ jobs:
           name: even4-21.jar
           path: target/even4-21.jar
 
-      - name: Create Release
+      - name: Create GitHub Release
         id: create_release
-        run: |
-          TAG_NAME="v1.0-${GITHUB_SHA}"
-          RELEASE_NAME="Release $TAG_NAME"
-          GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
-          curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
-            -d "{\"tag_name\": \"$TAG_NAME\", \"name\": \"$RELEASE_NAME\", \"body\": \"Release with .jar file\", \"draft\": false, \"prerelease\": false}" \
-            https://api.github.com/repos/${{ github.repository }}/releases
-
-      - name: Upload JAR to Release
-        run: |
-          TAG_NAME="v1.0-${GITHUB_SHA}"
-          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: application/octet-stream" \
-            --data-binary @target/even4-21.jar \
-            "https://uploads.github.com/repos/${{ github.repository }}/releases/$(curl -s -H \"Authorization: token ${{ secrets.GITHUB_TOKEN }}\" https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME | jq .id)/assets?name=even4-21.jar"
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/even4-21.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
