@@ -38,23 +38,23 @@ public abstract class BaseController {
             FxController screenController = loader.getController();
             screenController.setFacade(facade);
 
-            if (screenController instanceof UpdateEventScreenController) {
-                ((UpdateEventScreenController) screenController).setEventId(UUID.fromString(eventId));
+            if (screenController instanceof UpdateEventScreenController updateEventScreenController) {
+                updateEventScreenController.setEventId(UUID.fromString(eventId));
             }
-            if (screenController instanceof UpdateSubEventScreenController) {
-                ((UpdateSubEventScreenController) screenController).setEventId(UUID.fromString(eventId));
+            if (screenController instanceof UpdateSubEventScreenController updateSubEventScreenController) {
+                updateSubEventScreenController.setEventId(UUID.fromString(eventId));
             }
-            if (screenController instanceof UpdateSessionScreenController) {
-                ((UpdateSessionScreenController) screenController).setEventName(eventId);
+            if (screenController instanceof UpdateSessionScreenController updateSessionScreenController) {
+                updateSessionScreenController.setEventName(eventId);
             }
-            if (screenController instanceof UpdateSubmitScreenController) {
-                ((UpdateSubmitScreenController) screenController).setEventName(eventId);
+            if (screenController instanceof UpdateSubmitScreenController updateSubmitScreenController) {
+                updateSubmitScreenController.setEventName(eventId);
             }
-            if (screenController instanceof CertificateScreenController) {
-                ((CertificateScreenController) screenController).setEventName(eventId);
+            if (screenController instanceof CertificateScreenController certificateScreenController) {
+                certificateScreenController.setEventName(eventId);
             }
-            if (screenController instanceof EventArticleScreenController) {
-                ((EventArticleScreenController) screenController).setEventId(UUID.fromString(eventId));
+            if (screenController instanceof EventArticleScreenController eventArticleScreenController) {
+                eventArticleScreenController.setEventId(UUID.fromString(eventId));
             }
         }
 

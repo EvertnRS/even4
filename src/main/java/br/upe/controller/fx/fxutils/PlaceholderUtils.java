@@ -46,10 +46,10 @@ public class PlaceholderUtils {
     }
 
     private static boolean isControlEmpty(Control control) {
-        if (control instanceof TextField) {
-            return ((TextField) control).getText().isEmpty();
-        } else if (control instanceof DatePicker) {
-            return ((DatePicker) control).getValue() == null;
+        if (control instanceof TextField textField) {
+            return textField.getText().isEmpty();
+        } else if (control instanceof DatePicker datePicker) {
+            return datePicker.getValue() == null;
         }
         return true;
     }

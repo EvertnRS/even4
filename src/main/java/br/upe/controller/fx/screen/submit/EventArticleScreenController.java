@@ -54,7 +54,7 @@ public class EventArticleScreenController extends BaseController implements FxCo
         initial();
     }
 
-    public void setEventId(UUID eventId) throws IOException {
+    public void setEventId(UUID eventId){
         this.eventId = eventId;
         loadEventArticles();
     }

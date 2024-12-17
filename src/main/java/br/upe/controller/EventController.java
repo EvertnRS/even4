@@ -15,7 +15,6 @@ public class EventController implements Controller {
     private static final String DESCRIPTION = "description";
     private static final String LOCATION = "location";
     private static final Logger LOGGER = Logger.getLogger(EventController.class.getName());
-    private Persistence eventLog;
 
     public EventController() throws IOException {
         //
@@ -108,15 +107,15 @@ public class EventController implements Controller {
 
     @Override
     public String getData(String dataToGet) {
+        Persistence eventLog = EventRepository.getInstance();
         String data = "";
-        this.eventLog = EventRepository.getInstance();
         try {
             switch (dataToGet) {
-                case "id" -> data = (String) this.eventLog.getData("id");
-                case "name" -> data = (String) this.eventLog.getData("name");
-                case DESCRIPTION -> data = (String) this.eventLog.getData(DESCRIPTION);
-                case "date" -> data = String.valueOf(this.eventLog.getData("date"));
-                case LOCATION -> data = (String) this.eventLog.getData(LOCATION);
+                case "id" -> data = (String) eventLog.getData("id");
+                case "name" -> data = (String) eventLog.getData("name");
+                case DESCRIPTION -> data = (String) eventLog.getData(DESCRIPTION);
+                case "date" -> data = String.valueOf(eventLog.getData("date"));
+                case LOCATION -> data = (String) eventLog.getData(LOCATION);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
@@ -124,6 +123,7 @@ public class EventController implements Controller {
         }
         return data;
     }
+
 
     private boolean isValidParamsLength(Object... params) {
         return params.length == 5;

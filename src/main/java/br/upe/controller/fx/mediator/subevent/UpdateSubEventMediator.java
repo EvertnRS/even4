@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class UpdateSubEventMediator extends Mediator {
     private final UpdateSubEventScreenController updateScreenSubEventController;
-    private UUID currentId;
+
     private static final String HANDLE_SUB_EVENT = "handleSubEvent";
     private static final String HANDLE_SESSION = "handleSession";
     private static final String HANDLE_EVENT = "handleEvent";
@@ -92,11 +92,12 @@ public class UpdateSubEventMediator extends Mediator {
     }
 
     private void handleSubEventUpdate() throws IOException {
-        this.currentId = updateScreenSubEventController.getId();
+        UUID currentId = updateScreenSubEventController.getId();
         if (validateInputs(currentId, facade.getAllSubEvent())) {
             updateScreenSubEventController.updateSubEvent();
         }
     }
+
 
     private void loadScreenForEvent(String event) {
         String fxmlFile = getFxmlPathForEvent(event);

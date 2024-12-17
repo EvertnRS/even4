@@ -53,7 +53,7 @@ public class AllSessionScreenController extends BaseController implements FxCont
         initialize();
     }
 
-    private void initialize() throws IOException {
+    private void initialize() {
         userEmail.setText(facade.getUserData("email"));
         loadAllSessions();
 
