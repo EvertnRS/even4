@@ -60,18 +60,14 @@ public class AllSessionScreenController extends BaseController implements FxCont
 
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             setupPlaceholders();
-            try {
-                loadAllSessions();
-            } catch (IOException e) {
-                throw new CustomRuntimeException("Algo deu errado", e);
-            }
+            loadAllSessions();
         });
 
         AllSessionMediator mediator = new AllSessionMediator(this, facade, sessionPane, null);
         mediator.registerComponents();
     }
 
-    private void loadAllSessions() throws IOException {
+    private void loadAllSessions()  {
         SessionRepository sessionRepository = SessionRepository.getInstance();
         sessionVBox.getChildren().clear();
 

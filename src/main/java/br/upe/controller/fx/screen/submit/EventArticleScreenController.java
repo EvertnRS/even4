@@ -59,16 +59,12 @@ public class EventArticleScreenController extends BaseController implements FxCo
         loadEventArticles();
     }
 
-    private void initial() throws IOException {
+    private void initial() {
         userEmail.setText(facade.getUserData("email"));
 
         searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             setupPlaceholders();
-            try {
-                loadEventArticles();
-            } catch (IOException e) {
-                throw new CustomRuntimeException("Algo deu errado", e);
-            }
+            loadEventArticles();
         });
 
         mediator = new EventArticleMediator(this, facade, submitPane, null);
@@ -77,7 +73,8 @@ public class EventArticleScreenController extends BaseController implements FxCo
         loadEventArticles();
     }
 
-    private void loadEventArticles() throws IOException {
+
+    private void loadEventArticles() {
         articleVBox.getChildren().clear();
 
         List<SubmitArticle> eventArticles = facade.getEventArticles(eventId);
