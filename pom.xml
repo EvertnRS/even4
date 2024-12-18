@@ -129,25 +129,19 @@
           <execution>
             <phase>package</phase>
             <goals>
-              <goal>shade</goal>
+              <goal>shade</goal> <!-- Cria o JAR com as dependências -->
             </goals>
             <configuration>
               <createDependencyReducedPom>false</createDependencyReducedPom>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>br.upe.ui.Main</mainClass> <!-- Ensure this is your correct main class -->
+                  <mainClass>br.upe.ui.Main</mainClass> <!-- Classe principal -->
                 </transformer>
               </transformers>
-              <artifactSet>
-                <includes>
-                  <include>org.openjfx:*</include> <!-- Ensure JavaFX dependencies are included -->
-                </includes>
-              </artifactSet>
             </configuration>
           </execution>
         </executions>
       </plugin>
-
 
       <plugin>
         <groupId>org.openjfx</groupId>
