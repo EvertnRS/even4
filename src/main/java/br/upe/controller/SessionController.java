@@ -154,7 +154,7 @@ public class SessionController implements Controller {
         SessionRepository session = new SessionRepository();
         UUID sessionId = session.getSessionIdByNameAndUser(oldName, userId);
         if (sessionId == null) {
-            LOGGER.warning("Sessão não encontrada para o nome: " + newName + " e usuário com ID: " + userId);
+            LOGGER.warning(String.format("Sessão não encontrada para o nome: %s e usuário com ID: %s", newName, userId));
             return false;
         }
 
@@ -191,30 +191,30 @@ public class SessionController implements Controller {
     }
 
 
-    public String setData(String dataToGet) {
-        String data = "";
+    public void setData(String dataToSet, String value) {
         if (this.sessionLog == null) {
             LOGGER.warning("Sessão não inicializada.");
-            return "";
+            return;
         }
 
+        UUID sessionId = UUID.randomUUID(); // Replace with the actual session ID
+
         try {
-            switch (dataToGet) {
-                case ID -> data = (String) this.sessionLog.getData(ID);
-                case NAME -> data = (String) this.sessionLog.getData(NAME);
-                case DESCRIPTION -> data = (String) this.sessionLog.getData(DESCRIPTION);
-                case "date" -> data = String.valueOf(this.sessionLog.getData("date"));
-                case LOCATION -> data = (String) this.sessionLog.getData(LOCATION);
-                case EVENT_ID -> data = (String) this.sessionLog.getData(EVENT_ID);
-                case OWNER_ID -> data = (String) this.sessionLog.getData(OWNER_ID);
-                case STARTTIME -> data = (String) this.sessionLog.getData(STARTTIME);
-                case ENDTIME -> data = (String) this.sessionLog.getData(ENDTIME);
+            switch (dataToSet) {
+                case ID -> this.sessionLog.setData(sessionId, ID, value);
+                case NAME -> this.sessionLog.setData(sessionId, NAME, value);
+                case DESCRIPTION -> this.sessionLog.setData(sessionId, DESCRIPTION, value);
+                case "date" -> this.sessionLog.setData(sessionId, "date", value);
+                case LOCATION -> this.sessionLog.setData(sessionId, LOCATION, value);
+                case EVENT_ID -> this.sessionLog.setData(sessionId, EVENT_ID, value);
+                case OWNER_ID -> this.sessionLog.setData(sessionId, OWNER_ID, value);
+                case STARTTIME -> this.sessionLog.setData(sessionId, STARTTIME, value);
+                case ENDTIME -> this.sessionLog.setData(sessionId, ENDTIME, value);
                 default -> throw new IOException();
             }
         } catch (IOException e) {
             LOGGER.warning("Informação não existe ou é restrita");
         }
-        return data;
     }
 
     @Override
