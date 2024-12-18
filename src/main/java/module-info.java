@@ -9,6 +9,7 @@ module br.upe.even4 {
     requires org.postgresql.jdbc;
     requires io.github.cdimascio.dotenv.java;
     requires org.jetbrains.annotations;
+    requires java.desktop;
 
     exports br.upe.ui;
     exports br.upe.controller;
