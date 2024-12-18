@@ -51,7 +51,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }} # Usando apenas o nome da tag/branch, como 'jpa-security'
           files: target/even4-21.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
