@@ -36,9 +36,6 @@ jobs:
       - name: Build with Maven (Executable JAR)
         run: mvn clean package
 
-      - name: Generate JavaFX Runtime with jlink
-        run: mvn javafx:jlink
-
       - name: Validate JAR Content
         run: jar tf target/even4-21.jar
 
