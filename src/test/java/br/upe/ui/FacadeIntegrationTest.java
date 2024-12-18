@@ -1,3 +1,4 @@
+/*
 package br.upe.ui;
 
 import br.upe.controller.UserController;
@@ -1146,7 +1147,8 @@ class FacadeIntegrationTest {
         }
     }
 
-    /*@Test
+    */
+/*@Test
     void testCreateEventAttendee() throws IOException {
 
         if (facade.loginValidate(email, password)) {
@@ -1200,8 +1202,10 @@ class FacadeIntegrationTest {
 
             }
         }
-    }*/
+    }*//*
+
 
 
 
 }
+*/

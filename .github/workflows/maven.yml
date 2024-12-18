@@ -33,8 +33,14 @@ jobs:
           echo DB_PASSWORD="${{ secrets.DB_PASSWORD }}" >> /home/runner/work/even4/even4/.env
           cat /home/runner/work/even4/even4/.env
 
-      - name: Build with Maven
+      - name: Build with Maven (Executable JAR)
         run: mvn clean package
+
+      - name: Generate JavaFX Runtime with jlink
+        run: mvn javafx:jlink
+
+      - name: Validate JAR Content
+        run: jar tf target/even4-21.jar
 
       - name: Save JAR as Artifact
         uses: actions/upload-artifact@v3
@@ -42,12 +48,11 @@ jobs:
           name: even4-21.jar
           path: target/even4-21.jar
 
-      # Passo de criar o release associado à tag existente
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: "v1.0-7fcb157b873d27935cf23055fd2c828a543dc192"
+          tag_name: ${{ github.ref_name }}
           files: target/even4-21.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
