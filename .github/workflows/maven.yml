@@ -8,6 +8,9 @@ on:
     branches:
       - "jpa-security"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
