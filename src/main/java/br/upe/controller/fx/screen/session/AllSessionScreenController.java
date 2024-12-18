@@ -162,18 +162,19 @@ public class AllSessionScreenController extends BaseController implements FxCont
         return actionButtons;
     }
 
-    private void handleDetailSession(UUID sessionId) {
+    private void handleDetailSession(UUID id) {
         loadScreen("Carregando", () -> {
             SessionRepository sessionRepository = SessionRepository.getInstance();
             UserRepository userRepository = UserRepository.getInstance();
 
-            String content = "Nome: " + sessionRepository.getData(sessionId, "name") + "\n" +
-                    "Data: " + sessionRepository.getData(sessionId, "date") + "\n" +
-                    "Descrição: " + sessionRepository.getData(sessionId, "description") + "\n" +
-                    "Início: " + sessionRepository.getData(sessionId, "startTime") + "\n" +
-                    "Término: " + sessionRepository.getData(sessionId, "endTime") + "\n" +
-                    "Local: " + sessionRepository.getData(sessionId, "location") + "\n" +
-                    "Administrador: " + userRepository.getData("email") + "\n";
+            UUID ownerId = (UUID) sessionRepository.getData(id, "ownerId");
+            String ownerEmail = (String) userRepository.getData(ownerId, "email");
+
+            String content = "Nome: " + sessionRepository.getData(id, "name") + "\n" +
+                    "Data: " + sessionRepository.getData(id, "date") + "\n" +
+                    "Descrição: " + sessionRepository.getData(id, "description") + "\n" +
+                    "Local: " + sessionRepository.getData(id, "location") + "\n" +
+                    "Administrador: " + ownerEmail + "\n";
 
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

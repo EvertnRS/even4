@@ -128,20 +128,21 @@ public class AllSubEventScreenController extends BaseController implements FxCon
 
     private void handleDetailSubEvent(UUID id) {
         loadScreen("Carregando", () -> {
-            EventRepository eventRepository = EventRepository.getInstance();
-            SubEventRepository subeventRepository = SubEventRepository.getInstance();
+            SubEventRepository subEventRepository = SubEventRepository.getInstance();
             UserRepository userRepository = UserRepository.getInstance();
 
-            String content = "Nome: " + subeventRepository.getData(id, "name") + "\n" +
-                    "Data: " + subeventRepository.getData(id, "date") + "\n" +
-                    "Descrição: " + subeventRepository.getData(id, "description") + "\n" +
-                    "Local: " + subeventRepository.getData(id, "location") + "\n" +
-                    "Evento: " + eventRepository.getData((UUID) subeventRepository.getData(id, "eventId"), "name") + "\n" +
-                    "Administrador: " + userRepository.getData("email") + "\n";
+            UUID ownerId = (UUID) subEventRepository.getData(id, "ownerId");
+            String ownerEmail = (String) userRepository.getData(ownerId, "email");
+
+            String content = "Nome: " + subEventRepository.getData(id, "name") + "\n" +
+                    "Data: " + subEventRepository.getData(id, "date") + "\n" +
+                    "Descrição: " + subEventRepository.getData(id, "description") + "\n" +
+                    "Local: " + subEventRepository.getData(id, "location") + "\n" +
+                    "Administrador: " + ownerEmail + "\n";
 
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText("Detalhes do Evento");
+                alert.setHeaderText("Detalhes do Sub-Evento");
                 alert.setTitle(" ");
 
                 Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
