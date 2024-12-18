@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SessionController implements Controller {
@@ -154,9 +155,12 @@ public class SessionController implements Controller {
         SessionRepository session = new SessionRepository();
         UUID sessionId = session.getSessionIdByNameAndUser(oldName, userId);
         if (sessionId == null) {
-            LOGGER.warning(String.format("Sessão não encontrada para o nome: %s e usuário com ID: %s", newName, userId));
+            if (LOGGER.isLoggable(Level.WARNING)) {
+                LOGGER.warning(String.format("Sessão não encontrada para o nome: %s e usuário com ID: %s", newName, userId));
+            }
             return false;
         }
+
 
         isUpdated = session.update(sessionId, newName, newDate, newDescription, newLocation, newStartTime, newEndTime);
         this.sessionLog = session;

@@ -131,9 +131,10 @@ public class SessionRepository implements Persistence {
             time = Time.valueOf(timeString);
             // Agora você pode usar startTime e endTime como objetos Time
         } catch (IllegalArgumentException e) {
-            LOGGER.info("Erro ao converter a hora: " + e.getMessage());
-            throw new CustomRuntimeException("Algo deu errado", e);
+            throw new CustomRuntimeException(String.format("Erro ao converter a hora: %s. Verifique o formato da entrada.", e.getMessage()), e
+            );
         }
+
         return time;
     }
 
