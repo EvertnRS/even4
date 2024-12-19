@@ -10,6 +10,11 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class PlaceholderUtils {
+
+    private PlaceholderUtils() {
+        // Construtor privado para prevenir que instanciacoes sejam feitas
+    }
+
     private static void animatePlaceholder(Text placeholder, boolean focus) {
         TranslateTransition transition = new TranslateTransition(Duration.millis(200), placeholder);
         if (focus) {

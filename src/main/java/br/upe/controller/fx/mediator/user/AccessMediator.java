@@ -140,7 +140,7 @@ public class AccessMediator extends Mediator {
                     });
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new CustomRuntimeException("Ocorreu um erro no acesso.", e);
             }
         }, screenPane);
     }

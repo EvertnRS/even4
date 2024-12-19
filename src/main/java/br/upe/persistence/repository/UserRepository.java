@@ -144,7 +144,19 @@ public class UserRepository implements Persistence {
 
     @Override
     public Object getData(UUID id, String dataToGet) {
-        return null;
+        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        User user = entityManager.find(User.class, id);
+        if (user == null) {
+            return null;
+        }
+        return switch (dataToGet) {
+            case "id" -> user.getId();
+            case "name" -> user.getName();
+            case EMAIL -> user.getEmail();
+            case "password" -> user.getPassword();
+            case "cpf" -> user.getCpf();
+            default -> null;
+        };
     }
 
     @Override

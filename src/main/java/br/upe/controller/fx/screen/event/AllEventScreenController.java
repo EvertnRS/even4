@@ -120,11 +120,14 @@ public class AllEventScreenController extends BaseController implements FxContro
             EventRepository eventRepository = EventRepository.getInstance();
             UserRepository userRepository = UserRepository.getInstance();
 
+            UUID ownerId = (UUID) eventRepository.getData(id, "ownerId");
+            String ownerEmail = (String) userRepository.getData(ownerId, "email");
+
             String content = "Nome: " + eventRepository.getData(id, "name") + "\n" +
                     "Data: " + eventRepository.getData(id, "date") + "\n" +
                     "Descrição: " + eventRepository.getData(id, "description") + "\n" +
                     "Local: " + eventRepository.getData(id, "location") + "\n" +
-                    "Administrador: " + userRepository.getData("email") + "\n";
+                    "Administrador: " + ownerEmail + "\n";
 
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
