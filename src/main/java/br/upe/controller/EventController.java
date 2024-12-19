@@ -148,7 +148,7 @@ public class EventController implements Controller {
 
         String name = (String) params[0];
         UUID ownerId =  UUID.fromString((String)params[1]);
-        System.out.printf("name: %s, ownerId: %s\n", name, ownerId);
+        LOGGER.info(String.format("Verificando existência: name=%s, ownerId=%s%n", name, ownerId));
         EventRepository eventRepository = EventRepository.getInstance();
         return eventRepository.isExist(name, ownerId);
     }
