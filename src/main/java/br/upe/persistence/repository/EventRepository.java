@@ -252,7 +252,6 @@ public class EventRepository implements Persistence {
         }
 
         String name = (String) params[0];
-        UUID ownerId = (UUID) params[1];
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         TypedQuery<Event> query = entityManager.createQuery(
