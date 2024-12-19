@@ -54,8 +54,8 @@ public class AttendeeRepository implements Persistence {
 
         try {
             transaction.begin();
-
             // Buscar usuário e sessão
+
             User user = entityManager.find(User.class, parsedUserId);
             if (user == null) {
                 LOGGER.warning(String.format("Usuário não encontrado com o ID: %s", parsedUserId));
