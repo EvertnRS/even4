@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.sql.Time;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -49,8 +51,19 @@ public class Session implements Model {
     @NotNull
     private Event eventId;
 
+    @ManyToMany(mappedBy = "sessions")
+    private Set<Attendee> attendees = new HashSet<>();
+
     public Session() {
         // Construtor não utilizado
+    }
+
+    public Set<Attendee> getAttendees() {
+        return attendees;
+    }
+
+    public void setAttendees(Set<Attendee> attendees) {
+        this.attendees = attendees;
     }
 
     // Getters e Setters

@@ -32,6 +32,8 @@ public class User {
     private List<Session> sessions;
     @OneToMany(mappedBy = "ownerId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubmitArticle> articles;
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attendee> participations;
 
     public List<Event> getEvents() {
         return events;
@@ -104,5 +106,13 @@ public class User {
 
     public void setName(@NotNull String name) {
         this.name = name;
+    }
+
+    public List<Attendee> getParticipations() {
+        return participations;
+    }
+
+    public void setParticipations(List<Attendee> participations) {
+        this.participations = participations;
     }
 }

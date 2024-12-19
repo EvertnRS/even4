@@ -132,12 +132,13 @@ public class EventController implements Controller {
     @Override
     public Object[] isExist(Object... params) throws IOException {
         if (params.length != 2) {
-            LOGGER.warning("Só pode ter 1 parametro");
+            LOGGER.warning("Só pode ter 2 parametro");
             return new Object[]{false, null};
         }
 
         String name = (String) params[0];
         UUID ownerId =  UUID.fromString((String)params[1]);
+        System.out.printf("name: %s, ownerId: %s\n", name, ownerId);
         EventRepository eventRepository = EventRepository.getInstance();
         return eventRepository.isExist(name, ownerId);
     }

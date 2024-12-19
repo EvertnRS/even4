@@ -227,8 +227,8 @@ public class UserRepository implements Persistence {
             TypedQuery<User> query = entityManager.createQuery(
                     "SELECT u FROM User u WHERE u.email = :email", User.class);
             query.setParameter(EMAIL, email);
+            query.setMaxResults(1);
             User user = query.getSingleResult();
-
             if (isPasswordEqual(password, user.getPassword())) {
                 this.userId = user.getId();
 

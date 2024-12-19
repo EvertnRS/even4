@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -30,7 +31,16 @@ public class SubEvent implements Model {
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     @NotNull
     private User ownerId;
+    @OneToMany(mappedBy = "subEventId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Session> sessions;
 
+    public List<Session> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
+    }
 
     public UUID getId() {
         return id;

@@ -1,9 +1,6 @@
 package br.upe.persistence.repository;
 
-import br.upe.persistence.Event;
-import br.upe.persistence.Session;
-import br.upe.persistence.SubEvent;
-import br.upe.persistence.User;
+import br.upe.persistence.*;
 import br.upe.persistence.builder.SessionBuilder;
 import br.upe.utils.CustomRuntimeException;
 import br.upe.utils.JPAUtils;
@@ -16,6 +13,7 @@ import java.io.IOException;
 import java.sql.Time;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -48,18 +46,14 @@ public class SessionRepository implements Persistence {
             LOGGER.warning("Devem ser fornecidos 9 parâmetros.");
             return new Object[]{false, null};
         }
+
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-        UUID eventId = null;
-        UUID subEventId = null;
-        Event event = null;
-        SubEvent subevent = null;
-        if (params[0] != null) {
-            eventId = (UUID) params[0];
-            event = entityManager.find(Event.class, eventId);
-        } else if (params[8] != null) {
-            subEventId = (UUID) params[8];
-            subevent = entityManager.find(SubEvent.class, subEventId);
-        }
+        UUID eventId = (UUID) params[0];
+        UUID subEventId = (UUID) params[8];
+
+        Event event = eventId != null ? entityManager.find(Event.class, eventId) : null;
+        SubEvent subEvent = subEventId != null ? entityManager.find(SubEvent.class, subEventId) : null;
+
         String name = (String) params[1];
         Date date = (Date) params[2];
         String description = (String) params[3];
@@ -68,41 +62,47 @@ public class SessionRepository implements Persistence {
         Time endTime = convertTime((String) params[6]);
         UUID ownerId = UUID.fromString((String) params[7]);
 
-
         User owner = entityManager.find(User.class, ownerId);
-        boolean isCreated = false;
-
         if (owner == null) {
             LOGGER.warning("Usuário inválido.");
             return new Object[]{false, null};
         }
 
-        Session session = SessionBuilder.builder()
-                .withName(name)
-                .withDate(date)
-                .withDescription(description)
-                .withLocation(location)
-                .withStartTime(startTime)
-                .withEndTime(endTime)
-                .withSubEvent(subevent)
-                .withEvent(event)
-                .withOwner(owner)
-                .build();
+        // Criar sessão
+        Session session = new Session();
+        session.setName(name);
+        session.setDate(date);
+        session.setDescription(description);
+        session.setLocation(location);
+        session.setStartTime(startTime);
+        session.setEndTime(endTime);
+        session.setOwnerId(owner);
+        session.setEventId(event);
+        session.setSubEventId(subEvent);
 
-        List<Session> userSessions = owner.getSessions();
-        userSessions.add(session);
-        owner.setSessions(userSessions);
-
-        if(event != null) {
-            List<Session> eventSessions = event.getSessions();
-            eventSessions.add(session);
-            event.setSessions(eventSessions);
+        // Associar ao evento e ao usuário
+        if (event != null) {
+            event.getSessions().add(session);
         }
 
+        if (subEvent != null) {
+            subEvent.getSessions().add(session);
+        }
+        owner.getSessions().add(session);
+
         EntityTransaction transaction = entityManager.getTransaction();
+        boolean isCreated = false;
+
         try {
             transaction.begin();
             entityManager.persist(session);
+            if (event != null) {
+                entityManager.merge(event);
+            }
+            if (subEvent != null) {
+                entityManager.merge(subEvent);
+            }
+            entityManager.merge(owner);
             transaction.commit();
             isCreated = true;
         } catch (Exception e) {
@@ -115,8 +115,10 @@ public class SessionRepository implements Persistence {
                 entityManager.close();
             }
         }
+
         return new Object[]{isCreated, session.getId()};
     }
+
 
     public Time convertTime(String timeString) {
         Time time = null;
@@ -192,7 +194,8 @@ public class SessionRepository implements Persistence {
             LOGGER.warning("Devem ser fornecidos 2 parâmetros.");
             return false;
         }
-        UUID id = (UUID) params[0];
+
+        UUID sessionId = (UUID) params[0];
         UUID ownerId = (UUID) params[1];
         boolean isDeleted = false;
 
@@ -202,30 +205,42 @@ public class SessionRepository implements Persistence {
         try {
             transaction.begin();
 
-            Session session = entityManager.find(Session.class, id);
+            // Buscar a sessão e o proprietário
+            Session session = entityManager.find(Session.class, sessionId);
             if (session == null) {
-                LOGGER.warning(SESSION_NOT_FOUND);
+                LOGGER.warning("Sessão não encontrada.");
                 return false;
             }
 
             User owner = entityManager.find(User.class, ownerId);
-            if (owner == null) {
-                LOGGER.warning("Criador inválido.");
+            if (owner == null || !session.getOwnerId().getId().equals(ownerId)) {
+                LOGGER.warning("Usuário não é o criador da sessão ou inválido.");
                 return false;
             }
 
-            List<Session> userSessions = owner.getSessions();
-            userSessions.remove(session);
-            owner.setSessions(userSessions);
+            // Remover a relação entre session e attendees
+            Set<Attendee> attendees = session.getAttendees();
+            for (Attendee attendee : attendees) {
+                attendee.getSessions().remove(session);
+            }
+            session.getAttendees().clear();
 
+            // Remover a sessão do evento
             Event event = session.getEventId();
+            SubEvent subEvent = session.getSubEventId();
             if (event != null) {
-                List<Session> eventSessions = event.getSessions();
-                eventSessions.remove(session);
-                event.setSessions(eventSessions);
+                event.getSessions().remove(session);
+            }
+            if (subEvent != null) {
+                subEvent.getSessions().remove(session);
             }
 
+            // Remover a sessão do criador
+            owner.getSessions().remove(session);
+
+            // Remover a sessão
             entityManager.remove(session);
+
             transaction.commit();
             LOGGER.info("Sessão deletada com sucesso.");
             isDeleted = true;

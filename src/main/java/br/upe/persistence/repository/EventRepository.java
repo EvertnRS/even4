@@ -256,9 +256,9 @@ public class EventRepository implements Persistence {
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         TypedQuery<Event> query = entityManager.createQuery(
-                "SELECT e FROM Event e WHERE e.name = :name AND e.ownerId.id = :ownerId", Event.class);
+                "SELECT e FROM Event e WHERE e.name = :name", Event.class);
         query.setParameter("name", name);
-        query.setParameter("ownerId", ownerId);
+
         try {
             Event event = query.getSingleResult();
             return new Object[]{true, event.getId()};
