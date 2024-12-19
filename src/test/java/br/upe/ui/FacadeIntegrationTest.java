@@ -348,6 +348,7 @@ class FacadeIntegrationTest {
 
     @Test
     void testCreateSubEvent() throws IOException {
+        System.out.println("Teste de criação de subevento"); // Troca para que não fique igual ao update
 
         if (facade.loginValidate(email, password)) {
             boolean isUserDeleted = facade.deleteUser("1234");
