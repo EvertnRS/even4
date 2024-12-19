@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EventController implements Controller {
@@ -148,7 +149,9 @@ public class EventController implements Controller {
 
         String name = (String) params[0];
         UUID ownerId =  UUID.fromString((String)params[1]);
-        LOGGER.info(String.format("Verificando existência: name=%s, ownerId=%s%n", name, ownerId));
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info(String.format("Verificando existência: name=%s, ownerId=%s%n", name, ownerId));
+        }
         EventRepository eventRepository = EventRepository.getInstance();
         return eventRepository.isExist(name, ownerId);
     }
