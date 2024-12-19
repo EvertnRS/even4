@@ -5,10 +5,12 @@ on:
     branches:
       - "master"
       - "jpa"
+      - "jpa-workflow-tests"
   pull_request:
     branches:
       - "master"
       - "jpa"
+      - "jpa-workflow-tests"
 
 jobs:
   build:

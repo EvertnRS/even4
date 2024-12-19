@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - jpa
+      - jpa-workflow-tests
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -42,4 +43,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=EvertnRS_even4 -DskipTests
+        run: |
+          mvn clean verify -DskipTests org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=EvertnRS_even4
