@@ -3,7 +3,6 @@ package br.upe.persistence.repository;
 import br.upe.persistence.Attendee;
 import br.upe.persistence.Session;
 import br.upe.persistence.User;
-import br.upe.persistence.builder.AttendeeBuilder;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
@@ -11,7 +10,6 @@ import jakarta.persistence.TypedQuery;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -73,7 +71,7 @@ public class AttendeeRepository implements Persistence {
             // Verificar se o Attendee já existe
             attendee = entityManager.createQuery(
                             "SELECT a FROM Attendee a WHERE a.userId = :userId", Attendee.class)
-                    .setParameter("userId", user)
+                    .setParameter(USER_ID, user)
                     .getResultStream()
                     .findFirst()
                     .orElse(null);

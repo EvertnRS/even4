@@ -1,7 +1,6 @@
 package br.upe.persistence.repository;
 
 import br.upe.persistence.*;
-import br.upe.persistence.builder.SessionBuilder;
 import br.upe.utils.CustomRuntimeException;
 import br.upe.utils.JPAUtils;
 import jakarta.persistence.EntityManager;

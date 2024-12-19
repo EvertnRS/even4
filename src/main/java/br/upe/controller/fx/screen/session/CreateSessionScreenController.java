@@ -7,10 +7,6 @@ import br.upe.controller.fx.screen.FxController;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
-import br.upe.utils.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.TypedQuery;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -26,7 +22,6 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class CreateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;

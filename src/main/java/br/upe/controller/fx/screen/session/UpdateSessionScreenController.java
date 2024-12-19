@@ -5,12 +5,7 @@ import br.upe.controller.fx.mediator.session.UpdateSessionMediator;
 import br.upe.controller.fx.screen.BaseController;
 import br.upe.controller.fx.screen.FxController;
 import br.upe.facade.FacadeInterface;
-import br.upe.persistence.Session;
 import br.upe.persistence.repository.SessionRepository;
-import br.upe.utils.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.TypedQuery;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
@@ -21,16 +16,13 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class UpdateSessionScreenController extends BaseController implements FxController {
     private FacadeInterface facade;
     private String sessionName;
     private String sessionId;
     private UpdateSessionMediator mediator;
-    private static final Logger LOGGER = Logger.getLogger(UpdateSessionScreenController.class.getName());
 
 
     @FXML
