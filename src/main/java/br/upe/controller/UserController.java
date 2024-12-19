@@ -101,6 +101,16 @@ public class UserController implements Controller {
     }
 
     @Override
+    public String[] verifyByEventName(String eventName) {
+        return new String[0];
+    }
+
+    @Override
+    public String[] verifyBySessionName(String sessionName) {
+        return new String[0];
+    }
+
+    @Override
     public List<String> list(Object... params) {
         // Método não implementado
         return List.of();

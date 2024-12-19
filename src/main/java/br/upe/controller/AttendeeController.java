@@ -115,6 +115,16 @@ public class AttendeeController implements Controller {
         return data;
     }
 
+    @Override
+    public String[] verifyByEventName(String eventName) {
+        return new String[0];
+    }
+
+    @Override
+    public String[] verifyBySessionName(String sessionName) {
+        return new String[0];
+    }
+
     private String getSessionId(String searchName) {
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
         String fatherId = null;

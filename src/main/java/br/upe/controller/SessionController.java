@@ -234,4 +234,14 @@ public class SessionController implements Controller {
         return sessionRepository.isExist(name, ownerId);
     }
 
+    public String[] verifyByEventName(String eventName) {
+        SessionRepository sessionRepository = SessionRepository.getInstance();
+        return sessionRepository.verifyByEventName(eventName);
+    }
+
+    public String[] verifyBySessionName(String sessionName) {
+        SessionRepository sessionRepository = SessionRepository.getInstance();
+        return sessionRepository.verifyBySessionName(sessionName);
+    }
+
 }

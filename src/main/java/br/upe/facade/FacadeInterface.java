@@ -58,6 +58,10 @@ public interface FacadeInterface {
 
     Object[] isSessionExist(Object... params) throws IOException;
 
+    String[] verifyBySessionName(String sessionName);
+
+    String[] verifyByEventName(String sessionName);
+
 
     // SubmitArticleController methods
 

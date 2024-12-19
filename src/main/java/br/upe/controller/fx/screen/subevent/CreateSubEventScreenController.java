@@ -6,10 +6,6 @@ import br.upe.controller.fx.screen.BaseController;
 import br.upe.controller.fx.screen.FxController;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.Event;
-import br.upe.utils.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.TypedQuery;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -133,16 +129,17 @@ public class CreateSubEventScreenController extends BaseController implements Fx
 
     }
 
-    public UUID getEventIdByName(String eventName) {
-        try {
-            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-            TypedQuery<UUID> query = entityManager.createQuery(
-                    "SELECT e.id FROM Event e WHERE LOWER(TRIM(e.name)) = LOWER(TRIM(:name))", UUID.class);
-            query.setParameter("name", eventName.trim());
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            throw new IllegalArgumentException("Event not found: " + eventName, e);
+    public UUID getEventIdByName(String eventName) throws IOException {
+        List<Event> events = facade.listEvents(facade.getUserData("id"));
+        UUID eventId;
+
+        for (Event event : events) {
+            if ((event).getName().equals(eventName)) {
+                eventId = (event).getId();
+                return eventId;
+            }
         }
+        return null;
     }
 
     @Override

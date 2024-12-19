@@ -33,6 +33,16 @@ public class SubmitArticleController implements Controller {
     }
 
     @Override
+    public String[] verifyByEventName(String eventName) {
+        return new String[0];
+    }
+
+    @Override
+    public String[] verifyBySessionName(String sessionName) {
+        return new String[0];
+    }
+
+    @Override
     public Object[] create(Object... params) throws IOException {
         if (params.length != 3) {
             LOGGER.warning("São necessários 3 parâmetros: nome do evento, o conteúdo do arquivo (byte[]) e id do proprietário.");

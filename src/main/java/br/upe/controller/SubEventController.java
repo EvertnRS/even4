@@ -142,6 +142,16 @@ public class SubEventController implements Controller {
         return data;
     }
 
+    @Override
+    public String[] verifyByEventName(String eventName) {
+        return new String[0];
+    }
+
+    @Override
+    public String[] verifyBySessionName(String sessionName) {
+        return new String[0];
+    }
+
     private boolean isValidParamsLength(Object... params) {
         return params.length == 5;
     }

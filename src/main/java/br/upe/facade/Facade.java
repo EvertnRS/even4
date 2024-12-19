@@ -123,6 +123,14 @@ public class Facade implements FacadeInterface {
         return sessionController.isExist(params);
     }
 
+    public String[] verifyBySessionName(String sessionName) {
+        return sessionController.verifyBySessionName(sessionName);
+    }
+
+    public String[] verifyByEventName(String sessionName) {
+        return sessionController.verifyByEventName(sessionName);
+    }
+
 
     // SubmitArticleController methods
 

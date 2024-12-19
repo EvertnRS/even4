@@ -98,42 +98,12 @@ public class CreateSessionScreenController extends BaseController implements FxC
     }
 
     private String[] verifyType(String name) {
-        String[] type = new String[2]; // Define um array com dois elementos
-        EntityManager entityManager = null;
 
-        try {
-            // Obtém o EntityManager a partir do JPAUtils
-            entityManager = JPAUtils.getEntityManagerFactory();
-
-            // Cria uma consulta para buscar o ID pelo nome
-            TypedQuery<UUID> query = entityManager.createQuery(
-                    "SELECT e.id FROM Event e WHERE e.name = :name", UUID.class);
-            query.setParameter("name", name);
-
-            // Atribui os valores ao array
-            type[0] = query.getSingleResult().toString(); // ID
-            type[1] = "evento"; // Tipo
-
-            return type; // Retorna o array preenchido
-        } catch (NoResultException e) {
-            // Obtém o EntityManager a partir do JPAUtils
-            entityManager = JPAUtils.getEntityManagerFactory();
-
-            // Cria uma consulta para buscar o ID pelo nome
-            TypedQuery<UUID> query = entityManager.createQuery(
-                    "SELECT e.id FROM SubEvent e WHERE e.name = :name", UUID.class);
-            query.setParameter("name", name);
-
-            // Atribui os valores ao array
-            type[0] = query.getSingleResult().toString(); // ID
-            type[1] = "subEvento"; // Tipo
-
-            return type;
-        } finally {
-            if (entityManager != null && entityManager.isOpen()) {
-                entityManager.close();
-            }
+        String[] type = facade.verifyByEventName(name);
+        if (type[1] == null) {
+            throw new IllegalArgumentException("Nenhum evento ou subevento encontrado para o nome: " + name);
         }
+        return type;
     }
 
     private void loadUserEvents() throws IOException {

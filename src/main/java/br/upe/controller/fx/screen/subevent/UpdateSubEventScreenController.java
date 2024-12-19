@@ -5,11 +5,8 @@ import br.upe.controller.fx.mediator.subevent.UpdateSubEventMediator;
 import br.upe.controller.fx.screen.BaseController;
 import br.upe.controller.fx.screen.FxController;
 import br.upe.facade.FacadeInterface;
+import br.upe.persistence.SubEvent;
 import br.upe.persistence.repository.SubEventRepository;
-import br.upe.utils.JPAUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.TypedQuery;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.DatePicker;
@@ -22,6 +19,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 public class UpdateSubEventScreenController extends BaseController implements FxController {
@@ -127,17 +125,19 @@ public class UpdateSubEventScreenController extends BaseController implements Fx
         }
     }
 
-    public UUID getEventIdBySubEventId(UUID subEventId) {
-        try {
-            EntityManager entityManager = JPAUtils.getEntityManagerFactory();
-            TypedQuery<UUID> query = entityManager.createQuery(
-                    "SELECT s.eventId.id FROM SubEvent s WHERE s.id = :subEventId", UUID.class);
-            query.setParameter("subEventId", subEventId);
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            throw new IllegalArgumentException("Event not found for sub-event ID: " + subEventId, e);
+    public UUID getEventIdBySubEventId(UUID subEventId) throws IOException {
+        List<SubEvent> subEvents = facade.listSubEvents(facade.getUserData("id"));
+        UUID eventId;
+
+        for (SubEvent subEvent : subEvents) {
+            if ((subEvent).getId().equals(subEventId)) {
+                eventId = subEvent.getEventId().getId();
+                return eventId;
+            }
         }
+        return null;
     }
+
 
     public UUID getId() {
         return subEventId;

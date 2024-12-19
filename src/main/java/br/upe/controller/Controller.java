@@ -21,4 +21,8 @@ public interface Controller {
 
     String getData(String dataToGet);
 
+    String[] verifyByEventName(String eventName);
+
+    String[] verifyBySessionName(String sessionName);
+
 }

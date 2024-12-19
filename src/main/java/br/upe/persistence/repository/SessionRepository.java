@@ -370,4 +370,90 @@ public class SessionRepository implements Persistence {
         return new Object[]{false, null};
     }
 
+    public String[] verifyByEventName(String name){
+        String[] type = new String[2]; // Define um array com dois elementos
+        EntityManager entityManager = null;
+
+        try {
+            // Obtém o EntityManager a partir do JPAUtils
+            entityManager = JPAUtils.getEntityManagerFactory();
+
+            // Cria uma consulta para buscar o ID pelo nome
+            TypedQuery<UUID> query = entityManager.createQuery(
+                    "SELECT e.id FROM Event e WHERE e.name = :name", UUID.class);
+            query.setParameter("name", name);
+
+            // Atribui os valores ao array
+            type[0] = query.getSingleResult().toString(); // ID
+            type[1] = "evento"; // Tipo
+
+            return type; // Retorna o array preenchido
+        } catch (NoResultException e) {
+            // Obtém o EntityManager a partir do JPAUtils
+            entityManager = JPAUtils.getEntityManagerFactory();
+
+            // Cria uma consulta para buscar o ID pelo nome
+            TypedQuery<UUID> query = entityManager.createQuery(
+                    "SELECT e.id FROM SubEvent e WHERE e.name = :name", UUID.class);
+            query.setParameter("name", name);
+
+            // Atribui os valores ao array
+            type[0] = query.getSingleResult().toString(); // ID
+            type[1] = "subEvento"; // Tipo
+
+            return type;
+        } finally {
+            if (entityManager != null && entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+    }
+
+    public String[] verifyBySessionName(String sessionName){
+        String[] type = new String[3];
+        EntityManager entityManager = null;
+
+        try {
+            if (sessionName == null || sessionName.trim().isEmpty()) {
+                throw new IllegalArgumentException("O nome da sessão não pode ser nulo ou vazio");
+            }
+
+            entityManager = JPAUtils.getEntityManagerFactory();
+
+            // Consulta para buscar a sessão com nome específico
+            TypedQuery<Session> sessionQuery = entityManager.createQuery(
+                    "SELECT s FROM Session s WHERE LOWER(TRIM(s.name)) = LOWER(TRIM(:name))",
+                    Session.class
+            );
+            sessionQuery.setParameter("name", sessionName.trim());
+            LOGGER.info("Session name: {}");
+
+            List<Session> sessionResults = sessionQuery.getResultList();
+            if (sessionResults.isEmpty()) {
+                throw new IllegalArgumentException("Nenhum dado encontrado para o nome da sessão: " + sessionName);
+            }
+
+            // Exibe a sessão encontrada
+            Session session = sessionResults.get(0);
+
+            // Preencha os dados de retorno
+            if (session.getSubEventId() != null && session.getSubEventId().getId() != null) {
+                type[0] = session.getSubEventId().getId().toString();
+                type[1] = "subEvento"; // Ou faça a consulta para obter o nome do subevento
+                type[2] = session.getId().toString();
+            } else if (session.getEventId() != null && session.getEventId().getId() != null) {
+                type[0] = session.getEventId().getId().toString();
+                type[1] = "evento"; // Ou faça a consulta para obter o nome do evento
+                type[2] = session.getId().toString();
+            }
+
+        } catch (NoResultException e) {
+            throw new IllegalArgumentException("Nenhum dado encontrado para o nome da sessão: " + sessionName, e);
+        } finally {
+            if (entityManager != null && entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+        return type;
+    }
 }
