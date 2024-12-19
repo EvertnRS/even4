@@ -250,7 +250,6 @@ public class EventRepository implements Persistence {
             LOGGER.warning("Só pode ter 2 parametro");
             return new Object[]{false, null};
         }
-
         String name = (String) params[0];
 
         EntityManager entityManager = JPAUtils.getEntityManagerFactory();
