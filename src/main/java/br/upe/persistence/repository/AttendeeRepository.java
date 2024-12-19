@@ -11,6 +11,7 @@ import jakarta.persistence.TypedQuery;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AttendeeRepository implements Persistence {
@@ -58,14 +59,18 @@ public class AttendeeRepository implements Persistence {
 
             User user = entityManager.find(User.class, parsedUserId);
             if (user == null) {
-                LOGGER.warning(String.format("Usuário não encontrado com o ID: %s", parsedUserId));
+                if (LOGGER.isLoggable(Level.WARNING)) {
+                    LOGGER.warning(String.format("Usuário não encontrado com o ID: %s", parsedUserId));
+                }
 
                 return new Object[]{false, null};
             }
 
             Session session = entityManager.find(Session.class, parsedSessionId);
             if (session == null) {
-                LOGGER.warning(String.format("Usuário não encontrado com o ID: %s", parsedUserId));
+                if (LOGGER.isLoggable(Level.WARNING)) {
+                    LOGGER.warning(String.format("Usuário não encontrado com o ID: %s", parsedUserId));
+                }
 
                 return new Object[]{false, null};
             }
