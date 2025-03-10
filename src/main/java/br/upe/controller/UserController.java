@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import static br.upe.ui.Validation.isValidCPF;
-import static br.upe.ui.Validation.isValidEmail;
+import static br.upe.utils.Validation.isValidCPF;
+import static br.upe.utils.Validation.isValidEmail;
 
 public class UserController implements Controller {
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());

@@ -14,4 +14,16 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
         </properties>
     </persistence-unit>
+
+    <persistence-unit name="even4-test">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!-- JDBC settings -->
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+
+            <!-- Hibernate settings -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
 </persistence>
