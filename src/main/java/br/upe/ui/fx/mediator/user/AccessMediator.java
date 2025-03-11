@@ -9,7 +9,11 @@ import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
@@ -24,12 +28,13 @@ public class AccessMediator extends Mediator {
     private static final  String HANDLE_LOGIN = "handleLogin";
     private static final  String HANDLE_REGISTER = "handleRegister";
 
-
-
     private TextField nameTextField;
     private TextField cpfTextField;
     private TextField emailTextField;
     private TextField passTextField;
+    private TextField showPassText;
+    private ToggleButton toggleShowPassword;
+    private ImageView passView;
 
     public AccessMediator(SignUpScreenController userSignUpController, FacadeInterface facade, AnchorPane screenPane, Label errorUpdtLabel, LoginScreenController userLoginController) {
         super(facade, screenPane, errorUpdtLabel, userSignUpController);
@@ -37,11 +42,14 @@ public class AccessMediator extends Mediator {
         this.userLoginController = userLoginController;
     }
 
-    public void setComponents(TextField nameTextField, TextField cpfTextField, TextField emailTextField, TextField passTextField) {
+    public void setComponents(TextField nameTextField, TextField cpfTextField, TextField emailTextField, PasswordField passTextField, TextField showPassText, ToggleButton toggleShowPassword, ImageView passView) {
         this.nameTextField = nameTextField;
         this.cpfTextField = cpfTextField;
         this.emailTextField = emailTextField;
         this.passTextField = passTextField;
+        this.showPassText = showPassText;
+        this.toggleShowPassword = toggleShowPassword;
+        this.passView = passView;
 
         if (userSignUpController != null) {
             setupRegisterListeners();
@@ -85,11 +93,29 @@ public class AccessMediator extends Mediator {
                 assert userLoginController != null;
                 userLoginController.genericButton("/fxml/signUpScreen.fxml", screenPane, null, null);
                 break;
+            case "togglePassword":
+                togglePassword();
+                break;
             default:
                 throw new IllegalArgumentException("Invalid event: " + event);
         }
-
         return null;
+    }
+
+    private void togglePassword(){
+        showPassText.textProperty().bindBidirectional(passTextField.textProperty());
+
+        if (toggleShowPassword.isSelected()) {
+            showPassText.setVisible(true);
+            passTextField.setVisible(false);
+            Image newImage = new Image("/images/icons/buttons/hideIcon.png");
+            passView.setImage(newImage);
+        } else {
+            showPassText.setVisible(false);
+            passTextField.setVisible(true);
+            Image newImage = new Image("/images/icons/buttons/showIcon.png");
+            passView.setImage(newImage);
+        }
     }
 
     private void handleRegisterEvent() {

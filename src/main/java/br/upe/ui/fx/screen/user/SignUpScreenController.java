@@ -10,9 +10,8 @@ import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
@@ -31,7 +30,13 @@ public class SignUpScreenController extends BaseController implements FxControll
     private TextField cpfTextField;
 
     @FXML
-    private TextField passTextField;
+    private PasswordField passTextField;
+
+    @FXML
+    private TextField showPassText;
+
+    @FXML
+    private ToggleButton toggleShowPassword;
 
     @FXML
     private AnchorPane registerAnchorPane;
@@ -50,6 +55,9 @@ public class SignUpScreenController extends BaseController implements FxControll
 
     @FXML
     private Label errorLabel;
+
+    @FXML
+    private ImageView imageView1;
 
     public void setNameTextField(TextField nameTextField) {
         this.nameTextField = nameTextField;
@@ -82,9 +90,17 @@ public class SignUpScreenController extends BaseController implements FxControll
 
         setupPlaceholders();
 
-        accessMediator.setComponents(nameTextField, cpfTextField, emailTextField, passTextField);
+        accessMediator.setComponents(nameTextField, cpfTextField, emailTextField, passTextField, showPassText, toggleShowPassword, imageView1);
 
         Platform.runLater(() -> registerAnchorPane.requestFocus());
+
+        toggleShowPassword.setOnAction(event -> {
+            try {
+                handleSignupTogglePassword();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void setupPlaceholders() {
@@ -116,8 +132,10 @@ public class SignUpScreenController extends BaseController implements FxControll
                 }
             });
         }, registerAnchorPane);
+    }
 
-
+    public void handleSignupTogglePassword() throws IOException {
+        accessMediator.notify("togglePassword");
     }
 
     @Override

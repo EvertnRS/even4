@@ -10,9 +10,8 @@ import br.upe.facade.FacadeInterface;
 import br.upe.utils.CustomRuntimeException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
@@ -24,7 +23,13 @@ public class LoginScreenController extends BaseController implements FxControlle
     private TextField emailTextField;
 
     @FXML
-    private TextField passTextField;
+    private TextField textField;
+
+    @FXML
+    private PasswordField passTextField;
+
+    @FXML
+    private ToggleButton toggleShowPassword;
 
     @FXML
     private AnchorPane loginAnchorPane;
@@ -38,19 +43,10 @@ public class LoginScreenController extends BaseController implements FxControlle
     @FXML
     private Label errorLabel;
 
+    @FXML
+    private ImageView imageView1;
+
     private AccessMediator accessMediator;
-
-    public TextField getPassTextField() {
-        return passTextField;
-    }
-
-    public TextField getEmailTextField() {
-        return emailTextField;
-    }
-
-    public Label getErrorLabel() {
-        return errorLabel;
-    }
 
     @FXML
     public void initialize() throws IOException {
@@ -62,9 +58,17 @@ public class LoginScreenController extends BaseController implements FxControlle
 
         setupPlaceholders();
 
-        accessMediator.setComponents(null, null, emailTextField, passTextField);
+        accessMediator.setComponents(null, null, emailTextField, passTextField, textField, toggleShowPassword, imageView1);
 
         Platform.runLater(() -> loginAnchorPane.requestFocus());
+
+        toggleShowPassword.setOnAction(event -> {
+            try {
+                handleLoginTogglePassword();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void setupPlaceholders() {
@@ -80,6 +84,21 @@ public class LoginScreenController extends BaseController implements FxControlle
         }
     }
 
+    public void handleLoginTogglePassword() throws IOException {
+        accessMediator.notify("togglePassword");
+    }
+
+    public TextField getPassTextField() {
+        return passTextField;
+    }
+
+    public TextField getEmailTextField() {
+        return emailTextField;
+    }
+
+    public Label getErrorLabel() {
+        return errorLabel;
+    }
 
     @Override
     public void setFacade(FacadeInterface facade) {
