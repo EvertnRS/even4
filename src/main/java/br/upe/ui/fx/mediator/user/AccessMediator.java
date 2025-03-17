@@ -6,6 +6,7 @@ import br.upe.ui.fx.screen.user.SignUpScreenController;
 import br.upe.facade.FacadeInterface;
 import br.upe.persistence.repository.UserRepository;
 import br.upe.utils.CustomRuntimeException;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -16,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -102,7 +104,7 @@ public class AccessMediator extends Mediator {
         return null;
     }
 
-    private void togglePassword(){
+    private void togglePassword() {
         showPassText.textProperty().bindBidirectional(passTextField.textProperty());
 
         if (toggleShowPassword.isSelected()) {
@@ -116,6 +118,12 @@ public class AccessMediator extends Mediator {
             Image newImage = new Image("/images/icons/buttons/showIcon.png");
             passView.setImage(newImage);
         }
+
+        toggleShowPassword.setDisable(true);
+
+        PauseTransition pause = new PauseTransition(Duration.millis(500));
+        pause.setOnFinished(event -> toggleShowPassword.setDisable(false));
+        pause.play();
     }
 
     private void handleRegisterEvent() {
@@ -219,6 +227,15 @@ public class AccessMediator extends Mediator {
                         }
                     }
                 });
+            }
+        });
+
+        cpfTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                cpfTextField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+            if (cpfTextField.getText().length() > 11) {
+                cpfTextField.setText(cpfTextField.getText().substring(0, 11));
             }
         });
 

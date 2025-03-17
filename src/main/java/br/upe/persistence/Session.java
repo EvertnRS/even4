@@ -125,6 +125,8 @@ public class Session implements Model {
     }
 
     public Event getEventId() {
+        System.out.println("teste1");
+        System.out.println(eventId);
         return eventId;
     }
 

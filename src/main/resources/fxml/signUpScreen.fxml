@@ -49,7 +49,7 @@
             <Label layoutX="237.0" layoutY="363.0" text="Sign In" textFill="#ff914d" />
             <Button fx:id="handleReturnButton" layoutX="234.0" layoutY="359.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="47.0" style="-fx-cursor: hand;" text=" " />
         </children></Pane>
-   <ImageView fx:id="imageView1" fitHeight="36.0" fitWidth="28.0" layoutX="579.0" layoutY="390.0" preserveRatio="true">
+   <ImageView fx:id="imageView1" fitHeight="25.0" fitWidth="25.0" layoutX="580.0" layoutY="392.0" preserveRatio="true" style="-fx-cursor: hand;">
       <image>
          <Image url="@../images/icons/buttons/showIcon.png" />
       </image>
