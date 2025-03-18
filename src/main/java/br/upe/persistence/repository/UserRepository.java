@@ -2,7 +2,8 @@ package br.upe.persistence.repository;
 
 import br.upe.persistence.User;
 import br.upe.persistence.builder.UserBuilder;
-import br.upe.utils.JPAUtils;
+import br.upe.persistence.jpa.JPAFactory;
+import br.upe.persistence.jpa.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -34,7 +35,7 @@ public class UserRepository implements Persistence {
     }
 
     public boolean userExists(String email, Long cpf) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         TypedQuery<User> query = entityManager.createQuery(
                 "SELECT u FROM User u WHERE u.email = :email OR u.cpf = :cpf", User.class);
         query.setParameter(EMAIL, email);
@@ -73,7 +74,7 @@ public class UserRepository implements Persistence {
                 .build();
 
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -110,7 +111,7 @@ public class UserRepository implements Persistence {
         String password = (String) params[5];
         boolean isUpdated = false;
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -144,7 +145,7 @@ public class UserRepository implements Persistence {
 
     @Override
     public Object getData(UUID id, String dataToGet) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         User user = entityManager.find(User.class, id);
         if (user == null) {
             return null;
@@ -161,7 +162,7 @@ public class UserRepository implements Persistence {
 
     @Override
     public Object getData(String dataToGet) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         User user = entityManager.find(User.class, userId);
         if (user == null) {
             return null;
@@ -193,7 +194,7 @@ public class UserRepository implements Persistence {
         String password = (String) params[1];
         boolean isDeleted = false;
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -234,7 +235,7 @@ public class UserRepository implements Persistence {
         }
         String email = (String) params[0];
         String password = (String) params[1];
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         try {
             TypedQuery<User> query = entityManager.createQuery(
                     "SELECT u FROM User u WHERE u.email = :email", User.class);

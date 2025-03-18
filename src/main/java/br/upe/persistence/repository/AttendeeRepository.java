@@ -3,7 +3,8 @@ package br.upe.persistence.repository;
 import br.upe.persistence.Attendee;
 import br.upe.persistence.Session;
 import br.upe.persistence.User;
-import br.upe.utils.JPAUtils;
+import br.upe.persistence.jpa.JPAFactory;
+import br.upe.persistence.jpa.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
@@ -33,7 +34,7 @@ public class AttendeeRepository implements Persistence {
     }
 
     public List<Attendee> getAllAttendees() {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         TypedQuery<Attendee> query = entityManager.createQuery("SELECT e FROM Attendee e", Attendee.class);
         return query.getResultList();
     }
@@ -48,7 +49,7 @@ public class AttendeeRepository implements Persistence {
         UUID parsedUserId = UUID.fromString((String) params[0]);
         UUID parsedSessionId = UUID.fromString((String) params[1]);
         boolean isCreated = false;
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         Attendee attendee = null;
@@ -130,7 +131,7 @@ public class AttendeeRepository implements Persistence {
         UUID sessionId = (UUID) params[1];
         boolean isDeleted = false;
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
@@ -185,7 +186,7 @@ public class AttendeeRepository implements Persistence {
 
     @Override
     public Object getData(UUID id, String dataToGet) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         Attendee attendee = entityManager.find(Attendee.class, id);
         if (attendee == null) {
             return null;
@@ -218,7 +219,7 @@ public class AttendeeRepository implements Persistence {
 
         String userId = (String) params[0];
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         TypedQuery<Attendee> query = entityManager.createQuery(
                 "SELECT e FROM Attendee e WHERE e.userId.id = :userId", Attendee.class);
         query.setParameter(USER_ID, UUID.fromString(userId));

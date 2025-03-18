@@ -1,8 +1,9 @@
 package br.upe.persistence.repository;
 
 import br.upe.persistence.*;
+import br.upe.persistence.jpa.JPAFactory;
 import br.upe.utils.CustomRuntimeException;
-import br.upe.utils.JPAUtils;
+import br.upe.persistence.jpa.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -34,7 +35,7 @@ public class SessionRepository implements Persistence {
     }
 
     public List<Session> getAllSessions() {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         TypedQuery<Session> query = entityManager.createQuery("SELECT s FROM Session s", Session.class);
         return query.getResultList();
     }
@@ -46,7 +47,7 @@ public class SessionRepository implements Persistence {
             return new Object[]{false, null};
         }
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         UUID eventId = (UUID) params[0];
         UUID subEventId = (UUID) params[8];
 
@@ -154,7 +155,7 @@ public class SessionRepository implements Persistence {
         Time newStartTime = convertTime((String) params[5]);
         Time newEndTime = convertTime((String) params[6]);
         boolean isUpdated = false;
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -199,7 +200,7 @@ public class SessionRepository implements Persistence {
         UUID ownerId = (UUID) params[1];
         boolean isDeleted = false;
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
@@ -263,7 +264,7 @@ public class SessionRepository implements Persistence {
 
     @Override
     public Object getData(UUID id, String dataToGet) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         Session session = entityManager.find(Session.class, id);
         if (session == null) {
             return null;
@@ -285,7 +286,7 @@ public class SessionRepository implements Persistence {
 
     @Override
     public void setData(UUID sessionId, String dataToSet, Object data) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -324,7 +325,7 @@ public class SessionRepository implements Persistence {
     }
 
     public UUID getSessionIdByNameAndUser(String sessionName, UUID userId) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         try {
             // JPQL para buscar o ID da sessão com base no nome e no usuário
             String jpql = "SELECT s.id FROM Session s WHERE s.name = :sessionName AND s.ownerId.id = :userId";
@@ -350,7 +351,7 @@ public class SessionRepository implements Persistence {
 
         String name = (String) params[0];
         UUID userId = UUID.fromString((String) params[1]);
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         try {
             TypedQuery<Session> query = entityManager.createQuery("SELECT s FROM Session s WHERE s.name = :name AND s.ownerId.id = :userId", Session.class);
             query.setParameter("name", name);
@@ -375,7 +376,7 @@ public class SessionRepository implements Persistence {
 
         try {
             // Obtém o EntityManager a partir do JPAUtils
-            entityManager = JPAUtils.getEntityManagerFactory();
+            entityManager = JPAFactory.getJPAProvider().getEntityManager();
 
             // Cria uma consulta para buscar o ID pelo nome
             TypedQuery<UUID> query = entityManager.createQuery(
@@ -389,7 +390,7 @@ public class SessionRepository implements Persistence {
             return type; // Retorna o array preenchido
         } catch (NoResultException e) {
             // Obtém o EntityManager a partir do JPAUtils
-            entityManager = JPAUtils.getEntityManagerFactory();
+            entityManager = JPAFactory.getJPAProvider().getEntityManager();
 
             // Cria uma consulta para buscar o ID pelo nome
             TypedQuery<UUID> query = entityManager.createQuery(
@@ -417,7 +418,7 @@ public class SessionRepository implements Persistence {
                 throw new IllegalArgumentException("O nome da sessão não pode ser nulo ou vazio");
             }
 
-            entityManager = JPAUtils.getEntityManagerFactory();
+            entityManager = JPAFactory.getJPAProvider().getEntityManager();
 
             // Consulta para buscar a sessão com nome específico
             TypedQuery<Session> sessionQuery = entityManager.createQuery(

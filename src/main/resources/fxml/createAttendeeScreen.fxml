@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="newAttendeePane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.screen.attendee.CreateAttendeeScreenController">
+<AnchorPane fx:id="newAttendeePane" prefHeight="582.0" prefWidth="960.0" style="-fx-background-color: #FF914D;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.fx.screen.attendee.CreateAttendeeScreenController">
 
     <children>
         <ImageView fx:id="logoView" fitHeight="96.0" fitWidth="90.0" layoutY="2.0" preserveRatio="true">
@@ -46,7 +46,8 @@
                 </Button>
                 <Label fx:id="errorUpdtLabel" layoutX="300.0" layoutY="446.0" prefHeight="17.0" prefWidth="293.0" style="-fx-text-fill: red;" text=" " textAlignment="CENTER" />
                 <Button fx:id="handleBackButton" layoutX="87.0" layoutY="60.0" mnemonicParsing="false" opacity="0.0" prefHeight="50.0" prefWidth="72.0" style="-fx-cursor: hand;" text="back" />
-                <ComboBox fx:id="eventComboBox" layoutX="358.0" layoutY="186.0" prefWidth="150.0" promptText="Selecione a Sessão" />
+                <ComboBox fx:id="sessionComboBox" layoutX="358.0" layoutY="221.0" prefWidth="150.0" promptText="Selecione a Sessão" />
+            <ComboBox fx:id="eventComboBox" layoutX="358.0" layoutY="158.0" prefWidth="150.0" promptText="Selecione o Evento" />
             </children>
         </Pane>
         <Label fx:id="userEmail" layoutX="87.0" layoutY="39.0" prefHeight="18.0" prefWidth="135.0" style="-fx-text-fill: white;" text="Teste">

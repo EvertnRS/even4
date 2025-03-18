@@ -2,9 +2,10 @@ package br.upe.controller;
 
 import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
+import br.upe.persistence.jpa.JPAFactory;
 import br.upe.persistence.repository.Persistence;
 import br.upe.persistence.repository.SubEventRepository;
-import br.upe.utils.JPAUtils;
+import br.upe.persistence.jpa.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
@@ -157,7 +158,7 @@ public class SubEventController implements Controller {
     }
 
     private String getFatherEventId(String searchName) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         String fatherId = null;
         try {
             TypedQuery<Event> query = entityManager.createQuery("SELECT e FROM Event e WHERE e.name = :searchName", Event.class);

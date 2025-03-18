@@ -4,7 +4,8 @@ import br.upe.persistence.Event;
 import br.upe.persistence.SubEvent;
 import br.upe.persistence.User;
 import br.upe.persistence.builder.SubEventBuilder;
-import br.upe.utils.JPAUtils;
+import br.upe.persistence.jpa.JPAFactory;
+import br.upe.persistence.jpa.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -34,7 +35,7 @@ public class SubEventRepository implements Persistence {
     }
 
     public List<SubEvent> getAllSubEvents() {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         TypedQuery<SubEvent> query = entityManager.createQuery("SELECT e FROM SubEvent e", SubEvent.class);
         return query.getResultList();
     }
@@ -54,7 +55,7 @@ public class SubEventRepository implements Persistence {
         UUID ownerId = UUID.fromString((String) params[5]);
         boolean isCreated = false;
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         Event event = entityManager.find(Event.class, fatherId);
         User owner = entityManager.find(User.class, ownerId);
 
@@ -112,7 +113,7 @@ public class SubEventRepository implements Persistence {
         String newDescription = (String) params[3];
         String newLocation = (String) params[4];
         boolean isUpdated = false;
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
@@ -159,7 +160,7 @@ public class SubEventRepository implements Persistence {
         UUID ownerId = (UUID) params[1];
         boolean isDeleted = false;
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
@@ -207,7 +208,7 @@ public class SubEventRepository implements Persistence {
 
     @Override
     public Object getData(UUID id, String dataToGet) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         SubEvent subevent = entityManager.find(SubEvent.class, id);
         if (subevent == null) {
             return null;
@@ -226,7 +227,7 @@ public class SubEventRepository implements Persistence {
 
     @Override
     public void setData(UUID eventId, String dataToSet, Object data) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -267,9 +268,9 @@ public class SubEventRepository implements Persistence {
         }
         String name = (String) params[0];
         UUID ownerId = UUID.fromString((String) params[1]);
-        User owner = JPAUtils.getEntityManagerFactory().find(User.class, ownerId);
+        User owner = JPAFactory.getJPAProvider().getEntityManager().find(User.class, ownerId);
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         TypedQuery<SubEvent> query = entityManager.createQuery(
                 "SELECT e FROM SubEvent e WHERE e.name = :name AND e.ownerId = :owner", SubEvent.class);
         query.setParameter("name", name);

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="registerAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.controller.fx.screen.user.SignUpScreenController">
+<AnchorPane fx:id="registerAnchorPane" prefHeight="582.0" prefWidth="960.0" stylesheets="@../stylesheets/loginScreen.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.upe.ui.fx.screen.user.SignUpScreenController">
 
     <ImageView fx:id="imageView" fitHeight="378.0" fitWidth="368.0" layoutX="296.0" layoutY="-87.0" preserveRatio="true">
         <image>
@@ -18,8 +18,12 @@
             <TextField fx:id="nameTextField" cache="true" layoutX="71.0" layoutY="64.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
             <TextField fx:id="cpfTextField" cache="true" layoutX="71.0" layoutY="118.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
             <TextField fx:id="emailTextField" cache="true" layoutX="71.0" layoutY="175.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
-            <TextField fx:id="passTextField" cache="true" layoutX="71.0" layoutY="235.0" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+            <StackPane layoutX="71.0" layoutY="235.0" prefHeight="47.0" prefWidth="293.0">
+                <PasswordField fx:id="passTextField" cache="true" prefHeight="47.0" prefWidth="294.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" />
+                <TextField fx:id="showPassText" prefHeight="47.0" prefWidth="293.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" visible="false" />
+            </StackPane>
             <Text fx:id="namePlaceholder" fill="DARKGRAY" layoutX="80.0" layoutY="92.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Nome" />
+            <ToggleButton fx:id="toggleShowPassword" layoutX="302.0" layoutY="246.0" onAction="#handleSignupTogglePassword" opacity="0.0" prefHeight="25.0" prefWidth="59.0" style="-fx-cursor: hand;" />
             <Text fx:id="cpfPlaceholder" fill="DARKGREY" layoutX="80.0" layoutY="146.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="CPF" />
             <Text fx:id="emailPlaceholder" fill="DARKGRAY" layoutX="82.0" layoutY="203.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Email" />
             <Text fx:id="passPlaceholder" fill="DARKGRAY" layoutX="80.0" layoutY="263.0" style="-fx-font-size: 12; -fx-opacity: 0.5;" text="Senha" />
@@ -43,6 +47,11 @@
 
             <Label layoutX="143.0" layoutY="363.0" text="Já é cadastrado?" />
             <Label layoutX="237.0" layoutY="363.0" text="Sign In" textFill="#ff914d" />
-            <Button fx:id="handleReturnButton" layoutX="248.0" layoutY="359.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="45.0" style="-fx-cursor: hand;" text=" " />
+            <Button fx:id="handleReturnButton" layoutX="234.0" layoutY="359.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="47.0" style="-fx-cursor: hand;" text=" " />
         </children></Pane>
+   <ImageView fx:id="imageView1" fitHeight="25.0" fitWidth="25.0" layoutX="580.0" layoutY="392.0" preserveRatio="true" style="-fx-cursor: hand;">
+      <image>
+         <Image url="@../images/icons/buttons/showIcon.png" />
+      </image>
+   </ImageView>
 </AnchorPane>

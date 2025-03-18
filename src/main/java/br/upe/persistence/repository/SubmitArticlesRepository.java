@@ -4,7 +4,8 @@ import br.upe.persistence.Event;
 import br.upe.persistence.SubmitArticle;
 import br.upe.persistence.User;
 import br.upe.persistence.builder.SubmitArticleBuilder;
-import br.upe.utils.JPAUtils;
+import br.upe.persistence.jpa.JPAFactory;
+import br.upe.persistence.jpa.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
@@ -31,13 +32,13 @@ public class SubmitArticlesRepository implements Persistence {
     }
 
     public List<SubmitArticle> getAllArticles() {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         TypedQuery<SubmitArticle> query = entityManager.createQuery("SELECT a FROM SubmitArticle a", SubmitArticle.class);
         return query.getResultList();
     }
 
     public List<SubmitArticle> getAllEventArticles(UUID eventId) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         TypedQuery<SubmitArticle> query = entityManager.createQuery("SELECT a FROM SubmitArticle a WHERE a.eventId.id = :eventId", SubmitArticle.class);
         query.setParameter("eventId", eventId);
         return query.getResultList();
@@ -57,7 +58,7 @@ public class SubmitArticlesRepository implements Persistence {
         String articleName = (String) params[3];
         boolean isCreated = false;
 
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         User owner = entityManager.find(User.class, ownerId);
 
@@ -115,7 +116,7 @@ public class SubmitArticlesRepository implements Persistence {
         byte[] articleContent = (byte[]) params[1];
         UUID articleId = (UUID) params[2];
         boolean isUpdated = false;
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
@@ -157,7 +158,7 @@ public class SubmitArticlesRepository implements Persistence {
         UUID articleId = (UUID) params[0];
 
         boolean isDeleted = false;
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
@@ -202,7 +203,7 @@ public class SubmitArticlesRepository implements Persistence {
 
     @Override
     public Object getData(UUID id, String dataToGet) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         SubmitArticle submitArticle = entityManager.find(SubmitArticle.class, id);
         if (submitArticle == null) {
             return null;
@@ -221,7 +222,7 @@ public class SubmitArticlesRepository implements Persistence {
 
     @Override
     public void setData(UUID submitArticleId, String dataToSet, Object data) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -259,7 +260,7 @@ public class SubmitArticlesRepository implements Persistence {
 
         String name = (String) params[0];
         UUID ownerId = (UUID) params[1];
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         TypedQuery<SubmitArticle> query = entityManager.createQuery(
                 "SELECT a FROM SubmitArticle a WHERE a.name = :name", SubmitArticle.class);
         query.setParameter("name", name);

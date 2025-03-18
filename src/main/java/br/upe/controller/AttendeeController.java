@@ -2,9 +2,10 @@ package br.upe.controller;
 
 import br.upe.persistence.Attendee;
 import br.upe.persistence.Session;
+import br.upe.persistence.jpa.JPAFactory;
 import br.upe.persistence.repository.AttendeeRepository;
 import br.upe.persistence.repository.Persistence;
-import br.upe.utils.JPAUtils;
+import br.upe.persistence.jpa.JPAUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
@@ -126,7 +127,7 @@ public class AttendeeController implements Controller {
     }
 
     private String getSessionId(String searchName) {
-        EntityManager entityManager = JPAUtils.getEntityManagerFactory();
+        EntityManager entityManager = JPAFactory.getJPAProvider().getEntityManager();
         String fatherId = null;
         try {
             TypedQuery<Session> query = entityManager.createQuery("SELECT e FROM Session e WHERE e.name = :name", Session.class);
