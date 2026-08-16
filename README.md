@@ -241,7 +241,3 @@ A documentação do projeto está organizada em:
 - README (documentação principal)
 - `CONTRIBUTING.md` (guia de contribuição)
 - `LICENSE` (licença)
-
----
-
-Desenvolvido com ❤️ por **Everton**.
