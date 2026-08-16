@@ -241,3 +241,32 @@ A documentação do projeto está organizada em:
 - README (documentação principal)
 - `CONTRIBUTING.md` (guia de contribuição)
 - `LICENSE` (licença)
+
+---
+
+## 👥 Equipe
+<a href="https://github.com/EvertnRS">
+  <img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/840eeb2e-2866-4a83-a86b-e97a498bde9f" />
+</a>
+
+<a href="https://github.com/ok-kioo">
+  <img width="100" height="100" alt="image" src="https://github.com/user-attachments/assets/f7da043e-005d-4c5c-a4ab-75fdec3ed861" />
+</a>
+
+<a href="https://github.com/Thulio05">
+  <img width="460" height="460" alt="image" src="https://github.com/user-attachments/assets/2af41271-6292-4293-b2d3-6524b6be5245" />
+</a>
+
+<a href="https://github.com/GabrielSLima01">
+  <img width="420" height="420" alt="image" src="https://github.com/user-attachments/assets/d0efa69e-5c3b-4ea2-8485-b162e41e3842" />
+</a>
+
+<a href="https://github.com/DeyvidMariano">
+  <img width="420" height="420" alt="image" src="https://github.com/user-attachments/assets/aab5179d-d364-438b-a162-b9086bf6b8fc" />
+
+</a>
+
+<a href="https://github.com/devwander">
+  <img width="460" height="460" alt="image" src="https://github.com/user-attachments/assets/1f1f0c11-8f06-45a7-81c1-70517c443532" />
+
+</a>
